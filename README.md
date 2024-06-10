@@ -27,3 +27,6 @@ listView.setCellFactory(new Callback<ListView<String>, ListCell<String>>(){
     }
 });
 ```
+ 
+•  **ChangeListener**, bir ObservableValue içerisindeki değişiklikleri dinlemek ve bu değişikliklere tepki vermek için kullanılır. ObservableValue'aki değişikliği dinler ve changed metodunu uygular. Changed metodu dinlenen değerde bir değişiklik olduğunda otomatik olarak çağırılır. 
+
