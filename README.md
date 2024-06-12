@@ -94,3 +94,31 @@ public class Main(){
   }
 }
 ```
+•  **super()**, bir classın subclassında(alt classından) constructorında, superclassının(üst classının) constructorını çağırmak için kullanılır.
+```java
+class Animal{
+  Animal(){
+    System.out.println("Animal constructor called");
+  }
+}
+class Dog extends Animal(){
+  Dog(){
+    super();
+    System.out.println("Dog constructor called");
+  }
+}
+public class Main(){
+  public static void main(String[] args){
+    Dog dog=new Dog();
+  }
+}
+```
+>Çıktı;   
+>Animal constructor called   
+>Dog constructor called
+
+
+
+
+
+
