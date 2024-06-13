@@ -164,7 +164,45 @@ public class Main(){
 > Dairesel bağlı liste(Circular linked list): son düğüm ilk düğümün pointerını tutar.  
 > Çift yönlü bağlı listeler(Doubly linked list ): Sonraki ve önceki elemanın olmak üzere iki pointer tutar.
 
-•  Bir queue'yu sadece stack yapısı kullanarak nasıl çalıştırabiliriz? İki stack ile bunu sağlayabiliriz. Birinci stack eklemek için ikinci stack çıkarmak için kullanılır. 
+•  Bir queue'yu sadece stack yapısı kullanarak nasıl çalıştırabiliriz? İki stack ile bunu sağlayabiliriz. Birinci stack eklemek için ikinci stack çıkarmak için kullanılır.  
+ ```java
+public class QueueUsingStacks<T>{
+  private Stack<T> stack1;
+  private Stack<T> stack2;
+  public QueueUsingStacks(){
+    stack1=new Stack<>();
+    stack2=new Stack<>();
+  }
+  public void enqueue(T item){
+    stack1.push(item);
+  }
+  public T dequeue(){
+    if(stack2.isEmpty()){
+      if(stack1.isEmpty()){
+        throw new RuntimeException("Queue is empty");
+      }
+      while(!stack1.isEmpty()){
+        stack2.push(stack1.pop());
+      }
+    }
+    return stack2.pop();
+  }
+  public boolean isEmpty(){
+    return stack1.isEmpty()&&stack2.isEmpty(); 
+  }
+  public T peek(){
+    if(stack2.isEmpty()){
+      if(stack1.isEmpty()){
+        throw new RuntimeException("Queue is empty");
+      }
+      while(!stack1.isEmpty()){
+        stack2.push(stack1.pop());
+      }
+    }
+    return stack2.peek();
+  }
+}
+```
 •  **Algoritma Complexity**:
 
 
