@@ -46,7 +46,7 @@ Veri bağlamak için;
 bind(Binding <? super Boolean> observable)
 ``` 
 •  **Concrete Class(Somut Sınıf)**, doğrudan örneklenebilen yani new anahtar kelimesi kullanılarak bir instance'ının yani objesinin oluşturulabileceği anlamına gelir.  Bir obje yaratmak için constructor'a sahip olan ve doğrudan kullanılabilen bir sınıftır.   
-•  **Abstract Class (Soyut Sınıf)**, doğrudan örneklenemezler yani new anahtar kelimesi ile bir obje oluşturulamaz. Bu sınıflar başka sınıflar tarafından genişletilebilir(extends edebilir) ve örneklenebilir. Bir class'a sadece bir abstract inherit edilebilir.  
+•  **Abstract Class (Soyut Sınıf)**, doğrudan örneklenemezler yani new anahtar kelimesi ile bir obje oluşturulamaz. Bu sınıflar başka sınıflar tarafından genişletilebilir(extends edebilir) ve örneklenebilir. Bir class'a sadece bir abstract inherit edilebilir. Static metodlar abstract olarak tanımlanamaz.  
 •  **Interface**, doğrudan örneklenemezler, bir arayüzü kullanabilmek için bir classın bu interface'i implement etmesi gerekir. Bir sınıf arayüzü implement ettiğinde arayüzde tanımlanan ve  kullanılacak olan tüm metodları gerçekleştirmek zorundadır yani gereksinimlerine göre metodu doldurmalıdır. Genellikle metod imzalarını içerirler ve metodların gerçekleştirilmesini somut classlara bırakırlar.  Java 8 ile birlikte, interfacelerde default metodlar ve static metodlar tanıtıldı.Bu metodlar, interfacelerin metodları nasıl gerçekleştireceğine dair bilgi verir. 
 ```java
 public interface Vehicle(){
@@ -81,6 +81,9 @@ public class Main(){
       public static final int value2=10; // iki versiyonda aynı anlama gelir ce derleyici tarafından aynı şekilde işlenir. 
       }
  ```
+>public, değişkenlerin interface'i implement eden tüm sınıflar tarafından erişilebilir olduğu anlamına gelir.
+>static, değişkenlerin classın bir instance'ına bağlı olmadığını, dolayısıyla interface'in kendisine ait olduğunu ifade ederler.
+>final, değişkenin değerinin sadece bir kez atanabileceğini ve sonra değiştirilemeyeceğini ifade eder.   
 
      •  Bir class'a birden fazla interface implement edilebilir.
 •  **Inheritance**, nesne yönelimli programlamada bir sınıfın başka bir sınıfın özelliklerini ve davranışlarını devralmasıdır. Bu yeni bir class oluştururken mevcut bir sınıfın işlevselliğini yeniden kullanmayı ve genişletmeyi sağlar. Bu işlem **extends** anahtar kelimesi ile yapılır.
@@ -144,8 +147,13 @@ public class Main(){
  > Pop: stack'ten eleman çıkarır, top elemanı çıkarır.  
  > Peek: kullanıcıya veri ödndürür, top elemanını döndürür.
 
-•  **Queues**, FIFO(First In, First Out) prensibi ile çalışır.   
-•  **HashMap**, Key-Value çiftlerini hızlıca aramak için kullanılır.     
+•  **Queues**, FIFO(First In, First Out) prensibi ile çalışır. poll() metodu kuyruktaki en alttaki öğeyi yani en önce giren ögeyi döndürür ve sile. Kuyruk boş olduğunda bir exception fırlatmaz, null değeri döndürür.    
+•  **HashMap**, Key-Value çiftlerini hızlıca aramak için kullanılır. Her key'e karşılık gelen bir değer bulunur. Anahtar unique'tir, bir değer birden fazla olabilir. Elemanları ekleme sorasına göre depolamaz. 
+•  **Linked HashMap**, gönderilen değerler ekleme sırasına göre eklenir.   
+•  **TreeMap**, gönderilen değerler keylerine göre küçükten büyüğe doğru sıralanarak depolanır.   
+•  **Concurrent HashMap**, birden fazla thread herhangi bir bir komplikasyon olmadan tek bir nesne üzerinde çalışabilir. Bir anahtar veya değer olarak boş nesneler eklemek mümkün değildir. ConcurrentHashMap nesnesini kitlemeden bir okuma işlemi için herhangi bir sayıda thread uygulanabilir. Ancak obje güncellemek için thread'in, thread'in çalışmak istediği belirli segmenti kitlemesi gerekir. Bu tür locking mekanizmasına "segment lockig"  or "bucket locking" denir. ConcurrentHashMap nesnesi, concurrency levela göre bir dizi segmente bölünür. Varsayılan concurrency level'ı 16'dır. Bu nedenle bir seferde 16 update işlemi threadler tarafından gerçekleştirilir. 
+>Concurrency Level; eşzamanlı olarak mapi güncelleyen thread sayısı.  
+
 •  **Binary Search Tree(İkili Arama Ağacı)**, ilk önce kök düğüm oluşturulur. Sadece sağ ve sol çocuklar eklenir. Sol çocuklar daima parenttan küçük olmalıdır. Sağ çocuklar parent'tan büyük olmalıdır. Her eklenen düğüm leaf durumundadır(leaflerin çocuğu olmaz). Arama yapıldığında karşılaştırılmaya roottan başlanır. Karmaşıklığı Big O(logn). Delete ve insert işlemlerinin maaliyetleri yüksektir. Denge sorunu vardır.     
 •  **Heap**, binary tree üzerine kuruludur. Full complete tree doldurma yapmaktır amaç(yukarıdan aşağıya, soldan sağa doldurma işlemi yapılır.). İki türü vardır;
 >Max heap: parent düğümü child düğümünden büyük ya da eşit olmalıdır.   
@@ -156,8 +164,8 @@ public class Main(){
 > Dairesel bağlı liste(Circular linked list): son düğüm ilk düğümün pointerını tutar.  
 > Çift yönlü bağlı listeler(Doubly linked list ): Sonraki ve önceki elemanın olmak üzere iki pointer tutar.
 
-•  ** 
-   
+•  Bir queue'yu sadece stack yapısı kullanarak nasıl çalıştırabiliriz? İki stack ile bunu sağlayabiliriz. Birinci stack eklemek için ikinci stack çıkarmak için kullanılır. 
+•  **Algoritma Complexity**:
 
 
 
