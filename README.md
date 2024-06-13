@@ -16,7 +16,9 @@ listView.setCellFactory(new Callback<ListView<String>, ListCell<String>>(){
   public ListCell<String> call(ListView<String> listView){
     return new ListCell<String>(){
       @Override
-      protected void updateItem(String item, boolean empty){//Hücre içeriği burada güncellenir. item hücre içeriği, empty hücrenin boş olup olmadığını belirten boolean değer
+      protected void updateItem(String item, boolean empty){//Hücre içeriği burada güncellenir.
+                                                            //item hücre içeriği, empty hücrenin boş olup
+                                                            //olmadığını belirten boolean değer
         super.updateItem(item,empty);
         if(item!=null){
         ...
@@ -79,6 +81,7 @@ public class Main(){
       public static final int value2=10; // iki versiyonda aynı anlama gelir ce derleyici tarafından aynı şekilde işlenir. 
       }
  ```
+
      •  Bir class'a birden fazla interface implement edilebilir.
 •  **Inheritance**, nesne yönelimli programlamada bir sınıfın başka bir sınıfın özelliklerini ve davranışlarını devralmasıdır. Bu yeni bir class oluştururken mevcut bir sınıfın işlevselliğini yeniden kullanmayı ve genişletmeyi sağlar. Bu işlem **extends** anahtar kelimesi ile yapılır.
 ```java
@@ -148,10 +151,10 @@ public class Main(){
 >Max heap: parent düğümü child düğümünden büyük ya da eşit olmalıdır.   
 >Min heap ; parent düğümü child düğümünden küçük ya da eşit olmalıdır.
  
-•  **Linked List**, Saklanan veriler kendisinden sonra gelen veriyi işaret etmek zorundadır. Her düğüm 2 değer tutar: içinde tutacağı değer ve sonraki düğümü gösteren pointer-referans değer. Dinamik bir yapısı vardır, istediğimiz kadar eleman ekleyebiliriz. Eleman ekleme ve silme işlemleri kolaydır. Random erişim yoktur, baştan başlamak zorundayız.Array List ile karşılaştırdığımızda eleman eklemek istediğimizde Array List'in performansı Linked List'e göre kötüdür çünkü elemanlarının hepsi yer değiştirmek zorunda kalır(2. indexle 3. index, 3.indexle 4. index gibi ..). Linked List eleman eklemek istediğimizde sadece iki tane objenin yerini değiştiririz.Hafıza bakımından karşılaiştırdığımızda Linked List daha fazla yer kaplar;pointer tuttuğu için ekstra hafıza tutar. Üç çeşittir:
+•  **Linked List**, Saklanan veriler kendisinden sonra gelen veriyi işaret etmek zorundadır. Her düğüm 2 değer tutar: içinde tutacağı değer ve sonraki düğümü gösteren pointer-referans değer. Dinamik bir yapısı vardır, istediğimiz kadar eleman ekleyebiliriz. Eleman ekleme ve silme işlemleri kolaydır. Random erişim yoktur, baştan başlamak zorundayız.Array List ile karşılaştırdığımızda eleman eklemek istediğimizde Array List'in performansı Linked List'e göre kötüdür çünkü elemanlarının hepsi yer değiştirmek zorunda kalır(2. indexle 3. index, 3.indexle 4. index gibi ..). Linked List eleman eklemek istediğimizde sadece iki tane objenin yerini değiştiririz.Hafıza bakımından karşılaştırdığımızda Linked List daha fazla yer kaplar;pointer tuttuğu için ekstra hafıza tutar. Üç çeşittir:
 > Tek yönlü bağlı listeler(singly linked list): Son düğümün pointerı NULL.  
 > Dairesel bağlı liste(Circular linked list): son düğüm ilk düğümün pointerını tutar.  
-> Çift yönlü bağloı listeler(Doubly linked list ): Sonraki ve önceki elemanın olmak üzere iki pointer tutar.
+> Çift yönlü bağlı listeler(Doubly linked list ): Sonraki ve önceki elemanın olmak üzere iki pointer tutar.
 
 •  ** 
    
