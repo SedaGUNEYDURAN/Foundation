@@ -135,12 +135,26 @@ public class Main(){
 •  **Plastik Software Configuration Management**, bir yazılım konfigürasyon yönetim aracıdır(Git, SVN gibi düşün ). Dağıtık(distributed) ve merkezi(centralized) sürüm kontrol sistemlerinin avantajlarını birleştirerek yüksek performanslı ve ölçeklenebilir bir çözüm sunar.Conflictleri tespit eder ve çözer.   
 •  **Asana**, ekiplerin projelerini ve görevlerini planmasına, izlemesine ve yönetmesine yardımcı olan bir proje yönetim yazılımıdır(Jira gibi).  
 •  **DOORS(Dynamic Object-Oriented Requirements System)**, gereksinim yönetimi için güçlü ve kapsamlı bir çözümdür. Gereksinimlerin toplanması, izlenmesi, değişiklik yönetimi ve işbirliği gibi kritik süreçlerde etkinlik sağlar.   
-•  Neden veri yapıları kullanırız? Veri yapıları bilgisayar bilimlerinin temellerini oluşturur. Verinin etkin bir şekilde yönetilmesini, işlenmesini ve analiz edilmesi için önemlidir. Yazılım geliştiriciler doğru veri yapılarını kullanrak uygulamaların performansını ve verimliliğini arttırabilir. 
->**Stack**, LIFO(Last In, First Out) prensibi ile çalışır.
->**Queues**, FIFO(First In, First Out) prensibi ile çalışır.
->**HashMap**, Key-Value çiftlerini hızlıca aramak için kullanılır.
->**Binary Tree**,
->**Linked List**,
+•  Neden veri yapıları kullanırız? Veri yapıları bilgisayar bilimlerinin temellerini oluşturur. Verinin etkin bir şekilde yönetilmesini, işlenmesini ve analiz edilmesi için önemlidir. Yazılım geliştiriciler doğru veri yapılarını kullanrak uygulamaların performansını ve verimliliğini arttırabilir.    
+•  **Stack**, LIFO(Last In, First Out) prensibi ile çalışır.Dizi ve linked list mantığın ile oluşturulabilirler.Stack işlemleri;     
+ > Push: stack'e eleman ekleme işlemi yapar, yeni eklenen eleman top olur.  
+ > Pop: stack'ten eleman çıkarır, top elemanı çıkarır.  
+ > Peek: kullanıcıya veri ödndürür, top elemanını döndürür.
+
+•  **Queues**, FIFO(First In, First Out) prensibi ile çalışır.   
+•  **HashMap**, Key-Value çiftlerini hızlıca aramak için kullanılır.     
+•  **Binary Search Tree(İkili Arama Ağacı)**, ilk önce kök düğüm oluşturulur. Sadece sağ ve sol çocuklar eklenir. Sol çocuklar daima parenttan küçük olmalıdır. Sağ çocuklar parent'tan büyük olmalıdır. Her eklenen düğüm leaf durumundadır(leaflerin çocuğu olmaz). Arama yapıldığında karşılaştırılmaya roottan başlanır. Karmaşıklığı Big O(logn). Delete ve insert işlemlerinin maaliyetleri yüksektir. Denge sorunu vardır.     
+•  **Heap**, binary tree üzerine kuruludur. Full complete tree doldurma yapmaktır amaç(yukarıdan aşağıya, soldan sağa doldurma işlemi yapılır.). İki türü vardır;
+>Max heap: parent düğümü child düğümünden büyük ya da eşit olmalıdır.   
+>Min heap ; parent düğümü child düğümünden küçük ya da eşit olmalıdır.
+ 
+•  **Linked List**, Saklanan veriler kendisinden sonra gelen veriyi işaret etmek zorundadır. Her düğüm 2 değer tutar: içinde tutacağı değer ve sonraki düğümü gösteren pointer-referans değer. Dinamik bir yapısı vardır, istediğimiz kadar eleman ekleyebiliriz. Eleman ekleme ve silme işlemleri kolaydır. Random erişim yoktur, baştan başlamak zorundayız.Array List ile karşılaştırdığımızda eleman eklemek istediğimizde Array List'in performansı Linked List'e göre kötüdür çünkü elemanlarının hepsi yer değiştirmek zorunda kalır(2. indexle 3. index, 3.indexle 4. index gibi ..). Linked List eleman eklemek istediğimizde sadece iki tane objenin yerini değiştiririz.Hafıza bakımından karşılaiştırdığımızda Linked List daha fazla yer kaplar;pointer tuttuğu için ekstra hafıza tutar. Üç çeşittir:
+> Tek yönlü bağlı listeler(singly linked list): Son düğümün pointerı NULL.  
+> Dairesel bağlı liste(Circular linked list): son düğüm ilk düğümün pointerını tutar.  
+> Çift yönlü bağloı listeler(Doubly linked list ): Sonraki ve önceki elemanın olmak üzere iki pointer tutar.
+
+•  ** 
+   
 
 
 
