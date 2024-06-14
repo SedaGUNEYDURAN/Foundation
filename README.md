@@ -203,8 +203,49 @@ public class QueueUsingStacks<T>{
   }
 }
 ```
-•  **Algoritma Complexity**:
+•  **Algoritma Complexity**: Bir algoritmanın performansını, ölçmek için kullanılan kavramdır. Algoritmanın performansı ne kadar hızlı çalıştığına, ne kadar kaynak yani bellek, zaman tükettiğine bakılarak hesaplanır.Asimptotik olarak Big-O notasyonu ile ifade edilir.
 
+      •  O(1): sabit zamanlıdır. Giriş verisinin büyüklüğünden bağımsızdır.  
+         O(n): doğrusal zamanlıdır. Giriş verisinin büyüklüğü ile doğru orantılıdır.   
+         O(n^2): kare zamanlıdır.Giriş verisinin büyüklüğünün karesi ile orantılıdır.  
+         O(logn): logaritmik zamanlıdır. Giriş verisinin büyüklüğünün logaritması ile orantılıdır.   
+      •  İki türü vardır;  
+      
+           •  Time Complexity: algoritmanın çalışmasını tamamlamak için ihtiyaç duyduğu süredir.    
+           •  Space Coplexity: algortimanın çalışması sırasında ihtiyaç duyduğu bellek miktarıdır.     
+•  **Process**; word, excel veya herhangi başka bir uygulama henüz çalışmıyorken bir programdır. Programlar çalıştırıldığında process olarak nitelendirilir. Process'ler hayatlarına tek bir thread ile başlarve bu thread'e main thread denilir. Diğer threadler ise programın çalışma esnasında sistem fonksiyonları tarafından yaratılmaktadır.  
+•  **Heap**; Java projeleri processe dönüştükleri zaman kendi memory space'ini yani heapini oluşturur.  
+•  **Multitasking**; bilgisayarın bir çok processi aynı anda çalıştırmasıdır.Örneğin web browser'ı çalıştırırken aynı anda spotifyın da açık olması.     
+•  **Thread**; bir processin birden fazla işi aynı anda yapmasını sağlayan yapılara thread denir. Bir process bünyesinde bir ya da birden fazla thread barındırabilir.    Thread'ler aynı anda sadece tek bir işi yapabilir. Threadler processin içinde oluştuğu için processlerin olşturduğu bellek alanına direkt olarak erişim sağlayabilirler ve her threadin sadece kendisiniğn erişebileceği bir tane "thread stack"i bulunur.Threadler,in çalışma sırası jvm ve işletim sistemine bağlıdır.
+> "Synchronized" anahtar kelimesini yazdığımızda o obje üstünden, o class üzerinden sadece tek bir anahtara(lock) sahip oluruz. Threatler anahtarla metoda giriyor gibi düşün ve anahtara da lock de. İki tane anahtar oluşturmak istediğinde
+ ```java
+public synchronized void metod1(){
+  metod içeriği
+}
+ ```
+yerine 
+ ```java
+public void metod1(){
+ synchronized(lock1){
+    metod içeriği
+}
+  
+}
+ ```
+•  **Paralel programlama**; threadlerin çok çekirdekli işlemcilerde farklı çekirdeklerde eşzamanlı olarak çalıştırılmasıdır.    
+•  **Multithread**;bir process içinde bir çok thread oluşturup bir çok işi bir arada yapmaktadır.Wordde yazı yazarken aynı anda kelimelerin sayılması gibi   
+•  **Concurency(eşzamanlılık)**; bir çok işimizi threadler yardımıyla paralel olarak yapabiliriz. Threadlerin paralel olarak çalışmasına concurency denir.  
+•  **Deadlock**; iki ya da daha fazla processin devam etmek için birbirlerinin bitmesini beklemesi ve sonuçta ikisinin de devam edememesi durumudur.   
+•  **Semafor**;Birden fazla processin eş zamanlı çalışması durumunda birbirleri için risk teşkil ettikleri kritik zamanlarda birbirlerini beklemesini sağlayan mekanizmadır.  
+•  **Mutex**;  
+•  **Cache**;  
+•  **Memory Leak**;  
+•  **Polimorfizm**;  
+•  **  
+•  Library nedir?  
+•  UML Dokümantasyonu;  
+  
+  
 
 
 
