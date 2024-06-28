@@ -54,6 +54,16 @@ Platform.runLater(()->{
 //Bu kod bloğu, JavaFX uygulama threadinde çalıştırılır. Yavaşlatıcı işlemler bu blog içerisinde gerçekleştirilmemelidir. 
 });
 ```
+•  JavaFX uygulamaları, "Applicatiın.class" kullanarak başlatılır. Bu class, uygulamanın başlangıç noktasıdır ve start() metodu çağırarak uygulamayı başlatır. Application classı, start() metodunun içinde "PlatformImpl" classına veya diğer ilgili sınıflara doğrudan erişmez. Bunun yerine, JavaFX'ın arkasındaki mekanizmelar start() metodu içinde otomatik olarak çalışır.   
+•  JavaFX'in arkasındaki mekanizmaların bir kısmı, "PlatformImpl" classı tarafından yönetilir. PlatformImpl.class, JavaFX'in platforma özgü işlemlerini gerçekleştirir ve gerekli ön hazırlıkları yapar. Bu ön hazırlıklar arasında, uygulamanın çalıştığı platforma göre farklılık gösterebilecek işlemler yer alabilir.   
+•  JavaFX uygulamaları, platform bağımsız olduğu için, JavaFX runtime'ın farklı işletim sistemleri için uygun olan platform özelliklerine erişebilmesi için bir yol sağlaması gerekir. Bu işlem, JavaFX uygulama threadinden ayrı bir thread'de gerçekleştirilir ve PlatformImpl.class tarafından yönetilir.  
+•  Java'da "EventHandler" sınıfının "handle" metoduna **EventHandler.handler(new Event("Enter",null, null))** şeklinde bir parametre geçtiğimizde
+- "Enter": Bu oluşturulan event nesnesi türünü temsil eder. Olay türü genellikle bir olayın ne olduğunu belirtmek için kullanılan bir dizedir. Örneğin, kullanıcı bir tuşa basarsa ve bu olayı temsil etmek istiyorsa "keyPress"" veya ""keyRelease" gibi olay türü kullanabiliriz.
+- Birinci null: oluşturulan event nesnesinin kaynağını temsil eder. Olayın kaynağı, genellikle nerede meydana geldiğini belirtmek için kullanılır. Örneğin, bir butona tıklama olayını temsil ediyorsanız, buton nesnesini kaynak olarak belirtebiliriz.
+- İkinci null: bu oluşturulan event nesnenin ilgili verilerini temsil eder.Olaya özgü veriler,olaytürüne bağlı oalrak farklı şekillerde olabilir. Örneğin, bir fare tıklama olayı için, tıklama koordinatlarını içeren bir "mouseEvent" nesnesi verilebilir.
+  
+•  **PlatformImpl.class**, JavaFX runtime'ın main thread'ini yönetir. JavaFX uygulama threadinden farklı thread'de çalışan işlevleri sağlar. Uygulamanın çıkış yapmasından önce sonlandırılır. 
+
 •  **MVC(Model-View-Controller)** bir tasarım desenidir. Bu tasarım deseni, bir yazılım uygulamasını üç ana bileşene ayırarak, uygulamnın geliştirilmesini, bakımını ve test edilmesini kolaylaştırır.MVC mimarisi şu şekilde çalışır;   
   - **Model:** Uygulamanın verilerinin tutulduğu bileşendir. Veritabanı veya dosya gibi kalıcı veri kaynaklarına erişebilirler. E-ticaret uygulamasını ele alırsak; bu uygulamanın model bileşeni ürünlerin, müşterilerin, siparişlerin ve stokların verilerini tutar. Bu veriler, veritabanı veya dosya gibi kalıcıveri kaynaklarına depolanabilir. Model bileşeni verilerin doğru bir şekilde işlenmesinden ve yönetilmesinden sorumludur.     
   - **View:** Kullanıcının uygulamayı kullanarak gördüğü bileşendir. JavaFX bileşenleri(örneğin;label,button,textfield) kullanarak oluşturulur.    
