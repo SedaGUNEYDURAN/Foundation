@@ -46,7 +46,7 @@ Veri bağlamak için;
 bind(Binding <? super Boolean> observable)
 ``` 
 •  **SwingUtilities.invokeLater**: Java'da Swing GUI uygulamaları için kullanılan bir metoddur. Bu metod, GUI komponentlerinin ekranda görüntülenmesi ve güncellenmesi gerektiğinde kullanılır. Swing GUI uygulamaları, **Java event dispatch thread(EDT)** üzerinde çalışır. EDT, Swing komponentlerinin oluşturulması, görüntülenmesi ve güncellenmesi gibi görevleri yerine getirmek için tasarlanmıştır. Ancak, GUI komponentleri güncellendiğinde veya yeniden çizildiğinde, bir başka thread tarafından oluşan verileri kullanmak isteyebiliriz. Bu durumda, SwingUtilities.invokeLater metodu kullanılabilir. _Bu metod, verilerin Java event dispatch tarafından kullanılabilir hale gelmesini bekler ve bu verileri kullanarak GUI komponentlerini güncellemimizi sağlar._   
-•  Java Swing, GUI bileşenlerinin işletim sistemi arayüzüne erişmek için özel bir thread kullanır. Bu thread, Swing olaylarını işlemek, bileşenlerin çizimlerini güncellemek, kullanıcı etkileşimlerini işlemek gibi görevleri yönetir. Ancak bu thread, main thread'den ayrı bir threaddir. Bu nedenle thread güvenliği sorunları ortaya çıkabilir._**InvokeLaterDispatch class'ı ** bu sorunları önlemek için tasarlanmıştır. Bu class, Swing bileşenlerinin main thread'e erişimini yönetir ve bu bileşenlerin sadece main thread üzerinde çalışmasını sağlar._ Böylece Swing bileşenlerinin işletim sistemi arayüzüne erişimi, doğru bir şekilde koordine edilerek yapılır ve thread güvenliği sağlanır.  **SwingUtilities.invokeLater()** metodu, arayüz bileşenlerinin işlemlerini main thread2e gönderir. 
+•  Java Swing, GUI bileşenlerinin işletim sistemi arayüzüne erişmek için özel bir thread kullanır. Bu thread, Swing olaylarını işlemek, bileşenlerin çizimlerini güncellemek, kullanıcı etkileşimlerini işlemek gibi görevleri yönetir. Ancak bu thread, main thread'den ayrı bir threaddir. Bu nedenle thread güvenliği sorunları ortaya çıkabilir._**InvokeLaterDispatch class'ı ** bu sorunları önlemek için tasarlanmıştır. Bu class, Swing bileşenlerinin main thread'e erişimini yönetir ve bu bileşenlerin sadece main thread üzerinde çalışmasını sağlar._ Böylece Swing bileşenlerinin işletim sistemi arayüzüne erişimi, doğru bir şekilde koordine edilerek yapılır ve thread güvenliği sağlanır.  **SwingUtilities.invokeLater()** metodu, arayüz bileşenlerinin işlemlerini main thread2e gönderir.    
 •  **Platform.runLater**: JavaFX uygulamalarında kullanılan bir yöntemdir ve belirtilen işlevi JavaFX uygulama threadinden farklı bir zaman diliminde çalıştırmak için kullanılır. Bu yöntem, bir olay veya işlem nedeniyle uygulamanın main thread üzerinde yavaşlamalarveya donmalar yaşanmasını önlemek için kullanılır. _Platform.runLater yöntemi, belirtilen işlevi JavaFX uygulama threadindeki sonraki boş bir zaman diliminde çalıştırmak için bir istek sırasına yerleştirir._ Bu nedenle, Platform.runLater yöntemi çağırıldığında belirtilen işlev hemen çalıştırılmaz, ancak bir sonraki fırsatta çalıştırılır. 
 ```java
 Platform.runLater(()->{
@@ -54,11 +54,42 @@ Platform.runLater(()->{
 });
 ```
 •  **MVC(Model-View-Controller)** bir tasarım desenidir. Bu tasarım deseni, bir yazılım uygulamasını üç ana bileşene ayırarak, uygulamnın geliştirilmesini, bakımını ve test edilmesini kolaylaştırır.MVC mimarisi şu şekilde çalışır;   
-     • **Model:** Uygulamanın verilerinin tutulduğu bileşendir. Veritabanı veya dosya gibi kalıcı veri kaynaklarına erişebilirler. E-ticaret uygulamasını ele alırsak; bu uygulamanın model bileşeni ürünlerin, müşterilerin, siparişlerin ve stokların verilerini tutar. Bu veriler, veritabanı veya dosya gibi kalıcıveri kaynaklarına depolanabilir. Model bileşeni verilerin doğru bir şekilde işlenmesinden ve yönetilmesinden sorumludur.     
-     • **View:** Kullanıcının uygulamayı kullanarak gördüğü bileşendir. JavaFX bileşenleri(örneğin;label,button,textfield) kullanarak oluşturulur.    
-     • **Controller:** Model ve View arasında bir bağlantı oluşturarak, kullanıcın yaptığı işlemleri işler.Controller bileşeni, kullanıcının yaptığı eylemleri alır ve Model bileşeninin verilerini güncellemek için kullanılır.Örneğin; kullanıcının bir ürünü sepete eklemesi durumunda, Controller bileşeni, Model bileşenindeki sepet verilerini günceller.   
+  - **Model:** Uygulamanın verilerinin tutulduğu bileşendir. Veritabanı veya dosya gibi kalıcı veri kaynaklarına erişebilirler. E-ticaret uygulamasını ele alırsak; bu uygulamanın model bileşeni ürünlerin, müşterilerin, siparişlerin ve stokların verilerini tutar. Bu veriler, veritabanı veya dosya gibi kalıcıveri kaynaklarına depolanabilir. Model bileşeni verilerin doğru bir şekilde işlenmesinden ve yönetilmesinden sorumludur.     
+  - **View:** Kullanıcının uygulamayı kullanarak gördüğü bileşendir. JavaFX bileşenleri(örneğin;label,button,textfield) kullanarak oluşturulur.    
+  - **Controller:** Model ve View arasında bir bağlantı oluşturarak, kullanıcın yaptığı işlemleri işler.Controller bileşeni, kullanıcının yaptığı eylemleri alır ve Model bileşeninin verilerini güncellemek için kullanılır.Örneğin; kullanıcının bir ürünü sepete eklemesi durumunda, Controller bileşeni, Model bileşenindeki sepet verilerini günceller.
+    
 •  **JSF(JavaServer Faces):** Kullanıcı arayüzü bileşenlerini oluşturmak için kullanılan bir frameworktür. MVC mimarisini kullanarak, geliştiricilere web uygulamalarının hızlı bir şekilde geliştirilmesine yardımcı olur. Hibernate ve spring gibi teknolojilerle birlikte çalışabilmektedir. JSF nasıl çalışır;
-     • **Controller:** gELEN İSTEKLERİ cONTROLLER KATMANINDA YER ALAN sERVLET ARAYÜZÜNÜ UYGULYAN-İMPLEMENT EDEN JAVAX.FACES.WEBAPP.fACESsERVLET SINIFI TARAFINDAN YÖNETİR. JSF sayfları genellikle .xhtml ve .jsf uzantısı ile hazırlanır.JSF sayfalarının işlenmesi için web.xml ayarı ile JavaServlet tarafından yönetileceği belirtilir. Gelen istekler eşleştikten sonra JSF sayfalarının yer aldığı view katmanı derlenerek istemciye gönderilir. 
+
+  -  **Controller:**  Gelen istekleri controller katmanında yer alanservlet arayüzünü uygulayan-implement eden javax.faces.webapp.facesServlet sınıfı tarafından yönetilir.JSF sayfları genellikle .xhtml ve .jsf uzantısı ile hazırlanır.JSF sayfalarının işlenmesi için web.xml ayarı ile JavaServlet tarafından yönetileceği belirtilir. Gelen istekler eşleştikten sonra JSF sayfalarının yer aldığı view katmanı derlenerek istemciye gönderilir. 
+```html
+<servlet>
+  <sevlet-name>Faces Servlet</servlet-name>
+  <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+  <load-on-startup>1</load-on-startup>
+</servlet>
+```
+  - **View:** View katmanında web sayfalarını oluşturmak için çeşitli JSF bileşenleri etiketleri kullanılır. JSF etiketlerini HTML etiketlerinden ayıran en önemli özellik; Model katmanında yer alan ve Managed Bean olarak adlandırılan Java komutları ile bağlantı kurmayı sağlamasıdır.
+  - **Model:** Bu katmanda sınıflar bazı kuralları olan sıradan Java sınıflarıdır. 
+>Parametresi constructor'ı olmalıdır.  
+>Serializable arayüzünü uygulamalıdır.  
+>Her bir sınıf özelliğine ait get ve set metodu olmalıdır.  
+>View katmanı ile bağlantı için @Named annocation veya XML ayarları kullanılmalıdır.    
+
+•  **Annotation:** Java diline ve Java komutlarına ek bilgi eklemek için kullanılan ifadelerdir. Eklenen bu ek bilgiler komutların çalışmasını değiştirmeyecektir. Ancak Java Reflection yapısı kullanılarak annotation bilgileri alınır ve işlem yapılabilir. Bildirim için @ eklenmesi yeterlidir. 
+```java
+public @interface AnnotationAdi{//bu şekilde annotation oluşturulur. 
+veri-tipi adı();
+} 
+```
+
+  - **@Override:** Derleyiciye metodun ezildiğini bildirir. 
+  - **@Depricated:** Bir metodun kullanımdan kaldırıldığını bildirmek için kullanılır. 
+  - **@SuppressWarnings:** Bu annocation derleyicinin bir uyarısını veya hatasını görmezden gelmesini sağlar. Bu bazı durumlarda programcıların, belirli bir uyarının önemsiz olduğunu ve dikkate alınmaması gerektiğini belirtmelerini sağlar. Bu uyarıya sebep olan kodun tür güvenliğini tehlikeye atmadığından eminsek @SupressWarnings("uncheched") notasyonu kullanılarak bu uyarıyı gizleyebiliriz. Kod uyarı vermeden derlenmiş olur. Ancak tür güvenliğini tehlikeye atıyorsa ClassCastException hatası fırlatır.
+  -  **@FunctionalInterface:** Bu annotation, bir arayüzün fonksiyonel bir arayüz olduğunu belirtir. Bu Java8'den beri kullanılır. lambda ifadeleri ve diğer fonsiyonel programlama özellikleri gibi fonksiyonel arayüzlerin kullanımını kolaylaştırır. 
+
+
+ 
+
 •  **Concrete Class(Somut Sınıf)**, doğrudan örneklenebilen yani new anahtar kelimesi kullanılarak bir instance'ının yani objesinin oluşturulabileceği anlamına gelir.  Bir obje yaratmak için constructor'a sahip olan ve doğrudan kullanılabilen bir sınıftır.   
 •  **Abstract Class (Soyut Sınıf)**, doğrudan örneklenemezler yani new anahtar kelimesi ile bir obje oluşturulamaz. Bu sınıflar başka sınıflar tarafından genişletilebilir(extends edebilir) ve örneklenebilir. Bir class'a sadece bir abstract inherit edilebilir. Static metodlar abstract olarak tanımlanamaz.  
 •  **Interface**, doğrudan örneklenemezler, bir arayüzü kullanabilmek için bir classın bu interface'i implement etmesi gerekir. Bir sınıf arayüzü implement ettiğinde arayüzde tanımlanan ve  kullanılacak olan tüm metodları gerçekleştirmek zorundadır yani gereksinimlerine göre metodu doldurmalıdır. Genellikle metod imzalarını içerirler ve metodların gerçekleştirilmesini somut classlara bırakırlar.  Java 8 ile birlikte, interfacelerde default metodlar ve static metodlar tanıtıldı.Bu metodlar, interfacelerin metodları nasıl gerçekleştireceğine dair bilgi verir. 
@@ -258,8 +289,11 @@ public void metod1(){
 •  **  
 •  Library nedir?  
 •  UML Dokümantasyonu;  
-  
-• **IndexOutOfBoundException**: arrayin ya da collection'ın geçerli index aralığının dışında bir indexe erişilmeye çalışıldığını gösterir. 
+
+
+## Exceptions
+• **IndexOutOfBoundException**: arrayin ya da collection'ın geçerli index aralığının dışında bir indexe erişilmeye çalışıldığını gösterir.   
+• **ClassCastException**: bir sınıfın bir nesneyi başka bir türe dönüştürmeye çalıştığı vwe dönüşümün uygun olmadığı durumlarda alınır.  
 
 
 
