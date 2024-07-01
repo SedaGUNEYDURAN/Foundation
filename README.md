@@ -109,15 +109,31 @@ liste.forEach((String meyve)->System.out.println(meyve));
   - Consumer, bir girdi değeri alır ve herhangi bir değer döndürmez.forEach metodu,"Consumer" interface'ine sahip bir nesne bekler ve listedeki her öge için Consumer'ın abstractı "accept" metodunu çağırır.   
 
  •  **Tomcat**: Apache Tomcat veya Tomcat Jva tabanlı web uygulamalarını yayınlamak için kullanılan web sunucusudur. Java Servlet, JavaServer Pages(JSP), Java Expression Language, Java Standart Tag Library(JSTL) gibi teknolojileri destekler. _Tomcat'in temel görevi, web uygulamalarının istemcilere sunulmasını sağlamaktır._ Bu uygulamalar, bir web sunucusuna yüklenir ve Tomcat'in çalışması sayesinde istemciler tarafından tarayıcılarda görüntülenebilir hale gelir. Tomcat, bir çook platformda çalışabilir ve Java tabanlı olduğu için Java Virtual Machine(JVM) üzerine çalışır.   
-•  **Hibernate**: Jva programlama dili için geliştirilmiş bir ORM(Object Relational Mapping) aracıdır. ORM, nesne yönelimli(OOP) ve ilişkisel veritabanı arasındaki farklılıkları ortadan kaldırmak için kullanılır Hibernate, veritabanı işlemlerin OOP prensipleri ile gerçekleştirmeyi sağlar. 
+•  **Hibernate**: Java programlama dili için geliştirilmiş bir ORM(Object Relational Mapping) aracıdır. ORM, nesne yönelimli(OOP) ve ilişkisel veritabanı arasındaki farklılıkları ortadan kaldırmak için kullanılır. Hibernate, veritabanı işlemlerin OOP prensipleri ile gerçekleştirmeyi sağlar. 
   
   - Veritabanı işlemlerinin programlama düzeyinde yapılandırılmasına izin verir. Nesneler arasındaki ilişkiler, Hibernate tarafından veritabanında uygun şekilde saklanır. 
   - Veritabanı işlemlerini gerçekleştirmek için SQL sorguları oluşturur, veritabanı işlemlerini tamamlanır.
   - Veritabanı işlemlerindeki tekrarları azaltır ve böylece geliştiricilerin daha az kod yazmalarına olanak tanır.
   - Açık kaynak kodlu bir yazılımdır ve Java için kullanılabilir.
-  - Veritabanındaki kaynak kodlu bir yazılımdır ve Java için kullanabilir.  
+  - Veritabanındaki kaynak kodlu bir yazılımdır ve Java için kullanabilir.
+  - Veritabanındaki tablolar ile classları eşleştirir.Classlar üzerinden veritabanındaki nesneleri map ederek(ilişkilendirerek) verileri hızlıca insert, update, delete ve select edebilmemizi sağlar.   
 
-
+•  **JDBC(Java Database Connective)**: Java programlama dilinde veritabanlarına erişmek ve bu veritabanlarıyla etkileşim kurmak için kullanılan bir API'dir.JDBC,SQL sorgularını çalıştırabilen ve sonuçlarını alma yeteneği olan bir ara birim sağlar. 
+   
+   -Java Application --> JDBC --> Oracle Driver       --> DB(Oracle, MySql)
+                                  Sql Server Driver
+   -JDBC, bir veritabanı driver app'yı sağlar ve bu veritabanı driver'ı belirli bir veritabanı sistemine özgü olan kodları içerir. Bu nedenle, JDBC farklı veritabanı bağlanmak için aynı API'yı kullanarak darklı driverlar kullanabilir. 
+   
+•  Yazılım mühendisliğinde design priciple ve design pattern aynı şeyler değildir. 
+  
+  - Design principle, daha iyi uygulamalar tasarlayabilemek için üst düzey kurallar sağlar.
+  - Design pattern, yaygın olarak ortaya çı8kan nesne yönelimli problemlerin implementasyonu ile ilgili low-level çözümler sağlar. 
+• **Atomic Integer**, java.util.concurrent.atomic paketinde bulunan bir sınıftır. Bu class multithreading programlarda paylaşılan bir integer'ın güvenli bir şekilde arttırılması veya azaltılması gerektiği durumlarda kullanılır.
+```java
+AtomicInteger counter=new AtomicInteger(0);
+counter.incrementAndGet();//arttırma işlemi
+counter.decrementAndGet();//azaltma işlemi
+```
 
 •  **Concrete Class(Somut Sınıf)**, doğrudan örneklenebilen yani new anahtar kelimesi kullanılarak bir instance'ının yani objesinin oluşturulabileceği anlamına gelir.  Bir obje yaratmak için constructor'a sahip olan ve doğrudan kullanılabilen bir sınıftır.   
 •  **Abstract Class (Soyut Sınıf)**, doğrudan örneklenemezler yani new anahtar kelimesi ile bir obje oluşturulamaz. Bu sınıflar başka sınıflar tarafından genişletilebilir(extends edebilir) ve örneklenebilir. Bir class'a sadece bir abstract inherit edilebilir. Static metodlar abstract olarak tanımlanamaz.  
@@ -228,7 +244,10 @@ public class Main(){
 •  **Concurrent HashMap**, birden fazla thread herhangi bir bir komplikasyon olmadan tek bir nesne üzerinde çalışabilir. Bir anahtar veya değer olarak boş nesneler eklemek mümkün değildir. ConcurrentHashMap nesnesini kitlemeden bir okuma işlemi için herhangi bir sayıda thread uygulanabilir. Ancak obje güncellemek için thread'in, thread'in çalışmak istediği belirli segmenti kitlemesi gerekir. Bu tür locking mekanizmasına "segment lockig"  or "bucket locking" denir. ConcurrentHashMap nesnesi, concurrency levela göre bir dizi segmente bölünür. Varsayılan concurrency level'ı 16'dır. Bu nedenle bir seferde 16 update işlemi threadler tarafından gerçekleştirilir. 
 >Concurrency Level; eşzamanlı olarak mapi güncelleyen thread sayısı.  
 
-•  **Binary Search Tree(İkili Arama Ağacı)**, ilk önce kök düğüm oluşturulur. Sadece sağ ve sol çocuklar eklenir. Sol çocuklar daima parenttan küçük olmalıdır. Sağ çocuklar parent'tan büyük olmalıdır. Her eklenen düğüm leaf durumundadır(leaflerin çocuğu olmaz). Arama yapıldığında karşılaştırılmaya roottan başlanır. Karmaşıklığı Big O(logn). Delete ve insert işlemlerinin maaliyetleri yüksektir. Denge sorunu vardır.     
+•  **Binary Search Tree(İkili Arama Ağacı)**, ilk önce kök düğüm oluşturulur. Sadece sağ ve sol çocuklar eklenir. Sol çocuklar daima parenttan küçük olmalıdır. Sağ çocuklar parent'tan büyük olmalıdır. Her eklenen düğüm leaf durumundadır(leaflerin çocuğu olmaz). Arama yapıldığında karşılaştırılmaya roottan başlanır. Karmaşıklığı Big O(logn). Delete ve insert işlemlerinin maaliyetleri yüksektir. Denge sorunu vardır.    
+  
+  -isLeaf();Bir ağaç veri yapısında belirli bir düğümün yaprak düğüm olup olmadfığını kontrol etmek için kullanılır. Yaprak düğümler, hiçbir alt düğüme sahip olamyan son düğümlerdir.
+  
 •  **Heap**, binary tree üzerine kuruludur. Full complete tree doldurma yapmaktır amaç(yukarıdan aşağıya, soldan sağa doldurma işlemi yapılır.). İki türü vardır;
 >Max heap: parent düğümü child düğümünden büyük ya da eşit olmalıdır.   
 >Min heap ; parent düğümü child düğümünden küçük ya da eşit olmalıdır.
