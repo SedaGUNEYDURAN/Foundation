@@ -108,8 +108,15 @@ liste.forEach((String meyve)->System.out.println(meyve));
   - Burada forEach metodu "Consumer" adında bir interface beklemektedir.("Consumer" interface'i, genellikle bir işlem yapmak için bir girdi değerine ihtiyaç duyudulduğunda kullanılır. Örneğin;listedeki her bir öğe için bir işlem yapmak istiyorsak "Consumer" interface'i kullanılabilir.)  
   - Consumer, bir girdi değeri alır ve herhangi bir değer döndürmez.forEach metodu,"Consumer" interface'ine sahip bir nesne bekler ve listedeki her öge için Consumer'ın abstractı "accept" metodunu çağırır.   
 
- •  **Tomcat**: Apache Tomcat veya Tomcat Jva tabanlı web uygulamalarını yayınlamak için kullanılan web sunucusudur. Java Servlet, JavaServer Pages(JSP), Java Expression Language, Java Standart Tag Library(JSTL) gibi teknolojileri destekler. _Tomcat'in temel görevi, web uygulamalarının istemcilere sunulmasını sağlamaktır._ Bu uygulamalar, bir web sunucusuna yüklenir ve Tomcat'in çalışması sayesinde istemciler tarafından tarayıcılarda görüntülenebilir hale gelir. Tomcat, bir çook platformda çalışabilir ve Java tabanlı olduğu için Java Virtual Machine(JVM) üzerine çalışır. 
- 
+ •  **Tomcat**: Apache Tomcat veya Tomcat Jva tabanlı web uygulamalarını yayınlamak için kullanılan web sunucusudur. Java Servlet, JavaServer Pages(JSP), Java Expression Language, Java Standart Tag Library(JSTL) gibi teknolojileri destekler. _Tomcat'in temel görevi, web uygulamalarının istemcilere sunulmasını sağlamaktır._ Bu uygulamalar, bir web sunucusuna yüklenir ve Tomcat'in çalışması sayesinde istemciler tarafından tarayıcılarda görüntülenebilir hale gelir. Tomcat, bir çook platformda çalışabilir ve Java tabanlı olduğu için Java Virtual Machine(JVM) üzerine çalışır.   
+•  **Hibernate**: Jva programlama dili için geliştirilmiş bir ORM(Object Relational Mapping) aracıdır. ORM, nesne yönelimli(OOP) ve ilişkisel veritabanı arasındaki farklılıkları ortadan kaldırmak için kullanılır Hibernate, veritabanı işlemlerin OOP prensipleri ile gerçekleştirmeyi sağlar. 
+  
+  - Veritabanı işlemlerinin programlama düzeyinde yapılandırılmasına izin verir. Nesneler arasındaki ilişkiler, Hibernate tarafından veritabanında uygun şekilde saklanır. 
+  - Veritabanı işlemlerini gerçekleştirmek için SQL sorguları oluşturur, veritabanı işlemlerini tamamlanır.
+  - Veritabanı işlemlerindeki tekrarları azaltır ve böylece geliştiricilerin daha az kod yazmalarına olanak tanır.
+  - Açık kaynak kodlu bir yazılımdır ve Java için kullanılabilir.
+  - Veritabanındaki kaynak kodlu bir yazılımdır ve Java için kullanabilir.  
+
 
 
 •  **Concrete Class(Somut Sınıf)**, doğrudan örneklenebilen yani new anahtar kelimesi kullanılarak bir instance'ının yani objesinin oluşturulabileceği anlamına gelir.  Bir obje yaratmak için constructor'a sahip olan ve doğrudan kullanılabilen bir sınıftır.   
