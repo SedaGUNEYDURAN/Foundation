@@ -340,11 +340,16 @@ public void metod1(){
 •  UML Dokümantasyonu;  
 
 •  64 bit ve 32 bit, bir işlemcinin veya işletim sisteminin bellek adresleme kapasitesini tanımlar. 32 bitler adresleme kapasitesi 32 bittir yani 2^32 bayttır.Bu da yaklaşık olarak 4 GB'a karşılık gelir. 64 bit adresleme kapasitesi 64 bittir yani 2^64 bayttır. 
-
+• **Java Reflection API**, Java programının runtimeda classları, metodları ve alanları inceleyerek bunlar üzerinde dinamik olarak işlem yapabilmesine olanak sağlayan mekanizmadır. Class'ın yapısını (method, constructor) runtime'da öğrenmek için kullanılır. 
 
 ## Exceptions
 • **IndexOutOfBoundException**: arrayin ya da collection'ın geçerli index aralığının dışında bir indexe erişilmeye çalışıldığını gösterir.   
 • **ClassCastException**: bir sınıfın bir nesneyi başka bir türe dönüştürmeye çalıştığı vwe dönüşümün uygun olmadığı durumlarda alınır.  
+• **InvocationTargetException**:Java Reflection API'ını kullanarak bir methodu çağırmaya çalışırken meydana gelir. Bir method "invoke"  methodu ile çağırıldığında bir exception atarsa exception  InvocationTargetException'ı ile sarmalanarak fırlatılır. 
+
+  • Java Reflection API kullanarak "method.invoke" metodu ile bir method çağırılır.
+  • Eğer çağırılan method bir exception fırlatırsa, bu exception doğrudan Reflection API tarafından fırlatılmaz. Bunun yerine InvocationTargetException exception'ını ile sarmalanır. Gerçek exception saklanmış olur.
+  • Asıl hataya neden olan exception getCause() methodu ile bulunur. 
 
 
 
