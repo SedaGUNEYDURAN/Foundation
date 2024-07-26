@@ -510,8 +510,15 @@ public class Main {
 
 
 ## SOLID
-•**Single Responsibility Principle**: 
+•**Single Responsibility Principle**: : Bir sınıfın değişmesi için asla birden fazla sebep olmamalıdır. Bir classın fonksiyonel birlikteliğe sahip olması gerektiğini ifade eder. Bir sınıf öyle odaklı olmalıdır ki değişmesi için birden fazla sebep olmamalıdır. Bir sınıf sadece bir şeyi soyutlamalı ve sadece ona odaklanmalı, onunla ilgili veriye sahip olmalı ve sorumluluları yerine getirmelidir. Dolayısıyla da bir sınıf sadece bir soyutlamayla ilgili Sebeplerden dolayı değişebilir. **Separation of Concerns** prensibinin bir uygulaması olarak görülebilir. 
 
+      •**Separation of Concerns**: Sorunları ayrılmasıdır. Yazılım geliştirme sürecinde karmaşıklığı azaltmak ve yazılımın daha esnek, sürdürülebilir ve ölçeklenebilir olmasını sağlamak amacıyla kullanılır. Katmanlı mimari, MVC, Mikroservisler bu prensibin uygulandığı bazı yaklaşımlardır.   
+      
+•**Open-Closed Principle**: Yazılım yapıları genişletilmeye açık ama değişime kapalıdır.    
+•**Liskov Substitution Principle**: Taban sınıflara işaretçi ya da referans kullanılan fonksiyonlar türetilen sınıfların nesnelerini de (gerçek tiplerini) bilmeden kullanabilmelidir.   
+•**Interface Segregation Principle**: İstemciler kullanmadıkları arayüzlere bağımlı olmaya zorlanmamalıdır.    
+•**Dependency Inversion Principle** : Yüksek seviyeli modüller aşağı seviyeli modüllere bağımlı olmamalıdır. İkisi de soyutlamalara bağımlı olmalıdır.   
+•**Granularity Principle**:
 
 
 
