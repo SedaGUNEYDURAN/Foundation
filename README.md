@@ -329,19 +329,28 @@ public void metod1(){
 •  **Multithread**;bir process içinde bir çok thread oluşturup bir çok işi bir arada yapmaktadır.Wordde yazı yazarken aynı anda kelimelerin sayılması gibi   
 •  **Concurency(eşzamanlılık)**; bir çok işimizi threadler yardımıyla paralel olarak yapabiliriz. Threadlerin paralel olarak çalışmasına concurency denir.  
 •  **Deadlock**; iki ya da daha fazla processin devam etmek için birbirlerinin bitmesini beklemesi ve sonuçta ikisinin de devam edememesi durumudur.   
-•  **Semafor**;Birden fazla processin eş zamanlı çalışması durumunda birbirleri için risk teşkil ettikleri kritik zamanlarda birbirlerini beklemesini sağlayan mekanizmadır.  
+•  **Semafor**;Birden fazla processin eş zamanlı çalışması durumunda birbirleri için risk teşkil ettikleri kritik zamanlarda birbirlerini beklemesini sağlayan mekanizmadır. 
 •  **Mutex(mutual exclusion)**; multithreaded  programlamada kullanılan bir senkronizasyon mekanizmasıdır. Aynı anda sadece bir thread'in belirli bir thread veya veri kaynağına erişmesini sağlar. Race Conditions(veri yarışı) ve tutarsız veri durumlarını önlemek için kullanılır. Bir thread mutex'i kitlediğinde(lock), diğer thread o mutex'i kitleyene kadar bekler. Thread işi bitiridğinde mutex'i serbest bırakır(unlock).Böylece başka bir thread bu kaynağa erişebilir.    
-
 •  **Cache**; önbellektir.Verilerin geçici olarak saklandığı, hızlı erişilebilen bir bellek alanıdır. 
-•  **Memory Leak**;  
-•  **Polimorfizm**;  
-•  **  
-•  Library nedir?  
-•  UML Dokümantasyonu;  
-
+•  **Memory Leak**; Artık kullanılmayan belleğin serbest bırakılmaması durumunda meydana gelir. Zamanla belleğin tükenmesine ve sistem performansının düşmesine neden olur. Birbirini işaret eden nesneler(referans döngüsü), garbage collector tarafından tespit edilemez ve bu nedenle serbest bırakılmazlar. Sonsuz döngülü işlemler memory leak'e neden olur. 
+•  **Polimorfizm**; aynı işlemin, farklı veri tipleri veya sınıflar üzerinde farklı şekillerde çalışabilmesini sağlar. Aynı isimdeki bir metoduni farklı classlar tarafından farklı şekillerde uygulanmasına olanak verir.  
 •  64 bit ve 32 bit, bir işlemcinin veya işletim sisteminin bellek adresleme kapasitesini tanımlar. 32 bitler adresleme kapasitesi 32 bittir yani 2^32 bayttır.Bu da yaklaşık olarak 4 GB'a karşılık gelir. 64 bit adresleme kapasitesi 64 bittir yani 2^64 bayttır. 
 • **Java Reflection API**, Java programının runtimeda classları, metodları ve alanları inceleyerek bunlar üzerinde dinamik olarak işlem yapabilmesine olanak sağlayan mekanizmadır. Class'ın yapısını (method, constructor) runtime'da öğrenmek için kullanılır. 
 
+## Cohesion(Birliktelik )
+•  Tek bir amaca sorumluluğa odaklanır(single responsibility). Bir fonksiyon/metot ne kadar az iş yaparsa birlikteliği o kadar yüksek olur.   
+  
+  • Gelişigüzel(Coincidental): Bir araya getirilmiş ilgisiz yapılardır. Örneğin; util classları  
+  • Mantıksal(Logital):Gerçekte farklı tabiatta  olmalarına rağmen tek bir şey ile ilgili olduğu düşünülen bir araya getirilmiş yapılardır. Örneğin; Cutter class’ında cutHair() cutTalk() metodunun bulunması gibi.  
+  • Zamansal(Temporal): Zamansal birliktelikten dolayı bir araya getirilmişlerdir.  
+  • Prosedürel(Procedural):Bir konu ile ilgili işlerin yukarıdan aşağıya doğru fonksiyonel olarak ayrılması ve hepsinin bir sınıfta bir araya getirilmesi. Örneğin; dosya açmakla ilgili her şeyi yapan, dosya erişimini ve gerekli belleği kontrol eden, dosyayı açıp kaydedip e-mail olarak gönderen bir class.  
+  • İletişimsel(Communicational/Informational): Aynı veri üzerinde çalışan yapıların bir araya getirilmesidir. Veri işlemenin öne çıktığı durumlarda görülür.   
+  • Ardışıl(Sequential): Class sevğiyesinde birinin çıktısının diğerini beslediği, pipe şeklinde çalışan fonksiyonları bir araya getiren claslardır.   
+  •  Fonksiyonel(Functional): En iyi birlitelik durumudur. Tek, çok iyi tanımlanmış ve olabildiğince küçük bir işe ya da sorumluluğa yönelik oloarak bir araya getirilmiş yapılardır.   
+
+
+
+Kod geliştirmeye açık, değiştirilmeye kapalı yazılmalıdır. 
 ## Exceptions
 • **IndexOutOfBoundException**: arrayin ya da collection'ın geçerli index aralığının dışında bir indexe erişilmeye çalışıldığını gösterir.   
 • **ClassCastException**: bir sınıfın bir nesneyi başka bir türe dönüştürmeye çalıştığı vwe dönüşümün uygun olmadığı durumlarda alınır.  
