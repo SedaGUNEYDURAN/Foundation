@@ -500,7 +500,8 @@ public class Main {
   - **Soyut bağımlılık(abstract coupling)**: Soyut olan üst yapılara olan bağımlılıktır. Soyut bağımlılıkta, gerçekleştirme
       mirası(implementation inheritance) ile arayüz mirası(interface inheritance) kullanılır. Mesaj bağımlılığının bir üst,
       daha iyi halidir. Abstract couplingte nesneler birbirlerinin interfacelerini belirleyen üst tipi belirler, gerçek tipi bilmez.
-      Dependency Inversion(DI) ile elde edilir.    
+      Dependency Inversion(DI) ile elde edilir.
+    
 • **Cohesion ile coupling arasındaki fark**; Coupling;İki veya daha fazla modül arasındaki ilişkiye odaklanır. Cohesion: bir modül içindeki öğelerin birbirleriyle ne derece ilgili olduğuna odaklanır. Yüksek cohesion, düşük coupling istenen durumdur. Genel olarak yazılımda istenen şey kod geliştirmeye açık, değiştirilmeye kapalı yazılmalıdır.  
 • **Anemic Domain Model**; iş alanını temsil eden nesnelerin(domain object), iş alanıyla ilgili sadece veriyi taşıyıp herhangi bir davranışa sahip olmadığı durumdur. Dolayısıyla nesneler arasındaki bağımlılık, arayüzlerindeki davranışlar yerine, doğrudan erişerek ya da set/get metotlarıyla veri üzerindedir.  İş davranışları servis nesnelerine yığılmakta ve orada prosedürel bir şekilde Fowler’ın Transaction Script olarak adlandırdığı anti pattern gerçekleştirilmektedir.   
 • **Fowler Transaction Script**: İş mantığı tasarım desenidir. Özellikle veri odaklı uygulamalarda sıkça uygulanır. Her işlem tek bir betik ya da metodda bulunur. Bu betik, doğrudan veritabanı işlemleri ya da diğer business logic adımlarını içerir. Business logic, genellikle bir veri kaynağından verileri alır, işler ve sonuçları kaydeder. Her bir betik belirli bir iş süresini kapsar ve genellikle tek bir işlem(transaction) içinde çalışır.   
@@ -512,7 +513,7 @@ public class Main {
 ## SOLID
 •**Single Responsibility Principle**: : Bir sınıfın değişmesi için asla birden fazla sebep olmamalıdır. Bir classın fonksiyonel birlikteliğe sahip olması gerektiğini ifade eder. Bir sınıf öyle odaklı olmalıdır ki değişmesi için birden fazla sebep olmamalıdır. Bir sınıf sadece bir şeyi soyutlamalı ve sadece ona odaklanmalı, onunla ilgili veriye sahip olmalı ve sorumluluları yerine getirmelidir. Dolayısıyla da bir sınıf sadece bir soyutlamayla ilgili Sebeplerden dolayı değişebilir. **Separation of Concerns** prensibinin bir uygulaması olarak görülebilir. 
 
-  -**Separation of Concerns**: Sorunları ayrılmasıdır. Yazılım geliştirme sürecinde karmaşıklığı azaltmak ve yazılımın daha esnek, sürdürülebilir ve ölçeklenebilir olmasını sağlamak amacıyla kullanılır. Katmanlı mimari, MVC, Mikroservisler bu prensibin uygulandığı bazı yaklaşımlardır.   
+  - **Separation of Concerns**: Sorunları ayrılmasıdır. Yazılım geliştirme sürecinde karmaşıklığı azaltmak ve yazılımın daha esnek, sürdürülebilir ve ölçeklenebilir olmasını sağlamak amacıyla kullanılır. Katmanlı mimari, MVC, Mikroservisler bu prensibin uygulandığı bazı yaklaşımlardır.   
       
 •**Open-Closed Principle**: Yazılım yapıları genişletilmeye açık ama değişime kapalıdır.    
 •**Liskov Substitution Principle**: Taban sınıflara işaretçi ya da referans kullanılan fonksiyonlar türetilen sınıfların nesnelerini de (gerçek tiplerini) bilmeden kullanabilmelidir.   
