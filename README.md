@@ -163,7 +163,7 @@ public class Main(){
 >    System.out.println("Hello,"+name);
 >}
 >```
-      •  Interface'ler classların implement etmesi gereken method signaturlarını ve canstant değerlerini tanımalmak için kullanlır. 
+     -  Interface'ler classların implement etmesi gereken method signaturlarını ve canstant değerlerini tanımalmak için kullanlır. 
       Yani interfacedeki değişpkenler her zaman "public static final" olarak tanımlanır ve başka türde değişkenler kullanılamaz.   
 ```java   
       public interface MyInterface{
@@ -175,7 +175,7 @@ public class Main(){
 >static, değişkenlerin classın bir instance'ına bağlı olmadığını, dolayısıyla interface'in kendisine ait olduğunu ifade ederler.
 >final, değişkenin değerinin sadece bir kez atanabileceğini ve sonra değiştirilemeyeceğini ifade eder.   
 
-     •  Bir class'a birden fazla interface implement edilebilir.
+     -  Bir class'a birden fazla interface implement edilebilir.
 •  **Inheritance**, nesne yönelimli programlamada bir sınıfın başka bir sınıfın özelliklerini ve davranışlarını devralmasıdır. Bu yeni bir class oluştururken mevcut bir sınıfın işlevselliğini yeniden kullanmayı ve genişletmeyi sağlar. Bu işlem **extends** anahtar kelimesi ile yapılır.
 ```java
 public abstract class Animal {
