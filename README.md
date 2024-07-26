@@ -387,14 +387,14 @@ public void metod1(){
       •Tight coupling: Bir classın bir classa bağımlılığı fazladır. Bir classsın iç detayları diğer classlar tarafından çok fazla kullanılıyorsa vardır. Bakımı zordur ve kötü tasarımın işaretidir.  
 
 • En kötüsünden en iyisine doğru coupling tipleri;
-      • İçerik(Content): Yapıların birbirlerinin iç yapılarına, gerçekleştirmelerine (implementation) bağımlı olduğu durumlardır. Yanlış soyutlama temel sebeptir. Doğrudan alan erişimi ya da set/get metotları yoluyla veri alışverişi en sık görülendir. Birlikte değiştirme sorunu oluşturur. 
-      • Common(Coupling):Global veri ve değişkenleri kullanan yapılar arasındaki bağımlılıktır. Sabitler, statik özelliklr ve davranışlar yanında Singleton gibi kalıplarda görülür. 
-      • Dışsal(External):Yapıları arasında, ortak kullandıkları dış bir bileşen ya da sistemin format, arayüz, veri yapısı vb. dayatmasından kaynaklanan bağımlılıktır. Façade ve Repository gibi kalıplarla azaltılabilir. 
-      • Control: Yapıların flag geçerek birbirlerinin akışlarını kontrol ettikleri bağımlılıktır. İçerik bağımlılığının özel bir halidir. 
-      • Veri yapısı bağımlılığı: Yapıların birbirlerine karmaşık veri yapısı geçerek oluşturdukları bağımlılıktır. Geçilen nesne değil veri yapısıdır.
-      • Veri bağımlılığı: Yapıların birbirlerine basit/ilkel/atomik veri geçerek oluşturdukları bağımlılıktır. Veri yapısı bağımlılığının daha basit halidir. 
-      • Mesaj:Interface bilgisi dışında başka hiçbir bilgi gerektirmeyen şeklidir. Olması gereken en sağlıklı bağımlılıktır. Metotlar, sınıflar, modüller, katmanlar ve sistemler arasında uygulanabilir. 
-      • Sıfır bağımlılık(no coupling): sistem olabilmek için mümkün olmayan bağımlılıktır.
+      • İçerik(Content): Yapıların birbirlerinin iç yapılarına, gerçekleştirmelerine (implementation) bağımlı olduğu durumlardır. Yanlış soyutlama temel sebeptir. Doğrudan alan erişimi ya da set/get metotları yoluyla veri alışverişi en sık görülendir. Birlikte değiştirme sorunu oluşturur.   
+      • Common(Coupling):Global veri ve değişkenleri kullanan yapılar arasındaki bağımlılıktır. Sabitler, statik özelliklr ve davranışlar yanında Singleton gibi kalıplarda görülür.   
+      • Dışsal(External):Yapıları arasında, ortak kullandıkları dış bir bileşen ya da sistemin format, arayüz, veri yapısı vb. dayatmasından kaynaklanan bağımlılıktır. Façade ve Repository gibi kalıplarla azaltılabilir.   
+      • Control: Yapıların flag geçerek birbirlerinin akışlarını kontrol ettikleri bağımlılıktır. İçerik bağımlılığının özel bir halidir.   
+      • Veri yapısı bağımlılığı: Yapıların birbirlerine karmaşık veri yapısı geçerek oluşturdukları bağımlılıktır. Geçilen nesne değil veri yapısıdır.  
+      • Veri bağımlılığı: Yapıların birbirlerine basit/ilkel/atomik veri geçerek oluşturdukları bağımlılıktır. Veri yapısı bağımlılığının daha basit halidir.   
+      • Mesaj:Interface bilgisi dışında başka hiçbir bilgi gerektirmeyen şeklidir. Olması gereken en sağlıklı bağımlılıktır. Metotlar, sınıflar, modüller, katmanlar ve sistemler arasında uygulanabilir.   
+      • Sıfır bağımlılık(no coupling): sistem olabilmek için mümkün olmayan bağımlılıktır.  
 
 Kod geliştirmeye açık, değiştirilmeye kapalı yazılmalıdır. 
 ## Exceptions
