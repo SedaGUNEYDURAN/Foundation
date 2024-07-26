@@ -401,14 +401,122 @@ public void metod1(){
       • Control: Yapıların flag geçerek birbirlerinin akışlarını kontrol ettikleri bağımlılıktır. İçerik bağımlılığının özel bir 
       halidir.  
       • Veri yapısı bağımlılığı: Yapıların birbirlerine karmaşık veri yapısı geçerek oluşturdukları bağımlılıktır. Geçilen nesne
-      değil veri yapısıdır.  
+      değil veri yapısıdır.  Örneği;
+ ```java
+interface Stack<E> {
+    void push(E element);
+    E pop();
+    boolean isEmpty();
+    boolean contains(E element);
+}
+
+class ArrayStack<E> implements Stack<E> {
+    private E[] elements;
+    private int size;
+    private static final int DEFAULT_CAPACITY = 16;
+    
+    @SuppressWarnings("unchecked")
+    public ArrayStack() {
+        elements = (E[]) new Object[DEFAULT_CAPACITY];
+    }
+    
+    public void push(E element) {
+        if (size == elements.length) {
+            resize();
+        }
+        elements[size++] = element;
+    }
+    
+    public E pop() {
+        if (size == 0) {
+            throw new EmptyStackException();
+        }
+        E element = elements[--size];
+        elements[size] = null; // Avoid memory leaks
+        return element;
+    }
+    
+    public boolean isEmpty() {
+        return size == 0;
+    }
+    
+    public boolean contains(E element) {
+        for (int i = 0; i < size; i++) {
+            if (elements[i].equals(element)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private void resize() {
+        E[] newElements = (E[]) new Object[elements.length * 2];
+        System.arraycopy(elements, 0, newElements, 0, size);
+        elements = newElements;
+    }
+}
+
+class Set<E> {
+    private Stack<E> stack;
+    
+    public Set(Stack<E> stack) {
+        this.stack = stack;
+    }
+    
+    public void add(E element) {
+        if (!stack.contains(element)) {
+            stack.push(element);
+        }
+    }
+    
+    public boolean contains(E element) {
+        return stack.contains(element);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Stack<Integer> stack = new ArrayStack<>();
+        Set<Integer> set = new Set<>(stack);
+        
+        set.add(1);
+        set.add(2);
+        set.add(1); // Duplicate, should not be added
+        System.out.println(set.contains(1)); // true
+        System.out.println(set.contains(3)); // false
+    }
+}
+ ```
+      
       • Veri bağımlılığı: Yapıların birbirlerine basit/ilkel/atomik veri geçerek oluşturdukları bağımlılıktır. Veri yapısı 
       bağımlılığının daha basit halidir.   
       • Mesaj:Interface bilgisi dışında başka hiçbir bilgi gerektirmeyen şeklidir. Olması gereken en sağlıklı bağımlılıktır. 
       Metotlar, sınıflar, modüller, katmanlar ve sistemler arasında uygulanabilir.   
       • Sıfır bağımlılık(no coupling): sistem olabilmek için mümkün olmayan bağımlılıktır.  
+      
+• Nesne-merkezli dillerde farklı bağımlılık türleri vardır:
 
-Kod geliştirmeye açık, değiştirilmeye kapalı yazılmalıdır. 
+      • **Miras bağımlılığı(Inheritance coupling)**: Üst yapı ile ondan türetilen yapı arasındaki bağımlılıktır.  
+      • **Soyut bağımlılık(abstract coupling)**: Soyut olan üst yapılara olan bağımlılıktır. Soyut bağımlılıkta, gerçekleştirme
+      mirası(implementation inheritance) ile arayüz mirası(interface inheritance) kullanılır. Mesaj bağımlılığının bir üst,
+      daha iyi halidir. Abstract couplingte nesneler birbirlerinin interfacelerini belirleyen üst tipi belirler, gerçek tipi bilmez.
+      Dependency Inversion(DI) ile elde edilir.    
+• **Cohesion ile coupling arasındaki fark**; Coupling;İki veya daha fazla modül arasındaki ilişkiye odaklanır. Cohesion: bir modül içindeki öğelerin birbirleriyle ne derece ilgili olduğuna odaklanır. Yüksek cohesion, düşük coupling istenen durumdur. Genel olarak yazılımda istenen şey kod geliştirmeye açık, değiştirilmeye kapalı yazılmalıdır.  
+• **Anemic Domain Model**; iş alanını temsil eden nesnelerin(domain object), iş alanıyla ilgili sadece veriyi taşıyıp herhangi bir davranışa sahip olmadığı durumdur. Dolayısıyla nesneler arasındaki bağımlılık, arayüzlerindeki davranışlar yerine, doğrudan erişerek ya da set/get metotlarıyla veri üzerindedir.  İş davranışları servis nesnelerine yığılmakta ve orada prosedürel bir şekilde Fowler’ın Transaction Script olarak adlandırdığı anti pattern gerçekleştirilmektedir.   
+• **Fowler Transaction Script**: İş mantığı tasarım desenidir. Özellikle veri odaklı uygulamalarda sıkça uygulanır. Her işlem tek bir betik ya da metodda bulunur. Bu betik, doğrudan veritabanı işlemleri ya da diğer business logic adımlarını içerir. Business logic, genellikle bir veri kaynağından verileri alır, işler ve sonuçları kaydeder. Her bir betik belirli bir iş süresini kapsar ve genellikle tek bir işlem(transaction) içinde çalışır.   
+• **Data Driven(veri odaklı)**: Karar verme ve stratejik geliştirme süreçlerinde verilerin aktif bir şekilde kullanılması anlamına gelir. Yazılımda bu yaklaşımdan olabildiğince kaçımayız. Veri odaklı değil davranış odaklı olmaya gayret etmeliyiz.     
+• **Data TransferObject(DTO)**:Bir sistemde veri taşıma amacı ile kullanılan basit bir nesnedir. Genellikle yalnızca fields içeren, business logic ve davranışlar barındırmayan, hafif veri kapsayıcılardır. Yalnızca fieldslar içerdikleri için genellikle getter/setter metodları ile verilere erişim sağlanır. Ana işlevleri veri katmanı ile business logic katmanı veya kullanıcı arayüzü (UI) katmanı arasında veri taşımaktır.Uygulama katmanları arasında (örneğin; veri erişim katmanı ve business logic katmanı arasında) veri aktarımını izole etmek ve bağımsızlığını korumak için DTO’lar kullanılır.  Web API’lerinde veya web servislerinde, DTO’lar genellikle istemciden alınan veya istemciye gönderilen verileri temsil etmek için kullanılır. DTO’lar JSON, XML gibi formatlara serileştirilebilir.
+•Litaratürde çeşitli prensipler vardır; SOLID, GRASP
+
+
+## SOLID
+•**Single Responsibility Principle**: 
+
+
+
+
+
+ 
 ## Exceptions
 • **IndexOutOfBoundException**: arrayin ya da collection'ın geçerli index aralığının dışında bir indexe erişilmeye çalışıldığını gösterir.   
 • **ClassCastException**: bir sınıfın bir nesneyi başka bir türe dönüştürmeye çalıştığı vwe dönüşümün uygun olmadığı durumlarda alınır.  
