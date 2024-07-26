@@ -367,6 +367,26 @@ public void metod1(){
 
 ![image](https://github.com/user-attachments/assets/27010d43-9516-4c73-9636-314786ea3a5b)
 
+• **Mixed-Instance Cohesion**: Bir sınıfın bazı özellikleri bazı nesneleri için geçerli bazı nesneleri için geçerli değildir.    Bir class, farklı yazılım alanlarının(domain) nesnelerinin özelliklerini bir araya getirir.  Nesneler, alanlarına has olmalıdır, birden fazla alan tek bir nesneden temsil edilmemelidir.
+
+      • Application Domain: Use caseleri gerçekleştirecek şekilde entityleri manipüle eden service nesneleri ;
+      eventler,eventHandlerlar, workflowlar. Tekrar  kullanımları düşüktür.   
+      • Business Domain: Objeler, entityler, enum ve interface nesneleridir.    
+      • Architecture Domain: MVC, DAO(Data Access Object)  vb. mimari stiller, transaction, cache, UI/GUI mekanizmaları, 
+      web servis, Spring, JPA vs.   
+      • Foundation Domain: primitives ve wrapper nesneleri, String, date, time, thread vb. müdahale edilemeyecek  sınıflardır.   
+
+> Application --> Business --> Architecture --> Foundation
+
+• **Mixed-Role Cohesion**: Aynı alan içerisinde olduğu halde farklı rollere sahip nesnelerin özelliklerinin tek bir nesnede toplandığı durumdur. Özellikle entity nesnelerinde çok sık görülür.  
+• **Proxy**: Sakladığı nesne ile aynı interface’e sahip olan nesnedir. MVC’deki Controller bir Proxy değildir çünkü controllerın bir nesne tutma gibi bir amacı yoktur. Controllerın interface’i model ile aynı değildir.  
+
+## Coupling (Bağlılık )
+• Koordinasyon karmaşıklığı, bir işin kendi başına ifade edilebilirliğinin ya da diğerleriyle ne kadar ilgili(relatedness) olduğunun ölçüsüdür. İlgililik, bağlılıktır(coupling) ve bağımlılığı düşük olan bileşenlerin karmaşıklığı da düşüktür. Olabilecek en iyi coupling; veriler üzerinden değil davranışlar üzerinden olandır. 
+
+
+
+
 Kod geliştirmeye açık, değiştirilmeye kapalı yazılmalıdır. 
 ## Exceptions
 • **IndexOutOfBoundException**: arrayin ya da collection'ın geçerli index aralığının dışında bir indexe erişilmeye çalışıldığını gösterir.   
