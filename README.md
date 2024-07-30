@@ -515,13 +515,15 @@ public class Main {
 •**Granularity Principle**:
 •**YAGNI(You Arent Gonna Need It) Prensibi**: Geliştiricilere ve ekiplerine gelecekte ihtiyaç duyulacağı tahmin edilen ama şuanda gereksiz olan işlevleri veya özellikleri eklemekten kaçınmayı öğütler. Genellikle Agile yazılım geliştirme metodolojisinde kullanılır. Sadece şuanda gerçekten gerekli olan işlevler üzerine çalışmasılmasına teşvik eder.      
 •**Design By Contact**:Yazılım bileşenleri için formal, kesin(precise) ve doğrulunabilir(verifiable) arayüzlerin tasarlanması gerektiğini ifade eder. 
-Temel olarak yazılım bileşenlerinin birbiri ile olan etkileşimlerini bir sözleşme çerçevesinde tanımlar. Bu contractlar, bileşenlerin nasıl etkileşime gireceğini açıklayan, ön koşullar(preconditions), son koşullar(postconditions) ve sınıf veya metod değişmezlerini(invariants) içerir.    
-
+Temel olarak yazılım bileşenlerinin birbiri ile olan etkileşimlerini bir sözleşme çerçevesinde tanımlar. Bu contractlar, bileşenlerin nasıl etkileşime gireceğini açıklayan, ön koşullar(preconditions), son koşullar(postconditions) ve sınıf veya metod değişmezlerini(invariants) içerir. Ön şartlar metodun istemcisi tarafından çağırılması için gereklidir. Son şartlar ise metodun çalışmasını bitirdiğinde oluşacak durum ile ilgilidir. Alt tiplerön şartları(require) zayıflatabilir ve son şartları(ensure) sıkılaştırabilir.  Alt tipler üst tiplerin kabul etmediğini kabul edebilir ve daha iyi daha özel bir hale getirebilir. 
+  -Miras aslen bir genelleştirme/özelleştirme(generalization/specialization) ilişkisidir. Üstte daha genel altta daha özel tipler bulunmalıdır. Yani bir metodumuz var diyelim Rectangle ve Square alanlarını hesaplayacağız. Override ederken ön koşulu parametre gibi düşün rectangle üst, square ise alt class diyelim. hesaplama metodunda tür olarak square veremeyiz bu prensibe göre çünkü ön koşul rectangle gibi daha geniş olmalıdır.  Son koşuldaysa durum tam tersidir. Parent metodunda List dönerken subda override ederken arrayList dönebilir bu son şarttır.  
+•**RTTI(Run Time Type Information)**:Java ve diğer bazı programlama dillerinde, çalışma zamanı sırasında nesnelerin türleri hakkında bilgi sahibi olmayı sağlar. Bu özellik nesnelerin türünü bilmediğimizde veya türün sadece çalışma zamanında belirlendiği durumlarda kullanışlıdır. Java'da RTTI, "instanceof" anahtar kelimesi ve classlar kullanılarak gerçekleştirilir. 
  
 ## Exceptions
 • **IndexOutOfBoundException**: arrayin ya da collection'ın geçerli index aralığının dışında bir indexe erişilmeye çalışıldığını gösterir.   
 • **ClassCastException**: bir sınıfın bir nesneyi başka bir türe dönüştürmeye çalıştığı vwe dönüşümün uygun olmadığı durumlarda alınır.  
 • **InvocationTargetException**:Java Reflection API'ını kullanarak bir methodu çağırmaya çalışırken meydana gelir. Bir method "invoke"  methodu ile çağırıldığında bir exception atarsa exception  InvocationTargetException'ı ile sarmalanarak fırlatılır. 
+• **IllegalArgumentException**: bir metodun argümanlarının geçersiz veya uygunsuz olduğu durumlarda fırlatılan bir exceptiondır. Bu hata tipik olarak bir metodun ön koşulların sağlanmadığı durumlarda kullanılır. 
 
   • Java Reflection API kullanarak "method.invoke" metodu ile bir method çağırılır.
   • Eğer çağırılan method bir exception fırlatırsa, bu exception doğrudan Reflection API tarafından fırlatılmaz. Bunun yerine InvocationTargetException exception'ını ile sarmalanır. Gerçek exception saklanmış olur.
