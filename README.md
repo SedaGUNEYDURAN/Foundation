@@ -509,13 +509,13 @@ public class Main {
   - Bazen sınıfların birden fazla arayüzü yerine getirerek, pek çok role sahip olduğu görülür. Özerllikle yetkinlik kazandırmak amacıyla bir API'nin parçası olan arayüzleri yerine geiren ama aynı zamanda bir rolü olan nesnelerde bu durum yaygındır. Böyle sınıflar **composite/aggregate(bileşik/küme sınıf) olarak adlandırılır. Böyle arayüzler fat, pollued olarak adlandırılır ve code smell oluşturur.           
       
 •**Open-Closed Principle**: Yazılım yapıları(classlar, modülleri, fonksiyonlar, metodlar ) genişletilmeye açık ama değişime kapalıdır.  Burada genişletmek kasıt; yapının en baştan itibaren, değişimi göz önüne alacak şekilde, değişebilecek kısımların, değişmeyecek kısımlardan yalıtılarak kurgulanması, dolayısıyla yeniliklerin var olan yapıları değiştirmeden yapılması, kaçınılmaz bağımlılıkların olabildiğince soyutlamalar üzerinden yapılması, gerçekleştirmelere bağımlılık oluşturulmamasıdır.  Sonucunda var olan tiplerin farklı amaçlara hizmet edecek şekilde alt sınıflarının oluşturulması ve sahip olduğu davranışları override(ezmesi) ile farklılaştırılması söz konusudur. Düşük birliktelikli yapılardan, iç yapılara bağımlılıktan, somut tiplere bağımlılıktan, global değişkenler, run time type identification gibi durumlardan kaçınılmalıdır. 
-•**Liskov Substitution Principle**: Taban sınıflara işaretçi ya da referans kullanılan fonksiyonlar türetilen sınıfların nesnelerini de (gerçek tiplerini) bilmeden kullanabilmelidir.   
+•**Liskov Substitution Principle**: Taban sınıflara(base class) işaretçi ya da referans kullanılan fonksiyonlar türetilen sınıfların nesnelerini de (gerçek tiplerini) bilmeden kullanabilmelidir.  Yani türetilmiş sınıf, temel sınıfın her türlü davranışını korumalıdır.  
 •**Interface Segregation Principle**: İstemciler kullanmadıkları arayüzlere bağımlı olmaya zorlanmamalıdır.    
 •**Dependency Inversion Principle** : Yüksek seviyeli modüller aşağı seviyeli modüllere bağımlı olmamalıdır. İkisi de soyutlamalara bağımlı olmalıdır.   
 •**Granularity Principle**:
-
-
-
+•**YAGNI(You Arent Gonna Need It) Prensibi**: Geliştiricilere ve ekiplerine gelecekte ihtiyaç duyulacağı tahmin edilen ama şuanda gereksiz olan işlevleri veya özellikleri eklemekten kaçınmayı öğütler. Genellikle Agile yazılım geliştirme metodolojisinde kullanılır. Sadece şuanda gerçekten gerekli olan işlevler üzerine çalışmasılmasına teşvik eder.      
+•**Design By Contact**:Yazılım bileşenleri için formal, kesin(precise) ve doğrulunabilir(verifiable) arayüzlerin tasarlanması gerektiğini ifade eder. 
+Temel olarak yazılım bileşenlerinin birbiri ile olan etkileşimlerini bir sözleşme çerçevesinde tanımlar. Bu contractlar, bileşenlerin nasıl etkileşime gireceğini açıklayan, ön koşullar(preconditions), son koşullar(postconditions) ve sınıf veya metod değişmezlerini(invariants) içerir.    
 
  
 ## Exceptions
