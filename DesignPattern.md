@@ -188,5 +188,34 @@ Temel olarak yazılım bileşenlerinin birbiri ile olan etkileşimlerini bir sö
   - Parent'ın fırlatmadığı exception'ı sub tipteki class fırlatamaz.   Diyelim ki Calculator adında bir classımız var ve bu classta bir add metodumuz var. Bu Calculater'ı extend eden PositiveCalculature var ve bu classında bir add metodu var.  Eğer Calculator metodu Exception exceptionını fırlatmıyorsa PositiveCalculater classındaki add metodu da bu exceptionı fırlatamaz(public void add throws Exception şeklinde yazılamaz).
        
 •**RTTI(Run Time Type Information)**:Java ve diğer bazı programlama dillerinde, çalışma zamanı sırasında nesnelerin türleri hakkında bilgi sahibi olmayı sağlar. Bu özellik nesnelerin türünü bilmediğimizde veya türün sadece çalışma zamanında belirlendiği durumlarda kullanışlıdır. Java'da RTTI, "instanceof" anahtar kelimesi ve classlar kullanılarak gerçekleştirilir.    
-•**Defensive Programming**: Yazılım geliştirme sürecinde olası hataları, kötü verileri veya beklenmedik durumları önceden tahmin edip ele almak için kullanılan bir yaklaşımdır. Mesela "assert" keyini kullanarak, loglama yaparak vs. sağlanabilir.  
- 
+•**Defensive Programming**: Yazılım geliştirme sürecinde olası hataları, kötü verileri veya beklenmedik durumları önceden tahmin edip ele almak için kullanılan bir yaklaşımdır. Mesela "assert" keyini kullanarak, loglama yaparak vs. sağlanabilir.     
+•**Law of Demeter/Priciple of Least Knowledge**:Bir nesne olabildiğince az sayıda nesneyi bilmelidir. Bu prensibe göre bir nesnenin metotlarında, kendisi üzerinde metot çağrısı yapabileceği nesneler;
+
+  - O nesnenin instance variableları
+  - O nesnenin metotlarına geçilen nesneler
+  - O nesnenin o metotunda oluşturulan nesneler
+```java
+public class A{
+  private B b;
+  public void f(C c){
+    b.g();     //yapılabilir
+    c.u();     //yapılabilir
+    D d=new D();
+    d.v();     //yapılabilir
+    E e=c.w(); //YAPILMAMALI
+    e.z();     //E'den iş isteme, C'den, E'den iş istemesini talep et.
+  }
+}
+ ```
+# GRASP
+• GRASP(General Responsibility Assignment Software Patterns):Yazılım tasarımında belirli sorumlulukları ve görevleri nesneler arasında dağıtmak için kullanılır. 
+  
+  - Information Expert: Temel nesne tanımını(encapsulation) vurgular ve bağımlılıklarını ortadan karldırmayı amaçlar. Bir sorumluluğun bir nesneye atanması, o nesnenin bu sorumluluğu yerine getirmek için gereken bilgiyi veya erişimi en iyi şekilde sağlayabilmesidir. 
+  - Creator: Bir nesnenin, başka bir nesnenin örneklerini(instance) oluşturma sorumluluğu alıp almayacağını belirler. A,B'yi kullanıyorsa, A'ya B'yi yaratma sorumluluğu verilebilir. 
+  - High Cohesion: Fonksiyonel birlikteliği vurgular. Bir nesnenin sorumluluklarının birbirine ne kadar bağlı ve tüm parçalarının bir amacı yerine getirip getirmediğini değerlendirir. Yüksek bağlılık, sorumlulukların iyi organize edilmiş ve ilişkili olduğu anlamına gelir. 
+  - Low Coupling: Nesneler arasındaki bağımlılıkların en aza indirilmesi prensibidir. Bu sistemde bağımlılıklar azaltılır ve değişikliği daha kolay yönetebilir hale getirir.
+  - Controller: Genel veya önemli bir işlevi handle eden bir nesne belirler. Tipik olarak, kullanıcı ile etkileşimi kontrol eden nesnedir. 
+  - Polymorphism:İlgili göreceli işlemlerin, farklı veri türlerinin üzerindeki işlemler olarak tanımlanmasına ve bu işlemler olarak tanımlanmasına ve bu işlemlerin aynı ada sahip olmasına izin verir(genellikle taban sınıf ve türetilmiş sınıflar arasında bir yöntem adı paylaşımıdır.)
+  - Pure Fabrication: Genelde domain modeli içinde bulunmayan ama sistem ihtiyaçları gereğince yaratılan bir sınıftır. Bu sınıf, gerçek dünya nesnelerine karşılık gelmeyen ve soyut işlemleri taşıyan bir sınıftır. 
+  - Indirection:
+  - Protected Variable: Değişimlere karşı bir modelin veya sistemin esnekliğini artırmak için değişim noktalarını ve kararsızlıkları bir koruyucu katman ile izole edilir. Bu sayede diğer bölümler bu değişimden etkilenmez. 
