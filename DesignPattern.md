@@ -214,8 +214,8 @@ public class A{
   - Creator: Bir nesnenin, başka bir nesnenin örneklerini(instance) oluşturma sorumluluğu alıp almayacağını belirler. A,B'yi kullanıyorsa, A'ya B'yi yaratma sorumluluğu verilebilir. 
   - High Cohesion: Fonksiyonel birlikteliği vurgular. Bir nesnenin sorumluluklarının birbirine ne kadar bağlı ve tüm parçalarının bir amacı yerine getirip getirmediğini değerlendirir. Yüksek bağlılık, sorumlulukların iyi organize edilmiş ve ilişkili olduğu anlamına gelir. 
   - Low Coupling: Nesneler arasındaki bağımlılıkların en aza indirilmesi prensibidir. Bu sistemde bağımlılıklar azaltılır ve değişikliği daha kolay yönetebilir hale getirir.
-  - Controller: Genel veya önemli bir işlevi handle eden bir nesne belirler. Tipik olarak, kullanıcı ile etkileşimi kontrol eden nesnedir. 
+  - Controller: Genel veya önemli bir işlevi handle eden bir nesne belirler. Tipik olarak, kullanıcı ile etkileşimi kontrol eden nesnedir. Her use case yapısını(eventleri olan yapı) yöneten yapıdır. Kötü bir şekilde dizayn edilmiş controllerın cohesion'u düşük olacaktır. Çünkü çok fazla şeyi yeri getirir. Buna bloated controller denir.Örneğin; bir controller classı olup bütün sistem eventlerini bu classın alması.
   - Polymorphism:İlgili göreceli işlemlerin, farklı veri türlerinin üzerindeki işlemler olarak tanımlanmasına ve bu işlemler olarak tanımlanmasına ve bu işlemlerin aynı ada sahip olmasına izin verir(genellikle taban sınıf ve türetilmiş sınıflar arasında bir yöntem adı paylaşımıdır.)
   - Pure Fabrication: Genelde domain modeli içinde bulunmayan ama sistem ihtiyaçları gereğince yaratılan bir sınıftır. Bu sınıf, gerçek dünya nesnelerine karşılık gelmeyen ve soyut işlemleri taşıyan bir sınıftır. 
-  - Indirection:
+  - Indirection:İki nesne arasında bir ilişki olması lazım ama doğrudan coupling ile yapmak istemediğimizde araya intermediate objeler konur. 
   - Protected Variable: Değişimlere karşı bir modelin veya sistemin esnekliğini artırmak için değişim noktalarını ve kararsızlıkları bir koruyucu katman ile izole edilir. Bu sayede diğer bölümler bu değişimden etkilenmez. 
