@@ -228,18 +228,73 @@ public class A{
   - Nesne yaratmayı kontrol etmek
   - Enumeration kullanarak:bu daha basit ve sıkıntısı az olan çözümdür. 
 
- Classtan tek bir nesne oluşturulabilmesini sağlamak için constructor'ın private olması gerekir ki istenen yerde istendiği gibi new ile bir nesne oluşturulamasın. Bu durumda new A() çağrısı sadece A classında yapılır.  Nesneyi oluştururken nesnenin classa ait olması için static olarak oluşturulur. Ama bu durumda da şöyle bir sorun oluşuyor; class çok büyük olabilir ve static nesneler program çalışır çalışmaz ilk oluşturulan şeylerdir bu durumda çok büyük bir yük olabilir. Bu durumda singleton nesnenin yaratılması için yaratılmasına ihtiyaç oluncaya kadar geciktirilmelidir. Yani **lazy loading(sonradan yüklemeli)** olmalıdır. Lazy Loaded singletonun problemi ise multi-threaded ortamlarda probleme yol açmasıdır. null kontrolünü aynı anda birden fazla kanalın yapması, birden fazla singleton nesnesinin oluşmasına sebep olur. Bu durumda thread safety sağlanamabilmesi için getInstance() metodunun aynı anda sadece bir tek kanal tarafından çağırılabileceğinden emin olmak gereklidir.Bunun için de mutex lock kullanılmalıdır. getInstance() metodunda Java'da synchronized, C#'da lock ile tüm metodun ya da belirlenen kapsamın(scope) aynı anda sadece bir kanal tarafından çalıştırılmasını sağlar. Ancak bu durumda da null kontrolünü synchronized olarak yapmak pahalıdır, performans açısından sorunludur. Çünkü mutex lock sadece singleton obje oluşturuluncaya kadar gereklidir, sonrasında referans null olmaktan çıktığından if kontrolü hiçbir zaman true dönmez. Ama run time'da tüm null kontrolleri mutex lock ile yapılır. Bu durumun önüne geçmek için de Double-Cheched Locking yapılır. Singleton nesneye olan referansın null olup olmadığının, birisi kilitli blokta diğeri ise öncesinde olmak üzere iki defa kontrol edildiği çözüme **Double-Cheched Locking** kalıbı denir. Mutex lock null kontrolü, singleton nesne oluşuncaya kadar çalışır. Singleton obje thread-safe olarak çalıştırıldıktan sonra çalışma ilk null kontrolü true döndürecğinden bir daha mutex lock alanına girmez. Bu da performans kazanımı sağlar. Ancak bu durumda da Java 1.5'de fixlenen bir memory bugından dolayı Double-Cheched Locking Pattern'i bu şekilde düzgün çalışmamaktadır. Threadler ayrı stackleri olan yapılardır. Her threadin ayrı local memory'si vardır. Local memory'e heapteki memoryden objeleri kopyalar, local memorysinde işi halleder, sonrasında geriye synchronized eder. İlk thread singleton referansını not null yapsa bile hala heapdeki ortak memorydeki singleton referansı null olarak kalmaya devam edebiliyor. Objeyi oluşturup referansını not null yaptığı halde ana memorye synchronize etmesi zaman alıyor o sırada ana memorydeki singleton referansı hala not null göründüğü için birden fazla thread locklamaya rağmen kırılıyor. Bu problemin çözümü olarak da singleton nesne de volatile kullanılmalıdır. Bu durumda nesneyi ilk defa oluşturma şansı elde eden kanalın yerel(local) belleğindeki bu durum, olatile tanımlamasından dolayı, bütün kanalların ulaştığı ortak belleğe aktarılır ve bir başka kanal artık null olmayan singleton referansından haberdar olur. Singleton nesne oluşturmayı ulaşılamayan, private kurucu ile yapmak çoğu zaman problemdir. Bu tür çözümler reflection ve serialization ile kırılabilir, birden fazla singleton yaratılabilir. Java ve C#'da constructor private olsa bile reflection ile sınıfların nesneleri oluşturulabilir. Serialize edilmiş singleton nesne birden fazla kere okunarak belleğe farklı nesneler olarak yüklenebilir. 
+• Classtan tek bir nesne oluşturulabilmesini sağlamak için constructor'ın private olması gerekir ki istenen yerde istendiği gibi new ile bir nesne oluşturulamasın. Bu durumda new A() çağrısı sadece A classında yapılır.  Nesneyi oluştururken nesnenin classa ait olması için static olarak oluşturulur. Ama bu durumda da şöyle bir sorun oluşuyor; class çok büyük olabilir ve static nesneler program çalışır çalışmaz ilk oluşturulan şeylerdir bu durumda çok büyük bir yük olabilir. Bu durumda singleton nesnenin yaratılması için yaratılmasına ihtiyaç oluncaya kadar geciktirilmelidir. Yani **lazy loading(sonradan yüklemeli)** olmalıdır.
 ```java
-public class A{
-  private static A a=new A(); //tekrar tekrar oluşmaması için classa ait olması gerekir bu yüzden static 
-  private A(){
-  }
-  public static A getInstance(){
-    return a;
-  }
+ public class Singleton { //Lazy Loading
+    private static Singleton instance;
 
+    private Singleton() {}
+
+    public static Singleton getInstance() {
+        if (instance == null) {
+            instance = new Singleton();
+        }
+        return instance;
+    }
 }
 ```
+
+• Lazy Loaded singletonun problemi ise multi-threaded ortamlarda probleme yol açmasıdır. null kontrolünü aynı anda birden fazla kanalın yapması, birden fazla singleton nesnesinin oluşmasına sebep olur. Bu durumda thread safety sağlanamabilmesi için getInstance() metodunun aynı anda sadece bir tek kanal tarafından çağırılabileceğinden emin olmak gereklidir.Bunun için de mutex lock kullanılmalıdır. getInstance() metodunda Java'da synchronized, C#'da lock ile tüm metodun ya da belirlenen kapsamın(scope) aynı anda sadece bir kanal tarafından çalıştırılmasını sağlar. Ancak bu durumda da null kontrolünü synchronized olarak yapmak pahalıdır, performans açısından sorunludur. Çünkü mutex lock sadece singleton obje oluşturuluncaya kadar gereklidir, sonrasında referans null olmaktan çıktığından if kontrolü hiçbir zaman true dönmez. Ama run time'da tüm null kontrolleri mutex lock ile yapılır. Bu durumun önüne geçmek için de Double-Cheched Locking yapılır. Singleton nesneye olan referansın null olup olmadığının, birisi kilitli blokta diğeri ise öncesinde olmak üzere iki defa kontrol edildiği çözüme **Double-Cheched Locking** kalıbı denir. Mutex lock null kontrolü, singleton nesne oluşuncaya kadar çalışır. Singleton obje thread-safe olarak çalıştırıldıktan sonra çalışma ilk null kontrolü true döndürecğinden bir daha mutex lock alanına girmez. Bu da performans kazanımı sağlar. Ancak bu durumda da Java 1.5'de fixlenen bir memory bugından dolayı Double-Cheched Locking Pattern'i bu şekilde düzgün çalışmamaktadır. Threadler ayrı stackleri olan yapılardır. Her threadin ayrı local memory'si vardır. Local memory'e heapteki memoryden objeleri kopyalar, local memorysinde işi halleder, sonrasında geriye synchronized eder. İlk thread singleton referansını not null yapsa bile hala heapdeki ortak memorydeki singleton referansı null olarak kalmaya devam edebiliyor. Objeyi oluşturup referansını not null yaptığı halde ana memorye synchronize etmesi zaman alıyor o sırada ana memorydeki singleton referansı hala not null göründüğü için birden fazla thread locklamaya rağmen kırılıyor. Bu problemin çözümü olarak da singleton nesne de volatile kullanılmalıdır. Bu durumda nesneyi ilk defa oluşturma şansı elde eden kanalın yerel(local) belleğindeki bu durum, volatile tanımlamasından dolayı, bütün kanalların ulaştığı ortak belleğe aktarılır ve bir başka kanal artık null olmayan singleton referansından haberdar olur.
+
+ ```java
+ public class Singleton {
+    private static volatile Singleton instance;
+
+    private Singleton() {}
+
+    public static Singleton getInstance() {
+        if (instance == null) {
+            synchronized (Singleton.class) {
+                if (instance == null) {
+                    instance = new Singleton();
+                }
+            }
+        }
+        return instance;
+    }
+}
+```
+
+• Buna ek olarak bir çözüm yöntemi daha geliştirilmiştir; private static inner class yani Bill Pugh Singleton Design geliştirildiBu yöntem hem lazy initialization yapar(Java'da bütün sınıflar lazy loading olarak yüklenir, ihtiyaç olmadığı sürece yüklenmez, burada da inner class lazy loading) hem de thread-safe olarak oluşturulur. 
+
+ ```java
+ public class Singleton {
+ 
+    private Singleton() {}// Private constructor
+    private static class SingletonHelper {  // Singleton Helper: statik iç sınıf
+        // SingletonHelper sınıfı yüklendiğinde bu tek örnek oluşturulur.
+        private static final Singleton INSTANCE = new Singleton();
+    }
+    public static Singleton getInstance() { // Singleton örneğine küresel erişim noktası
+        return SingletonHelper.INSTANCE;
+    }
+}
+```
+
+• Singleton nesne oluşturmayı ulaşılamayan, private kurucu ile yapmak çoğu zaman problemdir. Bu tür çözümler reflection ve serialization ile kırılabilir, birden fazla singleton yaratılabilir. Java ve C#'da constructor private olsa bile reflection ile sınıfların nesneleri oluşturulabilir. Serialize edilmiş singleton nesne birden fazla kere okunarak belleğe farklı nesneler olarak yüklenebilir. Bunlar yerine Enum yönteminin kullanılması daha sağlıklıdır. 
+
+ ```java
+public enum Singleton {
+    INSTANCE;
+
+    // Diğer metotlarınızı buraya ekleyebilirsiniz
+    public void someMethod() {
+        // Çalıştırılacak kod
+    }
+}
+ ```
+
+
 
 # Factory Method
 •Nesne yaratmayı soyutlamak    
