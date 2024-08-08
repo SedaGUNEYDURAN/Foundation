@@ -337,6 +337,13 @@ public void metod1(){
 •  64 bit ve 32 bit, bir işlemcinin veya işletim sisteminin bellek adresleme kapasitesini tanımlar. 32 bitler adresleme kapasitesi 32 bittir yani 2^32 bayttır.Bu da yaklaşık olarak 4 GB'a karşılık gelir. 64 bit adresleme kapasitesi 64 bittir yani 2^64 bayttır.   
 • **Java Reflection API**, Java programının runtimeda classları, metodları ve alanları inceleyerek bunlar üzerinde dinamik olarak işlem yapabilmesine olanak sağlayan mekanizmadır. Class'ın yapısını (method, constructor) runtime'da öğrenmek için kullanılır. 
 • Java'da bütün sınıflar lazy loading olarak yüklenir, ihtiyaç olmadığı sürece yüklenmez. 
+• Mutuable; bir nesnenin ya da veri yapısının içeriğinin veya durumunun daha sonra değiştirilebilir olduğu anlamına gelir. İmmutable nesneler, bir kez oluşturulduktan sonra değiştirilemeyen nesnelerdir. 
+Java'da mutuable nesneler; 
+> ArrayList, HashMap, Vustom Mutuable Class
+Java'da immutable nesneler;
+> String, Wrapper Classes(Integer, Boolean, Double, vb.), LocalDate, LocalTime(java.time)
+
+• Stateless(durumsuz) yapı, client ile server veya hizmetler arasında gerçekleşen her bir etkileşimin birbirinden bağımsız olduğunu ve oturum veya bağlam bilgisi taşımadığını ifade eder. Herhangi bir bağımsız işlemin veya isteğin bağımsız bir şekilde çalışabilmesi, sistemlerin daha esnek, ölçeklenebilir ve yönetilebilir bir şekilde çaluışabilmesi, sistemlerin daha esnek, ölçeklenebilir ve yönetilebilir olmasını sağlar. HTTP, stateless bir protokoldür. Bu her HTTP isteğinin bağımsız olduğu ve sunucunun önceki istekler hakkınad bilgi tutmadığı anlamına gelir. RESTful Servisler, rest(Representational State Transfer) mimarisi, stateless yapı üzerine kuruludur. Her bir RESTful API isteği, gerekli yetkilendirme bilgilerini ve diğer gerekli verileri taşır.  
 
 ## Exceptions
 • **IndexOutOfBoundException**: arrayin ya da collection'ın geçerli index aralığının dışında bir indexe erişilmeye çalışıldığını gösterir.   
