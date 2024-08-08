@@ -265,7 +265,7 @@ public class A{
 }
 ```
 
-• Buna ek olarak bir çözüm yöntemi daha geliştirilmiştir; private static inner class yani Bill Pugh Singleton Design geliştirildiBu yöntem hem lazy initialization yapar(Java'da bütün sınıflar lazy loading olarak yüklenir, ihtiyaç olmadığı sürece yüklenmez, burada da inner class lazy loading) hem de thread-safe olarak oluşturulur. 
+• Buna ek olarak bir çözüm yöntemi daha geliştirilmiştir; private static inner class yani Bill Pugh Singleton Design geliştirildi.Bu yöntem hem lazy initialization yapar(Java'da bütün sınıflar lazy loading olarak yüklenir, ihtiyaç olmadığı sürece yüklenmez, burada da inner class lazy loading) hem de thread-safe olarak oluşturulur. 
 
  ```java
  public class Singleton {
@@ -293,8 +293,12 @@ public enum Singleton {
     }
 }
  ```
-
-
+• Singleton nesne güncellenebilir bir duruma(mutable state) sahipse multi-threaded ortamda mutex lock ile kontrol gerekir. Kullanım kolyalığı açısından singleton nesnenin durumunu değişmez(final/readonly) yapmak ya da en azından gerekeiyorsa sadece tek istemci tarafından güncellenecek şekilde kullanmak önemlidir. 
+• Singleton'ı anti-pattern görme eğilimi vardır. Çünkü tek olan nesne erişim kolaylığından dolayı global bir değişkene dönüşmektedir. Singleton pattern ile hem durumu(state) hem de davranışı(behavior) global yapman imkanı vardır. Bu ise singleton nesneye ciddi bir bağımlılık oluşturmaktadır. Singleton nesne, hem uygulamanın her tarafından erişilebilir durumdadır hem de muhtemelen uygulama boyunca bellekte kalmaya devam eder. Bu durumda singleton nesne memory leak'e neden oplabilir eğer çok büyükse. 
+• Singleton pattern, inheritance(miras) prensibine terstir. Tüm kurucuları private olduğu için Singleton class'ın alt sınıfları olamaz. Ama ASingleton miras devralabilir. Yani Singleton, bir arayüzden ya da sınıftan miras devralabilir, devraldığı metotlara yeni gerçekleştirmeler vererek onları ezebilir(override). 
+• Singleton nesneler statik de tanımlanabilir ancak statik metodlar override edilemezler, sadece nesne metotları override edilebilir. 
+• Singleton sınıfının nesnelerininsayısı değişebilir, benzer yöntemler sayısı kontrol edilebilen nesneler oluşturulabilir. 
+• Bazı patternlerin gerçekleştirilmesinde Singleton pattern kullanılır; Abstract Factory, Builder, Prototype. 
 
 # Factory Method
 •Nesne yaratmayı soyutlamak    
