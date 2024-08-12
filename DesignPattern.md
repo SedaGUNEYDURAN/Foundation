@@ -299,7 +299,74 @@ public enum Singleton {
 • Bazı patternlerin gerçekleştirilmesinde Singleton pattern kullanılır; Abstract Factory, Builder, Prototype.    
 
 # Factory Method
-• Kısaca nesne yaratmayı soyutlamaktır. Bir nesne yaratmak için bir arayüz anımlanır, fakat hangi sınıfın nesnesinin oluşturulacağını alt sınıflar karar verir. Factory method bir sınıfın nesne oluşturmasını alt sınıflara ötelenmesine izin verir,nesne oluşturma işlemini istemciden soyutlayarak. Böylece istemcinin hangi tür nesne oluşturacağını bilmeden nesne oluşturmasına olanak tanır.  
+• Kısaca nesne yaratmayı soyutlamaktır. Bir nesne yaratmak için bir arayüz tanımlanır, fakat hangi sınıfın nesnesinin oluşturulacağını alt sınıflar karar verir. Factory method bir sınıfın nesne oluşturmasını alt sınıflara ötelenmesine izin verir,nesne oluşturma işlemini istemciden soyutlayarak. Böylece istemcinin hangi tür nesne oluşturacağını bilmeden nesne oluşturmasına olanak tanır.  
+• Nesneler arasında bir ilişki yoksa farklı factory merthod interfaceleri kullanılmalıdır. Eğer nesneler farklı parametrelerle oluşturuluyorsa ortak bir create() metodu dolayısıyla ortak bir ata interface kullanılamaz. Her nesne için ayrı bir interface ve farklı create() metotları oluşturulur. 
+
+
+
+
+
+ ```java
+public interface Transport {
+    void deliver();
+}
+public class Truck implements Transport {
+    @Override
+    public void deliver() {
+        System.out.println("Kara yoluyla teslimat yapılıyor.");
+    }
+}
+public class Ship implements Transport {
+    @Override
+    public void deliver() {
+        System.out.println("Deniz yoluyla teslimat yapılıyor.");
+    }
+}
+public abstract class Logistics {
+    // Factory Method
+    public abstract Transport createTransport();
+
+    public void planDelivery() {
+        Transport transport = createTransport();
+        transport.deliver();
+    }
+}
+public class RoadLogistics extends Logistics {
+    @Override
+    public Transport createTransport() {
+        return new Truck();
+    }
+}
+public class SeaLogistics extends Logistics {
+    @Override
+    public Transport createTransport() {
+        return new Ship();
+    }
+}
+public class AirLogistics extends Logistics {
+    @Override
+    public Transport createTransport() {
+        return new Plane();
+    }
+}
+
+
+public class Main {
+    public static void main(String[] args) {
+        // Kara yolu lojistiği
+        Logistics roadLogistics = new RoadLogistics();
+        roadLogistics.planDelivery();
+        
+        // Deniz yolu lojistiği
+        Logistics seaLogistics = new SeaLogistics();
+        seaLogistics.planDelivery();
+        
+    }
+}
+
+ ```
+
+
 
 # Abstract Factory
 •Nesne ailesi yaratmayı soyutlamak    
