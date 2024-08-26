@@ -263,7 +263,11 @@ public class Main(){
 ```
 
   -Somut yapılar arasındaki bağımlılıkların tamamen soyut bağımlılıklara donüşecek şekilde tersine çevrilmelidir. Bu amaçla her somut yapının soyut bir üst tipi oluşturulmalı ve yukarı seviyeli iş yapan yapıların bağımlılıkları soyut tiplere çevrilmelidir. Bu şekilde üst seviyeli soyut yapılar ile onların detayları arasına  soyutlama tabakası konarak, değişimin yayılması önlenmelidir.    
-•**Granularity Principle**:  
+•**Granularity Principle**:  Bağımsız sorumlulukların doğru bir şekilde belirlenmesi ve bu sorumlulukların uygun büyüklükteki(granülerlikte) bileşenlere dağıtılması gerektiğini savunur. 
+
+  - İnce taneli(Fine-Grained) Bileşenler:Her bileşen ya da class, tek bir sorumluluk üstlenir.Esnektir, kolay test edileBilir amcak karşıklığı arttırır ve yönetimi zorlaştırır.
+  - Kalın taneli(Course-Grained) Bileşenler: Her bileşen veya class, birden fazla sorumluluk üstlenir ve daha geniş kapsamlı bir işlevi yerine getirir. Değişikliklerin etkisi yüksek olur ve test edilmesi zordur, anlaması ve yönetilmesi kolaydır.
+         
 •**YAGNI(You Arent Gonna Need It) Prensibi**: Geliştiricilere ve ekiplerine gelecekte ihtiyaç duyulacağı tahmin edilen ama şuanda gereksiz olan işlevleri veya özellikleri eklemekten kaçınmayı öğütler. Genellikle Agile yazılım geliştirme metodolojisinde kullanılır. Sadece şuanda gerçekten gerekli olan işlevler üzerine çalışmasılmasına teşvik eder.        
 •**Design By Contact**:Yazılım bileşenleri için formal, kesin(precise) ve doğrulunabilir(verifiable) arayüzlerin tasarlanması gerektiğini ifade eder. 
 Temel olarak yazılım bileşenlerinin birbiri ile olan etkileşimlerini bir sözleşme çerçevesinde tanımlar. Bu contractlar, bileşenlerin nasıl etkileşime gireceğini açıklayan, ön koşullar(preconditions), son koşullar(postconditions) ve sınıf veya metod değişmezlerini(invariants) içerir. Ön şartlar metodun istemcisi tarafından çağırılması için gereklidir. Son şartlar ise metodun çalışmasını bitirdiğinde oluşacak durum ile ilgilidir. Alt tiplerön şartları(require) zayıflatabilir ve son şartları(ensure) sıkılaştırabilir.  Alt tipler üst tiplerin kabul etmediğini kabul edebilir ve daha iyi daha özel bir hale getirebilir. 
