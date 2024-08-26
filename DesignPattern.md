@@ -6,7 +6,7 @@
   - Zamansal(Temporal): Zamansal birliktelikten dolayı bir araya getirilmişlerdir.  
   - Prosedürel(Procedural):Bir konu ile ilgili işlerin yukarıdan aşağıya doğru fonksiyonel olarak ayrılması ve hepsinin bir sınıfta bir araya getirilmesi. Örneğin; dosya açmakla ilgili her şeyi yapan, dosya erişimini ve gerekli belleği kontrol eden, dosyayı açıp kaydedip e-mail olarak gönderen bir class.  
   - İletişimsel(Communicational/Informational): Aynı veri üzerinde çalışan yapıların bir araya getirilmesidir. Veri işlemenin öne çıktığı durumlarda görülür.   
-  - Ardışıl(Sequential): Class sevğiyesinde birinin çıktısının diğerini beslediği, pipe şeklinde çalışan fonksiyonları bir araya getiren claslardır.   
+  - Ardışıl(Sequential): Class seviyesinde birinin çıktısının diğerini beslediği, pipe şeklinde çalışan fonksiyonları bir araya getiren claslardır.   
   - Fonksiyonel(Functional): En iyi birlitelik durumudur. Tek, çok iyi tanımlanmış ve olabildiğince küçük bir işe ya da sorumluluğa yönelik oloarak bir araya getirilmiş yapılardır.
 
 • **Ivar Jacobson’ın nesne sınıflandırması**; Boundary nesneleri controller nesnelerini, controller nesneleri entityleri kullanırlar.
@@ -43,7 +43,7 @@
   - İçerik(Content): Yapıların birbirlerinin iç yapılarına, gerçekleştirmelerine (implementation) bağımlı olduğu durumlardır. 
       Yanlış soyutlama temel sebeptir. Doğrudan alan erişimi ya da set/get metotları yoluyla veri alışverişi en sık görülendir. 
       Birlikte değiştirme sorunu oluşturur.   
-  - Common(Coupling):Global veri ve değişkenleri kullanan yapılar arasındaki bağımlılıktır. Sabitler, statik özelliklr ve 
+  - Common(Coupling):Global veri ve değişkenleri kullanan yapılar arasındaki bağımlılıktır. Sabitler, statik özelliklEr ve 
       davranışlar yanında Singleton gibi kalıplarda görülür.   
   - Dışsal(External):Yapıları arasında, ortak kullandıkları dış bir bileşen ya da sistemin format, arayüz, veri yapısı vb.
       dayatmasından kaynaklanan bağımlılıktır. Façade ve Repository gibi kalıplarla azaltılabilir.   
@@ -152,7 +152,7 @@ public class Main {
       daha iyi halidir. Abstract couplingte nesneler birbirlerinin interfacelerini belirleyen üst tipi belirler, gerçek tipi bilmez.
       Dependency Inversion(DI) ile elde edilir.
     
-• **Cohesion ile coupling arasındaki fark**; Coupling;İki veya daha fazla modül arasındaki ilişkiye odaklanır. Cohesion: bir modül içindeki öğelerin birbirleriyle ne derece ilgili olduğuna odaklanır. Yüksek cohesion, düşük coupling istenen durumdur. Genel olarak yazılımda istenen şey kod geliştirmeye açık, değiştirilmeye kapalı yazılmalıdır.  
+• **Cohesion ile coupling arasındaki fark**; Coupling;İki veya daha fazla modül arasındaki ilişkiye odaklanır. Cohesion: bir modül içindeki öğelerin birbirleriyle ne derece ilgili olduğuna odaklanır. **Yüksek cohesion, düşük coupling istenen durumdur.** Genel olarak yazılımda istenen şey kod geliştirmeye açık, değiştirilmeye kapalı yazılmalıdır.  
 • **Anemic Domain Model**; iş alanını temsil eden nesnelerin(domain object), iş alanıyla ilgili sadece veriyi taşıyıp herhangi bir davranışa sahip olmadığı durumdur. Dolayısıyla nesneler arasındaki bağımlılık, arayüzlerindeki davranışlar yerine, doğrudan erişerek ya da set/get metotlarıyla veri üzerindedir.  İş davranışları servis nesnelerine yığılmakta ve orada prosedürel bir şekilde Fowler’ın Transaction Script olarak adlandırdığı anti pattern gerçekleştirilmektedir.   
 • **Fowler Transaction Script**: İş mantığı tasarım desenidir. Özellikle veri odaklı uygulamalarda sıkça uygulanır. Her işlem tek bir betik ya da metodda bulunur. Bu betik, doğrudan veritabanı işlemleri ya da diğer business logic adımlarını içerir. Business logic, genellikle bir veri kaynağından verileri alır, işler ve sonuçları kaydeder. Her bir betik belirli bir iş süresini kapsar ve genellikle tek bir işlem(transaction) içinde çalışır.   
 • **Data Driven(veri odaklı)**: Karar verme ve stratejik geliştirme süreçlerinde verilerin aktif bir şekilde kullanılması anlamına gelir. Yazılımda bu yaklaşımdan olabildiğince kaçımayız. Veri odaklı değil davranış odaklı olmaya gayret etmeliyiz.        
@@ -167,17 +167,100 @@ public class Main {
   - **Separation of Concerns**: Sorunları ayrılmasıdır. Yazılım geliştirme sürecinde karmaşıklığı azaltmak ve yazılımın daha esnek, sürdürülebilir ve ölçeklenebilir olmasını sağlamak amacıyla kullanılır. Katmanlı mimari, MVC, Mikroservisler bu prensibin uygulandığı bazı yaklaşımlardır.   
   - **DRY(Don't Repeat Yourself)**: Eğer bir statement ya da bloğun birden fazla yerde bulunması gerekiyorsa, bu ifade bir metoda dönüştürülmelidir. Hiç bir kod parçası asla tekrar etmemelidir ve sistemde sadece bir yerde bulunmalıdır.
   - Bazen sınıfların birden fazla interface'i implement ederek, pek çok role sahip olduğu görülür. Özellikle yetkinlik kazandırmak amacıyla bir API'nin parçası olan interfaceleri yerine getiren ama aynı zamanda bir rolü olan nesnelerde bu durum yaygındır. Böyle sınıflar **composite/aggregate(bileşik/küme sınıf) olarak adlandırılır. Böyle interfacelere fat, pollued olarak adlandırılır ve code smell oluşturur.
-  - Eğer single responsibility prensibi ihlal edilirse fat classlar ortaya çıkar. Fat class; yazılım geliştirmede fazla büyük ve karmaşık hale gelmiş classları tanımlar. Çok fazla sorumluluğa sahiplerdir.            
+  - Eğer single responsibility prensibi ihlal edilirse fat classlar ortaya çıkar. **Fat class**; yazılım geliştirmede fazla büyük ve karmaşık hale gelmiş classları tanımlar. Çok fazla sorumluluğa sahiplerdir.            
       
 •**Open-Closed Principle**: Yazılım yapıları(classlar, modülleri, fonksiyonlar, metodlar ) genişletilmeye açık ama değişime kapalıdır.  Burada genişletmek kasıt; yapının en baştan itibaren, değişimi göz önüne alacak şekilde, değişebilecek kısımların, değişmeyecek kısımlardan yalıtılarak kurgulanması, dolayısıyla yeniliklerin var olan yapıları değiştirmeden yapılması, kaçınılmaz bağımlılıkların olabildiğince soyutlamalar üzerinden yapılması, gerçekleştirmelere bağımlılık oluşturulmamasıdır.  Sonucunda var olan tiplerin farklı amaçlara hizmet edecek şekilde alt sınıflarının oluşturulması ve sahip olduğu davranışları override(ezmesi) ile farklılaştırılması söz konusudur. Düşük birliktelikli yapılardan, iç yapılara bağımlılıktan, somut tiplere bağımlılıktan, global değişkenler, run time type identification gibi durumlardan kaçınılmalıdır.     
-•**Liskov Substitution Principle**: Taban sınıflara(base class) işaretçi ya da referans kullanılan fonksiyonlar türetilen sınıfların nesnelerini de (gerçek tiplerini) bilmeden kullanabilmelidir.  Yani türetilmiş sınıf, temel sınıfın her türlü davranışını korumalıdır.  LSP tasarlanan yapının o yapıyı kullanacak istemciler açısından doğrulanması gerektiğini ifade eder. Kurulan modeller ilk bakışta anlamlı ve tutarlı olsa bile aslolan istemcilerin o modeli nasıl kullanacağıdır. İstemcilerin üst arayüzler hakkında yaptıkları kabuller ve sahip oldukları beklentiler, alt arayüzler tarafından da karşılanmalıdır.    
+•**Liskov Substitution Principle**: Taban sınıflara(base class) işaretçi ya da referans kullanılan fonksiyonlar türetilen sınıfların nesnelerini de (gerçek tiplerini) bilmeden kullanabilmelidir.  Yani türetilmiş sınıf, temel sınıfın her türlü davranışını korumalıdır.  LSP tasarlanan yapının o yapıyı kullanacak istemciler açısından doğrulanması gerektiğini ifade eder. Kurulan modeller ilk bakışta anlamlı ve tutarlı olsa bile aslolan istemcilerin o modeli nasıl kullanacağıdır. İstemcilerin üst arayüzler hakkında yaptıkları kabuller ve sahip oldukları beklentiler, alt arayüzler tarafından da karşılanmalıdır. Örnek;
+
+```java
+abstract cclass Bird{
+  //Genel bir kuş davranışı burada olur
+}
+class FlyingBird extends Bird{
+  public void fly(){
+    System.out.println("Uçuyorum!");
+  }
+}
+class Sparrow extends FlyingBird{
+  @Override
+  public void fly(){
+    System.out.println("Serçe Uçuyor!");
+  }
+}
+class Penguin extends Bird{
+ //Penguenlere özgü davranış burada olabilir
+}
+```
+
+Eğer genel davranış yani fly() metodu Bird classında tanımlansaydı; Penguen uçamadığı için hata atacaktı ve  bu Liskov Subsitutide Prinsibinin ihlaline neden olucaktı.    
 •**Interface Segregation Principle**: İstemciler kullanmadıkları interfacelere bağımlı olmaya zorlanmamalıdır. SRP'nin yüksek birliktelik(cohesion) amacıyla arayüzlere uygulanmış halidir. ISP karşıtı durumun tipik iki göstergesi vardır:
 
   - Farklı istemcilerin aynı interface üzerindeki farklı metotları çağırması,
   - Interface'in alt tipi olan sınıfların bazı metodlara gerçekleştirme vermekte zorlanması.
 
-Bu durumda bu arayüz bölümelidir. İstemciler sadece ilgilendikleri metotları görmelidir. Alt sınıflar da sadece ihtiyacı olan metotları devralıp gerçekleştirmelidir.   
-•**Dependency Inversion Principle** : Yüksek seviyeli modüller aşağı seviyeli modüllere bağımlı olmamalıdır. İkisi de soyutlamalara bağımlı olmalıdır. Soyutlamalar detaylara bağımlı olmamalı, detaylar soyutlamalara bağımlı olmalıdır.(Yüksek seviyeli modül/iş ile kastedilen, uygulamayı oluşturan temel soyutlamalardır. Süreçler ve onları yöneten(süreçsel metotlar) yapılar bu türdendir. Alt seviyeli modül/iş ile kastedilen ise detaylardır. Atomik iş yapan işçi metotlar ve sınıfları bu türdendir.)
+Bu durumda bu arayüz bölünmelidir. İstemciler sadece ilgilendikleri metotları görmelidir. Alt sınıflar da sadece ihtiyacı olan metotları devralıp gerçekleştirmelidir.   
+•**Dependency Inversion Principle** : Yüksek seviyeli modüller aşağı seviyeli modüllere bağımlı olmamalıdır. İkisi de soyutlamalara bağımlı olmalıdır. Soyutlamalar detaylara bağımlı olmamalı, detaylar soyutlamalara bağımlı olmalıdır.(Yüksek seviyeli modül/iş ile kastedilen, uygulamayı oluşturan temel soyutlamalardır. Süreçler ve onları yöneten(süreçsel metotlar) yapılar bu türdendir. Alt seviyeli modül/iş ile kastedilen ise detaylardır. Atomik iş yapan işçi metotlar ve sınıfları bu türdendir.) Bu prensibe ihlal edildiği örnek; OrderService classı doğrudan CreditCardPaymentProcessor classına bağımlı. CreditCardPaymentProcessor classında bir değişiklik olursa bundan OrderService classının da değiştirilmesi gerekir.  
+
+```java
+class CreditCardPaymentProcessor{
+  public void processPayment(double amount){
+    System.out.println("Kredi kartı ile ödeme işlemi:"+amount);
+  }
+}
+
+class OrderService{
+  private CreditCardPaymentProcessor paymentProcessor;
+  public OrderService(){ //constructor
+    this.paymentProcessor=new CreditCardPaymentProcessor();
+  }
+  public void placeOrder(double amount){
+      paymentProcessor.processPayment(amount);
+  }
+}
+public class Main(){
+  public static void main(String[] args){
+    OrderService orderService=new OrderService();
+    orderService.placeOrder(100.0);
+  }
+}
+```
+Dependency Inversion Principle'a uygun olarak yazılırsa;
+
+```java
+
+interface PaymentProcessor{
+  void processPayment(double amount);
+}
+class CreditCardPaymentProcessor implements PaymentProcessor{
+  @Override
+  public void processPayment(double amount){
+    System.out.println("Kredi kartı ile ödeme işlemi:"+amount);
+  }
+}
+class PayPalProcessor implements PaymentProcessor{
+  @Override
+  public void processPayment(double amount){
+    System.out.println("Paypal iloe ödeme işlemi:"+amount);
+  }
+}
+class OrderService{
+  private PaymentProcessor paymentProcessor;
+  public OrderService(PaymentProcessor paymentProcessor){
+    this.paymentProcessor=paymentProcessor;
+  }
+}
+public class Main(){
+  public static void main(String[] args){
+    PaymentProcessor creditCardProcessor=new CreditCardPaymentProcessor();
+    OrderService orderService=new OrderService(creditCardProcessor);
+    orderService.placeOrder(100.0);
+
+    PaymentProcessor payPalProcess=new PaymentProcessor();
+    OrderService orderService=new OrderService(payPalProcess);
+    orderService.placeOrder(200.0);
+  }
+}
+```
 
   -Somut yapılar arasındaki bağımlılıkların tamamen soyut bağımlılıklara donüşecek şekilde tersine çevrilmelidir. Bu amaçla her somut yapının soyut bir üst tipi oluşturulmalı ve yukarı seviyeli iş yapan yapıların bağımlılıkları soyut tiplere çevrilmelidir. Bu şekilde üst seviyeli soyut yapılar ile onların detayları arasına  soyutlama tabakası konarak, değişimin yayılması önlenmelidir.    
 •**Granularity Principle**:  
