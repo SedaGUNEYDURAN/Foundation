@@ -387,11 +387,54 @@ public enum Singleton {
 
 # Factory Method
 • Kısaca nesne yaratmayı soyutlamaktır. Bir nesne yaratmak için bir arayüz tanımlanır, fakat hangi sınıfın nesnesinin oluşturulacağını alt sınıflar karar verir. Factory method bir sınıfın nesne oluşturmasını alt sınıflara ötelenmesine izin verir,nesne oluşturma işlemini istemciden soyutlayarak. Böylece istemcinin hangi tür nesne oluşturacağını bilmeden nesne oluşturmasına olanak tanır.  
+
+ ```java
+public interface Factory{
+  public Employee create(String name);
+ }
+public class EmployeeFactory implements Factory{
+  @Override
+  public Employee create(String name){
+    Employee employee=new Employee(name,28);
+    return employee;
+  }
+}
+public class ManagerFactory implements Factory{
+  @Override
+  public Employee create(String name){
+    Employee employee=new Manager(name,IT,28);
+    return employee;
+  }
+}
+ ```
+
 • Nesneler arasında bir ilişki yoksa farklı factory merthod interfaceleri kullanılmalıdır. Eğer nesneler farklı parametrelerle oluşturuluyorsa ortak bir create() metodu dolayısıyla ortak bir ata interface kullanılamaz. Her nesne için ayrı bir interface ve farklı create() metotları oluşturulur. 
 
-
-
-
+ ```java
+public interface EmployeeFactory{
+  public Employee create(String name);
+ }
+public interface ManagerFactory{
+  public Employee create(String name, String department, Integer age);
+ }
+public class EmployeeFactory implements Factory{
+  @Override
+  public Employee create(String name){
+    Employee employee=new Employee(name,28);
+    return employee;
+  }
+}
+public class ManagerFactory implements ManagerFactory{
+  @Override
+  public Employee create(String name String department, Integer age){
+    Employee employee=new Manager(name,IT,28);
+    return employee;
+  }
+}
+ ```
+• Birden fazla factory metodunu tek bir classta toplamak içinoluşturulan nesnelerin bir nesne ailesinin parçası olması gereklidir.--> Abstaract Factory
+• Factory method, abstract bir yapı olmalı ki extend edilebilsin olabildiğince az parametre geçmeliyiz ki bir yerde bir iş yapsın. Aslolan Factory Method'ın nesne yaratmayı soyutlamasıdır, nesnenin nasıl yaratılacağı ayrı bir konudur ve nesneye bağlıdır.  
+• Bloch çözümünde; constructorlar yerine static metotları tavsiye eder. createNewEmployee(int,String,String), createNewTemporarayEmploye(int,String) constructorlarını bir class içerisinde tanımlayamayız. Ama static olarak tanımlarsak isimli kurucu(named constructors) haline gelir. Bu çözümde her sınıf kendi nesnesinin üreticicisidir, bundan dolayı ayrı ayrı arayüz ve gerçekleştirmelerine ihtiyaç duyulmaz. Factory methodla burada ayrışmaktadır.Factory method ile ilgili bir örnek daha; 
 
  ```java
 public interface Transport {
@@ -452,9 +495,8 @@ public class Main {
 }
 
  ```
-
-
-
+Bu örnekte main metodu çalışır. Logistics türünden RoadLogistics nesnesi oluşturulur.  roadLogistics.planDelivery() metodu çağırılır. planDelivery() metodu içinde RoadLogistics içinde override edilmiş olan createTransport() metodu çağırılır.Burada  createTransport() metodu Logistics sınıfının abstract bir metodu olmasına rağmen roadLogistics nesnesi RoadLogistic sınıfında tanımlı createTransport metodu çalıştırılır. RoadLogistic nesnesi RoadLogistics.createTransport() metodu bir Truck nesnesi döndürür. 
+transport.deliver() Truck nesnesi üzerinden deliver() metodunu çağırır. Track.deliver() metodu Kara yoluyla teslimat yapılıyor. mesajını ekrana bastırır.n
 # Abstract Factory
 •Nesne ailesi yaratmayı soyutlamak    
 # Builder:
