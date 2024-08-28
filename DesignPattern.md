@@ -503,6 +503,112 @@ transport.deliver() Truck nesnesi üzerinden deliver() metodunu çağırır. Tra
 • Factory method tek bir nesneyi yaratmaktan sorumludur. Yaratılan nesne bir değil birden çok ise yapılacak şey birden fazla Factory method kullanmaktır. Bu durumda farklı Factory Methodlar farklı interfacelerde bulunur. Çünkü objeler arasında bir ilgi ya da bağımlılık yoktur. Benzer şekilde her bir obje için interface'i gerçekleştiren dolayısıyla da Factory Method'u ezen sınıflar oluşturulur. Elimizdeki nesneler , bir nesne ailesi oluşturuyorsa yani bu nesneler birbirleriyle ilgili nesnelerse, her birisi için ayrı ayrı oluşturulan ve farklı sınıflara konan Factory Method'larını bir araya toplayan sınıfın birlikteliğini düşürmez. Bu classa Abstract Factory denilir. **Kısaca abstract factory, birden fazla factory method kullanılarak oluşturulur.** 
 • Birlikte kullanılacak nesnelerin , birden fazla ortam/platform için yaratılmaları söz konusu Abstract Factory interface'ini her ortam/platform için farklı bir gerçekleştirmesi de olabilir. Her abstract factory gerçekleştirmesinde ailenin her ferdi için ayrı bir factory method kullanılır. 
 • Abstract factory'de factory methodu yanında Builder ve Protype da kullanılabilir. 
+
+ ```java
+public class Client {
+
+    public static void main(String[] args) {
+        // Modern mobilya seti oluştur
+        FurnitureFactory modernFactory = new ModernFurnitureFactory();
+        Chair modernChair = modernFactory.createChair();
+        Table modernTable = modernFactory.createTable();
+        
+        modernChair.sitOn();
+        modernTable.use();
+        
+        // Klasik mobilya seti oluştur
+        FurnitureFactory classicFactory = new ClassicFurnitureFactory();
+        Chair classicChair = classicFactory.createChair();
+        Table classicTable = classicFactory.createTable();
+
+        classicChair.sitOn();
+        classicTable.use();
+    }
+}
+ ```
+
+ ```java
+// Abstract Factory Arayüzü
+public interface FurnitureFactory {
+    Chair createChair();
+    Table createTable();
+}
+ ```
+
+ ```java
+public class ModernFurnitureFactory implements FurnitureFactory {
+    @Override
+    public Chair createChair() {
+        return new ModernChair();
+    }
+    @Override
+    public Table createTable() {
+        return new ModernTable();
+    }
+}
+
+// Klasik Mobilya Fabrikası
+public class ClassicFurnitureFactory implements FurnitureFactory {
+    @Override
+    public Chair createChair() {
+        return new ClassicChair();
+    }
+
+    @Override
+    public Table createTable() {
+        return new ClassicTable();
+    }
+}
+ ```
+
+ ```java
+// Sandalye için arayüz
+public interface Chair {
+    void sitOn();
+}
+
+// Masa için arayüz
+public interface Table {
+    void use();
+}
+ ```
+
+ ```java
+// Modern Sandalye
+public class ModernChair implements Chair {
+    @Override
+    public void sitOn() {
+        System.out.println("Sitting on a modern chair");
+    }
+}
+
+// Modern Masa
+public class ModernTable implements Table {
+    @Override
+    public void use() {
+        System.out.println("Using a modern table");
+    }
+}
+
+// Klasik Sandalye
+public class ClassicChair implements Chair {
+    @Override
+    public void sitOn() {
+        System.out.println("Sitting on a classic chair");
+    }
+}
+
+// Klasik Masa
+public class ClassicTable implements Table {
+    @Override
+    public void use() {
+        System.out.println("Using a classic table");
+    }
+}
+ ```
+
+Burada   FurnitureFactory modernFactory = new ModernFurnitureFactory() kodu ile 
+
 # Builder:
 •Karmaşık nesne yaratma sürecini kurgulamak    
 # Prototype: 
