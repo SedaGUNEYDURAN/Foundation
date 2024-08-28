@@ -607,7 +607,7 @@ public class ClassicTable implements Table {
 }
  ```
 
-Burada   FurnitureFactory modernFactory = new ModernFurnitureFactory() kodu ile 
+Burada ModernFurnitureFactory classından FurnitureFactory nesnesi yaratır(modernFactory). modernFactory nesnesi createChair() metodunu çağırır ve ClassicChair nesnesi yaratılır, bu nesne modernChair'a atanır.modernChair nesnesi  sitOn() metodunu çağırır ve  ekrana Sitting on a classic chair bastırır . 
 
 # Builder:
 •Karmaşık nesne yaratma sürecini kurgulamak    
