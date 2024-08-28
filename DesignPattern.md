@@ -498,7 +498,11 @@ public class Main {
 Bu örnekte main metodu çalışır. Logistics türünden RoadLogistics nesnesi oluşturulur.  roadLogistics.planDelivery() metodu çağırılır. planDelivery() metodu içinde RoadLogistics içinde override edilmiş olan createTransport() metodu çağırılır.Burada  createTransport() metodu Logistics sınıfının abstract bir metodu olmasına rağmen roadLogistics nesnesi RoadLogistic sınıfında tanımlı createTransport metodu çalıştırılır. RoadLogistic nesnesi RoadLogistics.createTransport() metodu bir Truck nesnesi döndürür. 
 transport.deliver() Truck nesnesi üzerinden deliver() metodunu çağırır. Track.deliver() metodu Kara yoluyla teslimat yapılıyor. mesajını ekrana bastırır.n
 # Abstract Factory
-•Nesne ailesi yaratmayı soyutlamak    
+• Temel amacı nesne ailesi yaratmayı soyutlamaktır. Birbiriyle ilgili ya da bağımlı nesne ailelerini, nesnelerin somut sınıflarını belirtmeden yaratmak için bir interface sağlamaktır.   
+• Abstract  Factory, tek nesne yerine, nesne ailesi oluşturmak üzere kullanılan bir kalıptır. Abstract Factory bir sınıftır, Factory Method ise bir metottur. Factory Method tek bir objenin, Abstract Factory birden fazla objenin yaratılmasını soyutlar. Bu nedenle Abstaract Factory birden fazla Factory Methoda sahiptir. 
+• Factory method tek bir nesneyi yaratmaktan sorumludur. Yaratılan nesne bir değil birden çok ise yapılacak şey birden fazla Factory method kullanmaktır. Bu durumda farklı Factory Methodlar farklı interfacelerde bulunur. Çünkü objeler arasında bir ilgi ya da bağımlılık yoktur. Benzer şekilde her bir obje için interface'i gerçekleştiren dolayısıyla da Factory Method'u ezen sınıflar oluşturulur. Elimizdeki nesneler , bir nesne ailesi oluşturuyorsa yani bu nesneler birbirleriyle ilgili nesnelerse, her birisi için ayrı ayrı oluşturulan ve farklı sınıflara konan Factory Method'larını bir araya toplayan sınıfın birlikteliğini düşürmez. Bu classa Abstract Factory denilir. **Kısaca abstract factory, birden fazla factory method kullanılarak oluşturulur.** 
+• Birlikte kullanılacak nesnelerin , birden fazla ortam/platform için yaratılmaları söz konusu Abstract Factory interface'ini her ortam/platform için farklı bir gerçekleştirmesi de olabilir. Her abstract factory gerçekleştirmesinde ailenin her ferdi için ayrı bir factory method kullanılır. 
+• Abstract factory'de factory methodu yanında Builder ve Protype da kullanılabilir. 
 # Builder:
 •Karmaşık nesne yaratma sürecini kurgulamak    
 # Prototype: 
