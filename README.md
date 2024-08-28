@@ -347,7 +347,7 @@ Java'da immutable nesneler;
 
 ## Exceptions
 • **IndexOutOfBoundException**: arrayin ya da collection'ın geçerli index aralığının dışında bir indexe erişilmeye çalışıldığını gösterir.   
-• **ClassCastException**: bir sınıfın bir nesneyi başka bir türe dönüştürmeye çalıştığı vwe dönüşümün uygun olmadığı durumlarda alınır.  
+• **ClassCastException**: bir sınıfın bir nesneyi başka bir türe dönüştürmeye çalıştığı ve dönüşümün uygun olmadığı durumlarda alınır.  
 • **InvocationTargetException**:Java Reflection API'ını kullanarak bir methodu çağırmaya çalışırken meydana gelir. Bir method "invoke"  methodu ile çağırıldığında bir exception atarsa exception  InvocationTargetException'ı ile sarmalanarak fırlatılır. 
 • **IllegalArgumentException**: bir metodun argümanlarının geçersiz veya uygunsuz olduğu durumlarda fırlatılan bir exceptiondır. Bu hata tipik olarak bir metodun ön koşulların sağlanmadığı durumlarda kullanılır. 
 
@@ -355,6 +355,7 @@ Java'da immutable nesneler;
   • Eğer çağırılan method bir exception fırlatırsa, bu exception doğrudan Reflection API tarafından fırlatılmaz. Bunun yerine InvocationTargetException exception'ını ile sarmalanır. Gerçek exception saklanmış olur.
   • Asıl hataya neden olan exception getCause() methodu ile bulunur. 
 
+• **CloneNotSupportedException**: klonlama sırasında alınır. İki durumda ortaya çıkar. Bir nesne klonlanmaya çalışıldığında, ancak bu nesnenin sınıfı Clonable interface'ini implement etmedeğinde ve Object classının clone() metodunu çağırırken super.clone() kullanılırken.  
 
 
 
