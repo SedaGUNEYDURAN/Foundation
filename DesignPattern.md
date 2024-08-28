@@ -612,5 +612,83 @@ Burada ModernFurnitureFactory classından FurnitureFactory nesnesi yaratır(mode
 # Builder:
 •Karmaşık nesne yaratma sürecini kurgulamak    
 # Prototype: 
-•Bir örnek nesneden kopyalamayla  yeni nesneler türetmek     
+•Bir örnek nesneden kopyalamayla  yeni nesneler türetmektir.Karmaşık nesneleri sıfırdan yaratmak yerine, hali hazırda elde var olan nesnelerden kopyalayarak(clone) elde etmek yoluna gidilebilir. Durumu kopyalanarak çoğaltılan nesne **prototip** ya da örnek nesnedir. Diyelim ki elimizde bir Account nesnesi var ama bunun da tipleri var frozenAccount, normalAccount, negativeAccount. Account nesnesi çok fazla parametre istediğinde nesne oluşturmak çok olur. Aşağıdaki gibi bir durumda parametre geçmesi oldukça zor ve karışıktır. 
+
+ ```java
+Account frozenAccount= new Account("1",34,21,333,"Ayşe","Tez",32);
+Account normalAccount= new Account("5",32,12,32,"Zeynep","Hane",87);
+Accoutn negativeAccount=new Account("2",3444,32,11,"Hakan","Çalı",455);
+ ```
+
+• Account nesnesini de yaratmak için sürekli constructor çağrısı yapmak yerine var olan bir Account nesnesini prototip ya da örnek olarak elde tutup, diğer Account nesnelerinin bu prototipten kopyalanarak üretilmesi sağlanabilir. Prototip olarak oluşurulan nesne, aynı sınıftan diğer nesneler için bir başlangıç noktası olur. Dolayısıyla, yeni nesneleri oluşturmaya var olan prototipi kopyalayarak(cloning) başlayabiliriz. Kopyalamayla elde edilen nesnenin durumu, prototiple aynıdır.Ancak yeni nesnenin kendine has duruma sahip olması gereklidir. Bu yüzden, prototip ile yeni nesnenin olması gereken durumu arasındaki farklılık, yeni nesne üzerinde set metotları çağrılarak giderilir.   
+
+• Cloneable Interface'i, Java'da bir nesnenin klonlanabileceğini belirtir. bu interface herhangi bir metot tanımlamaz, sadece bir işaret arayüzü yani marker interfacedir, yani bir classta implement edildiğinde klonlanabilir olduğunu belirtir. 
+• clone() metodu, "Object" classında yer alır ve bu metot, bir nesnenin yüzeysel kopyasını(swallow copy) oluşturur. 
+
+>swallow copy: Nesnenin ilk seviyedeki alanlarının kopyalandığı ancak bu alanların eğer referans türündeyse orijinal nesneleri referans ettiği kopyadır. 
+>deep copy: Nesnenin tüm seviyedeki alanlarının özgün olarak kopyalandığı durumu ifade eder. 
+
+• Prototype örneği; 
+
+ ```java
+public class Client {
+    public static void main(String[] args) {
+        // İlk rapor nesnesini oluştur
+        Report originalReport = new Report("Prototip", "Prototip nesne");
+
+        // Raporu klonla
+        Report clonedReport = (Report) originalReport.clone();
+
+        // Klonlanmış raporun başlığını ve içeriğini değiştir
+        clonedReport.setTitle("Cloned ");
+        clonedReport.setContent("Content cloned ");
+
+        // Sonuçları yazdır
+        System.out.println("Original Report: " + originalReport);
+        System.out.println("Cloned Report: " + clonedReport);
+    }
+}
+public interface Document extends Cloneable {
+    Document clone();
+    void setTitle(String title);
+    void setContent(String content);
+}
+public class Report implements Document {
+    private String title;
+    private String content;
+
+    public Report(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
+    @Override
+    public Document clone() {
+        try {
+            return (Report) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    @Override
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    @Override
+    public String toString() {
+        return "Report [title=" + title + ", content=" + content + "]";
+    }
+}
+ ```
+
+Burada ilk olarak Report classından bir obje oluşturulur ve parametreleri geçilir. originalReport.clone(), clone() metodu çağrısı yapılır.clone() metodunda, (Report) super.clone() döner. Bu ne demek? klonlama işlemini "Object" sınıfındaki clone() metodundan çağırır. Bu da Cloneable interface'ini uygulayan nesnenin yani originalReport nesnesinin bir kopyası(swallow) oluşturulur. Clonable interface'i uygulanamıyorsa CloneNotSupportedException hatası fırlatılır. Oluşturulan kopya Object classında oluşturuldupu için Object tipindedir. Uygun tipe dönüştürülmesi için (Report) super.clone() şeklinde yazılır ve döndürülür. 
+• Prototype kalıbı nesnelerin nasıl üretileceğini çözer. Prototype kalıbı nesnelerin nerede oluşturulacağı ile ilgilenmez dolayısıyla nesne yaratmayı soyutlamaz.  Protipten yeni nesne ürütmeyi bir factory metodunun ardına koymak çok daha uygundur. Factory metoduna parametre geçilerek, nesne olması gereken haliyle geriye döndürülebilir. 
 # Dependency Injection:**  
