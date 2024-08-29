@@ -610,7 +610,113 @@ public class ClassicTable implements Table {
 Burada ModernFurnitureFactory classından FurnitureFactory nesnesi yaratır(modernFactory). modernFactory nesnesi createChair() metodunu çağırır ve ClassicChair nesnesi yaratılır, bu nesne modernChair'a atanır.modernChair nesnesi  sitOn() metodunu çağırır ve  ekrana Sitting on a classic chair bastırır . 
 
 # Builder:
-•Karmaşık nesne yaratma sürecini kurgulamak    
+• Amaç karmaşık nesne yaratma sürecini kurgulamaktır. Proje karmaşıklıklaştıkça veya aynı nesne için farklı konfigürasyonlar söz konusu olduğunda nesne de karmaşıklaşır. Constructor çağrısı yaparak builder pattern'i ile bir süreç içinde yapılır. Bu kalıpta yaratmak(create) yerine inşa söz konusudur. Bu sebeple builder kelimesi ile süreçsellik vurgusu yapılmıştır.  
+• Bir nesnenin karmaşık olduğunun en temel göstergesi, çok parametre alan constructorlardır. -> Telecoping constructor anti-pattern(uzun kurucu anti pattern'i) Constructora geçilen parametrelerin de oluşturulması gerektiği düşünüldüğünde, bu sürecin soyutlanması gerektiği açıktır.  
+• Varsayılan constructor ve set metotları, uzun constructor problemini başka bir probleme çevirmektedir. Pek çok set metodunun çağrılmasının yanında yapılacak yanlışların, oluşturlan nesnenin durumunda problemlere yol açması da mümkündür. Ayrıca bu yaklaşım nesnnenin durumunu değişebilir yani mutable halde bırakmaktadır.  
+• Bu kalıpta vurgulanan şey, nesnenin nerede yaratılacağı değil nesnenin yaratılma sürecidir. Nesnenin inşa edilme süreci bir arayüzün farklı gerçekleştirmeleri olarak kurulur. Bir interface'i gerçekleştiren Builder classının metotları, oluşturulacak nesneyi bir süreç içinde inşa eder. **En basit haliyle** builder, nesnenin varsayılan kurucusunu çağırıp sonrasında set metotlarıyla nesneyi inşa eder ve oluşan nesneyi istemciye geri döndürür. 
+• Nesneyi inşa etme sürecindeki metotlar hep aynı inşa edici nesnneyi yani builder nesnesini döndürülerse inşa eden kod süreci bir zincir şekilnde yazılabilir. 
+• **Zincirleme(Chaining) Yöntemi**: Bir nesne üzerinde birden fazla metot çağrısı yaparken, metotların birbirini zincir şeklinde bağlanarak çağrılmasını sağlar. Bu her metot çağrısının ardından aynı nesnenin döndürülmesi ile gerçekleştirilir. Bu yöntem kullanılarak bir nesne adım adım yapılandırılabilir. 
+
+
+ ```java
+public HouseBuilder setGarden(boolean hasGarden) {
+    this.hasGarden = hasGarden;
+    return this;
+}
+
+public HouseBuilder setSwimmingPool(boolean hasSwimmingPool) {
+    this.hasSwimmingPool = hasSwimmingPool;
+    return this;
+}
+
+ ```
+Bu kodda, her bir metot HouseBuilder nesnesini this döner, yani çağrıyı yapan HouseBuilder nesnesini döner. Bu da o metodu çağıran kodun, başka bir metodu hemene ardından  aynı nesne üzerinden çağıralabilmesini sağlar. 
+
+• Nesnesi inşa eden builder, nesnenin içinde, örneğin bir iç sınıf (inner/nested class) olarak konumlandırılırsa nesnenin set metotlarından kurtulmak mümkündür. Böylece oluşturulan nesnenin durumunun daha sonra değiştirilmesinin önüne geçilir ve immutable nesne elde edilir. Bu durumda builder nesne, temel nesneden alınır. Yani nesne kendi builder nesnesini constructor metoduna(factory method) sahip olur.  
+•  İnşa sürecinde nesnenin gerçekten oluşturulduğu an, en son build() çağrısı yapılıncaya kadar geciktirilebilir. build() çağrısı yapılmadığında hiçbir nesne oluşturulmaz. Bu şekilde lazy-loaded bir süreç oluşturulur. Yani builder nesnesi inşa ettiği nesnenin durumuyla ilgili bilgi tutmalıdır ve build() çağrısında bu bilgilere göre nesneyi oluşturmalıdır.   
+• Nesneyi inşa etme sürecinde farklı safhalar söz konusu ve bu safhalar arasında bir sıra varsa bu durumda farklı builder nesneleri kullanılabilir. 
+
+ ```java
+public class Main {
+    public static void main(String[] args) {
+        House house = new House.HouseBuilder("Beton", "Çelik")
+                .setGarden(true)
+                .setSwimmingPool(false)
+                .setGarage(true)
+                .build();
+
+        System.out.println(house);
+    }
+}
+
+class House {
+    // Zorunlu özellikler
+    private final String foundation;
+    private final String structure;
+    
+    // Opsiyonel özellikler
+    private final boolean hasGarden;
+    private final boolean hasSwimmingPool;
+    private final boolean hasGarage;
+
+    private House(HouseBuilder builder) {
+        this.foundation = builder.foundation;
+        this.structure = builder.structure;
+        this.hasGarden = builder.hasGarden;
+        this.hasSwimmingPool = builder.hasSwimmingPool;
+        this.hasGarage = builder.hasGarage;
+    }
+
+    public static class HouseBuilder {
+        // Zorunlu özellikler
+        private final String foundation;
+        private final String structure;
+
+        // Opsiyonel özellikler - Varsayılan değerler
+        private boolean hasGarden = false;
+        private boolean hasSwimmingPool = false;
+        private boolean hasGarage = false;
+
+        public HouseBuilder(String foundation, String structure) {
+            this.foundation = foundation;
+            this.structure = structure;
+        }
+
+        public HouseBuilder setGarden(boolean hasGarden) {
+            this.hasGarden = hasGarden;
+            return this;
+        }
+
+        public HouseBuilder setSwimmingPool(boolean hasSwimmingPool) {
+            this.hasSwimmingPool = hasSwimmingPool;
+            return this;
+        }
+
+        public HouseBuilder setGarage(boolean hasGarage) {
+            this.hasGarage = hasGarage;
+            return this;
+        }
+
+        public House build() {
+            return new House(this);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "House{" +
+               "foundation='" + foundation + '\'' +
+               ", structure='" + structure + '\'' +
+               ", hasGarden=" + hasGarden +
+               ", hasSwimmingPool=" + hasSwimmingPool +
+               ", hasGarage=" + hasGarage +
+               '}';
+    }
+}
+ ```
+
+Burada House classının içinde, constructor ve zorunlu alanları içerir. HouseBuilder inner classının constructorı zorunlu parametreleri alır. Opsiyonel özellikler için setter benzeri metodları sağlar ve her bir metot HouseBuilder nesnesini döenr. build() metodu sonunda House nesnesini oluşturur. HouseBuilder inner classı static olarak tanımlanmıştır bu sayede HouseBuilder'ın instance'ın yaratmadan doğradan bu metotları kullanabildik. 
+
 # Prototype: 
 •Bir örnek nesneden kopyalamayla  yeni nesneler türetmektir.Karmaşık nesneleri sıfırdan yaratmak yerine, hali hazırda elde var olan nesnelerden kopyalayarak(clone) elde etmek yoluna gidilebilir. Durumu kopyalanarak çoğaltılan nesne **prototip** ya da örnek nesnedir. Diyelim ki elimizde bir Account nesnesi var ama bunun da tipleri var frozenAccount, normalAccount, negativeAccount. Account nesnesi çok fazla parametre istediğinde nesne oluşturmak çok olur. Aşağıdaki gibi bir durumda parametre geçmesi oldukça zor ve karışıktır. 
 
