@@ -801,6 +801,140 @@ Burada ilk olarak Report classından bir obje oluşturulur ve parametreleri geç
 # Dependency Injection:
 • Avantajı, tanım tabanlı(declarative) bir yapı sunmasıdır. Bu şekilde nesnelerin birbirlerine olan bağımlılıkları ifade edilir ama bağımlılıkların nasıl yerine getireleceği Dependency Injection altyapısı tarafından gerçekleştirilir. Bu da karmaşıklığı azaltır ve değişimi kolaylaştırır.   
 • Dependency Injection bir kalıp olmakla birlikte genelde teknolojik destek ile gerçekleşir. 
+• Dependency Injection, nesnelerin bağımlılıklarını doğrudan inşa etmek ve yönetmek yerine bu bağımlılıkları dışarıdan alarak yani enjekte ederek bağımlılıkların daha esnek ve test edilebilir olmasını sağlayan bir patterndir. (Loose couplingini güçlendirir. ) Üç temel yolla gerçekleşir.
+  
+  - **Constructor Injection**:Bağımlılıkların bir nesnenin constructorı aracılığı ile enjekte edilmesini sağlar. Bu yöntemle, classın ihtiyaç duyduğu tüm bağımlılıklar, nesne oluşturulurken constructor!a parametre olarak geçilir. Bu sayede bağımlılıklar sınıfın dışarıdan sağlanan bileşenleridir ve sınıf kendi başına bağımlılıkları yaratmaktan sorumlu değildir.
+
+ ```java
+public class Main {
+    public static void main(String[] args) {
+        // Bağımlılıkları oluştur
+        Service service = new Service();
+
+        // Client nesnesini, bağımlılığı ile birlikte oluştur
+        Client client = new Client(service);
+
+        // Client üzerinde bir işlem yap
+        client.doSomething();
+    }
+}
+public class Service {
+    public void serve() {
+        System.out.println("Servis çalışıyor.");
+    }
+}
+
+public class Client {
+    private final Service service;
+
+    // Constructor Injection
+    public Client(Service service) {
+        this.service = service;
+    }
+
+    public void doSomething() {
+        service.serve();
+    }
+}
+ ```
+
+  -  **Setter Injection**: Bağımlılıkların nesneye setter metotları ile enjekte edilmesini sağlar. Sınıfın bağımlılıkları nesne oluşturulduktan sonra setter metotları kullanılarak ayarlanır.
+ 
+ ```java
+public class Main {
+    public static void main(String[] args) {
+        // Bağımlılıkları oluştur
+        Service service = new Service();
+        
+        // Client nesnesini oluştur
+        Client client = new Client();
+        
+        // Bağımlılığı Client'e enjekte et
+        client.setService(service);
+        
+        // Client üzerinde bir işlem yap
+        client.doSomething();
+    }
+}
+
+
+public class Service {
+    public void serve() {
+        System.out.println("Servis işlevi gerçekleştirilmiştir.");
+    }
+}
+
+public class Client {
+    private Service service;
+
+    // Setter Injection nesne injekt edildi
+    public void setService(Service service) {
+        this.service = service;
+    }
+
+    public void doSomething() {
+        if (service != null) {
+            service.serve();
+        } else {
+            System.out.println("Service dependency is not set.");
+        }
+    }
+}
+ ```
+
+
+  
+  -  **Interface Injection**: Bağımlılığın sağlanacağı sınıf ve bağımlılığın kendisi, ortak bir interface'i kullanarak iletişim kurar. Bu arayüz genellikler bağımlılığı sağlamak için bir metot tanımlar. Kullanımı çok yaygın değildir. 
+  
+ ```java
+public class Main {
+    public static void main(String[] args) {
+        // Bağımlılığı oluştur
+        Service service = new ConcreteService();
+        
+        // Client nesnesini oluştur
+        Client client = new Client();
+        
+        // Bağımlılığı Client'e enjekte et
+        client.setService(service);
+        
+        // Client üzerinde bir işlem yap
+        client.doSomething();
+    }
+}
+
+public interface Service {
+    void serve();
+}
+
+public class ConcreteService implements Service {
+    @Override
+    public void serve() {
+        System.out.println("Servis işlevi gerçekleştirilmiştir.");
+    }
+}
+
+public interface ServiceInjector {
+    void setService(Service service);
+}
+
+public class Client implements ServiceInjector {
+    private Service service;
+
+    @Override
+    public void setService(Service service) {
+        this.service = service;
+    }
+
+    public void doSomething() {
+        if (service != null) {
+            service.serve();
+        } else {
+            System.out.println("Service dependency is not set.");
+        }
+    }
+}
+ ```
 
 
 ![Ekran Alıntısı](https://github.com/user-attachments/assets/4b3eaeee-f8ed-40e8-ab78-735072d7b2e7)
