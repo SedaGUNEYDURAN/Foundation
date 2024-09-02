@@ -941,6 +941,118 @@ public class Client implements ServiceInjector {
 
 
 
+# Structural Pattern(Yapısal Kalıplar)
+• Yapısal kalıplar,sınıflar ve nesnelerin daha büyük yapılar oluşturmak üzere nasıl bir araya geldikleriyle ilgilidir. Kalıtım(inheritance ya da is-a) ve birleştirme(composition ya da has-a)  yapısal ilişkidir. Yapısal kalıplarda var olan interfaceleri, classları ve objeleri, kalıtım ve composition yoluyla bir araya getirerek yeni fonksiyonel yapılar oluşturulur.
+
+## Flyweight
+• Amacı;nesneleri paylaşarak, nesne sayısını azaltmaktır .
+• Flyweight object, farklı bağlamlarda ortak olarak kullanılabilen nesnedir. Nesne farklı bağlamlar tarafından ortaklaşa kullanılır ancak nesne her bağlamda bağımsız olarak davranır. 500 sayfalık bir kitap düşünelim her sayfa için ayrı bir nesne oluşturmak çok maliyetli olacaktır. Bunun yerine bir sayfa nesnesi oluşturup tekrar tekrar kullanıbilmelidir. 4. sayfayı gösterirken 4. sayfa nesneye yüklenmeli, 7. sayfa gösterilirken nesneninin içini boşaltıp 7. sayfa yüklenmelidir.   
+• Nesnelerin durumu ikiye ayrılır; 
+
+  - İçsel durum(intrinsic state), flyweight objenin temsil ettiği asıl durumdur.Paylaşılan durumdur ve nesne tarafından ortak bir şekilde kullanılır. Değişmez ve bağımsızdır. Tüm örneklerde aynıdır, bu nedenle tek bir yerden yönetilebilir. Örneğin; renk, bir pikselin içsel durumudur çünkü renk bir çok piksel tarafından paylaşılabilir. Bellek tasarrufu sağlar.
+  - Dışsal durum(extrinsic state), içinde bulunduğu bağlam tarafından belirlenen durumdur. Farklı  çok sayıda objeye ihtiyaç duyulur.  Dışsal durum ne kadar basitse Flyweight objenin kullanımı o kadar kolaydır. Paylaşılan ve bağımsız olmayan durumdur. Değişken ve dinamik olarak nesneye özgü sağlanır. Her nesne örneği için farklı olabilir ve bu nedenle dışarıdan sağlanır. Örneğin; pikselin koordinatları(x,y) dışsal bir durumdur çünkü her pikselin koordinatı farklıdır ve dinamik olarak paylaşılır. Nesne örneklerinin bağımsızlığını sağlar. Az sayıda nesne dışsal bağımlılığı arttrır. 
+
+• Factory method yardımı ile oluşturulurlar. 
+• Java'da primitive türlerin wrapper classları ve referans değerlerin bazıları Flyweight patternini kullanır. Belirli aralıklarda yapılan önbellekleme, bellek kullanımı düşürür, performansı yükseltir ve eşzamanlılık sounlarını azaltır. 
+
+  - Byte, Short, Integer, Long ->-128 ile 127 aralığında; Character classı, 0 ile 127(ASCII karakterleri olarak) aralığında yer alan değerler önbelleğe alınır ve aynı nesne kullanılır. 
+  - Float ve Double classları önbellekleme mekanizmasını bulunmamaktadır. Bu türlerde her yeni atama için yeni bir nesne oluşturulur.
+
+  
+ ```java
+public class WrapperCacheDemo {
+    public static void main(String[] args) {
+        // Byte için uç örnekler
+        Byte byte1 = 127;
+        Byte byte2 = 127;
+        System.out.println(byte1 == byte2); // true
+
+        // Short için örnekler
+        Short short1 = 127;
+        Short short2 = 127;
+        System.out.println(short1 == short2); // true
+
+        // Integer için örnekler
+        Integer int1 = 127;
+        Integer int2 = 127;
+        System.out.println(int1 == int2); // true
+
+        // Long için örnekler
+        Long long1 = 127L;
+        Long long2 = 127L;
+        System.out.println(long1 == long2); // true
+
+        // Character için örnekler
+        Character char1 = 127;
+        Character char2 = 127;
+        System.out.println(char1 == char2); // true
+
+        // Integer fakat aralık dışında değerler için
+        Integer int3 = 128;
+        Integer int4 = 128;
+        System.out.println(int3 == int4); // false
+
+        // Float ve Double için örnekler
+        Float float1 = 127.0f;
+        Float float2 = 127.0f;
+        System.out.println(float1 == float2); // false
+
+        Double double1 = 127.0;
+        Double double2 = 127.0;
+        System.out.println(double1 == double2); // false
+    }
+}
+  
+ ```
+
+  - String classı içsel olarak Flyweight desenine benzer bir mekanizma kullanır. String pool Java tarafından yönetilen ve aynı karakter dizisine sahip string nesnelerini paylaştıran bir havuzdur. String pool sayesinde, aynı karakter dizilerini içeren string nesneleri bellekten tasarruf etmek için yeniden kullanılır. intern(), bir string nesnesinin string poolda bulunmasını sağlar.  Java String classının intern() metodu, String poolun bir parçası olarak işlev görür. Eğer bir string literal(string nesnesi oluştururken doğrudan çift tırnak "" içinde bir karakter dizisi kullanmaktır.) olarak tanımlanırsa veya intern() metodu kullanılarak havuza eklenirse, aynı karakter dizisine sahip başka string ensneleri yeniden kullanılacaktır. 
+
+  
+ ```java
+ public class StringFlyweightExample {
+    public static void main(String[] args) {
+        // String literal - havuza otomatik olarak eklenir
+        String str1 = "Hello";
+        String str2 = "Hello";
+
+        // `new` ile oluşturulmuş String - havuza otomatik olarak eklenmez
+        String str3 = new String("Hello");
+
+        // `intern()` kullanımı - manuel olarak havuza eklenir
+        String str4 = str3.intern();
+
+        // Literaller - aynı nesneyi paylaşır
+        System.out.println(str1 == str2); // true
+
+        // `new` ile oluşturulmuş ama havuza eklenmemiş - farklı nesne
+        System.out.println(str1 == str3); // false
+
+        // `intern()` kullanımı sonucu - aynı nesneyi paylaşır
+        System.out.println(str1 == str4); // true
+    }
+}
+  
+ ```
+
+• Her nesne havu flyweight nesne değildir, flyweight nesne farklı bağlamlarda tekrar tekrar kullanılıyor olmalıdır.  
+ 
+## Adapter
+• Uyumsuz arayüzleri uyumlu kılmak
+
+## Composite
+• Bütün parça ilişkisini birbirlerinden ayırmak
+
+## Façade
+• Karmaşık bir alt sistemi kullanmayı kolaylaştırmak
+
+## Proxy
+• Bir nesneye erişimi kontrol etmek
+
+## Decorator
+• Nesneye dinamik olarak yeni özellikler kazandırmak
+
+## Bridge
+• Soyutlama ile gerçekleştirilmesini birbirinden ayırmak
 
 
 
