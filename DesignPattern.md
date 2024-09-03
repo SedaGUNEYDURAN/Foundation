@@ -1037,7 +1037,103 @@ public class WrapperCacheDemo {
 • Her nesne havu flyweight nesne değildir, flyweight nesne farklı bağlamlarda tekrar tekrar kullanılıyor olmalıdır.  
  
 ## Adapter
-• Uyumsuz arayüzleri uyumlu kılmak
+• Bir classın interface'in, bir başka sınıfın beklediği interface'e çevirir. Adaptör, uyumsuz arayüzleri sebebiyle çalışamayacak classların bir arada çalışmasını sağlar. Bir adaptör classı kullanarak uyumsuz classların interfacelerini uyumlu hale getirir. 
+• Adapter classı, uyumsuz class ile istemcinin kendisi ile çalışmasını bildiği interface arasına girer ve uyumsuz classı, o interface ile uyumlu hale getirir. 
+
+ ```java
+public class AdapterPatternDemo {
+    public static void main(String[] args) {
+        // Türk cihazımız
+        TurkishPlug turkishDevice = new TurkishDevice();
+        
+        // Türk cihazını doğrudan çalıştırıyoruz
+        turkishDevice.provideElectricity();
+        
+        // Türk cihazını ABD prizinde çalıştırmak için adaptör kullanıyoruz
+        USPlug adapter = new TurkishToUSAdapter(turkishDevice);
+        adapter.providePower();
+    }
+}
+
+// Türkiye'deki adaptörler için Interface
+interface TurkishPlug {
+    void provideElectricity();
+}
+
+// Türkiye adaptörü (bununla uyumlu bir cihaz)
+class TurkishDevice implements TurkishPlug {
+    @Override
+    public void provideElectricity() {
+        System.out.println("Türkiye prizinden elektrik sağlanıyor.");
+    }
+}
+
+// ABD'deki adaptörler için Interface
+interface USPlug {
+    void providePower();
+}
+
+// ABD adaptörü (bununla uyumlu bir cihaz)
+class USDevice implements USPlug {
+    @Override
+    public void providePower() {
+        System.out.println("ABD prizinden güç sağlanıyor.");
+    }
+}
+
+// Adaptör sınıfı: TurkishPlug'u USPlug ile uyumlu hale getiriyor
+class TurkishToUSAdapter implements USPlug {
+    private TurkishPlug turkishPlug;
+
+    public TurkishToUSAdapter(TurkishPlug turkishPlug) {
+        this.turkishPlug = turkishPlug;
+    }
+
+    @Override
+    public void providePower() {
+        // TurkishPlug'un metodunu çağırarak uyum sağlar
+        turkishPlug.provideElectricity();
+    }
+}
+
+ ```
+
+Bu kodda turkishDevice objesi oluşturuluyor. Bu obje ile türk cihazı doğrudan çalıştırılıyor ve ekrana "Türkiye prizinden elektrik sağlanıyor." bastırılıyor. Sonrasında TurkishToUSAdapter  classının bir instance'i oluşturuluyor ve turkishDevice(TurkishPlug interface'i türünden) nesnesini alarak USPlug interface'ine uyarlıyor ve bu nesne adapter nesnemiz. adapter.providePower() metodu çağırıldığında providePower() metodu çağırılır o da içinde  turkishPlug.provideElectricity() metodunu çağırır ve ekrana "Türkiye prizinden elektrik sağlanıyor." bastırır. (Dikkat edersen constructor injection yapılıyor)
+
+• Eğer ikiyönlü bir adaptöre ihtiyacımız varsa iki interface'i de implement etmeliyiz;
+
+ ```java
+class BidirectionalAdapter implements TurkishPlug, USPlug {
+    private TurkishPlug turkishPlug;
+    private USPlug usPlug;
+
+    // İki adet constructor var
+    public BidirectionalAdapter(TurkishPlug turkishPlug) {
+        this.turkishPlug = turkishPlug;
+    }
+
+    public BidirectionalAdapter(USPlug usPlug) {
+        this.usPlug = usPlug;
+    }
+
+    // TurkishPlug arayüzündeki metodu implemente ediyor
+    @Override
+    public void provideElectricity() {
+        if (usPlug != null) {
+            usPlug.providePower();
+        }
+    }
+
+    // USPlug arayüzündeki metodu implemente ediyor
+    @Override
+    public void providePower() {
+        if (turkishPlug != null) {
+            turkishPlug.provideElectricity();
+        }
+    }
+}
+ ```
+
 
 ## Composite
 • Bütün parça ilişkisini birbirlerinden ayırmak
