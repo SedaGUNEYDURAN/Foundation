@@ -1037,8 +1037,8 @@ public class WrapperCacheDemo {
 • Her nesne havu flyweight nesne değildir, flyweight nesne farklı bağlamlarda tekrar tekrar kullanılıyor olmalıdır.  
  
 ## Adapter
-• Bir classın interface'in, bir başka sınıfın beklediği interface'e çevirir. Adaptör, uyumsuz arayüzleri sebebiyle çalışamayacak classların bir arada çalışmasını sağlar. Bir adaptör classı kullanarak uyumsuz classların interfacelerini uyumlu hale getirir. 
-• Adapter classı, uyumsuz class ile istemcinin kendisi ile çalışmasını bildiği interface arasına girer ve uyumsuz classı, o interface ile uyumlu hale getirir. 
+• Bir classın interface'in, bir başka sınıfın beklediği interface'e çevirir. Adaptör, uyumsuz arayüzleri sebebiyle çalışamayacak classların bir arada çalışmasını sağlar. Bir adaptör classı kullanarak uyumsuz classların interfacelerini uyumlu hale getirir.    
+• Adapter classı, uyumsuz class ile istemcinin kendisi ile çalışmasını bildiği interface arasına girer ve uyumsuz classı, o interface ile uyumlu hale getirir. Yani işimize yarayan çağırmasını bildiğimiz arayüze sahip olmayan nesneyi kullanılabilir yapar. İstediğimiz arayüze sahip olmayan nesnenin arayüzüne dokunmadan, onu adaptör yardımıyla sarmalayarak gerçekleşir. Uyumsuz nesnenin yeni arayüzü adaptör tarafından belirlenmiş oluyor. Adaptor, uyumsuz nesnenin wrapperı olmuş oluyor.  
 
  ```java
 public class AdapterPatternDemo {
@@ -1134,6 +1134,7 @@ class BidirectionalAdapter implements TurkishPlug, USPlug {
 }
  ```
 
+• Entegrasyon katmanlarında da sıklıkla Adaptor kalıbından faydalanılır. 
 
 ## Composite
 • Bütün parça ilişkisini birbirlerinden ayırmak
