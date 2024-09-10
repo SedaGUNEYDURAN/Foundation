@@ -945,17 +945,17 @@ public class Client implements ServiceInjector {
 • Yapısal kalıplar,sınıflar ve nesnelerin daha büyük yapılar oluşturmak üzere nasıl bir araya geldikleriyle ilgilidir. Kalıtım(inheritance ya da is-a) ve birleştirme(composition ya da has-a)  yapısal ilişkidir. Yapısal kalıplarda var olan interfaceleri, classları ve objeleri, kalıtım ve composition yoluyla bir araya getirerek yeni fonksiyonel yapılar oluşturulur.
 
 ## Flyweight
-• Amacı;nesneleri paylaşarak, nesne sayısını azaltmaktır .
-• Flyweight object, farklı bağlamlarda ortak olarak kullanılabilen nesnedir. Nesne farklı bağlamlar tarafından ortaklaşa kullanılır ancak nesne her bağlamda bağımsız olarak davranır. 500 sayfalık bir kitap düşünelim her sayfa için ayrı bir nesne oluşturmak çok maliyetli olacaktır. Bunun yerine bir sayfa nesnesi oluşturup tekrar tekrar kullanıbilmelidir. 4. sayfayı gösterirken 4. sayfa nesneye yüklenmeli, 7. sayfa gösterilirken nesneninin içini boşaltıp 7. sayfa yüklenmelidir.   
+• Amacı;nesneleri paylaşarak, nesne sayısını azaltmaktır .   
+• Flyweight object, farklı bağlamlarda ortak olarak kullanılabilen nesnedir. Nesne farklı bağlamlar tarafından ortaklaşa kullanılır ancak nesne her bağlamda bağımsız olarak davranır. 500 sayfalık bir kitap düşünelim her sayfa için ayrı bir nesne oluşturmak çok maliyetli olacaktır. Bunun yerine bir sayfa nesnesi oluşturup tekrar tekrar kullanıbilmelidir. 4. sayfayı gösterirken 4. sayfa nesneye yüklenmeli, 7. sayfa gösterilirken nesneninin içini boşaltıp 7. sayfa yüklenmelidir.      
 • Nesnelerin durumu ikiye ayrılır; 
 
   - İçsel durum(intrinsic state), flyweight objenin temsil ettiği asıl durumdur.Paylaşılan durumdur ve nesne tarafından ortak bir şekilde kullanılır. Değişmez ve bağımsızdır. Tüm örneklerde aynıdır, bu nedenle tek bir yerden yönetilebilir. Örneğin; renk, bir pikselin içsel durumudur çünkü renk bir çok piksel tarafından paylaşılabilir. Bellek tasarrufu sağlar.
   - Dışsal durum(extrinsic state), içinde bulunduğu bağlam tarafından belirlenen durumdur. Farklı  çok sayıda objeye ihtiyaç duyulur.  Dışsal durum ne kadar basitse Flyweight objenin kullanımı o kadar kolaydır. Paylaşılan ve bağımsız olmayan durumdur. Değişken ve dinamik olarak nesneye özgü sağlanır. Her nesne örneği için farklı olabilir ve bu nedenle dışarıdan sağlanır. Örneğin; pikselin koordinatları(x,y) dışsal bir durumdur çünkü her pikselin koordinatı farklıdır ve dinamik olarak paylaşılır. Nesne örneklerinin bağımsızlığını sağlar. Az sayıda nesne dışsal bağımlılığı arttrır. 
 
-• Factory method yardımı ile oluşturulurlar. 
-• Java'da primitive türlerin wrapper classları ve referans değerlerin bazıları Flyweight patternini kullanır. Belirli aralıklarda yapılan önbellekleme, bellek kullanımı düşürür, performansı yükseltir ve eşzamanlılık sounlarını azaltır. 
+• Factory method yardımı ile oluşturulurlar.     
+• Java'da primitive türlerin wrapper classları ve referans değerlerin bazıları Flyweight patternini kullanır. Belirli aralıklarda yapılan önbellekleme, bellek kullanımı düşürür, performansı yükseltir ve eşzamanlılık sorunlarını azaltır. 
 
-  - Byte, Short, Integer, Long ->-128 ile 127 aralığında; Character classı, 0 ile 127(ASCII karakterleri olarak) aralığında yer alan değerler önbelleğe alınır ve aynı nesne kullanılır. 
+  - Byte, Short, Integer, Long ->-128 ile 127 aralığında; Character classı, 0 ile 127(ASCII karakterleri olarak) aralığında yer alan değerler cache'e alınır ve aynı nesne kullanılır. 
   - Float ve Double classları önbellekleme mekanizmasını bulunmamaktadır. Bu türlerde her yeni atama için yeni bir nesne oluşturulur.
 
   
@@ -1005,7 +1005,7 @@ public class WrapperCacheDemo {
   
  ```
 
-  - String classı içsel olarak Flyweight desenine benzer bir mekanizma kullanır. String pool Java tarafından yönetilen ve aynı karakter dizisine sahip string nesnelerini paylaştıran bir havuzdur. String pool sayesinde, aynı karakter dizilerini içeren string nesneleri bellekten tasarruf etmek için yeniden kullanılır. intern(), bir string nesnesinin string poolda bulunmasını sağlar.  Java String classının intern() metodu, String poolun bir parçası olarak işlev görür. Eğer bir string literal(string nesnesi oluştururken doğrudan çift tırnak "" içinde bir karakter dizisi kullanmaktır.) olarak tanımlanırsa veya intern() metodu kullanılarak havuza eklenirse, aynı karakter dizisine sahip başka string ensneleri yeniden kullanılacaktır. 
+  - String classı içsel olarak Flyweight desenine benzer bir mekanizma kullanır. String pool Java tarafından yönetilen ve aynı karakter dizisine sahip string nesnelerini paylaştıran bir havuzdur. String pool sayesinde, aynı karakter dizilerini içeren string nesneleri bellekten tasarruf etmek için yeniden kullanılır. intern(), bir string nesnesinin string poolda bulunmasını sağlar.  Java String classının intern() metodu, String poolun bir parçası olarak işlev görür. Eğer bir string literal(string nesnesi oluştururken doğrudan çift tırnak "" içinde bir karakter dizisi kullanmaktır.) olarak tanımlanırsa veya intern() metodu kullanılarak havuza eklenirse, aynı karakter dizisine sahip başka string nesneleri yeniden kullanılacaktır. 
 
   
  ```java
@@ -1137,7 +1137,95 @@ class BidirectionalAdapter implements TurkishPlug, USPlug {
 • Entegrasyon katmanlarında da sıklıkla Adaptor kalıbından faydalanılır. 
 
 ## Composite
-• Bütün parça ilişkisini birbirlerinden ayırmak
+• Bütün parça ilişkisini birbirlerinden ayırmaktır amacı. Parça bütün ilişkisini göstermek için nesneleri ağaç yapılarında ifade edilir. Composite nesne, istemcilerin tekil nesneleri ve bu nesnelerin compositelerini(bileşiklerini) aynı şekilde işlemesine izin verir.  Composite nesnenin kullanımının istemciye fazladan yük getirmemesini sağlar.   
+• Composite kalıbında, parçalar ile bütünün ortak bir arayüze sahip olması sağlanır. Böylece istemci composite nesneyi de parçaları da aynı şekilde kullanır. Sonrasında bileşik nesne ile parçalar arasındaki ilişki düzenlenir. Bu amaçla composite nesnenin bir collection interface'ine sahip olması sağlanır. Dolayısıyla istemci, bütün-parça ilişkisinin karmaşıklığından uzak tutulur ve parçalar ile uğraşmayıp sadece bütün ile iletişimde olur.  
+• Parça bütün ilişkisinin olduğu yerlerde composite kalıbı kullanılabilir. Composite nesnede aynı zamanda parçadır. Composite nesnelerdeki metotların iterative olması gerekebilir. 
+ 
+ ```java
+public class CompositePatternDemo {
+    public static void main(String[] args) {
+        // Dosya ve dizin oluşturma
+        File file1 = new File("File1.txt");
+        File file2 = new File("File2.txt");
+        Directory directory1 = new Directory("Directory1");
+        directory1.addComponent(file1);
+        directory1.addComponent(file2);
+
+        File file3 = new File("File3.txt");
+        Directory directory2 = new Directory("Directory2");
+        directory2.addComponent(file3);
+        directory2.addComponent(directory1); // Directory1'i Directory2'ye ekliyoruz
+
+        // Yapıyı göster
+        directory2.showDetails();
+    }
+}
+
+class Directory implements FileSystemComponent {
+    private String name;
+    private List<FileSystemComponent> components = new ArrayList<>();
+
+    public Directory(String name) {
+        this.name = name;
+    }
+
+    public void addComponent(FileSystemComponent component) {
+        components.add(component);
+    }
+
+    public void removeComponent(FileSystemComponent component) {
+        components.remove(component);
+    }
+
+    @Override
+    public void showDetails() {
+        System.out.println("Directory: " + name);
+        for (FileSystemComponent component : components) {
+           System.out.println(" burada  ");
+	         component.showDetails();
+	         System.out.println(" bitiyor  ");
+        }
+    }
+}
+
+class File implements FileSystemComponent {
+    private String name;
+
+    public File(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void showDetails() {
+        System.out.println("File: " + name);
+    }
+}
+
+import java.util.ArrayList;
+import java.util.List;
+
+interface FileSystemComponent {
+    void showDetails();
+}
+ ```
+> Ekran çıktısı:  
+Directory: Directory2   
+ burada     
+File: File3.txt   
+ bitiyor     
+ burada     
+Directory: Directory1   
+ burada    
+File: File1.txt   
+ bitiyor     
+ burada     
+File: File2.txt   
+ bitiyor     
+ bitiyor     
+
+ Burada bir bileşen ağacında hem tek bir nesneyi(leaf) hem de grup nesnesini(composite) tek bir FileSystemComponent interface'i  ile yönetmeyi sağladık. Böylece istemci, bileşenleri aynı şekilde işlemesi için bir standart sağlanmış oldu. Yani FileComponentInterface'i sayesinde, bu bileşenlerin hepsi aynı şekilde işlenir yani, File veya bir Directory nesnesi olmasına bakılmaksızın hepsine aynı metod ile erişim sağlanır. 
+ 
+• 
 
 ## Façade
 • Karmaşık bir alt sistemi kullanmayı kolaylaştırmak
