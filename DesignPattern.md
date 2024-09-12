@@ -1228,13 +1228,13 @@ File: File2.txt
 • 
 
 ## Façade
-• Karmaşık bir alt sistemi kullanmayı kolaylaştırmayı amaçlar.Bir altsistemdeki arayüzlere bileşik bir arayüz sağlar. Buradaki arayüz terimi Java'daki interface ile karıştılmamalıdır, burada söz konusu olan API(Application Programming Interface). API, kullanıcıların veya diğer sistemlerin belirli işlevleri veya veri yapılarını nasıl kullanabileceklerini tanımlar ve karmaşık sistemlerin daha anlaşılır bir şekilde kullanılabilmesini sağlar.  
-• Sistemlerin karmaşıklığını yönetmek için parçalayark alt sistemlere bölebiliriz. Bu durumda alt sistemler birbirinin istemcisi durumuna gelir. Alt sistemler arasındaki bağımlılıkların da olabildiğince asgari düzeyde tutmak gerekir. 
-• Facade alt sistemlere bir giriş noktası sağlar, alt sistemlerin interface'i olur. Pek çok ince(fine-grained) interfaceden oluşan bir sistemi, kalın(coarsa-grained) bir arayüze dönüştürür. 
-• Facade'ın birlikteliği(cohesion) düşük, bağımlılığı(coupling) yüksek olma eğilimindedir. 
-• Facade'ın metotları süreci başlatan, yönlendiren ve sonlandıran nitelikte olur. Bu yüzden de metotları fazla sayıda parametre alma eğilimindedir. Facade nesneleri genelde stateless(durumsuz nesnelerdir). Aksi taktirde stateful nesneler Facade nesnelerinin sayısı istemci sayısına paralel olarak artar ve bu da ölçeklenebilir(scalability) problemlerini ortaya çıkarır. 
-• Kurumsal uygulamalardaki katmanlar(tiers/layers) arasındaki ilişkiyi basitleştiren en temel yapıdır. 
-• Facade ile Adapter arasındaki fark nedir? Facade karmaşık arayüzleri basit olanla değiştirir, Adapter ise uyumsuz arayüzü uyumlu hale getirir. 
+• Karmaşık bir alt sistemi kullanmayı kolaylaştırmayı amaçlar.Bir altsistemdeki arayüzlere bileşik bir arayüz sağlar. Buradaki arayüz terimi Java'daki interface ile karıştılmamalıdır, burada söz konusu olan API(Application Programming Interface). API, kullanıcıların veya diğer sistemlerin belirli işlevleri veya veri yapılarını nasıl kullanabileceklerini tanımlar ve karmaşık sistemlerin daha anlaşılır bir şekilde kullanılabilmesini sağlar.      
+• Sistemlerin karmaşıklığını yönetmek için parçalayark alt sistemlere bölebiliriz. Bu durumda alt sistemler birbirinin istemcisi durumuna gelir. Alt sistemler arasındaki bağımlılıkların da olabildiğince asgari düzeyde tutmak gerekir.    
+• Facade alt sistemlere bir giriş noktası sağlar, alt sistemlerin interface'i olur. Pek çok ince(fine-grained) interfaceden oluşan bir sistemi, kalın(coarsa-grained) bir arayüze dönüştürür.    
+• Facade'ın birlikteliği(cohesion) düşük, bağımlılığı(coupling) yüksek olma eğilimindedir.    
+• Facade'ın metotları süreci başlatan, yönlendiren ve sonlandıran nitelikte olur. Bu yüzden de metotları fazla sayıda parametre alma eğilimindedir. Facade nesneleri genelde stateless(durumsuz nesnelerdir). Aksi taktirde stateful nesneler Facade nesnelerinin sayısı istemci sayısına paralel olarak artar ve bu da ölçeklenebilir(scalability) problemlerini ortaya çıkarır.     
+• Kurumsal uygulamalardaki katmanlar(tiers/layers) arasındaki ilişkiyi basitleştiren en temel yapıdır.    
+• Facade ile Adapter arasındaki fark nedir? Facade karmaşık arayüzleri basit olanla değiştirir, Adapter ise uyumsuz arayüzü uyumlu hale getirir.    
 
  ```java
 public class Client {
