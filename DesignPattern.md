@@ -1223,12 +1223,64 @@ File: File2.txt
  bitiyor     
  bitiyor     
 
- Burada bir bileşen ağacında hem tek bir nesneyi(leaf) hem de grup nesnesini(composite) tek bir FileSystemComponent interface'i  ile yönetmeyi sağladık. Böylece istemci, bileşenleri aynı şekilde işlemesi için bir standart sağlanmış oldu. Yani FileComponentInterface'i sayesinde, bu bileşenlerin hepsi aynı şekilde işlenir yani, File veya bir Directory nesnesi olmasına bakılmaksızın hepsine aynı metod ile erişim sağlanır. 
+ Burada bir bileşen ağacında hem tek bir nesneyi(leaf) hem de grup nesnesini(composite) tek bir FileSystemComponent interface'i  ile yönetmeyi sağladık. Böylece istemci, bileşenleri aynı şekilde işlemesi için bir standart sağlanmış oldu. Yani FileComponentInterface'i sayesinde, bu bileşenlerin hepsi aynı şekilde işlenir yani, File veya bir Directory nesnesi olmasına bakılmaksızın hepsine aynı metod ile erişim sağlanır. Facade bir alt sistemin sağladığı hizmetleri tek ve basit bir arayüz (API) üzerinden sunmanın yoludur. 
  
 • 
 
 ## Façade
-• Karmaşık bir alt sistemi kullanmayı kolaylaştırmak
+• Karmaşık bir alt sistemi kullanmayı kolaylaştırmayı amaçlar.Bir altsistemdeki arayüzlere bileşik bir arayüz sağlar. Buradaki arayüz terimi Java'daki interface ile karıştılmamalıdır, burada söz konusu olan API(Application Programming Interface). API, kullanıcıların veya diğer sistemlerin belirli işlevleri veya veri yapılarını nasıl kullanabileceklerini tanımlar ve karmaşık sistemlerin daha anlaşılır bir şekilde kullanılabilmesini sağlar.  
+• Sistemlerin karmaşıklığını yönetmek için parçalayark alt sistemlere bölebiliriz. Bu durumda alt sistemler birbirinin istemcisi durumuna gelir. Alt sistemler arasındaki bağımlılıkların da olabildiğince asgari düzeyde tutmak gerekir. 
+• Facade alt sistemlere bir giriş noktası sağlar, alt sistemlerin interface'i olur. Pek çok ince(fine-grained) interfaceden oluşan bir sistemi, kalın(coarsa-grained) bir arayüze dönüştürür. 
+• Facade'ın birlikteliği(cohesion) düşük, bağımlılığı(coupling) yüksek olma eğilimindedir. 
+• Facade'ın metotları süreci başlatan, yönlendiren ve sonlandıran nitelikte olur. Bu yüzden de metotları fazla sayıda parametre alma eğilimindedir. Facade nesneleri genelde stateless(durumsuz nesnelerdir). Aksi taktirde stateful nesneler Facade nesnelerinin sayısı istemci sayısına paralel olarak artar ve bu da ölçeklenebilir(scalability) problemlerini ortaya çıkarır. 
+• Kurumsal uygulamalardaki katmanlar(tiers/layers) arasındaki ilişkiyi basitleştiren en temel yapıdır. 
+• Facade ile Adapter arasındaki fark nedir? Facade karmaşık arayüzleri basit olanla değiştirir, Adapter ise uyumsuz arayüzü uyumlu hale getirir. 
+
+ ```java
+public class Client {
+    public static void main(String[] args) {
+        MediaFacade mediaFacade = new MediaFacade();
+
+        // Bir medya dosyası oynatma
+        mediaFacade.playMedia("song.mp3", "movie.mp4", "subtitles.srt");
+    }
+}
+class MediaFacade {
+    private AudioPlayer audioPlayer;
+    private VideoPlayer videoPlayer;
+    private SubtitleManager subtitleManager;
+
+    public MediaFacade() {
+        audioPlayer = new AudioPlayer();
+        videoPlayer = new VideoPlayer();
+        subtitleManager = new SubtitleManager();
+    }
+
+    public void playMedia(String audioFile, String videoFile, String subtitleFile) {
+        audioPlayer.playAudio(audioFile);
+        videoPlayer.playVideo(videoFile);
+        subtitleManager.loadSubtitles(subtitleFile);
+    }
+}
+class AudioPlayer {
+    public void playAudio(String fileName) {
+        System.out.println("Playing audio: " + fileName);
+    }
+}
+
+class VideoPlayer {
+    public void playVideo(String fileName) {
+        System.out.println("Playing video: " + fileName);
+    }
+}
+
+class SubtitleManager {
+    public void loadSubtitles(String fileName) {
+        System.out.println("Loading subtitles from: " + fileName);
+    }
+}
+
+ ```
 
 ## Proxy
 • Bir nesneye erişimi kontrol etmek
