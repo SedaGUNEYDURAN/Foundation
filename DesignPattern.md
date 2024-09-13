@@ -1283,13 +1283,14 @@ class SubtitleManager {
  ```
 
 ## Proxy
-• Amaç bir nesneye erişimi kontrol etmektir. Ona olan erişimi kontrol etmek amacıyla bir başka nesne için geçiş(surrogate) ya da ara nesne(gerçeği yerine geçen(sahte) nesne) sağlar. Bu nesneye Proxy denir. İstemci olabildiğince kısıtlardan haberadr olmamalı, sanki asıl nesne ile çalışıyormuş gibi, normal çalışmasına devam etmelidir. Geçiş nesnesinin arayüzü, saklanan nesne ile aynı olursa istemci bu durumdan haberdar olmaz, asıl nesne ile aradaki nesneyi ayırt edemez. 
-• Proxy nesne istemciyi asıl nesneden yalıtır ve asıl nesneye olan bağımlılığı ortadan kaldırır. Proxy nesne kısıtları yöneterek asıl nesnenin birlikteliğini yükseltmeye da yardımcı olur. 
-• Proxy'nin kullanıldığı yaygın durumlar; lazy loading, güvenlik, önbellekleme ve ağ erişimi. 
+• Amaç bir nesneye erişimi kontrol etmektir. Ona olan erişimi kontrol etmek amacıyla bir başka nesne için geçiş(surrogate) ya da ara nesne(gerçeği yerine geçen(sahte) nesne) sağlar. Bu nesneye Proxy denir. İstemci olabildiğince kısıtlardan haberadr olmamalı, sanki asıl nesne ile çalışıyormuş gibi, normal çalışmasına devam etmelidir. Geçiş nesnesinin arayüzü, saklanan nesne ile aynı olursa istemci bu durumdan haberdar olmaz, asıl nesne ile aradaki nesneyi ayırt edemez.    
+• Proxy nesne istemciyi asıl nesneden yalıtır ve asıl nesneye olan bağımlılığı ortadan kaldırır. Proxy nesne kısıtları yöneterek asıl nesnenin birlikteliğini yükseltmeye da yardımcı olur.    
+• Proxy'nin kullanıldığı yaygın durumlar; lazy loading, güvenlik, önbellekleme ve ağ erişimi.    
 
 
  ```java
-// Subject Interface:Proxy ve gerçek nesnelerin uygulaması gereken bir interface veya classtır
+// Subject Interface:Proxy ve gerçek nesnelerin uygulaması gereken bir
+//interface veya classtır
 interface President {
     void giveSpeech();
 }
@@ -1308,7 +1309,8 @@ class RealPresident implements President {
     }
 }
 
-// Proxy: Gerçek nesneye erşimi kontrol eden class.Genellikle yapılan çağrıları gerçek nesneye yönlendirir.  
+// Proxy: Gerçek nesneye erşimi kontrol eden class.Genellikle yapılan çağrıları
+//gerçek nesneye yönlendirir.  
 class ProxyPresident implements President {
     private RealPresident realPresident;
     private String name;
