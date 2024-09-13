@@ -609,7 +609,7 @@ public class ClassicTable implements Table {
 
 Burada ModernFurnitureFactory classından FurnitureFactory nesnesi yaratır(modernFactory). modernFactory nesnesi createChair() metodunu çağırır ve ClassicChair nesnesi yaratılır, bu nesne modernChair'a atanır.modernChair nesnesi  sitOn() metodunu çağırır ve  ekrana Sitting on a classic chair bastırır . 
 
-# Builder:
+# Builder
 • Amaç karmaşık nesne yaratma sürecini kurgulamaktır. Proje karmaşıklıklaştıkça veya aynı nesne için farklı konfigürasyonlar söz konusu olduğunda nesne de karmaşıklaşır. Constructor çağrısı yaparak builder pattern'i ile bir süreç içinde yapılır. Bu kalıpta yaratmak(create) yerine inşa söz konusudur. Bu sebeple builder kelimesi ile süreçsellik vurgusu yapılmıştır.  
 • Bir nesnenin karmaşık olduğunun en temel göstergesi, çok parametre alan constructorlardır. -> Telecoping constructor anti-pattern(uzun kurucu anti pattern'i) Constructora geçilen parametrelerin de oluşturulması gerektiği düşünüldüğünde, bu sürecin soyutlanması gerektiği açıktır.  
 • Varsayılan constructor ve set metotları, uzun constructor problemini başka bir probleme çevirmektedir. Pek çok set metodunun çağrılmasının yanında yapılacak yanlışların, oluşturlan nesnenin durumunda problemlere yol açması da mümkündür. Ayrıca bu yaklaşım nesnnenin durumunu değişebilir yani mutable halde bırakmaktadır.  
@@ -717,7 +717,7 @@ class House {
 
 Burada House classının içinde, constructor ve zorunlu alanları içerir. HouseBuilder inner classının constructorı zorunlu parametreleri alır. Opsiyonel özellikler için setter benzeri metodları sağlar ve her bir metot HouseBuilder nesnesini döenr. build() metodu sonunda House nesnesini oluşturur. HouseBuilder inner classı static olarak tanımlanmıştır bu sayede HouseBuilder'ın instance'ın yaratmadan doğradan bu metotları kullanabildik. 
 
-# Prototype: 
+# Prototype 
 •Bir örnek nesneden kopyalamayla  yeni nesneler türetmektir.Karmaşık nesneleri sıfırdan yaratmak yerine, hali hazırda elde var olan nesnelerden kopyalayarak(clone) elde etmek yoluna gidilebilir. Durumu kopyalanarak çoğaltılan nesne **prototip** ya da örnek nesnedir. Diyelim ki elimizde bir Account nesnesi var ama bunun da tipleri var frozenAccount, normalAccount, negativeAccount. Account nesnesi çok fazla parametre istediğinde nesne oluşturmak çok olur. Aşağıdaki gibi bir durumda parametre geçmesi oldukça zor ve karışıktır. 
 
  ```java
@@ -798,7 +798,7 @@ public class Report implements Document {
 Burada ilk olarak Report classından bir obje oluşturulur ve parametreleri geçilir. originalReport.clone(), clone() metodu çağrısı yapılır.clone() metodunda, (Report) super.clone() döner. Bu ne demek? klonlama işlemini "Object" sınıfındaki clone() metodundan çağırır. Bu da Cloneable interface'ini uygulayan nesnenin yani originalReport nesnesinin bir kopyası(swallow) oluşturulur. Clonable interface'i uygulanamıyorsa CloneNotSupportedException hatası fırlatılır. Oluşturulan kopya Object classında oluşturuldupu için Object tipindedir. Uygun tipe dönüştürülmesi için (Report) super.clone() şeklinde yazılır ve döndürülür.   
 • Prototype kalıbı nesnelerin nasıl üretileceğini çözer. Prototype kalıbı nesnelerin nerede oluşturulacağı ile ilgilenmez dolayısıyla nesne yaratmayı soyutlamaz.  Protipten yeni nesne ürütmeyi bir factory metodunun ardına koymak çok daha uygundur. Factory metoduna parametre geçilerek, nesne olması gereken haliyle geriye döndürülebilir.   
 
-# Dependency Injection:
+# Dependency Injection
 • Avantajı, tanım tabanlı(declarative) bir yapı sunmasıdır. Bu şekilde nesnelerin birbirlerine olan bağımlılıkları ifade edilir ama bağımlılıkların nasıl yerine getireleceği Dependency Injection altyapısı tarafından gerçekleştirilir. Bu da karmaşıklığı azaltır ve değişimi kolaylaştırır.   
 • Dependency Injection bir kalıp olmakla birlikte genelde teknolojik destek ile gerçekleşir. 
 • Dependency Injection, nesnelerin bağımlılıklarını doğrudan inşa etmek ve yönetmek yerine bu bağımlılıkları dışarıdan alarak yani enjekte ederek bağımlılıkların daha esnek ve test edilebilir olmasını sağlayan bir patterndir. (Loose couplingini güçlendirir. ) Üç temel yolla gerçekleşir.
