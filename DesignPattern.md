@@ -1351,8 +1351,8 @@ public class ProxyPatternDemo {
 }
 
  ```
-• Proxy ile Adapter arasındaki fark; proxynin sakladığı nesne ile proxy nesnesi aynı interface implement eder. Adapter ise farklı interfacededir. 
-• Proxy ile Facade arasındaki fark; proxynin sakladığı nesne ile proxy aynı arayüzdedir. Facade, farklı arayüzleri basitleştirerek bir yerde toplamaktadır. Facade olduğunda clienların durumdan haberi olurken proxyde clientların durumdan haberi yoktur.  
+• Proxy ile Adapter arasındaki fark; proxynin sakladığı nesne ile proxy nesnesi aynı interface implement eder. Adapter ise farklı interfacededir.    
+• Proxy ile Facade arasındaki fark; proxynin sakladığı nesne ile proxy aynı arayüzdedir. Facade, farklı arayüzleri basitleştirerek bir yerde toplamaktadır. Facade olduğunda clienların durumdan haberi olurken proxyde clientların durumdan haberi yoktur.      
 
 ## Decorator
 • Nesneye dinamik olarak yeni özellikler kazandırmak
