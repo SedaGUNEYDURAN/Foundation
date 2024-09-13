@@ -1283,7 +1283,74 @@ class SubtitleManager {
  ```
 
 ## Proxy
-• Bir nesneye erişimi kontrol etmek
+• Amaç bir nesneye erişimi kontrol etmektir. Ona olan erişimi kontrol etmek amacıyla bir başka nesne için geçiş(surrogate) ya da ara nesne(gerçeği yerine geçen(sahte) nesne) sağlar. Bu nesneye Proxy denir. İstemci olabildiğince kısıtlardan haberadr olmamalı, sanki asıl nesne ile çalışıyormuş gibi, normal çalışmasına devam etmelidir. Geçiş nesnesinin arayüzü, saklanan nesne ile aynı olursa istemci bu durumdan haberdar olmaz, asıl nesne ile aradaki nesneyi ayırt edemez. 
+• Proxy nesne istemciyi asıl nesneden yalıtır ve asıl nesneye olan bağımlılığı ortadan kaldırır. Proxy nesne kısıtları yöneterek asıl nesnenin birlikteliğini yükseltmeye da yardımcı olur. 
+• Proxy'nin kullanıldığı yaygın durumlar; lazy loading, güvenlik, önbellekleme ve ağ erişimi. 
+
+
+ ```java
+// Subject Interface:Proxy ve gerçek nesnelerin uygulaması gereken bir interface veya classtır
+interface President {
+    void giveSpeech();
+}
+
+// RealSubject: Asıl nesne Proxy'nin erişimi kontrol ettiği asıl nesne
+class RealPresident implements President {
+    private String name;
+
+    public RealPresident(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void giveSpeech() {
+        System.out.println(name + " is giving a speech.");
+    }
+}
+
+// Proxy: Gerçek nesneye erşimi kontrol eden class.Genellikle yapılan çağrıları gerçek nesneye yönlendirir.  
+class ProxyPresident implements President {
+    private RealPresident realPresident;
+    private String name;
+
+    public ProxyPresident(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void giveSpeech() {
+        if (isAuthorized()) {
+            if (realPresident == null) {
+                realPresident = new RealPresident(name);
+            }
+            realPresident.giveSpeech();
+        } else {
+            System.out.println(name + " is not authorized to give a speech.");
+        }
+    }
+
+    private boolean isAuthorized() {
+        // Burada, yetkilendirme kontrolü yapılabilir.
+        // Örneğin, belirli bir koşul veya kullanıcı durumu.
+        // Şu an için tüm başkanlar yetkili kabul edelim.
+        return true; // Yetkili
+    }
+}
+
+// Test
+public class ProxyPatternDemo {
+    public static void main(String[] args) {
+        President president1 = new ProxyPresident("Alice");
+        President president2 = new ProxyPresident("Bob");
+
+        // Başkan vekilini kullanarak konuşma yapmayı deneyelim
+        president1.giveSpeech(); // Alice konuşma yapıyor
+        president2.giveSpeech(); // Bob konuşma yapıyor
+    }
+}
+
+ ```
+•
 
 ## Decorator
 • Nesneye dinamik olarak yeni özellikler kazandırmak
