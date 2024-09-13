@@ -1287,7 +1287,6 @@ class SubtitleManager {
 • Proxy nesne istemciyi asıl nesneden yalıtır ve asıl nesneye olan bağımlılığı ortadan kaldırır. Proxy nesne kısıtları yöneterek asıl nesnenin birlikteliğini yükseltmeye da yardımcı olur.    
 • Proxy'nin kullanıldığı yaygın durumlar; lazy loading, güvenlik, önbellekleme ve ağ erişimi.    
 
-
  ```java
 // Subject Interface:Proxy ve gerçek nesnelerin uygulaması gereken bir
 //interface veya classtır
@@ -1352,7 +1351,8 @@ public class ProxyPatternDemo {
 }
 
  ```
-•
+• Proxy ile Adapter arasındaki fark; proxynin sakladığı nesne ile proxy nesnesi aynı interface implement eder. Adapter ise farklı interfacededir. 
+• Proxy ile Facade arasındaki fark; proxynin sakladığı nesne ile proxy aynı arayüzdedir. Facade, farklı arayüzleri basitleştirerek bir yerde toplamaktadır. Facade olduğunda clienların durumdan haberi olurken proxyde clientların durumdan haberi yoktur.  
 
 ## Decorator
 • Nesneye dinamik olarak yeni özellikler kazandırmak
