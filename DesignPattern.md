@@ -1355,7 +1355,117 @@ public class ProxyPatternDemo {
 • Proxy ile Facade arasındaki fark; proxynin sakladığı nesne ile proxy aynı arayüzdedir. Facade, farklı arayüzleri basitleştirerek bir yerde toplamaktadır. Facade olduğunda clienların durumdan haberi olurken proxyde clientların durumdan haberi yoktur.      
 
 ## Decorator
-• Nesneye dinamik olarak yeni özellikler kazandırmak
+• Amaç;nesneye dinamik olarak yeni özellikler kazandırmaktır. 
+• Sıklıkla, yeni sorumluluğu/yetkinliği tüm sınıfa değil, nesnelere eklemek isteriz. Sorumlulukları sınıfa eklemek için tipik olarak mirası kullanırız. Sınıflara yetkinlik eklemek için inheritance kullanılmasının en temel problemi, inheritance'ın bir derleme zaman(compile time) yapısı olmasıdır. Her yeni yetkinlik için kod değişikliği ve tekrar derleme(recompalition) gerekir. Böyle çok yetkinliğin ve kombinasyonların söz konusu olduğu hallerde, hem derin hem de geniş nesne hiyerarşileri oluşur hem de çoklu miras(multiple inheritance) kullanılmak zorunda kalınır. (n farklı sorumluluk için n! alt sınıfa ihtiyaç olabilir.) **Bunun yerine miras (inheritance) ile is-a ilişkisi yerine nesne bileşimi(object composition) ile has-a ilişkisi kullanılmadır.** Yeni sorumlulukları yeni alt sınıflarla yerine getirmektense -alt sınıf ihtiyacını doğuran şeyi bir dekorasyon/bezeme malzemesi- nesnesi olarak görmek ve sınıfın nesnelerine eklemek daha sağlıklıdır. Decorator pattern; nesne bileşimini(composition) sınıf kalıtımına(inheritance'a) tercih eder.  
+•  Sınıf kalıtımı, bir derleme zamanı yapısıdır ve çalışma zamanında değişmez. Nesne birleştirmesi(object composition) çalışma zamanı yapısı olduğu için değişiklik yapılabilir. Yani inheritance statik, compositıon dinamik bir yapıdır. Bu sebeple composition, çok sayıda farklı durumu ifade etmede esnekli sağlar. 
+• Builder ile decorator arasındaki fark;Builder bir nesneyi sıfırdan build eder. Decorator ise composite bir nesneyi yolda ekleye ekleye build ediyor. 
+• java.io'da decorator pattern'ı kullanılır. FileInputStream aslında bir InputStream'dir. FileInputStream kendi cinsinden constructor'ına obje alır. Bu demek oluyor ki filedan okursun zipleyen stream'e geçersin(filedan okuduğunu zipler yani).  
+• Web yapılarındaki filtreler de decorator pattern'ı kullanılır.Web uygulamalarında istemciden gelen isteğin ya da ona döndürülen cevabın önce farklı konularda işlenmesine ihtiyaç duyulur. Örneğin; oluşturulan cevap önce XML'e çevrilir sonra XSLT transformasyonuyla bezenir, sonra ziplenir en son olarak da şifrelenir. Bu işlemlerin tam tersi gelen istekler için yapılır. 
+• Decorator kalıbının Composite'den farkı, decoratorde sorumluluk decorator nesnelerinde, compositede ise composite nesnede olmasıdır. Composite'de bileşik nesneye eklenen nesneleri yönetmek bileşik nesnenin sorumluluğundayken Decorator kalıbında sorumluluk dekoratör nesnelerindedir. **Yani decarotor kalıbında bütün-parça ilişkisi yoktur, nesnenin süreç içinde donatılması söz kosudur.** Dekoratörleri bir araya getirerek composite bir obje oluşturmuyoruz, object composition'ı kullanarak dekoratörleri oluşturuyoruz. 
+
+ ```java
+// Kahve arayüzü
+interface Coffee {
+    String getDescription();
+    double cost();
+}
+
+// Temel Kahve sınıfı
+class BasicCoffee implements Coffee {
+    @Override
+    public String getDescription() {
+        return "Basic Coffee";
+    }
+
+    @Override
+    public double cost() {
+        return 2.00; // Basit kahvenin fiyatı
+    }
+}
+
+// Dekoratör sınıfı
+abstract class CoffeeDecorator implements Coffee {
+    protected Coffee decoratedCoffee;
+
+    public CoffeeDecorator(Coffee coffee) {
+        this.decoratedCoffee = coffee;
+    }
+
+    @Override
+    public String getDescription() {
+        return decoratedCoffee.getDescription(); // Dekoratör, dekoratörünün tanımını sağlar.
+    }
+
+    @Override
+    public double cost() {
+        return decoratedCoffee.cost(); // Dekoratör, dekoratörünün fiyatını sağlar.
+    }
+}
+
+// Vanilya şurubu dekoratörü
+class VanillaSyrupDecorator extends CoffeeDecorator {
+    public VanillaSyrupDecorator(Coffee coffee) {
+        super(coffee);
+    }
+
+    @Override
+    public String getDescription() {
+        return decoratedCoffee.getDescription() + ", Vanilla Syrup";
+    }
+
+    @Override
+    public double cost() {
+        return decoratedCoffee.cost(); // Vanilya şurubu ekleme maliyeti 0
+    }
+}
+
+// Krema dekoratörü
+class WhippedCreamDecorator extends CoffeeDecorator {
+    public WhippedCreamDecorator(Coffee coffee) {
+        super(coffee);
+    }
+
+    @Override
+    public String getDescription() {
+        return decoratedCoffee.getDescription() + ", Whipped Cream";
+    }
+
+    @Override
+    public double cost() {
+        // Krema maliyeti, eğer üstte bir VanillaSyrupDecorator varsa bedava
+        if (decoratedCoffee instanceof VanillaSyrupDecorator) {
+            return decoratedCoffee.cost(); // Krema bedava
+        } else {
+            return decoratedCoffee.cost() + 5.00; // Krema fiyatı 5 lira
+        }
+    }
+}
+
+// Ana program
+public class Main {
+    public static void main(String[] args) {
+        Coffee myCoffee = new BasicCoffee(); // Temel kahve
+        System.out.println(myCoffee.getDescription() + " $" + myCoffee.cost());
+
+        // Vanilya şurubu eklenmiş kahve
+        myCoffee = new VanillaSyrupDecorator(myCoffee);
+        System.out.println(myCoffee.getDescription() + " $" + myCoffee.cost());
+
+        // Krema eklenmiş, vanilya şurubu varsa bedava
+        myCoffee = new WhippedCreamDecorator(myCoffee); // Vanilya şurubu var
+        System.out.println(myCoffee.getDescription() + " $" + myCoffee.cost());
+
+        // Yeni bir temel kahve oluşturarak krema ekliyoruz ama vanilya şurubu yok
+        Coffee anotherCoffee = new BasicCoffee();
+        anotherCoffee = new WhippedCreamDecorator(anotherCoffee); // Vanilya şurubu yok
+        System.out.println(anotherCoffee.getDescription() + " $" + anotherCoffee.cost());
+
+        // Süt eklenmiş kahve
+        anotherCoffee = new MilkDecorator(anotherCoffee);
+        System.out.println(anotherCoffee.getDescription() + " $" + anotherCoffee.cost());
+    }
+}
+ ```
 
 ## Bridge
 • Soyutlama ile gerçekleştirilmesini birbirinden ayırmak
