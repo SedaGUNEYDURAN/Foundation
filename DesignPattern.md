@@ -1476,3 +1476,44 @@ public class Main {
 • **Soyutlama(abstraction)** kullanıcının etkileşime bulunduğu yüksek seviyeli bir arayüze sahiptir. Bu işlevselliği temsil eder fakat detaylarına inmez. **Gerçekleştirme(implementation)** soyutlamanın gerçekleştirilmesidir. Gerçek işlevselliğin uygulandığı yerdir. 
 • Abstract factory ile arasındaki fark; abstract factoryde amaç nesne üretmektir. Bride'de ise amaç hig couplingiden low couplinge geçirmektir. 
 • Karmaşıklığı arttırmak pahasına esneklik sağlar. 
+
+# Davranışsal Kalıplar
+
+##Strategy
+•
+• 
+##Command
+• 
+• 
+##Iterator
+• 
+• 
+##Template Method
+• 
+• 
+##Observer
+• 
+• 
+##Memento
+• 
+• 
+##Chain of Responsibility
+• 
+• 
+
+##Visitor
+• 
+• 
+##State
+• 
+• 
+##Interpreter
+• 
+• 
+
+
+
+
+
+
+
