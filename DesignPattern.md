@@ -1476,6 +1476,78 @@ public class Main {
 • **Soyutlama(abstraction)** kullanıcının etkileşime bulunduğu yüksek seviyeli bir arayüze sahiptir. Bu işlevselliği temsil eder fakat detaylarına inmez. **Gerçekleştirme(implementation)** soyutlamanın gerçekleştirilmesidir. Gerçek işlevselliğin uygulandığı yerdir. 
 • Abstract factory ile arasındaki fark; abstract factoryde amaç nesne üretmektir. Bride'de ise amaç hig couplingiden low couplinge geçirmektir. 
 • Karmaşıklığı arttırmak pahasına esneklik sağlar. 
+ 
+ ```java
+// Implementation
+interface Color {
+    void applyColor();
+}
+
+// Concrete Implementation A
+class Red implements Color {
+    @Override
+    public void applyColor() {
+        System.out.println("Red color applied.");
+    }
+}
+
+// Concrete Implementation B
+class Green implements Color {
+    @Override
+    public void applyColor() {
+        System.out.println("Green color applied.");
+    }
+}
+
+// Abstraction
+abstract class Shape {
+    protected Color color;
+
+    protected Shape(Color color) {
+        this.color = color;
+    }
+
+    public abstract void draw();
+}
+
+// Refined Abstraction A
+class Circle extends Shape {
+    public Circle(Color color) {
+        super(color);
+    }
+
+    @Override
+    public void draw() {
+        System.out.print("Circle drawn with ");
+        color.applyColor();
+    }
+}
+
+// Refined Abstraction B
+class Square extends Shape {
+    public Square(Color color) {
+        super(color);
+    }
+
+    @Override
+    public void draw() {
+        System.out.print("Square drawn with ");
+        color.applyColor();
+    }
+}
+
+// Client Code
+public class BridgePatternDemo {
+    public static void main(String[] args) {
+        Shape redCircle = new Circle(new Red());
+        Shape greenSquare = new Square(new Green());
+
+        redCircle.draw();    // Circle drawn with Red color applied.
+        greenSquare.draw();  // Square drawn with Green color applied.
+    }
+}
+ ```
+
 
 # Davranışsal Kalıplar
 
