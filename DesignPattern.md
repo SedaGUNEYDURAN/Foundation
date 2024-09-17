@@ -1551,35 +1551,35 @@ public class BridgePatternDemo {
 
 # Davranışsal Kalıplar
 
-##Strategy   
+## Strategy   
 •   
 •    
-##Command   
+## Command   
 •   
 •   
-##Iterator   
+## Iterator   
 •   
 •   
-##Template Method  
+## Template Method  
 •   
 •   
-##Observer  
+## Observer  
 •   
 •   
-##Memento  
+## Memento  
 •   
 •   
-##Chain of Responsibility  
+## Chain of Responsibility  
 •   
 •   
 
-##Visitor    
+## Visitor    
 •      
 •   
-##State  
+## State  
 •   
 •   
-##Interpreter  
+## Interpreter  
 •   
 •   
 
