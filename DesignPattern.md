@@ -1550,38 +1550,170 @@ public class BridgePatternDemo {
  ```
 
 
-# Davranışsal Kalıplar
+# Davranışsal Kalıplar(Behavioral Pattern)
+• Davranışsal kalıplar , algoritmalar ve sorumlulukları sınıflara atamak ile ilgilir. Sadece sınıflar ve nesnelerle değil aynı zamanda onların arasıbndaki haberleşmeyle de ilgilidir. 
+• Davranışsal sınıf kalıpları kalıtımı kullanırken, davranışsal nesneler kalıpları composition kullanır. Yani hem has a hem de is a ilişkisi bulunur. 
 
 ## Strategy   
-•   
-•    
+•   Amaç; bir işi yapmanın farklı yollarını, o işi isteyen istemciden bağımsız ve birbiri yerine geçebilecek şekilde ifade eder. 
+• Durum kontrolleri yapılırken kullanır gibi düşün; if-else if yapısının  ya da switch-case yapısının bir dalı olarak ifade ederek algoritma aile gerçekleştirilir. Ancak bu çözüm uzun vadeli değildir ve çoğunlukla tek bir algoritma olduğu düşüncesine dayanır, değişimi göz önüne almaz. Algoritmanın farklı iki implementationını aynı yerde birbirini etkileyecek aralarında coupling oluşturacak şekilde implement etmemeliyiz. İstemci algoritmalardan bağımsız olmalıdır.  istemci algoritmaları yapmamalı, algoritmalardan hizmet istemeli.  
+• Farklı algoritmaları istemciden bağımsız bir şekilde kendilerine has farklı yerlerde gerçekleştirmek ve onları birbiri yerine geçebilecek şekilde kullanmalıyız. Bu durumda hem algoritmalar birbirinden ayrılacak ve aralarında gelişigüzel bağımlılıklar oluşmayacak hem de istemci bu algoritmaları gerçekleştirenlere doğrudan bağımlı olmayacaktır. **Kısacası strategy kalıbının çözümü bir arayüzü gerçekleştiren kardeş sınıflardır.** Her kardeş sınıf ayrı bir algoritmayı yerine getirir.  Hangi sınıfın kullanılacağını ise bir başka nesne, çoğunlukla bağlam karar verir. 
+• Bu yapıda istemci ile algoritmalar arasında soyut bağımlılık vardır. Bu şekilde istemci farklı davranışlara, stratejilere sahip bir yapı haline gelir. Stratejiler hem istemciden hem de birbirinden bağımsız olarak değişebilir. Yeni stratejiler kolayca eklenebilir ve istemci zengin davranışlara sahip olabilir. İstemci böylelikler SRP VE OCP'ye uygun hale gelir.  
+• Ne zaman bir şeyi hesaplamanın farklı yollarıyla karşılaşırsak bir iş kuralının bir faktöre göre değşen şekilleri vs. varsa Strategy kalıbı kullanılmalıdır. O anda tek bir yol olsa bile bu yapılmalı ileride iş evrildikçe birden fazla yolu çıkacaktır. 
+• Negatif yönü ise her algroritma farklı sınıf ile ifade edildiğinde sınıf ve nesne sayısı artar. 
+• Abstract factory bir nesne ailesini oluştururken Strategy algoritma ailesini yönetir. Strategy ve Proxy yapısal olarak birbirine benzese de farklı çözümlerdir. Proxy'de saklanan nesne ile onun vekili bir algoritmanın farklı gerçekleştirmeleri değildir. Strategy, Command'in özel bir hali olarak görülebilir. 
+
+ ```java
+public class Client {
+    public static void main(String[] args) {
+        SortingStrategyFactory factory = new SortingStrategyFactory();
+
+        int[] smallArray = {34, 7, 23, 32, 5, 62}; // 6 eleman
+        int[] mediumArray = new int[200]; // 200 eleman
+        int[] largeArray = new int[1000001]; // 1,000,001 eleman
+
+        // Rastgele sayılar ile doldur
+        for (int i = 0; i < mediumArray.length; i++) {
+            mediumArray[i] = (int) (Math.random() * 10000); // 0-9999 arası rastgele sayı
+        }
+
+        for (int i = 0; i < largeArray.length; i++) {
+            largeArray[i] = (int) (Math.random() * 10000); // 0-9999 arası rastgele sayı
+        }
+
+        System.out.println("Sorting small array using factory:");
+        SortingStrategy smallArrayStrategy = factory.getSortingStrategy(smallArray);
+        smallArrayStrategy.sort(smallArray);
+
+        System.out.println("Sorting medium array using factory:");
+        SortingStrategy mediumArrayStrategy = factory.getSortingStrategy(mediumArray);
+        mediumArrayStrategy.sort(mediumArray);
+
+        System.out.println("Sorting large array using factory:");
+        SortingStrategy largeArrayStrategy = factory.getSortingStrategy(largeArray);
+        largeArrayStrategy.sort(largeArray);
+    }
+}
+
+public class SortingStrategyFactory {
+    public SortingStrategy getSortingStrategy(int[] array) {
+        int length = array.length;
+
+        if (length < 100) {
+            return new BubbleSort();
+        } else if (length >= 100 && length < 1000000) {
+            return new QuickSort();
+        } else {
+            return new ArraysSort();
+        }
+    }
+}
+
+public interface SortingStrategy {
+    void sort(int[] array);
+}
+
+public class BubbleSort implements SortingStrategy {
+    @Override
+    public void sort(int[] array) {
+        int n = array.length;
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                if (array[j] > array[j + 1]) {
+                    // Swap array[j] and array[j + 1]
+                    int temp = array[j];
+                    array[j] = array[j + 1];
+                    array[j + 1] = temp;
+                }
+            }
+        }
+        System.out.println("Array sorted using Bubble Sort");
+    }
+}
+
+public class QuickSort implements SortingStrategy {
+    @Override
+    public void sort(int[] array) {
+        quickSort(array, 0, array.length - 1);
+        System.out.println("Array sorted using Quick Sort");
+    }
+
+    private void quickSort(int[] array, int low, int high) {
+        if (low < high) {
+            int pi = partition(array, low, high);
+            quickSort(array, low, pi - 1);
+            quickSort(array, pi + 1, high);
+        }
+    }
+
+    private int partition(int[] array, int low, int high) {
+        int pivot = array[high];
+        int i = (low - 1);
+        for (int j = low; j < high; j++) {
+            if (array[j] < pivot) {
+                i++;
+                // Swap array[i] and array[j]
+                int temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+        }
+        // Swap array[i + 1] and array[high] (or pivot)
+        int temp = array[i + 1];
+        array[i + 1] = array[high];
+        array[high] = temp;
+        return i + 1;
+    }
+}
+import java.util.Arrays;
+
+public class ArraysSort implements SortingStrategy {
+    @Override
+    public void sort(int[] array) {
+        Arrays.sort(array);
+        System.out.println("Array sorted using Arrays.sort");
+    }
+}
+ ```
+
 ## Command   
+•  Amaç; istekte bulunan istemci  ile isteği yeribne getiren arasındaki bağımlılığı azaltmak ve metot seviyesinde ifade edilen isteği nesne seviyesinde soyutlayarak ek yetkinlikler kazandırmatır. 
 •   
-•   
+
 ## Iterator   
-•   
-•   
+•   Amaç; collectionlardaki birden fazla nesneye sıralı erişim için bir yol sağamaktır. 
+•
+
+## Mediator 
+•  Amaç; cok sayıda nesnenin birbiriyle haberleşmesini ve koordinasyonunu sağlamaktır. 
+•  
+
 ## Template Method  
-•   
-•   
+•   Amaç;bir algoritmanın genel yapısını ifade edip, değişecek adımları içi doldurulacak şekilde bırakmaktır.
+• 
+
 ## Observer  
+•   Amaç; bir nesnenin durumundaki değişikliklerden haberdar olmaktır.  
 •   
-•   
+
 ## Memento  
-•   
-•   
+•   Amaç; sarmalamayı bozmadan, sonra ulaşmak üzere bir nesnenin durumunu saklamaktır.
+•  
+
 ## Chain of Responsibility  
-•   
+•   Amaç;istekte bulunan istemci ile isteği yerine getiren arasındaki bağımlılığı azaltmaktır. 
 •   
 
 ## Visitor    
-•      
-•   
+• Amaç; bir işi birden çok nesneye, o nesnelerin arayüzlerini değiştirmeden yaptırmayı sağlamaktır.      
+• 
+
 ## State  
-•   
-•   
+•   Amaç; bir nesnenin karmaşık durumlarına bağlı olan davranışlarını ifade etmektir. 
+•  
+
 ## Interpreter  
-•   
+•   Amaç; bir dildeki cümleleri yorumlamak amacıyla yorumlayıcı tanımlamaktır. 
 •   
 
 
