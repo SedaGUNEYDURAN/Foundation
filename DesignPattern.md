@@ -1551,8 +1551,8 @@ public class BridgePatternDemo {
 
 
 # Davranışsal Kalıplar(Behavioral Pattern)
-• Davranışsal kalıplar , algoritmalar ve sorumlulukları sınıflara atamak ile ilgilir. Sadece sınıflar ve nesnelerle değil aynı zamanda onların arasıbndaki haberleşmeyle de ilgilidir. 
-• Davranışsal sınıf kalıpları kalıtımı kullanırken, davranışsal nesneler kalıpları composition kullanır. Yani hem has a hem de is a ilişkisi bulunur. 
+• Davranışsal kalıplar , algoritmalar ve sorumlulukları sınıflara atamak ile ilgilir. Sadece sınıflar ve nesnelerle değil aynı zamanda onların arasıbndaki haberleşmeyle de ilgilidir.    
+• Davranışsal sınıf kalıpları kalıtımı kullanırken, davranışsal nesneler kalıpları composition kullanır. Yani hem has a hem de is a ilişkisi bulunur.    
 
 ## Strategy   
 •   Amaç; bir işi yapmanın farklı yollarını, o işi isteyen istemciden bağımsız ve birbiri yerine geçebilecek şekilde ifade eder.   
