@@ -1681,7 +1681,82 @@ public class ArraysSort implements SortingStrategy {
 • İki şeyi çözer; istemciler mesajı sadece hangi nesnenin aldığını bilmekle kalmazlar aynı zamanda hangi metodun da mesajı yerine getirdiğinde habersiz olurlar(strtegy patternı ile sağlarız) ve yan metotlarla(helper metod) karmaşıklaşan nesne daha odaklı hale gelir. Bu iki sorunu, isteği yerine getiren metodun nesne olarak modellenmesi yani sınıf olarak tanımlanması ile çözer. Ayrıca Strategy pattern ile isteği yerine getiren nesne saklanabildiğinden, gerçekte isteği yerine getiren metot saklanmış olur.   
 • Bir metod iken, nesne seviyesine çıkarılan isteğe Command denir. Command kalıbı, Strategy'nin daha genel hali olarak, sadece isteği alan nesnenin değil metodun da saklandığı çözüm olarak görülür. **Command'i soyut olarak temsil eden, arayüzdür. Arayüzün üzerindeki metodun ismi execute()'dur.** Her alt sınıf, somut Command nesnesi, execute()'u hangi emiri yerine getirdiğine göre ezer.Yani execute()'un ne yapacağına Command nesnesi karar verir. Her farklı emirde execute() metodu, eski halde bir metot olarak gerçekleştirilen isteğe karşılık gelir. Dolayısıyla execute() metodunun gerçekte ne yaptığını belirleyen bu metoda sahip olan alt sınıf alt sınıf yani emir nesnesidir.Ayrıca her Command nesnesi, temsil ettiği istekle ilgili redo/undo gibi farklı yardımcı metotlara sahip olabilir. 
 • MVC'de controllerın arka tarafında dispatch mekanizması Command pattern kullanılır. 
-•
+
+
+```java
+interface Command {
+    void execute();
+}
+
+class Light {
+    public void turnOn() {
+        System.out.println("The light is ON");
+    }
+
+    public void turnOff() {
+        System.out.println("The light is OFF");
+    }
+}
+
+class TurnOnLightCommand implements Command {
+    private Light light;
+
+    public TurnOnLightCommand(Light light) {
+        this.light = light;
+    }
+
+    @Override
+    public void execute() {
+        light.turnOn();
+    }
+}
+
+class TurnOffLightCommand implements Command {
+    private Light light;
+
+    public TurnOffLightCommand(Light light) {
+        this.light = light;
+    }
+
+    @Override
+    public void execute() {
+        light.turnOff();
+    }
+}
+
+class RemoteControl {
+    private Command command;
+
+    public void setCommand(Command command) {
+        this.command = command;
+    }
+
+    public void pressButton() {
+        command.execute();
+    }
+}
+
+public class CommandPatternDemo {
+    public static void main(String[] args) {
+        Light light = new Light();
+
+        Command turnOn = new TurnOnLightCommand(light);
+        Command turnOff = new TurnOffLightCommand(light);
+
+        RemoteControl remote = new RemoteControl();
+
+        // Işığı aç
+        remote.setCommand(turnOn);
+        remote.pressButton();
+
+        // Işığı kapat
+        remote.setCommand(turnOff);
+        remote.pressButton();
+    }
+}
+
+```
+
 •
 ## Iterator   
 •   Amaç; collectionlardaki birden fazla nesneye sıralı erişim için bir yol sağamaktır. 
