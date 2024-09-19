@@ -1677,9 +1677,12 @@ public class ArraysSort implements SortingStrategy {
  ```
 
 ## Command   
-•  Amaç; istekte bulunan istemci  ile isteği yeribne getiren arasındaki bağımlılığı azaltmak ve metot seviyesinde ifade edilen isteği nesne seviyesinde soyutlayarak ek yetkinlikler kazandırmatır. 
-•   
-
+•  Amaç; istekte bulunan istemci  ile isteği yerine getiren arasındaki bağımlılığı azaltmak ve metot seviyesinde ifade edilen isteği nesne seviyesinde soyutlayarak ek yetkinlikler kazandırmaktır. 
+• İki şeyi çözer; istemciler mesajı sadece hangi nesnenin aldığını bilmekle kalmazlar aynı zamanda hangi metodun da mesajı yerine getirdiğinde habersiz olurlar(strtegy patternı ile sağlarız) ve yan metotlarla(helper metod) karmaşıklaşan nesne daha odaklı hale gelir. Bu iki sorunu, isteği yerine getiren metodun nesne olarak modellenmesi yani sınıf olarak tanımlanması ile çözer. Ayrıca Strategy pattern ile isteği yerine getiren nesne saklanabildiğinden, gerçekte isteği yerine getiren metot saklanmış olur.   
+• Bir metod iken, nesne seviyesine çıkarılan isteğe Command denir. Command kalıbı, Strategy'nin daha genel hali olarak, sadece isteği alan nesnenin değil metodun da saklandığı çözüm olarak görülür. **Command'i soyut olarak temsil eden, arayüzdür. Arayüzün üzerindeki metodun ismi execute()'dur.** Her alt sınıf, somut Command nesnesi, execute()'u hangi emiri yerine getirdiğine göre ezer.Yani execute()'un ne yapacağına Command nesnesi karar verir. Her farklı emirde execute() metodu, eski halde bir metot olarak gerçekleştirilen isteğe karşılık gelir. Dolayısıyla execute() metodunun gerçekte ne yaptığını belirleyen bu metoda sahip olan alt sınıf alt sınıf yani emir nesnesidir.Ayrıca her Command nesnesi, temsil ettiği istekle ilgili redo/undo gibi farklı yardımcı metotlara sahip olabilir. 
+• MVC'de controllerın arka tarafında dispatch mekanizması Command pattern kullanılır. 
+•
+•
 ## Iterator   
 •   Amaç; collectionlardaki birden fazla nesneye sıralı erişim için bir yol sağamaktır. 
 •
