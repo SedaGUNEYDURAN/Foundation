@@ -347,6 +347,8 @@ Java'da immutable nesneler;
 
 • Stateless(durumsuz) yapı, client ile server veya hizmetler arasında gerçekleşen her bir etkileşimin birbirinden bağımsız olduğunu ve oturum veya bağlam bilgisi taşımadığını ifade eder. Herhangi bir bağımsız işlemin veya isteğin bağımsız bir şekilde çalışabilmesi, sistemlerin daha esnek, ölçeklenebilir ve yönetilebilir bir şekilde çaluışabilmesi, sistemlerin daha esnek, ölçeklenebilir ve yönetilebilir olmasını sağlar. HTTP, stateless bir protokoldür. Bu her HTTP isteğinin bağımsız olduğu ve sunucunun önceki istekler hakkınad bilgi tutmadığı anlamına gelir. RESTful Servisler, rest(Representational State Transfer) mimarisi, stateless yapı üzerine kuruludur. Her bir RESTful API isteği, gerekli yetkilendirme bilgilerini ve diğer gerekli verileri taşır.  
 
+• Somut metotlarda, bir alt classta override edilebilir. Ancak bazı koşulları vardır. Eğer üst sınıftaki metot final olarak tanımlanmışsa bu metot override edilemez. Somut metot public ya da protected olarak tanımlanmış olmalı, return türleri aynı olmalı, metot imzaları(isim ve parametre sayısı) aynı olmalıdır. 
+
 ## Exceptions
 • **IndexOutOfBoundException**: arrayin ya da collection'ın geçerli index aralığının dışında bir indexe erişilmeye çalışıldığını gösterir.   
 • **ClassCastException**: bir sınıfın bir nesneyi başka bir türe dönüştürmeye çalıştığı ve dönüşümün uygun olmadığı durumlarda alınır.  
