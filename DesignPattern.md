@@ -1765,16 +1765,158 @@ public class CommandPatternDemo {
 
 
 ## Iterator   
-•   Amaç; collectionlardaki birden fazla nesneye sıralı erişim için bir yol sağamaktır. 
-•
+•   Amaç; collectionlardaki birden fazla nesneye sıralı erişim için bir yol sağlamaktır.    
+• Iterator kalıbında öncelikle collection nesnesinin olması gereklidir. Collection nesnenin elemanların ulaşan Iterator nesneleri oluşturulur. Her Iterator nesnesi erişimle ilgili farklı bir davranışa sahip olabilir.Çünkü farklı collectionlarda farklı erişim kyöntemleri olabilir.   
+•  Aynı anda birden fazla Iterator aynı collection üzerinde çalışabilir. Ama bu sırada ekleme çıkarma söz konusu ise exception fırlatır buna dikkat edilmelidir.   
+• Collectionlarda, compositlerde kullanılır.     
+
+```java
+import java.util.ArrayList;
+import java.util.List;
+
+// Iterator arayüzü
+interface Iterator {
+    boolean hasNext();
+    Object next();
+}
+
+// Concrete Iterator
+class NameIterator implements Iterator {
+    private List<String> names;
+    private int position = 0;
+
+    public NameIterator(List<String> names) {
+        this.names = names;
+    }
+
+    @Override
+    public boolean hasNext() {
+        return position < names.size();
+    }
+
+    @Override
+    public Object next() {
+        return hasNext() ? names.get(position++) : null;
+    }
+}
+
+// Aggregate arayüzü
+interface Collection {
+    Iterator createIterator();
+}
+
+// Concrete Aggregate
+class NameCollection implements Collection {
+    private List<String> names = new ArrayList<>();
+
+    public void addName(String name) {
+        names.add(name);
+    }
+
+    @Override
+    public Iterator createIterator() {
+        return new NameIterator(names);
+    }
+}
+
+// Kullanım
+public class IteratorPatternExample {
+    public static void main(String[] args) {
+        NameCollection nameCollection = new NameCollection();
+        nameCollection.addName("Alice");
+        nameCollection.addName("Bob");
+        nameCollection.addName("Charlie");
+
+        Iterator nameIterator = nameCollection.createIterator();
+        while (nameIterator.hasNext()) {
+            System.out.println(nameIterator.next());
+        }
+    }
+}
+```
 
 ## Mediator 
-•  Amaç; cok sayıda nesnenin birbiriyle haberleşmesini ve koordinasyonunu sağlamaktır. 
+•  Amaç; cok sayıda nesnenin birbiriyle haberleşmesini ve koordinasyonunu sağlamaktır.   
 •  
 
 ## Template Method  
-•   Amaç;bir algoritmanın genel yapısını ifade edip, değişecek adımları içi doldurulacak şekilde bırakmaktır.
-• 
+•   Amaç;bir algoritmanın genel yapısını ifade edip, değişecek adımları içi doldurulacak şekilde bırakmaktır.Bir algoritmanın yapısını değiştirmeden, bazı adımlarının alt sınıflarda tekrar tanımlanmasına imkan sağlar.   
+• Algoritmanın iskeleti bellidir, adımların bazılarının detayı da belli olabilir ama geri kalan adımlarının detayı belli değildir. Bu durumda iskelet algoritmayı, detayı belli olmayan adımların içi sonra dolduralacak şekilde ifade ediyor demektir. Bu durumda bir metotta algoritmanın akışı ifade edilir ve bu akışta per çok metot çağrısı yapılır.Akışta davranışı belli olan metotlara gerçekleştirme verilir ve bunlar somut metotlardır. Ama belirsizlik ya da değişiklik içeren adımlara karşı gelen metotlar soyut bırakılır ve alt sınıflar bu soyut metotları gerçekleştirir. **Bir algoritmanın akışını, somut ve soyut metot çağrıları şeklinde veren metoda template ya da kalıp metot denir.** Template metot soyut sınıf içerisinde bulunur. 
+•  Bir sınıfta birden fazla template metot olabilir, template metotlar birbirini çağırabilir. Genişletebilir pek çok frameworkde kullanılır. 
+•  Template method kalıbı refactoring amacıyla pek çok sınıfa dağılmış ortak kodların sayut bir üst sınıfta toplanmasını sağlar. 
+
+```java
+// Şablon sınıfı
+abstract class CookingTemplate {
+
+    // Şablon metod
+    public final void cook() {
+        prepareIngredients();
+        cookFood();
+        serve();
+    }
+
+    // Soyut metotlar, alt sınıflar tarafından uygulanacak
+    protected abstract void prepareIngredients();
+    protected abstract void cookFood();
+
+    // Final metot, alt sınıflar tarafından değiştirilemez
+    private void serve() {
+        System.out.println("Hazırlanan yemek servis edildi.");
+    }
+}
+
+// Somut sınıf 1
+class PastaCooking extends CookingTemplate {
+
+    @Override
+    protected void prepareIngredients() {
+        System.out.println("Makarna, domates, sarımsak ve peynir hazırlanıyor.");
+    }
+
+    @Override
+    protected void cookFood() {
+        System.out.println("Pasta pişiriliyor.");
+    }
+}
+
+// Somut sınıf 2
+class SaladCooking extends CookingTemplate {
+
+    @Override
+    protected void prepareIngredients() {
+        System.out.println("Marul, domates, salatalık ve zeytinyağı hazırlanıyor.");
+    }
+
+    @Override
+    protected void cookFood() {
+        System.out.println("Salata karıştırılıyor.");
+    }
+}
+
+// Kullanım
+public class TemplatePatternExample {
+    public static void main(String[] args) {
+        CookingTemplate pastaCook = new PastaCooking();
+        pastaCook.cook();
+
+        System.out.println();
+
+        CookingTemplate saladCook = new SaladCooking();
+        saladCook.cook();
+    }
+}
+```
+
+Bu örnekte main metodunda iki farklı sınıf(PastaCooking ve SaladCoking) instanceları oluşturuluyor.Bu örnekler cook() metodunu çağırıyor. cook() metodu çalıştırıldığında prepareIngredients() metodu çalışır. Sonrasında cookFood() metodu çalışır Bu şekilde devam eder ve aşağıdaki çıktıyı verir.     
+
+>Makarna, domates, sarımsak ve peynir hazırlanıyor.
+>Pasta pişiriliyor.
+>Hazırlanan yemek servis edildi.
+>
+>Marul, domates, salatalık ve zeytinyağı hazırlanıyor.
+>Salata karıştırılıyor.
+>Hazırlanan yemek servis edildi.
 
 ## Observer  
 •   Amaç; bir nesnenin durumundaki değişikliklerden haberdar olmaktır.  
