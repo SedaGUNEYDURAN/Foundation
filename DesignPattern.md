@@ -1840,10 +1840,10 @@ public class IteratorPatternExample {
 •  
 
 ## Template Method  
-•   Amaç;bir algoritmanın genel yapısını ifade edip, değişecek adımları içi doldurulacak şekilde bırakmaktır.Bir algoritmanın yapısını değiştirmeden, bazı adımlarının alt sınıflarda tekrar tanımlanmasına imkan sağlar.   
-• Algoritmanın iskeleti bellidir, adımların bazılarının detayı da belli olabilir ama geri kalan adımlarının detayı belli değildir. Bu durumda iskelet algoritmayı, detayı belli olmayan adımların içi sonra dolduralacak şekilde ifade ediyor demektir. Bu durumda bir metotta algoritmanın akışı ifade edilir ve bu akışta per çok metot çağrısı yapılır.Akışta davranışı belli olan metotlara gerçekleştirme verilir ve bunlar somut metotlardır. Ama belirsizlik ya da değişiklik içeren adımlara karşı gelen metotlar soyut bırakılır ve alt sınıflar bu soyut metotları gerçekleştirir. **Bir algoritmanın akışını, somut ve soyut metot çağrıları şeklinde veren metoda template ya da kalıp metot denir.** Template metot soyut sınıf içerisinde bulunur. 
-•  Bir sınıfta birden fazla template metot olabilir, template metotlar birbirini çağırabilir. Genişletebilir pek çok frameworkde kullanılır. 
-•  Template method kalıbı refactoring amacıyla pek çok sınıfa dağılmış ortak kodların sayut bir üst sınıfta toplanmasını sağlar. 
+•   Amaç;bir algoritmanın genel yapısını ifade edip, değişecek adımları içi doldurulacak şekilde bırakmaktır.Bir algoritmanın yapısını değiştirmeden, bazı adımlarının alt sınıflarda tekrar tanımlanmasına imkan sağlar.     
+• Algoritmanın iskeleti bellidir, adımların bazılarının detayı da belli olabilir ama geri kalan adımlarının detayı belli değildir. Bu durumda iskelet algoritmayı, detayı belli olmayan adımların içi sonra dolduralacak şekilde ifade ediyor demektir. Bu durumda bir metotta algoritmanın akışı ifade edilir ve bu akışta per çok metot çağrısı yapılır.Akışta davranışı belli olan metotlara gerçekleştirme verilir ve bunlar somut metotlardır. Ama belirsizlik ya da değişiklik içeren adımlara karşı gelen metotlar soyut bırakılır ve alt sınıflar bu soyut metotları gerçekleştirir. **Bir algoritmanın akışını, somut ve soyut metot çağrıları şeklinde veren metoda template ya da kalıp metot denir.** Template metot soyut sınıf içerisinde bulunur.    
+•  Bir sınıfta birden fazla template metot olabilir, template metotlar birbirini çağırabilir. Genişletebilir pek çok frameworkde kullanılır.    
+•  Template method kalıbı refactoring amacıyla pek çok sınıfa dağılmış ortak kodların sayut bir üst sınıfta toplanmasını sağlar.   
 
 ```java
 // Şablon sınıfı
@@ -1910,13 +1910,13 @@ public class TemplatePatternExample {
 
 Bu örnekte main metodunda iki farklı sınıf(PastaCooking ve SaladCoking) instanceları oluşturuluyor.Bu örnekler cook() metodunu çağırıyor. cook() metodu çalıştırıldığında prepareIngredients() metodu çalışır. Sonrasında cookFood() metodu çalışır Bu şekilde devam eder ve aşağıdaki çıktıyı verir.     
 
->Makarna, domates, sarımsak ve peynir hazırlanıyor.
->Pasta pişiriliyor.
->Hazırlanan yemek servis edildi.
+>Makarna, domates, sarımsak ve peynir hazırlanıyor.  
+>Pasta pişiriliyor.  
+>Hazırlanan yemek servis edildi.  
 >
->Marul, domates, salatalık ve zeytinyağı hazırlanıyor.
->Salata karıştırılıyor.
->Hazırlanan yemek servis edildi.
+>Marul, domates, salatalık ve zeytinyağı hazırlanıyor.  
+>Salata karıştırılıyor.  
+>Hazırlanan yemek servis edildi.  
 
 ## Observer  
 •   Amaç; bir nesnenin durumundaki değişikliklerden haberdar olmaktır.  
