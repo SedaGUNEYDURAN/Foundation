@@ -1920,12 +1920,14 @@ Bu örnekte main metodunda iki farklı sınıf(PastaCooking ve SaladCoking) inst
 
 ## Observer(Abone)   
 •   Amaç; bir nesnenin durumundaki değişikliklerden haberdar olmaktır.  Observer(abone) nesne, durumundaki değişikliklerden haberdar olmak istediği konu(subject, observable) nesneye abone olur. Konu nesne, durumunda bir değişiklik o9lduğunda, kendisine abone olan nesneleri bilgilendirir. 
->Observable: Durumdaki değişikliklerin takip edildiği nesne, konu yad a subject, publisher.   
+>Observable: Durumdaki değişikliklerin takip edildiği nesne, konu yada subject, publisher.   
 >Observer: Söz konusu olan nesneye abone olup, ondaki değişikliklerden haberdar olmak isteyen nesne, abone ya da subscriber.
 >Notification, Broadcast: Söz konusu nesnenin, durumunda bir değişiklik olduğunda abonelerini uyarılması, güncelleme
 >Event: Konu nesnelerin abonelerini uyarırken kendilerine gönderdiği bilgilendirme.  
 
 • Söz konusu nesne üzerinde, nesnelerin abone olmasına izin veren arayüz bulunur. Abone nesneler üzerinde de konudan gelen güncelleme mesajını(event notification) alacak bir arayüz bulunur. Bundan dolayı bu kalıba Publisher-Subscriber, Procer-Consumer ya da Event-Notification denir.
+• Bir nesnedeki durumun değişiminden haberdar olmak isteyen birden çok nesne varsa Observer kalıbı kullanılır.  
+• Observer kalıbında durumu değişen konu nesne(subject), kendisine abone olanlarla ilgili bilgilendirme(notifiaction) arayüzü dışında herhangi bir kabule ya da bağımlılığa sahip değildir. Observer kalıbı ile konu ve aboneleri arasında soyut bir bağımlılık kurulur. Konu, kendisine abone olan pek çok nesneye yayın yapar. Konuya abone olan nesneler, istemeseler de her türlü güncellemeden haberdar olurlar.   
 
 ```java
 public interface Observer {
@@ -2010,8 +2012,90 @@ public class Main {
 >Current temperature: 22.3°C   
 >Weather statistics: Temp = 22.3°C, Humidity = 70.0%, Pressure = 1012.3hPa   
 
+• Konuya abone olan nesnelerin, olayın oluşumundan sonra uyarılması ciddi zaman ve kaynak tüketen bir iş olduğundan, uyarım mekanizmasının senkron yerine asenkron yapılması ile çok karşılaşılır. Böylece sayısı ve performansı kontrol edilemeyen sistemlerde olay bilgisi göndermenin maaleyeti düşer. Durum değişikliğinin anında bildirilmesi gerekn durumlarda ise senkron yapı kullanılır. Senkron observer, her güncelleme subscriberın "update" metodunun hemen çağırılması ile gerçekleşir. Asenkron observerda, güncellemeler bir thread üzerinden gerçekleştirilir, bu da gözlemcilerin karşılık vermek için başka bir zaman dilimini beklemesi sağlanır. Java'da bu genelde thread kullanarak veya CompletableFuture ile gerçekleştirebiliriz.    
 
-•
+```java
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
+interface Observer {
+    void update(String message);
+}
+
+interface Subject {
+    void attach(Observer observer);
+    void detach(Observer observer);
+    void notifyObservers(String message);
+}
+
+class ConcreteSubject implements Subject {
+    private List<Observer> observers = new ArrayList<>();
+
+    @Override
+    public void attach(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void detach(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers(String message) {
+        for (Observer observer : observers) {
+            // Asenkron güncelleme
+            CompletableFuture.runAsync(() -> observer.update(message)); 
+        }
+    }
+
+    public void changeState(String message) {
+        System.out.println("State has changed: " + message);
+        notifyObservers(message);
+    }
+}
+
+class ConcreteObserver implements Observer {
+    private String name;
+
+    public ConcreteObserver(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void update(String message) {
+        System.out.println(name + " received update: " + message);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        ConcreteSubject subject = new ConcreteSubject();
+
+        ConcreteObserver observer1 = new ConcreteObserver("Observer 1");
+        ConcreteObserver observer2 = new ConcreteObserver("Observer 2");
+
+        subject.attach(observer1);
+        subject.attach(observer2);
+        
+        subject.changeState("New State 1"); // Asenkron güncelleme
+        
+        // Ana iş parçacığı bitmeden çıktıyı görebilmek için bir süre bekle
+        try {
+            Thread.sleep(1000); 
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+>State has changed: New State 1
+>Observer 1 received update: New State 1
+>Observer 2 received update: New State 1
+
+• Observer kalıbının ilk defa Smalltalk'ta MVC kalıbında kullanıldığı bilinmektedir. MVC'de Model konudur ve View'da observer'dır. 
 
 ## Memento  
 •   Amaç; sarmalamayı bozmadan, sonra ulaşmak üzere bir nesnenin durumunu saklamaktır.
