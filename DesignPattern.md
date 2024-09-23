@@ -1918,9 +1918,100 @@ Bu örnekte main metodunda iki farklı sınıf(PastaCooking ve SaladCoking) inst
 >Salata karıştırılıyor.  
 >Hazırlanan yemek servis edildi.  
 
-## Observer  
-•   Amaç; bir nesnenin durumundaki değişikliklerden haberdar olmaktır.  
-•   
+## Observer(Abone)   
+•   Amaç; bir nesnenin durumundaki değişikliklerden haberdar olmaktır.  Observer(abone) nesne, durumundaki değişikliklerden haberdar olmak istediği konu(subject, observable) nesneye abone olur. Konu nesne, durumunda bir değişiklik o9lduğunda, kendisine abone olan nesneleri bilgilendirir. 
+>Observable: Durumdaki değişikliklerin takip edildiği nesne, konu yad a subject, publisher.   
+>Observer: Söz konusu olan nesneye abone olup, ondaki değişikliklerden haberdar olmak isteyen nesne, abone ya da subscriber.
+>Notification, Broadcast: Söz konusu nesnenin, durumunda bir değişiklik olduğunda abonelerini uyarılması, güncelleme
+>Event: Konu nesnelerin abonelerini uyarırken kendilerine gönderdiği bilgilendirme.  
+
+• Söz konusu nesne üzerinde, nesnelerin abone olmasına izin veren arayüz bulunur. Abone nesneler üzerinde de konudan gelen güncelleme mesajını(event notification) alacak bir arayüz bulunur. Bundan dolayı bu kalıba Publisher-Subscriber, Procer-Consumer ya da Event-Notification denir.
+
+```java
+public interface Observer {
+    void update(float temperature, float humidity, float pressure);
+}
+
+import java.util.List;
+import java.util.ArrayList;
+
+public interface Subject {
+    void attach(Observer observer);   // Gözlemci ekleme
+    void detach(Observer observer);   // Gözlemci çıkarma
+    void notifyObservers();           // Gözlemcilere bildirim gönderme
+}
+public class WeatherStation implements Subject {
+    private List<Observer> observers = new ArrayList<>();
+    
+    private float temperature;
+    private float humidity;
+    private float pressure;
+
+    @Override
+    public void attach(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void detach(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (Observer observer : observers) {
+            observer.update(temperature, humidity, pressure);
+        }
+    }
+
+    public void setMeasurements(float temperature, float humidity, float pressure) {
+        this.temperature = temperature;
+        this.humidity = humidity;
+        this.pressure = pressure;
+        notifyObservers(); // Değişiklik olduğunda gözlemcilere haber ver
+    }
+}
+
+public class TemperatureDisplay implements Observer {
+    @Override
+    public void update(float temperature, float humidity, float pressure) {
+        System.out.println("Current temperature: " + temperature + "°C");
+    }
+}
+
+public class StatisticsDisplay implements Observer {
+    @Override
+    public void update(float temperature, float humidity, float pressure) {
+        System.out.println("Weather statistics: Temp = " + temperature + "°C, Humidity = " + humidity + "%, Pressure = " + pressure + "hPa");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        WeatherStation weatherStation = new WeatherStation(); // Hava durumu istasyonu oluştur
+
+        TemperatureDisplay temperatureDisplay = new TemperatureDisplay(); // Sıcaklık ekranı
+        StatisticsDisplay statisticsDisplay = new StatisticsDisplay(); // Hava durumu istatistik ekranı
+
+        // Ekranları hava durumu istasyonuna ekle
+        weatherStation.attach(temperatureDisplay);
+        weatherStation.attach(statisticsDisplay);
+        
+        // Ölçümleri güncelle
+        weatherStation.setMeasurements(25.5f, 65.0f, 1013.1f); // İlk ölçüm
+        weatherStation.setMeasurements(22.3f, 70.0f, 1012.3f); // İkinci ölçüm
+    }
+}
+
+```
+
+>Current temperature: 25.5°C  
+>Weather statistics: Temp = 25.5°C, Humidity = 65.0%, Pressure = 1013.1hPa   
+>Current temperature: 22.3°C   
+>Weather statistics: Temp = 22.3°C, Humidity = 70.0%, Pressure = 1012.3hPa   
+
+
+•
 
 ## Memento  
 •   Amaç; sarmalamayı bozmadan, sonra ulaşmak üzere bir nesnenin durumunu saklamaktır.
