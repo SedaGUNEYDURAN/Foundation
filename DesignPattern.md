@@ -1835,9 +1835,18 @@ public class IteratorPatternExample {
 }
 ```
 
-## Mediator 
-•  Amaç; cok sayıda nesnenin birbiriyle haberleşmesini ve koordinasyonunu sağlamaktır.   
-•  
+## Mediator(Arabulucu) 
+•  Amaç; cok sayıda nesnenin birbiriyle haberleşmesini ve koordinasyonunu sağlamaktır.  Nesneleri birbirine doğrudan ulaşmaktan alıkoyarak gevşek bağımlılığa destek verir ve aralarındaki iletişimi serbestçe değiştirmemize izin verir.     
+•  Mediator'ın kullanımına örnek verecek olursak; Diyalog kutusunda menü, text alanı, button vb. pek çok farklı GUI nesnesi aralarında pek çok bağımlılık bulunur. Text yazılmadan buttonun  visible olmaması gibi. 
+• Nesneler concreteMediator(arabulucu) üzerinden bilgi alışverişinde bulunur. concreteMediator nesne ise diğer nesnelerlerle nasıl ve hangi durumlarda haberleşeceğini bilir. Bu şekilde **n tane nesne arasında muhtemelen n(n-1)/2 tane iletişim kanalı yerine concreteMediator nesnenin n tane nesne ile n tane iletişim kanalına sahip olması sağlanır.**
+• Mediator kalıbı uygulanmadığında nesneler arasında kurgulanacak many-to-many bağlantılar one-to-many olarak gerçekleşir. Nesnelere dağıtılacak olan haberleşme protokolu bilgisi, merkezi olarak mediator nesnesinden toplanır. Kontrol merkezileştirilmiş olur.  Böylece mediator karmaşıklığı azaltır. 
+• Arabulucu nesnenin thread-safe olması gerekebilir.Bu da ara bulucu nesnenin bakımını güçleştirir.  
+• Mediator tüm concreteMediator(arabulucular) için bir üst sınıftır. 
+>Mediator: İletişimi yöneten interfacedir.. 
+>ConcreteMediator: Mediator arayüzünü uygulayan ve bileşenler arasındaki etkileşimi yöneten somut sınıftır.
+>Colleague: Mediator aracılığıyla iletişim kuran nesnedir.
+
+• Temelde bakıldığında MVC'deki Controller, View ve Model'i yalıtıp aralarında işlemi yönettiği için bir Mediator olarak görülebilir. Ancak Controllerın, Mediatordan temel bir farkı vardır; her use case için ayrı bir Controller nesnesini gereklidir.    
 
 ## Template Method  
 •   Amaç;bir algoritmanın genel yapısını ifade edip, değişecek adımları içi doldurulacak şekilde bırakmaktır.Bir algoritmanın yapısını değiştirmeden, bazı adımlarının alt sınıflarda tekrar tanımlanmasına imkan sağlar.     
