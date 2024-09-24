@@ -2098,12 +2098,118 @@ public class Main {
 • Observer kalıbının ilk defa Smalltalk'ta MVC kalıbında kullanıldığı bilinmektedir. MVC'de Model konudur ve View'da observer'dır. 
 
 ## Memento  
-•   Bir nesnenin  iç durumunu saklayarak, bu durumun daha sonra geri yüklenmesini sağlar. Amaç; nesne üzerindeki değişiklikleri kaydedip geri almaktır.   
-•  Memento, nesnenin sadece durumu saklanma ihtiyacı duyulan kısmını gereken derinlikte saklar.
+•   Bir nesnenin  iç durumunu saklayarak, bu durumun daha sonra geri yüklenmesini sağlar. Amaç; nesne üzerindeki değişiklikleri kaydedip geri alabilmektir. Memento kalıbı ile durumu saklanan nesne daha basit hale gelir, aksi taktirde nesne kendi tarihselliğini tutması gerekirdi.      
+•  Memento kalıbı ile durumu tutulan nesne encapsulatıon'ı bozulmaz. Memento, nesnenin sadece durumu saklanma ihtiyacı duyulan kısmını gereken derinlikte saklar. Tarihselliğin gerekli olduğu durumlarda çok daha karmaşık memento nesneleri kullanılabilir. 
 >Originator: Durum bilgisini tutan ve bu durumu geri yüklenebilir bir biçimde saklayabilen nesne
 >Memento: Originator'ın iç durumunu saklayan nesne
->Caretaker: Memento nesnesini tutan nesne; genellikler bu nesne memento içeriğine erişmez sadece saklar. 
+>Caretaker: Memento nesnesini tutan nesne; genellikler bu nesne memento içeriğine erişmez sadece saklar.
 
+```java
+// Memento sınıfı, fotoğraf ayarlarını saklar
+class PhotoMemento {
+    private final String brightness;
+    private final String crop;
+    private final String filter;
+
+    public PhotoMemento(String brightness, String crop, String filter) {
+        this.brightness = brightness;
+        this.crop = crop;
+        this.filter = filter;
+    }
+
+    public String getBrightness() {
+        return brightness;
+    }
+
+    public String getCrop() {
+        return crop;
+    }
+
+    public String getFilter() {
+        return filter;
+    }
+}
+
+// Originator sınıfı, fotoğrafın durumunu tutar
+class PhotoEditor {
+    private String brightness;
+    private String crop;
+    private String filter;
+
+    public void setBrightness(String brightness) {
+        this.brightness = brightness;
+    }
+
+    public void setCrop(String crop) {
+        this.crop = crop;
+    }
+
+    public void setFilter(String filter) {
+        this.filter = filter;
+    }
+
+    public PhotoMemento save() {
+        return new PhotoMemento(brightness, crop, filter);
+    }
+
+    public void restore(PhotoMemento memento) {
+        this.brightness = memento.getBrightness();
+        this.crop = memento.getCrop();
+        this.filter = memento.getFilter();
+    }
+
+    public void display() {
+        System.out.println("Current Photo Settings: Brightness=" + brightness + ", Crop=" + crop + ", Filter=" + filter);
+    }
+}
+
+// Caretaker sınıfı, memento nesnelerini saklar
+class PhotoEditorHistory {
+    private final List<PhotoMemento> history = new ArrayList<>();
+
+    public void addMemento(PhotoMemento memento) {
+        history.add(memento);
+    }
+
+    public PhotoMemento getMemento(int index) {
+        return history.get(index);
+    }
+}
+
+// Ana uygulama
+public class PhotoEditorExample {
+    public static void main(String[] args) {
+        PhotoEditor editor = new PhotoEditor();
+        PhotoEditorHistory history = new PhotoEditorHistory();
+
+        // Kullanıcı fotoğraf ayarlarını yapar
+        editor.setBrightness("50%");
+        editor.setCrop("Portrait");
+        editor.setFilter("None");
+        history.addMemento(editor.save());
+
+        editor.setBrightness("70%");
+        editor.setCrop("Landscape");
+        editor.setFilter("Vintage");
+        history.addMemento(editor.save());
+
+        editor.setBrightness("30%");
+        editor.setCrop("Square");
+        editor.setFilter("Black & White");
+        history.addMemento(editor.save());
+
+        // Şu anki ayarları göster
+        editor.display();
+
+        // Geri yükleme işlemi
+        editor.restore(history.getMemento(1)); // İkinci ayarlara geri dön
+        editor.display(); // Ayarları göster
+    }
+}
+```
+
+>Current Photo Settings: Brightness=30%, Crop=Square, Filter=Black & White   
+>Current Photo Settings: Brightness=70%, Crop=Landscape, Filter=Vintage   
 
 ## Chain of Responsibility  
 •   Amaç;istekte bulunan istemci ile isteği yerine getiren arasındaki bağımlılığı azaltmaktır. 
