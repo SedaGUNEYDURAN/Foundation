@@ -2098,8 +2098,12 @@ public class Main {
 • Observer kalıbının ilk defa Smalltalk'ta MVC kalıbında kullanıldığı bilinmektedir. MVC'de Model konudur ve View'da observer'dır. 
 
 ## Memento  
-•   Amaç; sarmalamayı bozmadan, sonra ulaşmak üzere bir nesnenin durumunu saklamaktır.
-•  
+•   Bir nesnenin  iç durumunu saklayarak, bu durumun daha sonra geri yüklenmesini sağlar. Amaç; nesne üzerindeki değişiklikleri kaydedip geri almaktır.   
+•  Memento, nesnenin sadece durumu saklanma ihtiyacı duyulan kısmını gereken derinlikte saklar.
+>Originator: Durum bilgisini tutan ve bu durumu geri yüklenebilir bir biçimde saklayabilen nesne
+>Memento: Originator'ın iç durumunu saklayan nesne
+>Caretaker: Memento nesnesini tutan nesne; genellikler bu nesne memento içeriğine erişmez sadece saklar. 
+
 
 ## Chain of Responsibility  
 •   Amaç;istekte bulunan istemci ile isteği yerine getiren arasındaki bağımlılığı azaltmaktır. 
