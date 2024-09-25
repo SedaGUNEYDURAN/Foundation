@@ -1846,7 +1846,95 @@ public class IteratorPatternExample {
 >ConcreteMediator: Mediator arayüzünü uygulayan ve bileşenler arasındaki etkileşimi yöneten somut sınıftır.
 >Colleague: Mediator aracılığıyla iletişim kuran nesnedir.
 
-• Temelde bakıldığında MVC'deki Controller, View ve Model'i yalıtıp aralarında işlemi yönettiği için bir Mediator olarak görülebilir. Ancak Controllerın, Mediatordan temel bir farkı vardır; her use case için ayrı bir Controller nesnesini gereklidir.    
+• Temelde bakıldığında MVC'deki Controller, View ve Model'i yalıtıp aralarında işlemi yönettiği için bir Mediator olarak görülebilir. Ancak Controllerın, Mediatordan temel bir farkı vardır; her use case için ayrı bir Controller nesnesini gereklidir.     
+• JPA, EntityFramework vb. ORM çerçevelerinde kullanılan ve entityler ile ilişkisel veritabanındaki tablolar arasındaki eşleşmeyi yöneten Mapper nesneleri bir mediator gibi çalışır. Message Oriented Middleware(MOM) sistemleri birar arabulucu gibi çalışır.   
+• Mediatorda iki yönlü bir iletişim vardır, Facade'da ise bir tarafta client arka tarafta karmaşık business logici sakladığımız facade vardır. Facade kalıbı alt sistemi soutlarken Mediator karmaşık haberleşmeyi basitleştirir. 
+
+```java
+import java.util.ArrayList;
+import java.util.List;
+
+// Mediator arayüzü
+interface ChatMediator {
+    void sendMessage(String message, User user);
+    void addUser(User user);
+}
+
+// ConcreteMediator sınıfı
+class ChatRoom implements ChatMediator {
+    private final List<User> users;
+
+    public ChatRoom() {
+        this.users = new ArrayList<>();
+    }
+
+    @Override
+    public void sendMessage(String message, User user) {
+        for (User u : users) {
+            // Mesaj gönderen kullanıcıya geri göndermiyoruz
+            if (u != user) {
+                u.receive(message);
+            }
+        }
+    }
+
+    @Override
+    public void addUser(User user) {
+        users.add(user);
+    }
+}
+
+// Colleague sınıfı
+abstract class User {
+    protected ChatMediator mediator;
+    protected String name;
+
+    public User(ChatMediator mediator, String name) {
+        this.mediator = mediator;
+        this.name = name;
+    }
+
+    public abstract void send(String message);
+    public abstract void receive(String message);
+}
+
+// ConcreteColleague sınıfı
+class ChatUser extends User {
+    public ChatUser(ChatMediator mediator, String name) {
+        super(mediator, name);
+    }
+
+    @Override
+    public void send(String message) {
+        System.out.println(name + ": Sending Message=" + message);
+        mediator.sendMessage(message, this);
+    }
+
+    @Override
+    public void receive(String message) {
+        System.out.println(name + ": Received Message: " + message);
+    }
+}
+
+// Ana uygulama
+public class MediatorPatternExample {
+    public static void main(String[] args) {
+        ChatMediator mediator = new ChatRoom();
+
+        User user1 = new ChatUser(mediator, "Alice");
+        User user2 = new ChatUser(mediator, "Bob");
+        User user3 = new ChatUser(mediator, "Charlie");
+
+        mediator.addUser(user1);
+        mediator.addUser(user2);
+        mediator.addUser(user3);
+
+        user1.send("Hello, everyone!");
+        user2.send("Hi, Alice!");
+    }
+}
+```
+
 
 ## Template Method  
 •   Amaç;bir algoritmanın genel yapısını ifade edip, değişecek adımları içi doldurulacak şekilde bırakmaktır.Bir algoritmanın yapısını değiştirmeden, bazı adımlarının alt sınıflarda tekrar tanımlanmasına imkan sağlar.     
