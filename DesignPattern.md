@@ -2308,9 +2308,119 @@ public class PhotoEditorExample {
 >Current Photo Settings: Brightness=30%, Crop=Square, Filter=Black & White   
 >Current Photo Settings: Brightness=70%, Crop=Landscape, Filter=Vintage   
 
-## Chain of Responsibility  
+## Chain of Responsibility(Sorumluluk Zinciri)  
 •   Amaç;istekte bulunan istemci ile isteği yerine getiren arasındaki bağımlılığı azaltmaktır. 
-•   
+•   Bazen isteği kimin yerine getireceğinin belirlenmesini merkezileştirmekten kaçınmak gerekebilir. Bu durumda isteği kimin yerine getireceği, doğrudan isteği yerine getirecek hedef tarafından belirlenir. Bu yaklaşımda hedef nesneyi bulmayı merkezi bir sorumluluk olmaktan çıkarmak ve sorumluluğu hedef nesnelerin kendisine yaymak biraz pahalı olabilir ama etkin bir çözümdür. 
+•   İstemci ile isteği yerine getiren nesneler arasındaki bağımlılığı azaltmanın yollarından birisi Chain of Responsibility patternidir. Pattern bir nesne hiyerarşisini bir arayüz arkasına saklamakla kalmaz, kendisini yerine getirecek nesneyi bulması için isteği hiyerarşideki nesneler arasında gezdirir. 
+•   İşi isteyen nesneler de işi yerine getirecek yani hedef nesneler de bir hiyerarşide bulunurlar. Hedef nesnelerin, işi isteyen nesnelerle doğrudan iletişimde bulunmasını engellemek amacıyla hedef nesneler bir zincir boyunca, en basit olanından en karmaşık olanına doğru sıralanır. İstenen iş, önce zincirdeki ilk nesneye verilir. Eğer nesne verilen işin kendi sorumluluğuna uygun olduğuna karar verirse işi yerine getirir. Aksi taktirde işi bir sonraki nensye geçirir. Bu şekilde iş, yerine getirecek nesne buluncaya kadar, zincir boyunca iletilir. Bazen bir istek birden fazla nesne tarafından da işlenebilir. Zincirdeki nesnelerin kendilerine gelen isteği karşılayıp karşılayamayacaklarına karar vermeleri gereklidir. Bu amaçla gelen istekte ya da istekte bulunan nesnede ayırt edici bir durum olmalıdır. 
+
+
+
+```java
+// 1. Handler (İşleyici) Arayüzü 
+abstract class Logger {
+    public static int INFO = 1;
+    public static int DEBUG = 2;
+    public static int ERROR = 3;
+
+    protected int level;
+
+    // Bir sonraki işleyiciye başvurusu
+    protected Logger nextLogger;
+
+    public void setNextLogger(Logger nextLogger) {
+        this.nextLogger = nextLogger;
+    }
+
+    public void logMessage(int level, String message) {
+        if (this.level <= level) {
+            write(message);
+        }
+        if (nextLogger != null) {
+            nextLogger.logMessage(level, message);
+        }
+    }
+
+    protected abstract void write(String message);
+}
+
+// 2. ConcreteHandler Sınıfları
+class InfoLogger extends Logger {
+
+    public InfoLogger(int level) {
+        this.level = level;
+    }
+
+    @Override
+    protected void write(String message) {
+        System.out.println("INFO Logger: " + message);
+    }
+}
+
+class DebugLogger extends Logger {
+
+    public DebugLogger(int level) {
+        this.level = level;
+    }
+
+    @Override
+    protected void write(String message) {
+        System.out.println("DEBUG Logger: " + message);
+    }
+}
+
+class ErrorLogger extends Logger {
+
+    public ErrorLogger(int level) {
+        this.level = level;
+    }
+
+    @Override
+    protected void write(String message) {
+        System.out.println("ERROR Logger: " + message);
+    }
+}
+
+// 3. Zinciri Oluşturma
+public class ChainOfResponsibilityPatternDemo {
+
+    private static Logger getChainOfLoggers() {
+
+        Logger errorLogger = new ErrorLogger(Logger.ERROR);
+        Logger debugLogger = new DebugLogger(Logger.DEBUG);
+        Logger infoLogger = new InfoLogger(Logger.INFO);
+
+        // Zinciri oluşturma
+        infoLogger.setNextLogger(debugLogger);
+        debugLogger.setNextLogger(errorLogger);
+
+        return infoLogger;
+    }
+
+    public static void main(String[] args) {
+        Logger loggerChain = getChainOfLoggers();
+
+        loggerChain.logMessage(Logger.INFO, "Bu bir bilgi mesajıdır.");
+        loggerChain.logMessage(Logger.DEBUG, "Bu bir debug mesajıdır.");
+        loggerChain.logMessage(Logger.ERROR, "Bu bir hata mesajıdır.");
+    }
+}
+
+  ```
+
+Burada getChainOfLoggers() metodunda zinciri oluşturuyor. INFO-> DEBUG-> ERROR ve metotdan dönüş değeri infoLogger yani loggerChain değerimiz loggerChain olarak çağırıyor. infologgerın this.levelı 1 dir. loggerChain.logMessage(Logger.INFO, "Bu bir bilgi mesajıdır."); dediğimizde logmessage metotunda levelımız 1 this.level 1 olur. Şartı sağladığı için inloggerın write metodu çalışır. nextLogger != null şartına baktığımızda infologgerın nextloggerı debugloggerdır. debugloggerın this.level değeri ise 2, level değerimiz 1.  logmessage'ı çağırdığımızda 2 <= 1 şartı sağlamaz ve ilk çağrımız biter.   
+
+loggerChain.logMessage(Logger.DEBUG, "Bu bir debug mesajıdır."); çağrısına geçeriz. loggerChain değerimiz infologgerdı. infologgerın this.levelı 1, Logger.DEBUG'ın levelı 2. logMessage metoduna geldiğimizde this.level <= level şartını sağladığını görürüz. infologger için write metodu çalışır. nextLogger != null şartına geçtiğimizde infologger ile gelmiştik, infologgerın nextlogger değeri debugLogger yani null değil şartı sağladık. DebugLoggerında this.level değeri 2, level değerimiz 2 ile logmessage metodu this.level=2 level=2 ile çağırılır. 2<=2 şartını sağlar ve debuglogger için write metodu çalışır. nextLogger != null şartına geldiğimizde nextLogger değerimiz errorlogger olur. errorloggerın this.level değeri 3, level değerimiz 2. logmessage metodunu errorlogger ile çağırdığımızda  this.level <= level şartını 3<=2 ile sağlayamadığımız için bu çağrı de sonlanmış olur.    
+
+loggerChain.logMessage(Logger.ERROR, "Bu bir error mesajıdır."); çağrısına geçeriz. loggerChain değerimiz infologger. infologgerın this.level değeri 1, Logger.ERROR'ün level değeri 3. logMessage metoduna geldiğimizde this.level <= level şartını sağladığını görürüz. infologger için write metodu çalışır. nextLogger != null şartına geçtiğimizde infologger ile gelmiştik, infologgerın nextlogger değeri debugLogger yani null değil şartı sağladık. DebugLoggerında this.level değeri 2, level değerimiz 3 ile logmessage metodu this.level=2 level=3 ile çağırılır. this.level <= level şartını 2<=3 şartını sağlarız ve write metodu debuglogger için çalışır. nextLogger != null şartına geçtiğimizde debugloggerın nextlogger değeri errorloggerdır. errorloggerın this.level'ı 3, level 3 ile logMessage metodu çağırıldığında this.level <= level şartı 3 <= 3 ile sağlanmış olur ve write metodu errordebug için çalışır. nextLogger != null şartına geldiğimizde errorloggerın nextlogger değeri olmadığı için şartı sağlayamayız ve program sanlanmış olur.    
+
+>INFO Logger: Bu bir bilgi mesajıdır.   
+>INFO Logger: Bu bir debug mesajıdır.   
+>DEBUG Logger: Bu bir debug mesajıdır.   
+>INFO Logger: Bu bir hata mesajıdır.  
+>DEBUG Logger: Bu bir hata mesajıdır.   
+>ERROR Logger: Bu bir hata mesajıdır.
+
 
 ## Visitor    
 • Amaç; bir işi birden çok nesneye, o nesnelerin arayüzlerini değiştirmeden yaptırmayı sağlamaktır.      
