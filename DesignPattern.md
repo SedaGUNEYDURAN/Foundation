@@ -2309,10 +2309,10 @@ public class PhotoEditorExample {
 >Current Photo Settings: Brightness=70%, Crop=Landscape, Filter=Vintage   
 
 ## Chain of Responsibility(Sorumluluk Zinciri)  
-•   Amaç;istekte bulunan istemci ile isteği yerine getiren arasındaki bağımlılığı azaltmaktır. 
-•   Bazen isteği kimin yerine getireceğinin belirlenmesini merkezileştirmekten kaçınmak gerekebilir. Bu durumda isteği kimin yerine getireceği, doğrudan isteği yerine getirecek hedef tarafından belirlenir. Bu yaklaşımda hedef nesneyi bulmayı merkezi bir sorumluluk olmaktan çıkarmak ve sorumluluğu hedef nesnelerin kendisine yaymak biraz pahalı olabilir ama etkin bir çözümdür. 
-•   İstemci ile isteği yerine getiren nesneler arasındaki bağımlılığı azaltmanın yollarından birisi Chain of Responsibility patternidir. Pattern bir nesne hiyerarşisini bir arayüz arkasına saklamakla kalmaz, kendisini yerine getirecek nesneyi bulması için isteği hiyerarşideki nesneler arasında gezdirir. 
-•   İşi isteyen nesneler de işi yerine getirecek yani hedef nesneler de bir hiyerarşide bulunurlar. Hedef nesnelerin, işi isteyen nesnelerle doğrudan iletişimde bulunmasını engellemek amacıyla hedef nesneler bir zincir boyunca, en basit olanından en karmaşık olanına doğru sıralanır. İstenen iş, önce zincirdeki ilk nesneye verilir. Eğer nesne verilen işin kendi sorumluluğuna uygun olduğuna karar verirse işi yerine getirir. Aksi taktirde işi bir sonraki nensye geçirir. Bu şekilde iş, yerine getirecek nesne buluncaya kadar, zincir boyunca iletilir. Bazen bir istek birden fazla nesne tarafından da işlenebilir. Zincirdeki nesnelerin kendilerine gelen isteği karşılayıp karşılayamayacaklarına karar vermeleri gereklidir. Bu amaçla gelen istekte ya da istekte bulunan nesnede ayırt edici bir durum olmalıdır. 
+•   Amaç;istekte bulunan istemci ile isteği yerine getiren arasındaki bağımlılığı azaltmaktır.   
+•   Bazen isteği kimin yerine getireceğinin belirlenmesini merkezileştirmekten kaçınmak gerekebilir. Bu durumda isteği kimin yerine getireceği, doğrudan isteği yerine getirecek hedef tarafından belirlenir. Bu yaklaşımda hedef nesneyi bulmayı merkezi bir sorumluluk olmaktan çıkarmak ve sorumluluğu hedef nesnelerin kendisine yaymak biraz pahalı olabilir ama etkin bir çözümdür.    
+•   İstemci ile isteği yerine getiren nesneler arasındaki bağımlılığı azaltmanın yollarından birisi Chain of Responsibility patternidir. Pattern bir nesne hiyerarşisini bir arayüz arkasına saklamakla kalmaz, kendisini yerine getirecek nesneyi bulması için isteği hiyerarşideki nesneler arasında gezdirir.    
+•   İşi isteyen nesneler de işi yerine getirecek yani hedef nesneler de bir hiyerarşide bulunurlar. Hedef nesnelerin, işi isteyen nesnelerle doğrudan iletişimde bulunmasını engellemek amacıyla hedef nesneler bir zincir boyunca, en basit olanından en karmaşık olanına doğru sıralanır. İstenen iş, önce zincirdeki ilk nesneye verilir. Eğer nesne verilen işin kendi sorumluluğuna uygun olduğuna karar verirse işi yerine getirir. Aksi taktirde işi bir sonraki nensye geçirir. Bu şekilde iş, yerine getirecek nesne buluncaya kadar, zincir boyunca iletilir. Bazen bir istek birden fazla nesne tarafından da işlenebilir. Zincirdeki nesnelerin kendilerine gelen isteği karşılayıp karşılayamayacaklarına karar vermeleri gereklidir. Bu amaçla gelen istekte ya da istekte bulunan nesnede ayırt edici bir durum olmalıdır.   
 
 
 
@@ -2422,9 +2422,113 @@ loggerChain.logMessage(Logger.ERROR, "Bu bir error mesajıdır."); çağrısına
 >ERROR Logger: Bu bir hata mesajıdır.
 
 
+• Eğer bir isteği birden fazla nesne yerine getirebiliyorsa ve hangisininm yerine getireceği önceden bilinmiyorsa, ya da bilinse bile isteyen ile isteği yerine getiren arasında statik ilişki kurmak istenmiyorsa yani isteği kimin yerine getireceği dinamik olarak belirlenecekse, ya da isteği kiminm yerine getireceğinin merkezi bir yapıda belirlenmesi istenmiyorsa bu durumlarda chain of responsibility kullanabiliriz. 
+•  Exception mekanizmaları chain of resposibility kullanır. Run timeda fırlatılan exception nesnesi, bu nesneyi fırlatan metottan başlayarak çağrı zincirinde(call chain) geriye doğru giderek uygun handler nesnesini arar. Fırlatılan exception nesnesinin tipine uygun bir handler bulunduğunda arama durur ve exception fırlatılıp gereği yapılır. 
+
 ## Visitor    
 • Amaç; bir işi birden çok nesneye, o nesnelerin arayüzlerini değiştirmeden yaptırmayı sağlamaktır.      
-• 
+• Bir koleksiyon ya da karmaşık nesne yapıları içindeki farklı nesneler üzerinde aynı türde işlemler yapmak istendiğinde, nesnelere yeni işlemler eklemenin zor ve yapı bozucu olduğu durumlarda kullanılır. İşlemler zamanla değiştiğinde her değişimde nesne sınıflarını değiştirmek zorundaysak visitor design patternı kullanılabilir.Böyle durumlarda visitor pattern ile yeni davranışları nesnelerin üzerinde tanımlamak yerine bir başka ziyaretçi nesne(visitor nesne) tanımlamak ve bu ziyaretçinin davranışlara ihtiyaç duyan nesneleri ziyaret ederek davranışları gerçekleştirmesine sağlanır. 
+• Bir interface ya da soyut sınıf tanımlanır ve her class bu interface'i kullanır. Bir Visitor interface'i ya da soyut sınıfı tanımlanır.Bu interface her class için bir ziyaret metodu içerir. Sınıflar visitor'ı kabul etmek için accept() metodu içerir.Bu metodun içinde visitorın ilgili metodu çağırılır. 
+
+```java
+interface Element { 
+    void accept(Visitor visitor);
+}
+class File implements Element { 
+    private String name;
+    private int size;
+
+    public File(String name, int size) {
+        this.name = name;
+        this.size = size;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
+}
+
+class Folder implements Element {
+    private String name;
+    private List<Element> elements = new ArrayList<>();
+
+    public Folder(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void addElement(Element element) {
+        elements.add(element);
+    }
+
+    public List<Element> getElements() {
+        return elements;
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
+}
+
+interface Visitor { 
+    void visit(File file);
+    void visit(Folder folder);
+}
+
+
+class SizeCalculatorVisitor implements Visitor { 
+    private int totalSize = 0;
+
+    public int getTotalSize() {
+        return totalSize;
+    }
+
+    @Override
+    public void visit(File file) {
+        totalSize += file.getSize();
+    }
+
+    @Override
+    public void visit(Folder folder) {
+        for (Element element : folder.getElements()) {
+            element.accept(this);  // Alt elemanları ziyaret ediyoruz
+        }
+    }
+}
+public class VisitorPatternExample { 
+    public static void main(String[] args) {
+        // Dosya ve klasörler oluşturuluyor
+        File file1 = new File("file1.txt", 100);
+        File file2 = new File("file2.txt", 200);
+        Folder folder = new Folder("MyFolder");
+        folder.addElement(file1);
+        folder.addElement(file2);
+
+        // Boyut hesaplayıcısı ziyaretçisi
+        SizeCalculatorVisitor sizeCalculator = new SizeCalculatorVisitor();
+        folder.accept(sizeCalculator);
+
+        // Toplam boyut
+        System.out.println("Toplam boyut: " + sizeCalculator.getTotalSize() + " KB");
+    }
+}
+
+```
+
+• **Double dispatch**;bir anti pattern gibidir. Bir nesnenin bir metodu çağırırken hem o nesnenin tipine hem de parametre olarak aldığı nesnenin tipine bağlı olarak doğru metodun seçilmesini sağlar. Genelde nesneye dayalı dillerde metot çağrılarında tek bir dinamik dispatch yapılır, yani metodun hangi sınıfa ait olduğuna göre hangi versiyonun çalıştırılacağına karar verir. Visitor patternini kullanmadığımız durumlarda double dispatcher durumu ortaya çıkabilir. 
 
 ## State  
 •   Amaç; bir nesnenin karmaşık durumlarına bağlı olan davranışlarını ifade etmektir. 
