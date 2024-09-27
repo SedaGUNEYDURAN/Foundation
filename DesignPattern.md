@@ -2531,8 +2531,14 @@ public class VisitorPatternExample {
 • **Double dispatch**;bir anti pattern gibidir. Bir nesnenin bir metodu çağırırken hem o nesnenin tipine hem de parametre olarak aldığı nesnenin tipine bağlı olarak doğru metodun seçilmesini sağlar. Genelde nesneye dayalı dillerde metot çağrılarında tek bir dinamik dispatch yapılır, yani metodun hangi sınıfa ait olduğuna göre hangi versiyonun çalıştırılacağına karar verir. Visitor patternini kullanmadığımız durumlarda double dispatcher durumu ortaya çıkabilir. 
 
 ## State  
-•   Amaç; bir nesnenin karmaşık durumlarına bağlı olan davranışlarını ifade etmektir. 
-•  
+•   Amaç; bir nesnenin karmaşık durumlarına bağlı olan davranışlarının değişmesine izin vermektir. Nesne sanki sınıfı değişiyormuş gibi görünür.    
+•  Nesnenin durumunu farklı alanlarda ifade etmek ve nesne üzerinde yapılan metot çağrılarına duruma bağlı cevapları if-else ya da switch-case yapılarıyla yönetildiği yani durumlara bağlı olarak farklı davranış sergilemesi gereken nesneler olduğu durumlarda state pattern kullanılır. State kalıbında, nesnenin durumları ayrı ayrı ele alınır ve bir arayüzü gerçekleştiren sınıflarda diğer durumlardan yalıtılır. Bu şekilde her durum için ayrı bir sınıf oluşturulur ve duruma bağlı davranışların, içinde bulunan duruma özgü halleri burada gerçekleştirir. Sınıfların ortak davranışları ise üstteki tipte soyut olarak toplanır.  
+• State kalıbının uygulanmasındaki en temel karar noktası durumların yönetimiyle ilgilidir. Nesnenin hangi durumda olduğuna kim karar verecek ve durumlar arasındaki geçişleri kim yönetecek? İki alternatif vardır; durum değişimleri durumların kendileri tarafından yönetilir(yöneyim dağıtılır) ya da durum değişimleri merkezi olarak yönetilir. Durum değişimleri merkezi olarak yönetildiğinde; merkezi bir nesne, arabulucu(mediator) oalrak davranır ve durumlardan gelen bilgiye göre bir sonraki durumu belirler. Durum sayısı az olduğunda merkezi yapının kullanılması, durum sayısı arttığında ise merkezi yapı ile durum daha da karmaşıklaşacağı için dağıtık yapının kullanılması mantıklıdır. 
+• Durum yönetiminde Observer kalıbı kullanılır.Özellikle durum geçişlerinin merkezi olarak yönetildiği çözüöde durumları temsil eden nesneler, değişiklik halinde event fırlatarak kendilerini dinleyen merkezi nesneye durumu haber verirler.  
+• Durum nesneleri Singleton olabilir, paylaşım için Flyweight olarak modellenebilir. Durum geçişlerinde observer kalıbı kullanılabilir. 
+• http://www.soberit.hut.fi/tik-76.278/alex/plop95.htm paperı incelersen state durumlarını daha iyi anlayabilirsin. 
+
+
 
 ## Interpreter  
 •   Amaç; bir dildeki cümleleri yorumlamak amacıyla yorumlayıcı tanımlamaktır. 
