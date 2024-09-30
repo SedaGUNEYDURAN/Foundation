@@ -2631,10 +2631,238 @@ public class StatePatternDemo {
 
 ## Interpreter  
 •   Amaç; bir dildeki cümleleri yorumlamak amacıyla yorumlayıcı tanımlamaktır. 
-•   
+•   Bir dilin gramerini ve kurallarını temsil eden sınıflar kullanılarak ifade edilen bir dizi işlemi gerçekleştirme yeteneği sağlar. Basit bir dilde yazılmış expression(ifadeleri) çözümlemej ve değerlendirmek için kullanılır. 
+•  Farklı veri formatları arasında dönüşüm yaparken, örneğin bir yapılandırma dosyasını yorumlamak için kullanılır. 
+
+
+```java
+interface Expression { 
+    int interpret();
+}
+
+class Number implements Expression { 
+    private int number;
+
+    public Number(int number) {
+        this.number = number;
+    }
+
+    @Override
+    public int interpret() {
+        return number;
+    }
+}
+
+
+class Add implements Expression { 
+    private Expression leftExpression;
+    private Expression rightExpression;
+
+    public Add(Expression leftExpression, Expression rightExpression) {
+        this.leftExpression = leftExpression;
+        this.rightExpression = rightExpression;
+    }
+
+    @Override
+    public int interpret() {
+        return leftExpression.interpret() + rightExpression.interpret();
+    }
+}
+
+class Subtract implements Expression {
+    private Expression leftExpression;
+    private Expression rightExpression;
+
+    public Subtract(Expression leftExpression, Expression rightExpression) {
+        this.leftExpression = leftExpression;
+        this.rightExpression = rightExpression;
+    }
+
+    @Override
+    public int interpret() {
+        return leftExpression.interpret() - rightExpression.interpret();
+    }
+}
+
+
+public class InterpreterPatternExample { 
+    public static void main(String[] args) {
+        // (5 + 10) - 3 işlemini oluşturuyoruz
+        
+        Expression number1 = new Number(5);
+        Expression number2 = new Number(10);
+        Expression number3 = new Number(3);
+        
+        // 5 + 10
+        Expression addition = new Add(number1, number2);
+        
+        // (5 + 10) - 3
+        Expression subtraction = new Subtract(addition, number3);
+        
+        // Sonucu yorumla (interpret)
+        System.out.println("Sonuç: " + subtraction.interpret());
+    }
+}
+
+public class InterpreterPatternExample { 
+    public static void main(String[] args) {
+        // (5 + 10) - 3 işlemini oluşturuyoruz
+        
+        Expression number1 = new Number(5);
+        Expression number2 = new Number(10);
+        Expression number3 = new Number(3);
+        
+        // 5 + 10
+        Expression addition = new Add(number1, number2);
+        
+        // (5 + 10) - 3
+        Expression subtraction = new Subtract(addition, number3);
+        
+        // Sonucu yorumla (interpret)
+        System.out.println("Sonuç: " + subtraction.interpret());
+    }
+}
 
 
 
+```
+
+Güzel bir örnek daha;
+
+
+```java
+package Interpret2;
+
+import java.util.Stack;
+
+public class ExpressionParser {
+	Stack stack=new Stack<>();
+    public int parse(String str){
+        String[] tokenList = str.split(" ");
+        for (String symbol : tokenList) {
+            if (!ParserUtil.isOperator(symbol)) {
+                Expression numberExpression = new NumberExpression(symbol);
+                stack.push(numberExpression);
+                System.out.println(String.format("Pushed to stack: %d", numberExpression.interpret()));
+            } else  if (ParserUtil.isOperator(symbol)) {
+                Expression firstExpression = (Expression) stack.pop();
+                System.out.println("firstExpression:"+firstExpression.interpret());
+                Expression secondExpression = (Expression) stack.pop();
+                System.out.println("secondExpression:"+secondExpression.interpret());
+                System.out.println(String.format("Popped operands %d and %d",
+                        firstExpression.interpret(), secondExpression.interpret()));
+                Expression operator = ParserUtil.getExpressionObject(firstExpression, secondExpression, symbol);
+                System.out.println(String.format("Applying Operator: %s", operator));
+                int result = operator.interpret();
+                NumberExpression resultExpression = new NumberExpression(result);
+                stack.push(resultExpression);
+                System.out.println(String.format("Pushed result to stack: %d", resultExpression.interpret()));
+                System.out.println();
+            }
+        }
+       int result= ((Expression) stack.pop()).interpret();
+        return result;
+    }
+}
+
+public interface Expression {
+	   int interpret();
+
+}
+
+public class AdditionExpression implements Expression{
+	 private Expression firstExpression,secondExpression;
+	    public AdditionExpression(Expression firstExpression, Expression secondExpression){
+	        this.firstExpression=firstExpression;
+	        this.secondExpression=secondExpression;
+	    }
+	    @Override
+	    public int interpret(){
+	        return this.firstExpression.interpret()+this.secondExpression.interpret();
+	    }
+	    @Override
+	    public String toString(){
+	        return "+";
+	    }
+}
+
+public class ExpressionParserTest {
+	public static void main(String[] args) {
+	    
+	      String input="2 1 5 + *";
+	       ExpressionParser expressionParser=new ExpressionParser();
+	       int result=expressionParser.parse(input);
+	       System.out.println("Final result: "+result);
+	   
+	}   
+}
+
+
+public class MultiplicationExpression implements Expression {
+	private Expression firstExpression,secondExpression;
+    public MultiplicationExpression(Expression firstExpression, Expression secondExpression){
+        this.firstExpression=firstExpression;
+        this.secondExpression=secondExpression;
+    }
+    @Override
+    public int interpret(){
+        return this.firstExpression.interpret()*this.secondExpression.interpret();
+    }
+    @Override
+    public String toString(){
+        return "*";
+    }
+}
+
+public class NumberExpression implements Expression{
+	  private int number;
+	    public NumberExpression(int number){
+	        this.number=number;
+	    }
+	    public NumberExpression(String number){
+	        this.number=Integer.parseInt(number);
+	    }
+	    @Override
+	    public int interpret(){
+	        return this.number;
+	    }
+}
+
+public class ParserUtil {
+	 public static boolean isOperator(String symbol) {
+	        return (symbol.equals("+") || symbol.equals("-") || symbol.equals("*"));
+	    }
+	    public static Expression getExpressionObject(Expression firstExpression,Expression secondExpression,String symbol){
+	        if(symbol.equals("+"))
+	            return new AdditionExpression(firstExpression,secondExpression);
+	        else if(symbol.equals("-"))
+	            return new SubstractionExpression(firstExpression,secondExpression);
+	        else
+	            return new MultiplicationExpression(firstExpression,secondExpression);
+	    }
+}
+
+
+public class SubstractionExpression implements Expression {
+	 private Expression firstExpression,secondExpression;
+	    public SubstractionExpression(Expression firstExpression, Expression secondExpression){
+	        this.firstExpression=firstExpression;
+	        this.secondExpression=secondExpression;
+	    }
+	    @Override
+	    public int interpret(){
+	        return this.firstExpression.interpret()-this.secondExpression.interpret();
+	    }
+	    @Override
+	    public String toString(){
+	        return "-";
+	    }
+	    
+}
+
+
+
+```
 
 
 
