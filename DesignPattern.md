@@ -2534,11 +2534,99 @@ public class VisitorPatternExample {
 ## State  
 •   Amaç; bir nesnenin karmaşık durumlarına bağlı olan davranışlarının değişmesine izin vermektir. Nesne sanki sınıfı değişiyormuş gibi görünür.    
 •  Nesnenin durumunu farklı alanlarda ifade etmek ve nesne üzerinde yapılan metot çağrılarına duruma bağlı cevapları if-else ya da switch-case yapılarıyla yönetildiği yani durumlara bağlı olarak farklı davranış sergilemesi gereken nesneler olduğu durumlarda state pattern kullanılır. State kalıbında, nesnenin durumları ayrı ayrı ele alınır ve bir arayüzü gerçekleştiren sınıflarda diğer durumlardan yalıtılır. Bu şekilde her durum için ayrı bir sınıf oluşturulur ve duruma bağlı davranışların, içinde bulunan duruma özgü halleri burada gerçekleştirir. Sınıfların ortak davranışları ise üstteki tipte soyut olarak toplanır.     
-• State kalıbının uygulanmasındaki en temel karar noktası durumların yönetimiyle ilgilidir. Nesnenin hangi durumda olduğuna kim karar verecek ve durumlar arasındaki geçişleri kim yönetecek? İki alternatif vardır; durum değişimleri durumların kendileri tarafından yönetilir(yöneyim dağıtılır) ya da durum değişimleri merkezi olarak yönetilir. Durum değişimleri merkezi olarak yönetildiğinde; merkezi bir nesne, arabulucu(mediator) oalrak davranır ve durumlardan gelen bilgiye göre bir sonraki durumu belirler. Durum sayısı az olduğunda merkezi yapının kullanılması, durum sayısı arttığında ise merkezi yapı ile durum daha da karmaşıklaşacağı için dağıtık yapının kullanılması mantıklıdır.    
-• Durum yönetiminde Observer kalıbı kullanılır.Özellikle durum geçişlerinin merkezi olarak yönetildiği çözüöde durumları temsil eden nesneler, değişiklik halinde event fırlatarak kendilerini dinleyen merkezi nesneye durumu haber verirler.      
+• State kalıbının uygulanmasındaki en temel karar noktası durumların yönetimiyle ilgilidir. Nesnenin hangi durumda olduğuna kim karar verecek ve durumlar arasındaki geçişleri kim yönetecek? İki alternatif vardır; durum değişimleri durumların kendileri tarafından yönetilir(yönetim dağıtılır) ya da durum değişimleri merkezi olarak yönetilir. Durum değişimleri merkezi olarak yönetildiğinde; merkezi bir nesne, arabulucu(mediator) olarak davranır ve durumlardan gelen bilgiye göre bir sonraki durumu belirler. Durum sayısı az olduğunda merkezi yapının kullanılması, durum sayısı arttığında ise merkezi yapı ile durum daha da karmaşıklaşacağı için dağıtık yapının kullanılması mantıklıdır.    
+• Durum yönetiminde Observer kalıbı kullanılır.Özellikle durum geçişlerinin merkezi olarak yönetildiği çözümde durumları temsil eden nesneler, değişiklik halinde event fırlatarak kendilerini dinleyen merkezi nesneye durumu haber verirler.      
 • Durum nesneleri Singleton olabilir, paylaşım için Flyweight olarak modellenebilir. Durum geçişlerinde observer kalıbı kullanılabilir.   
 • http://www.soberit.hut.fi/tik-76.278/alex/plop95.htm paperı incelersen state durumlarını daha iyi anlayabilirsin.    
 
+```java
+// Durumları temsil eden arayüz 
+public interface State {
+    void doAction(MediaPlayerContext context);
+}
+
+public class PlayState implements State { 
+    @Override
+    public void doAction(MediaPlayerContext context) {
+        System.out.println("Oynatılıyor...");
+        context.setState(this);  // Oynat durumuna geçiş
+    }
+
+    public String toString() {
+        return "Play State";
+    }
+}
+
+
+public class PauseState implements State { 
+    @Override
+    public void doAction(MediaPlayerContext context) {
+        System.out.println("Duraklatıldı...");
+        context.setState(this);  // Duraklat durumuna geçiş
+    }
+
+    public String toString() {
+        return "Pause State";
+    }
+}
+
+public class StopState implements State { 
+    @Override
+    public void doAction(MediaPlayerContext context) {
+        System.out.println("Durduruldu...");
+        context.setState(this);  // Durdur durumuna geçiş
+    }
+
+    public String toString() {
+        return "Stop State";
+    }
+}
+
+public class MediaPlayerContext { 
+    private State state;
+
+    public MediaPlayerContext() {
+        state = null;  // Başlangıçta durum yok
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void pressButton() {
+        if (state != null) {
+            state.doAction(this);
+        } else {
+            System.out.println("Durum ayarlanmadı.");
+        }
+    }
+}
+
+public class StatePatternDemo { 
+    public static void main(String[] args) {
+        MediaPlayerContext context = new MediaPlayerContext();
+
+        // Play durumuna geçiş
+        PlayState playState = new PlayState();
+        playState.doAction(context);
+        System.out.println(context.getState().toString());
+
+        // Pause durumuna geçiş
+        PauseState pauseState = new PauseState();
+        pauseState.doAction(context);
+        System.out.println(context.getState().toString());
+
+        // Stop durumuna geçiş
+        StopState stopState = new StopState();
+        stopState.doAction(context);
+        System.out.println(context.getState().toString());
+    }
+}
+```
 
 
 ## Interpreter  
