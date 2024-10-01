@@ -2864,6 +2864,9 @@ public class SubstractionExpression implements Expression {
 
 ```
 
+GoF'da yer almayan kalıplarda bulunur;Null Object 
 
-
-
+## Null Object
+•  Amacı; Verilen tipin nesnesi olmaması durumu için vekil olarak bir nesne sağlamak ve null obje, detayları diğer nesnelerden(collaboratorlar) saklayarak akıllı "hiç bir şey yapma" davranışı sağlamaktır. Bobby Woolf tarafından teklif edilmiştir. Bobbyn Wolf, bu patterni Object Structal sınıfına sokmaktadır.  
+•  Bir referansın hiç bir nesneyi göstermediği durumlarda sıklıkla karşılaşılır.Bu durumda null olan referansa erişmek sıkıntılı olduğundan NullPointerException vb. sıra dışı durum fırlatılmasını önlemek için null kontrolü yapılır. Aslında hiçbir zaman null referansı geçmemeli ve döndürmemeliyiz. 
+•  
