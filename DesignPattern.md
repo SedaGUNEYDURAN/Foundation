@@ -2867,6 +2867,58 @@ public class SubstractionExpression implements Expression {
 GoF'da yer almayan kalıplarda bulunur;Null Object 
 
 ## Null Object
-•  Amacı; Verilen tipin nesnesi olmaması durumu için vekil olarak bir nesne sağlamak ve null obje, detayları diğer nesnelerden(collaboratorlar) saklayarak akıllı "hiç bir şey yapma" davranışı sağlamaktır. Bobby Woolf tarafından teklif edilmiştir. Bobbyn Wolf, bu patterni Object Structal sınıfına sokmaktadır.  
-•  Bir referansın hiç bir nesneyi göstermediği durumlarda sıklıkla karşılaşılır.Bu durumda null olan referansa erişmek sıkıntılı olduğundan NullPointerException vb. sıra dışı durum fırlatılmasını önlemek için null kontrolü yapılır. Aslında hiçbir zaman null referansı geçmemeli ve döndürmemeliyiz. 
+•  Amacı; Verilen tipin nesnesi olmaması durumu için vekil olarak bir nesne sağlamak ve null obje, detayları diğer nesnelerden(collaboratorlar) saklayarak akıllı "hiç bir şey yapma" davranışı sağlamaktır. Bobby Woolf tarafından teklif edilmiştir. Bobbyn Wolf, bu patterni Object Structal sınıfına sokmaktadır.    
+•  Bir referansın hiç bir nesneyi göstermediği durumlarda sıklıkla karşılaşılır.Bu durumda null olan referansa erişmek sıkıntılı olduğundan NullPointerException vb. sıra dışı durum fırlatılmasını önlemek için null kontrolü yapılır. Aslında hiçbir zaman null referansı geçmemeli ve döndürmemeliyiz.    
 •  
+
+```java
+// Arayüz tanımı
+interface Kullanici {
+    void bilgiVer();
+}
+
+// Gerçek Kullanici sınıfı
+class GercekKullanici implements Kullanici {
+    private String isim;
+
+    public GercekKullanici(String isim) {
+        this.isim = isim;
+    }
+
+    @Override
+    public void bilgiVer() {
+        System.out.println("Kullanici Ismi: " + isim);
+    }
+}
+
+// Null Kullanici sınıfı
+class NullKullanici implements Kullanici {
+    @Override
+    public void bilgiVer() {
+        System.out.println("Kullanici mevcut değil.");
+    }
+}
+
+// Kullanici Fabrikası
+class KullaniciFabrika {
+    public static Kullanici kullaniciGetir(String isim) {
+        if (isim == null || isim.isEmpty()) {
+            return new NullKullanici();
+        }
+        return new GercekKullanici(isim);
+    }
+}
+
+// Ana sınıf
+public class Main {
+    public static void main(String[] args) {
+        Kullanici kullanici1 = KullaniciFabrika.kullaniciGetir("Ali");
+        Kullanici kullanici2 = KullaniciFabrika.kullaniciGetir(""); // Null Kullanici
+
+        kullanici1.bilgiVer(); // Çıktı: Kullanici Ismi: Ali
+        kullanici2.bilgiVer(); // Çıktı: Kullanici mevcut değil.
+    }
+}
+```
+
+Yukarıdaki kodda NullKullanici class'ı null durumu için bir nesne oluşturur.bilgiVer(() metodunda, kullanıcının mevcut olmadığına dair bir mesaj çıkarır. null kontrolü gerektiren durumları ortadan kaldırmış olduk. Çünkü artık bir kullanıcı nesnesi "null" olduğunda bile bilgiVer metodunu çağırabilir.   
