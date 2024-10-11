@@ -21,16 +21,22 @@
 - **Usage**: Bir bileşen diğer bileşenin işlevlerini veya özelliklerini çağırdığında veya kullanıldığında ortaya çıkar Bir sınıfın başka bir sınıfın metodu çağırması durumu gibi.    
 
 ```java
-public class A extends P implements I{
-  private B b;
-  public void f(C c){
+public class A extends P implements I{ //P-> abstraction, I-> realization  
+  private B b;//usage ve association
+  public void f(C c){//usage
     ...
   }
   public D g(){
-    return new D(); 
+    return new D(); //usage
   }
 }
 ```
 
-• 
+• Association: Bir nesnenin başka bir nesneye sahip olma ilişkisidir.Yani bir sınıfta başka bir sınıfın referansının tutulması durumudur. has-a ilişkisidir. (objeyi oluştur, bir nesnenin objesi instance variable olarak ifade ediliyorsa -> has-a, bir classı extend ediyorsan -> is-a ) Association ilişkisi aynı zamanda iki nesne arasındaki bağlantının sayısını tanımlar. Association türleri;
+
+- **Unidirectional**:
+- **Bidirectional***:
+- **Aggregation**: Diğer objeleri bir araya getirme, daha gevşek bir sahip olma ilişkisi. Yazar ve kitap classını örnek verebilirz. 
+- **Composition**: Aggregation'ın daha güçlü halidir. Bir nesne başka bir nesneye sıkı bir şekilde bağlıdır ve diğeri olmadan var olamaz. 
+
 • 
