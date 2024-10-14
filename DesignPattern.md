@@ -6,8 +6,8 @@
   - Zamansal(Temporal): Zamansal birliktelikten dolayı bir araya getirilmişlerdir.  
   - Prosedürel(Procedural):Bir konu ile ilgili işlerin yukarıdan aşağıya doğru fonksiyonel olarak ayrılması ve hepsinin bir sınıfta bir araya getirilmesi. Örneğin; dosya açmakla ilgili her şeyi yapan, dosya erişimini ve gerekli belleği kontrol eden, dosyayı açıp kaydedip e-mail olarak gönderen bir class.  
   - İletişimsel(Communicational/Informational): Aynı veri üzerinde çalışan yapıların bir araya getirilmesidir. Veri işlemenin öne çıktığı durumlarda görülür.   
-  - Ardışıl(Sequential): Class seviyesinde birinin çıktısının diğerini beslediği, pipe şeklinde çalışan fonksiyonları bir araya getiren claslardır.   
-  - Fonksiyonel(Functional): En iyi birlitelik durumudur. Tek, çok iyi tanımlanmış ve olabildiğince küçük bir işe ya da sorumluluğa yönelik oloarak bir araya getirilmiş yapılardır.
+  - Ardışıl(Sequential): Class seviyesinde birinin çıktısının diğerini beslediği, pipe şeklinde çalışan fonksiyonları bir araya getiren classlardır.   
+  - Fonksiyonel(Functional): En iyi birlitelik durumudur. Tek, çok iyi tanımlanmış ve olabildiğince küçük bir işe ya da sorumluluğa yönelik olarak bir araya getirilmiş yapılardır.
 
 • **Ivar Jacobson’ın nesne sınıflandırması**; Boundary nesneleri controller nesnelerini, controller nesneleri entityleri kullanırlar.
   - Boundary: Sistemin aktörleriyle olan iletişimini yöneten nesnelerdir, interface nesneleri de denir. (MVC’de karşılığı view)
@@ -31,10 +31,10 @@
 • **Proxy**: Sakladığı nesne ile aynı interface’e sahip olan nesnedir. MVC’deki Controller bir Proxy değildir çünkü controllerın bir nesne tutma gibi bir amacı yoktur. Controllerın interface’i model ile aynı değildir.  
 
 # Coupling (Bağlılık )
-• Koordinasyon karmaşıklığı, bir işin kendi başına ifade edilebilirliğinin ya da diğerleriyle ne kadar ilgili(relatedness) olduğunun ölçüsüdür. İlgililik, bağlılıktır(coupling) ve bağımlılığı düşük olan bileşenlerin karmaşıklığı da düşüktür. Olabilecek en iyi coupling; veriler üzerinden değil davranışlar üzerinden olandır. 
+• Koordinasyon karmaşıklığı, bir işin kendi başına ifade edilebilirliğinin ya da diğerleriyle ne kadar ilgili(relatedness) olduğunun ölçüsüdür. İlgililik, bağlılıktır(coupling) ve bağımlılığı düşük olan bileşenlerin karmaşıklığı da düşüktür.**Olabilecek en iyi coupling; veriler üzerinden değil davranışlar üzerinden olandır.**
 
   - **Low/loose/weak  coupling**: Bir classın başka bir classa olan bağımlılığı mümkün olduğunca azdır. Classlar arasındaki 
-      etkileşim interfaces veya abstracts yolula gerçekleştirilir. 
+      etkileşim interfaces veya abstracts yoluyla gerçekleştirilir. 
   - **Tight coupling**: Bir classın bir classa bağımlılığı fazladır. Bir classsın iç detayları diğer classlar tarafından çok 
       fazla kullanılıyorsa vardır. Bakımı zordur ve kötü tasarımın işaretidir.  
 
@@ -43,7 +43,7 @@
   - İçerik(Content): Yapıların birbirlerinin iç yapılarına, gerçekleştirmelerine (implementation) bağımlı olduğu durumlardır. 
       Yanlış soyutlama temel sebeptir. Doğrudan alan erişimi ya da set/get metotları yoluyla veri alışverişi en sık görülendir. 
       Birlikte değiştirme sorunu oluşturur.   
-  - Common(Coupling):Global veri ve değişkenleri kullanan yapılar arasındaki bağımlılıktır. Sabitler, statik özelliklEr ve 
+  - Common(Coupling):Global veri ve değişkenleri kullanan yapılar arasındaki bağımlılıktır. Sabitler, statik özellikler ve 
       davranışlar yanında Singleton gibi kalıplarda görülür.   
   - Dışsal(External):Yapıları arasında, ortak kullandıkları dış bir bileşen ya da sistemin format, arayüz, veri yapısı vb.
       dayatmasından kaynaklanan bağımlılıktır. Façade ve Repository gibi kalıplarla azaltılabilir.   
@@ -253,11 +253,11 @@ public class Main(){
   public static void main(String[] args){
     PaymentProcessor creditCardProcessor=new CreditCardPaymentProcessor();
     OrderService orderService=new OrderService(creditCardProcessor);
-    orderService.placeOrder(100.0);
+    orderService.processPayment(100.0);
 
     PaymentProcessor payPalProcess=new PaymentProcessor();
     OrderService orderService=new OrderService(payPalProcess);
-    orderService.placeOrder(200.0);
+    orderService.processPayment(200.0);
   }
 }
 ```
@@ -265,10 +265,10 @@ public class Main(){
   -Somut yapılar arasındaki bağımlılıkların tamamen soyut bağımlılıklara donüşecek şekilde tersine çevrilmelidir. Bu amaçla her somut yapının soyut bir üst tipi oluşturulmalı ve yukarı seviyeli iş yapan yapıların bağımlılıkları soyut tiplere çevrilmelidir. Bu şekilde üst seviyeli soyut yapılar ile onların detayları arasına  soyutlama tabakası konarak, değişimin yayılması önlenmelidir.    
 •**Granularity Principle**:  Bağımsız sorumlulukların doğru bir şekilde belirlenmesi ve bu sorumlulukların uygun büyüklükteki(granülerlikte) bileşenlere dağıtılması gerektiğini savunur. 
 
-  - İnce taneli(Fine-Grained) Bileşenler:Her bileşen ya da class, tek bir sorumluluk üstlenir.Esnektir, kolay test edileBilir amcak karşıklığı arttırır ve yönetimi zorlaştırır.
+  - İnce taneli(Fine-Grained) Bileşenler:Her bileşen ya da class, tek bir sorumluluk üstlenir.Esnektir, kolay test edilebilir ancak karşıklığı arttırır ve yönetimi zorlaştırır.
   - Kalın taneli(Course-Grained) Bileşenler: Her bileşen veya class, birden fazla sorumluluk üstlenir ve daha geniş kapsamlı bir işlevi yerine getirir. Değişikliklerin etkisi yüksek olur ve test edilmesi zordur, anlaması ve yönetilmesi kolaydır.
          
-•**YAGNI(You Arent Gonna Need It) Prensibi**: Geliştiricilere ve ekiplerine gelecekte ihtiyaç duyulacağı tahmin edilen ama şuanda gereksiz olan işlevleri veya özellikleri eklemekten kaçınmayı öğütler. Genellikle Agile yazılım geliştirme metodolojisinde kullanılır. Sadece şuanda gerçekten gerekli olan işlevler üzerine çalışmasılmasına teşvik eder.        
+•**YAGNI(You Arent Gonna Need It) Prensibi**: Geliştiricilere ve ekiplerine gelecekte ihtiyaç duyulacağı tahmin edilen ama şuanda gereksiz olan işlevleri veya özellikleri eklemekten kaçınmayı öğütler. Genellikle Agile yazılım geliştirme metodolojisinde kullanılır. Sadece şuanda gerçekten gerekli olan işlevler üzerine çalışılmasına teşvik eder.        
 •**Design By Contact**:Yazılım bileşenleri için formal, kesin(precise) ve doğrulunabilir(verifiable) arayüzlerin tasarlanması gerektiğini ifade eder. 
 Temel olarak yazılım bileşenlerinin birbiri ile olan etkileşimlerini bir sözleşme çerçevesinde tanımlar. Bu contractlar, bileşenlerin nasıl etkileşime gireceğini açıklayan, ön koşullar(preconditions), son koşullar(postconditions) ve sınıf veya metod değişmezlerini(invariants) içerir. Ön şartlar metodun istemcisi tarafından çağırılması için gereklidir. Son şartlar ise metodun çalışmasını bitirdiğinde oluşacak durum ile ilgilidir. Alt tiplerin şartları(require) zayıflatabilir ve son şartları(ensure) sıkılaştırabilir.  Alt tipler üst tiplerin kabul etmediğini kabul edebilir ve daha iyi daha özel bir hale getirebilir. 
   - Miras aslen bir genelleştirme/özelleştirme(generalization/specialization) ilişkisidir. Üstte daha genel altta daha özel tipler bulunmalıdır. Yani bir metodumuz var diyelim Rectangle ve Square alanlarını hesaplayacağız. Override ederken ön koşulu parametre gibi düşün rectangle üst, square ise alt class diyelim. Hesaplama metodunda tür olarak square veremeyiz bu prensibe göre çünkü ön koşul rectangle gibi daha geniş olmalıdır.  Son koşuldaysa durum tam tersidir. Parent metodunda List dönerken subda override ederken arrayList dönebilir bu son şarttır.
@@ -297,15 +297,15 @@ public class A{
 # GRASP
 • GRASP(General Responsibility Assignment Software Patterns):Yazılım tasarımında belirli sorumlulukları ve görevleri nesneler arasında dağıtmak için kullanılır. 
   
-  - Information Expert: Temel nesne tanımını(encapsulation) vurgular ve bağımlılıklarını ortadan kaldırmayı amaçlar. Bir sorumluluğun bir nesneye atanması, o nesnenin bu sorumluluğu yerine getirmek için gereken bilgiyi veya erişimi en iyi şekilde sağlayabilmesidir. 
-  - Creator: Bir nesnenin, başka bir nesnenin örneklerini(instance) oluşturma sorumluluğu alıp almayacağını belirler. A,B'yi kullanıyorsa, A'ya B'yi yaratma sorumluluğu verilebilir. 
-  - High Cohesion: Fonksiyonel birlikteliği vurgular. Bir nesnenin sorumluluklarının birbirine ne kadar bağlı ve tüm parçalarının bir amacı yerine getirip getirmediğini değerlendirir. Yüksek bağlılık, sorumlulukların iyi organize edilmiş ve ilişkili olduğu anlamına gelir. 
-  - Low Coupling: Nesneler arasındaki bağımlılıkların en aza indirilmesi prensibidir. Bu sistemde bağımlılıklar azaltılır ve değişikliği daha kolay yönetebilir hale getirir.
-  - Controller: Genel veya önemli bir işlevi handle eden bir nesne belirler. Tipik olarak, kullanıcı ile etkileşimi kontrol eden nesnedir. Her use case yapısını(eventleri olan yapı) yöneten yapıdır. Kötü bir şekilde dizayn edilmiş controllerın cohesion'u düşük olacaktır. Çünkü çok fazla şeyi yeri getirir. Buna bloated controller denir.Örneğin; bir controller classı olup bütün sistem eventlerini bu classın alması.
-  - Polymorphism:İlgili göreceli işlemlerin, farklı veri türlerinin üzerindeki işlemler olarak tanımlanmasına ve bu işlemler olarak tanımlanmasına ve bu işlemlerin aynı ada sahip olmasına izin verir(genellikle taban sınıf ve türetilmiş sınıflar arasında bir yöntem adı paylaşımıdır.)
-  - Pure Fabrication: Genelde domain modeli içinde bulunmayan ama sistem ihtiyaçları gereğince yaratılan bir sınıftır. Bu sınıf, gerçek dünya nesnelerine karşılık gelmeyen ve soyut işlemleri taşıyan bir sınıftır. 
-  - Indirection:İki nesne arasında bir ilişki olması lazım ama doğrudan coupling ile yapmak istemediğimizde araya intermediate objeler konur. 
-  - Protected Variable: Değişimlere karşı bir modelin veya sistemin esnekliğini artırmak için değişim noktalarını ve kararsızlıkları bir koruyucu katman ile izole edilir. Bu sayede diğer bölümler bu değişimden etkilenmez.
+  - **Information Expert:** Temel nesne tanımını(encapsulation) vurgular ve bağımlılıklarını ortadan kaldırmayı amaçlar. Bir sorumluluğun bir nesneye atanması, o nesnenin bu sorumluluğu yerine getirmek için gereken bilgiyi veya erişimi en iyi şekilde sağlayabilmesidir. 
+  - **Creator:** Bir nesnenin, başka bir nesnenin örneklerini(instance) oluşturma sorumluluğu alıp almayacağını belirler. A,B'yi kullanıyorsa, A'ya B'yi yaratma sorumluluğu verilebilir. 
+  - **High Cohesion:** Fonksiyonel birlikteliği vurgular. Bir nesnenin sorumluluklarının birbirine ne kadar bağlı ve tüm parçalarının bir amacı yerine getirip getirmediğini değerlendirir. Yüksek bağlılık, sorumlulukların iyi organize edilmiş ve ilişkili olduğu anlamına gelir. 
+  - **Low Coupling:** Nesneler arasındaki bağımlılıkların en aza indirilmesi prensibidir. Bu sistemde bağımlılıklar azaltılır ve değişikliği daha kolay yönetebilir hale getirir.
+  - **Controller:** Genel veya önemli bir işlevi handle eden bir nesne belirler. Tipik olarak, kullanıcı ile etkileşimi kontrol eden nesnedir. Her use case yapısını(eventleri olan yapı) yöneten yapıdır. Kötü bir şekilde dizayn edilmiş controllerın cohesion'u düşük olacaktır. Çünkü çok fazla şeyi yerine getirir. Buna **bloated controller** denir.Örneğin; bir controller classı olup bütün sistem eventlerini bu classın alması.
+  - **Polymorphism:** İlgili göreceli işlemlerin, farklı veri türlerinin üzerindeki işlemler olarak tanımlanmasına ve bu işlemler olarak tanımlanmasına ve bu işlemlerin aynı ada sahip olmasına izin verir(genellikle taban sınıf ve türetilmiş sınıflar arasında bir yöntem adı paylaşımıdır.)
+  - **Pure Fabrication:** Genelde domain modeli içinde bulunmayan ama sistem ihtiyaçları gereğince yaratılan bir sınıftır. Bu sınıf, gerçek dünya nesnelerine karşılık gelmeyen ve soyut işlemleri taşıyan bir sınıftır. 
+  - **Indirection:** İki nesne arasında bir ilişki olması lazım ama doğrudan coupling ile yapmak istemediğimizde araya intermediate objeler konur. 
+  - **Protected Variable:** Değişimlere karşı bir modelin veya sistemin esnekliğini artırmak için değişim noktalarını ve kararsızlıkları bir koruyucu katman ile izole edilir. Bu sayede diğer bölümler bu değişimden etkilenmez.
 
 # Designs Pattern
 •Design Pattern, nesne yaratmayı soyutlar ve nesne yaratma kodlarının etrafa dağılmasını önler.  
