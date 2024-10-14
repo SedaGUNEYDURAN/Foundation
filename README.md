@@ -361,6 +361,7 @@ Java'da immutable nesneler;
 
 • **CloneNotSupportedException**: klonlama sırasında alınır. İki durumda ortaya çıkar. Bir nesne klonlanmaya çalışıldığında, ancak bu nesnenin sınıfı Clonable interface'ini implement etmedeğinde ve Object classının clone() metodunu çağırırken super.clone() kullanılırken.  
 
-
+• **Specification:** Bir yazılım bileşeninin veya sisteminin ne yapması gerektiğini tanımlayan bir belgedir. Geliştirilen yazılımın hedeflerini, özelliklerini ve davranışlarını belirler. Kullanıcı ihtiyaçlarını anlamak ve geliştirme sürecine rehberlik etmek için kullnılır. 
+• **Implementation:** Yazılımın nasıl oluşturulduğunu ve kodlarını ifade eder. Spesifikasyonun belirtilen gereksinimlerin somut, çalışır durumdaki bir yazılım ürününe dönüşmesini sağlar. 
 
 
