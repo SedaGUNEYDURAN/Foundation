@@ -39,4 +39,5 @@ public class A extends P implements I{ //P-> abstraction, I-> realization
 - **Aggregation**: Diğer objeleri bir araya getirme, daha gevşek bir sahip olma ilişkisi. Yazar ve kitap classını örnek verebilirz.  
 - **Composition**: Aggregation'ın daha güçlü halidir. Bir nesne başka bir nesneye sıkı bir şekilde bağlıdır ve diğeri olmadan var olamaz. Client yoksa service'de yoktur ilişkisidir.   
 
-• 
+• Wiring object:Objeler arasındaki  dependencyleri giderecek bir şekilde objeleri birbirine geçmektir.
+• Spring sadece nesneleri oluşturmak ile kalmaz, objeler arasındaki wiring'i de sağlar. Dolayısıyla nesnelerin diğer nesnelere olan bağımlılığını injenctionlarla yönetir. 
