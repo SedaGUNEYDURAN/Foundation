@@ -69,3 +69,8 @@ String[] aliases=beanFactory.getAliases("beanA"); //beanA'nın aliaslarını get
 String[] beanNamesForBeans=beanFactory.getBeanNamesForType(BeanA.class);//BeanA classından kaç tane bean var?
 ```
 • Bir beanden bir çok nesne oluşturabiliriz. 
+• ApplicationContext, containerı beanFactory'den daha yetkin bir şekilde temsil eden interface'in ismidir. 
+```java
+ApplicationContext context=new ClassPathXmlApplicationContext("org/java/spring/beans.xml");
+ApplicationContext context=new FileSystemApplicationContext("file:/Users/akin/beans.xml");
+```
