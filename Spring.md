@@ -47,6 +47,25 @@ public class A extends P implements I{ //P-> abstraction, I-> realization
 • IoC Container, objeleri  olupturmak, lifecyclelarını yönetmek, dependencyleri yönetmek işini yapar. Spring'in IoC container'ı tarafından ymönetilen objelere **bean** denir. Spring tarafından oluşturulmayan beanler, spring tarafından yönetilmezler.   
 • JavaBean default constructor'a sahip olan, varsa bütün fieldları private olan, set() ve get() metotlarına sahip olan bean'i kastediyoruz. Ama buradaki beanlerin böyle bir zorunlulukları yoktur, default constructorları olmak zorunda değildir.    
 • Sprinf IoC container'ına ulaşmakta kullanıdığımız temel interface; org.springframerwork.beans.BeanFactory   
-• Şu bean'i bana getir dediğimizde eğer bulamazsa **NoSuchDefinitionException**, aynı isimde, birden fazla karşılık gelecek bean tanımlanmışsa **NoUniqueBeanDefinitionException** hatasını fırlatır. (Bean'in birden fazla ismi olabilir bunlara **alias** denir. )  
-• org.springframework.beans.factory.ListableBeanFactory, enumeration yetkinliği verir.ListableBeanFactory interface'i içinde bulunan beanleri listeleme yeteneğine sahiptir. Belirli bir bean adı veya türüne göre sorulamayı sağlar.  
-• org.springframework.context.ApplicationContext, interface'i farklı türden resourceları yüksleme yeteneğine sahiptir. 
+• Şu bean'i bana getir dediğimizde eğer bulamazsa **NoSuchDefinitionException**, aynı isimde, birden fazla karşılık gelecek bean tanımlanmışsa **NoUniqueBeanDefinitionException** hatasını fırlatır. (Bean'in birden fazla ismi olabilir bunlara **alias** denir. )     
+• org.springframework.beans.factory.ListableBeanFactory, enumeration yetkinliği verir.ListableBeanFactory interface'i içinde bulunan beanleri listeleme yeteneğine sahiptir. Belirli bir bean adı veya türüne göre sorgulamayı sağlar.     
+• org.springframework.context.ApplicationContext, interface'i farklı türden resourceları yükleme yeteneğine sahiptir.  
+• getBeanFactory() metodu ile bean xml dosyasını yükleriz.   
+
+```java
+private static BeanFactory getBeanFactory(){
+  BeanFactory beanFactory=new ClassPathXmlApplicationContext("org/java/spring...../beanFactory/res  ources/beans.xml");
+  return beanFactory;
+}
+```
+
+• beanFactory'de isimle aldığımızda obje döneceği için cast etmeliyiz ,aynı ismi birden fazla bean için kullanamayacağımız yani unique olacağı için,  unique bir bean'i alıyoruz ama getBean ile aldığımızda class geçersek 
+
+```java
+beanA=(BeanA) beanFactory.getBean("BEAN_A"); //unique
+beanA=beanFactory.getBean(BeanA.class);
+boolean b=beanFactory.containsBean("a"); // a ismi ile oluşan bir bean'i container'ında tutuyor musun?
+String[] aliases=beanFactory.getAliases("beanA"); //beanA'nın aliaslarını getirir.
+String[] beanNamesForBeans=beanFactory.getBeanNamesForType(BeanA.class);//BeanA classından kaç tane bean var?
+```
+• Bir beanden bir çok nesne oluşturabiliriz. 
