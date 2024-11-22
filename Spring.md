@@ -44,10 +44,17 @@ public class A extends P implements I{ //P-> abstraction, I-> realization
 • Component bitmiş bir yapıdır, son üründür. Sadece API'sini,interface'ini, kullanarak iç yapısını bilmeye gerek kalmadan componentten hizmet alırız.   
 • Framework'ler bitmiş bir yapı, son ürün değildir. Semi-product, semi-completed application'dır. Tamamlanmaları lazım kullanılabilmek için. Tamamlanabilmek için de extend etmek gerekir. Extension dediğimiz  noktalara da **hook point** denir. Frameworkler farklı amaçlara sahip olabilir; Application development framework(Spring Security, JSF ...), Business domain framework(Acord)  
 • **Inversion of Controller(IoC)**, bir application'ın sahip olduğu akış kontrolünü elinden bırakması, karşı tarafa vermesi temelde frameworkler tarafından uygulanan bir mekanizmadır. Framework bir application tarafından extend edildiği zaman, çalıştırılıp framework'ü ayağa kaldırdığımız zaman (frameworjk'ü ayağa kaldırmazsak kontrol bizde, application'ın kendisinde) framework kontrolü kendisi ele alır ve kendi nesneleri ve bizim hook pointler ile sağladığımız nesneler üzerindeki metot çağrılarını ne zaman yapacağını, objeleri nasıl oluşturacağının, hangi objeler arasında dependencyler olduğunu ve onları nasıl yöneteceğini, hangi metotları çağıracağını, hangi exceptionları oluşturacağını ... bütün bunlara karar verir. Bu pattern'a, prensibe, yaklaşıma Inversion of Controller denir. Kısaca framework akış kontrolünü ele aldığı zaman IoC olur, framework neyi ne zaman yapacağına karar verir. Application'ımız framework'ün componenti olur. Bütün frameworkler IoC prensibi ile çalışır diyebiliriz.   
-• IoC Container, objeleri  olupturmak, lifecyclelarını yönetmek, dependencyleri yönetmek işini yapar. Spring'in IoC container'ı tarafından ymönetilen objelere **bean** denir. Spring tarafından oluşturulmayan beanler, spring tarafından yönetilmezler. Bir beanden bir çok nesne oluşturabiliriz. Beanler birbirine referansta bulunabilirler. 
+• IoC Container, objeleri  olupturmak, lifecyclelarını yönetmek, dependencyleri yönetmek işini yapar. Spring'in IoC container'ı tarafından yönetilen objelere **bean** denir. Spring tarafından oluşturulmayan beanler, spring tarafından yönetilmezler. Bir beanden bir çok nesne oluşturabiliriz. Beanler birbirine referansta bulunabilirler. 
 • JavaBean default constructor'a sahip olan, varsa bütün fieldları private olan, set() ve get() metotlarına sahip olan bean'i kastediyoruz. Ama buradaki beanlerin böyle bir zorunlulukları yoktur, default constructorları olmak zorunda değildir.    
 • Sprinf IoC container'ına ulaşmakta kullanıdığımız temel interface; org.springframerwork.beans.BeanFactory   
-• Şu bean'i bana getir dediğimizde eğer bulamazsa **NoSuchDefinitionException**, aynı isimde, birden fazla karşılık gelecek bean tanımlanmışsa **NoUniqueBeanDefinitionException** hatasını fırlatır. (Bean'in birden fazla ismi olabilir bunlara **alias** denir. )     
+• Şu bean'i bana getir dediğimizde eğer bulamazsa **NoSuchDefinitionException**, aynı isimde, birden fazla karşılık gelecek bean tanımlanmışsa **NoUniqueBeanDefinitionException** hatasını fırlatır. (Bean'in birden fazla ismi olabilir bunlara **alias** denir.) Aynı id'den birden fazla kullanıldığında BeanDefinitionParsingException exceptionı alırız,aynı bean ile birden fazla objeyi ifade edbiliriz.     
+
+```java
+<bean id="beanC" alias="a"/>
+<bean id="beanC" alias="aa"/> //BeanDefinitionParsingException
+<bean id="beanD" alias="aa"/>
+```
+
 • org.springframework.beans.factory.ListableBeanFactory, enumeration yetkinliği verir.ListableBeanFactory interface'i içinde bulunan beanleri listeleme yeteneğine sahiptir. Belirli bir bean adı veya türüne göre sorgulamayı sağlar.     
 • org.springframework.context.ApplicationContext, interface'i farklı türden resourceları yükleme yeteneğine sahiptir.  
 • getBeanFactory() metodu ile bean xml dosyasını yükleriz.   
@@ -72,13 +79,14 @@ String[] beanNamesForBeans=beanFactory.getBeanNamesForType(BeanA.class);//BeanA 
 • ApplicationContext, containerı beanFactory'den daha yetkin bir şekilde temsil eden interface'in ismidir. Eğer dosya setConfigLocation() ile yüklenirse refresh edilmesi gereklidir. 
 ```java
 ApplicationContext context=new ClassPathXmlApplicationContext("org/java/spring/beans.xml");
-ApplicationContext context=new FileSystemXMLApplicationContext("file:/Users/akin/beans.xml");
+ApplicationContext context=new FileSystemXMLApplicationContext("file:/Users/seda/beans.xml");
 
 FileSystemXMLApplicationContext context=new FileSystemXMLApplicationContext();
-context.setConfigLocation("file:/Users/akin/beans.xml");
+context.setConfigLocation("file:/Users/seda/beans.xml");
 context.refresh();
 ```
 
 • En az bir yada daha fazla bean tanımına sahip yapıya **configuration metadata** denir. Configuration metadata'yı göstermenin springde üç tane yolu var; XML, Java annotations, Java code. XML tabanlı metada <beans/>  isimli bir kök elementin içinde beanlerden ibarettir. xml dosyasının nasıl oluşturulduğuna dair daha fazla bilgi için; https://www.springframework.org/schema/beans/spring-beans.xsd
 
 • Bir projede birden fazla xml dosyası kullanılabilir. 
+• 
