@@ -43,11 +43,11 @@ public class A extends P implements I{ //P-> abstraction, I-> realization
 • Spring sadece nesneleri oluşturmak ile kalmaz, objeler arasındaki wiring'i de sağlar. Dolayısıyla nesnelerin diğer nesnelere olan bağımlılığını injenctionlarla yönetir.   
 • Component bitmiş bir yapıdır, son üründür. Sadece API'sini,interface'ini, kullanarak iç yapısını bilmeye gerek kalmadan componentten hizmet alırız.   
 • Framework'ler bitmiş bir yapı, son ürün değildir. Semi-product, semi-completed application'dır. Tamamlanmaları lazım kullanılabilmek için. Tamamlanabilmek için de extend etmek gerekir. Extension dediğimiz  noktalara da **hook point** denir. Frameworkler farklı amaçlara sahip olabilir; Application development framework(Spring Security, JSF ...), Business domain framework(Acord)  
-• **Inversion of Controller(IoC)**, bir application'ın sahip olduğu akış kontrolünü elinden bırakması, karşı tarafa vermesi temelde frameworkler tarafından uygulanan bir mekanizmadır. Framework bir application tarafından extend edildiği zaman, çalıştırılıp framework'ü ayağa kaldırdığımız zaman (frameworjk'ü ayağa kaldırmazsak kontrol bizde, application'ın kendisinde) framework kontrolü kendisi ele alır ve kendi nesneleri ve bizim hook pointler ile sağladığımız nesneler üzerindeki metot çağrılarını ne zaman yapacağını, objeleri nasıl oluşturacağının, hangi objeler arasında dependencyler olduğunu ve onları nasıl yöneteceğini, hangi metotları çağıracağını, hangi exceptionları oluşturacağını ... bütün bunlara karar verir. Bu pattern'a, prensibe, yaklaşıma Inversion of Controller denir. Kısaca framework akış kontrolünü ele aldığı zaman IoC olur, framework neyi ne zaman yapacağına karar verir. Application'ımız framework'ün componenti olur. Bütün frameworkler IoC prensibi ile çalışır diyebiliriz.   
-• IoC Container, objeleri  olupturmak, lifecyclelarını yönetmek, dependencyleri yönetmek işini yapar. Spring'in IoC container'ı tarafından yönetilen objelere **bean** denir. Spring tarafından oluşturulmayan beanler, spring tarafından yönetilmezler. Bir beanden bir çok nesne oluşturabiliriz. Beanler birbirine referansta bulunabilirler. 
+• **Inversion of Controller(IoC)**, bir application'ın sahip olduğu akış kontrolünü elinden bırakması, karşı tarafa vermesi temelde frameworkler tarafından uygulanan bir mekanizmadır. Framework bir application tarafından extend edildiği zaman, çalıştırılıp framework'ü ayağa kaldırdığımız zaman (framework'ü ayağa kaldırmazsak kontrol bizde, application'ın kendisinde) framework kontrolü kendisi ele alır ve kendi nesneleri ve bizim hook pointler ile sağladığımız nesneler üzerindeki metot çağrılarını ne zaman yapacağını, objeleri nasıl oluşturacağının, hangi objeler arasında dependencyler olduğunu ve onları nasıl yöneteceğini, hangi metotları çağıracağını, hangi exceptionları oluşturacağını ... bütün bunlara karar verir. Bu pattern'a, prensibe, yaklaşıma Inversion of Controller denir. Kısaca framework akış kontrolünü ele aldığı zaman IoC olur, framework neyi ne zaman yapacağına karar verir. Application'ımız framework'ün componenti olur. Bütün frameworkler IoC prensibi ile çalışır diyebiliriz.   
+• IoC Container, objeleri  oluşturmak, lifecyclelarını yönetmek, dependencyleri yönetmek işini yapar. Spring'in IoC container'ı tarafından yönetilen objelere **bean** denir. Spring tarafından oluşturulmayan beanler, spring tarafından yönetilmezler. Bir beanden bir çok nesne oluşturabiliriz. Beanler birbirine referansta bulunabilirler. 
 • JavaBean default constructor'a sahip olan, varsa bütün fieldları private olan, set() ve get() metotlarına sahip olan bean'i kastediyoruz. Ama buradaki beanlerin böyle bir zorunlulukları yoktur, default constructorları olmak zorunda değildir.    
 • Sprinf IoC container'ına ulaşmakta kullanıdığımız temel interface; org.springframerwork.beans.BeanFactory   
-• Şu bean'i bana getir dediğimizde eğer bulamazsa **NoSuchDefinitionException**, aynı isimde, birden fazla karşılık gelecek bean tanımlanmışsa **NoUniqueBeanDefinitionException** hatasını fırlatır. (Bean'in birden fazla ismi olabilir bunlara **alias** denir.) Aynı id'den birden fazla kullanıldığında BeanDefinitionParsingException exceptionı alırız,aynı bean ile birden fazla objeyi ifade edbiliriz.     
+• Şu bean'i bana getir dediğimizde eğer bulamazsa **NoSuchDefinitionException**, aynı isimde, birden fazla karşılık gelecek bean tanımlanmışsa **NoUniqueBeanDefinitionException** hatasını fırlatır. (Bean'in birden fazla ismi olabilir bunlara **alias** denir.) Aynı id'den birden fazla kullanıldığında **BeanDefinitionParsingException** exceptionı alırız,aynı bean ile birden fazla objeyi ifade edbiliriz.     
 
 ```java
 <bean id="beanC" alias="a"/>
@@ -86,7 +86,7 @@ context.setConfigLocation("file:/Users/seda/beans.xml");
 context.refresh();
 ```
 
-• En az bir yada daha fazla bean tanımına sahip yapıya **configuration metadata** denir. Configuration metadata'yı göstermenin springde üç tane yolu var; XML, Java annotations, Java code. XML ve Java annotationları aynı anda kullanabiliriz ancak xml her zaman annotationları ezer. XML tabanlı metada <beans/>  isimli bir kök elementin içinde beanlerden ibarettir. xml dosyasının nasıl oluşturulduğuna dair daha fazla bilgi için; https://www.springframework.org/schema/beans/spring-beans.xsd
+• En az bir yada daha fazla bean tanımına sahip yapıya **configuration metadata** denir. Configuration metadata'yı göstermenin springde üç tane yolu var; XML, Java annotations, Java code. XML ve Java annotationları aynı anda kullanabiliriz ancak **xml her zaman annotationları ezer**. XML tabanlı metada <beans/>  isimli bir kök elementin içinde beanlerden ibarettir. xml dosyasının nasıl oluşturulduğuna dair daha fazla bilgi için; https://www.springframework.org/schema/beans/spring-beans.xsd
 
 • Bir projede birden fazla xml dosyası kullanılabilir. 
 • Aşağıdaki xml dosyasının ifade ettiği; Guney classının bir instance'ı yaratılacak ve bu nesne id ile tanımlanan beanA ismi ile Spring container'ında yönetilecek.name anahtar kelimesi ile bean için alternatif referans isimleri sağlar ve bu isimler kullanılarak bean'e erişim kolaylaşır.  
@@ -97,4 +97,16 @@ context.refresh();
 </beans>
 ```
 
-• name attribute olmasına rağmen alias bir attribute değildir. 
+• name attribute olmasına rağmen alias bir attribute değildir,ayrı bir xml elementidir. Bir id'ye ait olan name'ler birbirlerinin aliaslarıdır. Yani alias var olan bir bir name'ine alternatif bir isim sağlamaktadır, bir bean'e birden fazla isim atamak için kullanılır. Aynı beans içerisinde idler, aliaslar, nameler unique olmalıdır. Aksi taktirde **BeanDefinitionParsingException** hatasını fırlatır. 
+
+```java
+<beans>
+    <bean id="beanA" name="beanAa, beanAAA" class="org.seda.domain.Guney"/>
+    <alias name="beanA" alias="a" />
+    <alias name="beanA" alias="aa" />
+    //beanA'ya a ve aa aliasları ile erişilebilir
+</beans>
+```
+•    **class**: class attribute'ında fully qualified class name(classın tam adı) belirtilir. Stpring'in bean örneğini oluşturabilmesi için hangi sınıfın kullanılacağını belirtir. Classın içerisinde abstract olmadığı sürece oluşturulacak olan class'ın tipini class attribute'ünde vermemiz gerekir. Bir classın abstract olarak tanımlanması, o sınıfın doğrudan örneğinin oluşturulamayacağı anlamına gelir. Eğer bir bean tanımında class attribute'u bir abstract sınıfı belirtirse Spring bu classın bir örneğini oluşturamaz.  XML yapılandırma dosyasında abstract class'a değil concrete classa referasn verilir.
+
+•    **parent**: Inheritance ilişkisini parent attribute'u ile gösterebiliriz.
