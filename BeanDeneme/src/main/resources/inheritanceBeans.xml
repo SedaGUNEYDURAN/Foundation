@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+    <bean id="parentBean" class="BeanDeneme.BeanDeneme.Parent">
+        <property name="i" value="7" />
+        <property name="b" value="true" />
+        <property name="s" value="Spring :)" />
+        <property name="beanA" ref="beanA" /> 
+    </bean>
+    
+    <bean id="child1" class="BeanDeneme.BeanDeneme.Child">
+    	
+        <property name="d" value="3.14" />
+        <property name="beanB" ref="beanB" /> 
+    </bean>
+    
+    <bean id="child2" parent="parentBean" class="BeanDeneme.BeanDeneme.Child">
+        <property name="i" value="9" /><!-- ezdi parentı-->
+        <property name="d" value="6.28" />
+        <property name="beanB" ref="beanB" />
+    </bean>
+    
+    <bean id="child3" parent="parentBean" class="BeanDeneme.BeanDeneme.Child">
+        <property name="s" value="Spring Boot :)" />
+        <property name="d" value="6.28" />
+        <property name="beanB" ref="beanB" />
+    </bean>
+    
+    <bean id="beanA" class="BeanDeneme.BeanDeneme.BeanA" >
+    	<property name="beanB" ref="beanB"></property>
+    </bean>
+    
+    <bean id="beanB" class="BeanDeneme.BeanDeneme.BeanB">
+        <property name="beanC" ref="beanC" />
+    </bean>
+    
+    <bean id="beanC" class="BeanDeneme.BeanDeneme.BeanC" /> 
+</beans>
+
