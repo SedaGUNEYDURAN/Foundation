@@ -114,11 +114,13 @@ git diff
 git diff --cached
 ```
 •  Git pull iki adımlı işlemi otomatik olarak gerçekleştirir, remote repositorydeki en son değişiklikleri lokal depomuza getirri ve fetch sırasında alınan değişiklikleri mevcut branch ile birleştirir yani merge eder. Aşağıdaki komut varsayılan remote repositoryden ve mevcut branchteki  branchteki remote branchten güncellemeleri çeker, birleştirir. Remote repository; C1-C2-C3 Local repository; C4-C5;   
+```java
   C1 - C2 - C3
            \
             M (merge commit)
            /
   C4 - C5
+```
 ```java
 git pull
 ```
