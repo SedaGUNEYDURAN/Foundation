@@ -185,11 +185,13 @@ git log dosyaAdı
 ```java
 git log -p
 ```
-•  
+•  Belirli bir commite hash'i ile dönemk için ;
 ```java
+git checkout hashCodu
 ```
-•  
+•  Belirli bir commitin ayrıntılarını hash'i ile görebilmek için;
 ```java
+git show hashCode
 ```
 •  
 ```java
