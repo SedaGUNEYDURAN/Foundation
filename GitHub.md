@@ -29,6 +29,10 @@ git clone https://github.com/kullaniciadiniz/repo-adi.git
 ```java
 git add . 
 ```
+• Yaptığımız değişiklikleri Git'e eklemek istediğimizde ancak sadece bir classı commitlemek istediğimizde pathini vermeliyiz, sonra aynı şekilde commitlemeliyiz;
+```java
+git add path/to/your/NewClass.java 
+```
 • Değişiklikleri commit etmek için;
 ```java
 git commit -m "First Commit"
@@ -97,11 +101,26 @@ git branch --set-upstream-to=remoteRepositoryName/branchAdı
 **Upstream**; bir branchin ana kaynağını tanımlamak için kullanılan bir terimdir.  Genellikle, bir branch üzerinde çalışırken o branchin ilişkili olduğu remote reporitory branchi ile bağlantısını ifade eder. Bir dalın bağlı olduğu uzak daldır. Genellikle, local branchimizin değişikliklerini göndermek(push) veya remote repository ile güncellemler almak(pull) için hangi referansı alacağını belirtir.
 **Downstream**; remote repository'nin local kopyalarındaki değişiklikleri yansıtan branchtir.
 
-
-
-
-
-
+•  Çalışma dizinindeki doyaların değişiklikleri kontrol etmek için; 
+```java
+git status
+```
+•  Çalışma dizinindeki değişiklikleri görmek için(staging area'ya eklenmeyenleri);
+```java
+git diff
+```
+•  Hem staging area'ya eklenen hem de henüz eklenmemiş değişiklikleri görmek için;
+```java
+git diff --cached
+```
+•  
+```java
+git 
+```
+•  
+```java
+git 
+```
 
 
 
