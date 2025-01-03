@@ -113,17 +113,44 @@ git diff
 ```java
 git diff --cached
 ```
-•  
+•  Git pull iki adımlı işlemi otomatik olarak gerçekleştirir, remote repositorydeki en son değişiklikleri lokal depomuza getirri ve fetch sırasında alınan değişiklikleri mevcut branch ile birleştirir yani merge eder. Aşağıdaki komut varsayılan remote repositoryden ve mevcut branchteki  branchteki remote branchten güncellemeleri çeker, birleştirir. Remote repository; C1-C2-C3 Local repository; C4-C5;   
+  C1 - C2 - C3
+           \
+            M (merge commit)
+           /
+  C4 - C5
 ```java
-git 
+git pull
+```
+•  Belirli bir remote repositoryden çekmek için;
+```java
+git pull remoteRepository
+```
+• Belirli bir banch'i çekmek için;
+```java
+git pull remoteRepository branchAdi
+```
+•  Sadece remote değişiklikleri görmek istiyorsak ama birleştirmek istemiyorsak;
+```java
+git fetch remoteRepository
+```
+•  Local değişiklikleri remote değişikliklerin üzerine almak istiyorsak ;
+```java
+git pull --rebase
+```
+Bu işlem önce fetch işlemi yapar. Sonrasında ise rebase işlemi yapar, uzaktaki commitleri alır local commitlerin önüne alarak yeni bir commit geçmişi oluşturur. (Remote repository; C1-C2-C3 Local repository; C4-C5  git pull --rebase remoteRepository branchAdi dediğimizde C1-C2-C3-C4-C5 ŞEKİLNDE OLUR COMMİTLER )
+•   
+```java
 ```
 •  
 ```java
-git 
 ```
-
-
-
+•  
+```java
+```
+•  
+```java
+```
 
 
 
