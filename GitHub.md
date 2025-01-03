@@ -141,8 +141,49 @@ git fetch remoteRepository
 git pull --rebase
 ```
 Bu işlem önce fetch işlemi yapar. Sonrasında ise rebase işlemi yapar, uzaktaki commitleri alır local commitlerin önüne alarak yeni bir commit geçmişi oluşturur. (Remote repository; C1-C2-C3 Local repository; C4-C5  git pull --rebase remoteRepository branchAdi dediğimizde C1-C2-C3-C4-C5 ŞEKİLNDE OLUR COMMİTLER )
-•   
+•   Tüm commit geçmişini görüntülemek için; 
 ```java
+git log 
+```
+•  Belirli bir sayıdaki son commiti görmek için;
+```java
+git log -görmekIstediğimizCommitSayısı
+```
+•  Belirli bir tarihten itibaren commitleri görmek için;
+```java
+git log --since=="2023-01-01"
+```
+•  Belirli bir tarihten önceki commitleri görmek için;
+```java
+git log --until="2023-12-31"
+```
+•  Commit bilgilerini özelleltirilmiş bir formatta gösterir.Her commit bir satırda gösterilir.
+```java
+git log --pretty=oneline
+```
+•  Commit hash'ini kısa bir formatte görmek için;
+```java
+git log --abbrev-commit
+```
+•  Commit geçmişini grafiksel bir formatte görebilmek için;
+```java
+git log --graph
+```
+•  Commitin hangi dosyaları etkilediğini ve bu dosyalardaki değişikliklerin kısa bir özeti için;
+```java
+git log --stat
+```
+• Belirli bir yazar tarafından yapılmış commitleri görmek için;
+```java
+git log --author="SedaGUNEYDURAN"
+```
+•  Belirli bir dosyaya ait commitleri görmek için;
+```java
+git log dosyaAdı
+```
+•  Her commit için hangi değişikliklerin yapıldığı(diff) detaylı bir formatta bilgi almak için;
+```java
+git log -p
 ```
 •  
 ```java
