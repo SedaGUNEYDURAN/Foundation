@@ -41,7 +41,10 @@ sets.stream.filter(isValidSet).forEach(set->{...});
   -  **filter(pair-> ..)** ifadesi mapObj ile oluşturulan Object dizilerini temsilen kullanılır lambda ifadesi ile pair üzerinde belirtilen koşulu kontrol eder. Eğer koşul true ise pair streamde kalır; değilse streamden çıkarılır.
         
 ```java
- IntStream.range(0, sets.size()-1).mapToObj(i->new Object[]{sets.get(i),sets.get(i+1)}).filter(pair->"SEDA".equals(((ISet)pair[0]).getName()) && "GUNEY DURAN".equals(((ISet)pair[1]).getName()).forEach(pair-> createMethod((ISet)pair[0], (ISet)pair[1]));
+IntStream.range(0, sets.size()-1).
+mapToObj(i->new Object[]{sets.get(i),sets.get(i+1)}).
+filter(pair->"SEDA".equals(((ISet)pair[0]).getName()) && "GUNEY DURAN".equals(((ISet)pair[1]).getName()).
+forEach(pair-> createMethod((ISet)pair[0], (ISet)pair[1]));
 ```
 
 
