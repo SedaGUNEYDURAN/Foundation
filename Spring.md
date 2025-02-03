@@ -51,7 +51,7 @@ public class A extends P implements I{ //P-> abstraction, I-> realization
 • IoC Container, objeleri  oluşturmak, lifecyclelarını yönetmek, dependencyleri yönetmek işini yapar. Spring'in IoC container'ı tarafından yönetilen objelere **bean** denir. Spring tarafından oluşturulmayan beanler, spring tarafından yönetilmezler. Bir beanden bir çok nesne oluşturabiliriz. Beanler birbirine referansta bulunabilirler.     
 • JavaBean default constructor'a sahip olan, varsa bütün fieldları private olan, set() ve get() metotlarına sahip olan bean'i kastediyoruz. Ama buradaki beanlerin böyle bir zorunlulukları yoktur, default constructorları olmak zorunda değildir.    
 • Spring IoC container'ına ulaşmakta kullanıdığımız temel interface; org.springframerwork.beans.BeanFactory   
-• Şu bean'i bana getir dediğimizde eğer bulamazsa **NoSuchDefinitionException**, aynı isimde, birden fazla karşılık gelecek bean tanımlanmışsa **NoUniqueBeanDefinitionException** hatasını fırlatır. (Bean'in birden fazla ismi olabilir bunlara **alias** denir.) Aynı id'den birden fazla kullanıldığında **BeanDefinitionParsingException** exceptionı alırız,aynı bean ile birden fazla objeyi ifade edbiliriz.     
+• Şu bean'i bana getir dediğimizde eğer bulamazsa **NoSuchDefinitionException**, aynı isimde, birden fazla karşılık gelecek bean tanımlanmışsa **NoUniqueBeanDefinitionException** hatasını fırlatır. (Bean'in birden fazla ismi olabilir bunlara **alias** denir.) Aynı id'den birden fazla kullanıldığında **BeanDefinitionParsingException** exceptionı alırız,aynı bean ile birden fazla objeyi ifade edebiliriz.     
 
 ```java
 <bean id="beanC" alias="a"/>
@@ -92,7 +92,7 @@ context.refresh();
 
 • En az bir yada daha fazla bean tanımına sahip yapıya **configuration metadata** denir. Configuration metadata'yı göstermenin springde üç tane yolu var; XML, Java annotations, Java code. XML ve Java annotationları aynı anda kullanabiliriz ancak **xml her zaman annotationları ezer**. XML tabanlı metada <beans/>  isimli bir kök elementin içinde beanlerden ibarettir. xml dosyasının nasıl oluşturulduğuna dair daha fazla bilgi için; https://www.springframework.org/schema/beans/spring-beans.xsd
 
-• Bir projede birden fazla xml dosyası kullanılabilir. 
+• Bir projede birden fazla xml dosyası kullanılabilir.     
 • Aşağıdaki xml dosyasının ifade ettiği; Guney classının bir instance'ı yaratılacak ve bu nesne id ile tanımlanan beanA ismi ile Spring container'ında yönetilecek.name anahtar kelimesi ile bean için alternatif referans isimleri sağlar ve bu isimler kullanılarak bean'e erişim kolaylaşır.  
 
 ```java
@@ -101,7 +101,7 @@ context.refresh();
 </beans>
 ```
 
-• name attribute olmasına rağmen alias bir attribute değildir,ayrı bir xml elementidir. Bir id'ye ait olan name'ler birbirlerinin aliaslarıdır. Yani alias var olan bir bir name'ine alternatif bir isim sağlamaktadır, bir bean'e birden fazla isim atamak için kullanılır. Aynı beans içerisinde idler, aliaslar, nameler unique olmalıdır. Aksi taktirde **BeanDefinitionParsingException** hatasını fırlatır. 
+• name attribute olmasına rağmen alias bir attribute değildir,ayrı bir xml elementidir. Bir id'ye ait olan name'ler birbirlerinin aliaslarıdır. Yani alias var olan bir name'ine alternatif bir isim sağlamaktadır, bir bean'e birden fazla isim atamak için kullanılır. Aynı beans içerisinde idler, aliaslar, nameler unique olmalıdır. Aksi taktirde **BeanDefinitionParsingException** hatasını fırlatır. 
 
 ```java
 <beans>
@@ -111,6 +111,6 @@ context.refresh();
     //beanA'ya a ve aa aliasları ile erişilebilir
 </beans>
 ```
-•    **class**: class attribute'ında fully qualified class name(classın tam adı) belirtilir. Stpring'in bean örneğini oluşturabilmesi için hangi sınıfın kullanılacağını belirtir. Classın içerisinde abstract olmadığı sürece oluşturulacak olan class'ın tipini class attribute'ünde vermemiz gerekir. Bir classın abstract olarak tanımlanması, o sınıfın doğrudan örneğinin oluşturulamayacağı anlamına gelir. Eğer bir bean tanımında class attribute'u bir abstract sınıfı belirtirse Spring bu classın bir örneğini oluşturamaz.  XML yapılandırma dosyasında abstract class'a değil concrete classa referasn verilir.
+•    **class**: class attribute'ında fully qualified class name(classın tam adı) belirtilir. Spring'in bean örneğini oluşturabilmesi için hangi sınıfın kullanılacağını belirtir. Classın içerisinde abstract olmadığı sürece oluşturulacak olan class'ın tipini class attribute'ünde vermemiz gerekir. Bir classın abstract olarak tanımlanması, o sınıfın doğrudan örneğinin oluşturulamayacağı anlamına gelir. Eğer bir bean tanımında class attribute'u bir abstract sınıfı belirtirse Spring bu classın bir örneğini oluşturamaz.  XML yapılandırma dosyasında abstract class'a değil concrete classa referası verilir.
 
 •    **parent**: Inheritance ilişkisini parent attribute'u ile gösterebiliriz.
