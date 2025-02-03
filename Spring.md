@@ -114,3 +114,14 @@ context.refresh();
 •    **class**: class attribute'ında fully qualified class name(classın tam adı) belirtilir. Spring'in bean örneğini oluşturabilmesi için hangi sınıfın kullanılacağını belirtir. Classın içerisinde abstract olmadığı sürece oluşturulacak olan class'ın tipini class attribute'ünde vermemiz gerekir. Bir classın abstract olarak tanımlanması, o sınıfın doğrudan örneğinin oluşturulamayacağı anlamına gelir. Eğer bir bean tanımında class attribute'u bir abstract sınıfı belirtirse Spring bu classın bir örneğini oluşturamaz.  XML yapılandırma dosyasında abstract class'a değil concrete classa referası verilir.
 
 •    **parent**: Inheritance ilişkisini parent attribute'u ile gösterebiliriz.
+•    Bean'in üzerinde default constructor çağrısı yapmasını önleyip static factory method ile sağladığımız instance'ı çağırabiliriz.(Constructorlar çok fazla parametre alıyorsa çok meşakatli olduğu için bu yöntem kullanılabilir). Abstract factory pattern'ını kullanacağım dersek; abstract factory'nin üzerindeki metotlar static değildir, instance metotlarıdır, factory objeleri oluşturulmalıdır.
+
+```java
+<bean id="beanStaticFactory" class="org.seda.domain.Guney" factory-method="create" />
+  <property name="beanB" ref="beanB">
+</bean> 
+<bean id="beanFactory" factory-bean="beanAFactory" factory-method="create">
+  <property name="beanB" ref="beanB"/>
+</bean>
+
+```
