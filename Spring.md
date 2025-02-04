@@ -125,3 +125,59 @@ context.refresh();
 </bean>
 
 ```
+
+**factory-method**, Guney sınıfında create adında bir statik metot vardır ve bu metot çağırılarak bean oluşturulacaktır. 
+**factory-bean=beanAFactory**,  beanAFactory bean'inden bir nesne oluşturmak için kullanılacak olan fabrikanın kimliğidir. beanAFactory adında bir bean var ve bu bean beanFactory idli beani oluşturulacaktır. 
+**factory-method="create"**, beanAFactory beaninden bir nesne oluşturmak için create metodu kullanılacaktır. beanAFactory create metodunu çağıracak beanFactory bean'i oluşturulacak. 
+
+
+•   Dependency injection dediğimiz şey bean'in bütün collaborator'ını bean'e inject edilmesidir. 2 çeşit injection; setter, constructor. **İki injection çeşidi de depended olunan şey bir bean ise ref attribute'unu kullanırlar, bean değilse(bir primitive değer ya da string geçeceksek) value attribute'unu kullanırlar.** Contructor injection için <constructor-arg/>, setter injection için <property/> kullanılır. ref kullanarak bir başka bean'e referans geçeceksek id, name ya da aliaslardan biri ref'e değer olarak geçilmesi lazım. Injectionon türüne göre <constructor-arg/> veya <property/> argümanında ref kullanılır. 
+
+•   **< constructor-arg/>** , öncelikle uygun bir constructor olmalıdır. ref argümanı id, name, alias'ı ile geçilir. Resolve etmesi argümanın tipi ile olur. Type, index, name ile birden fazla aynı tipte objeyi inject etmeyi de sağlayabiliriz. 
+
+```java
+<bean id="render1" class="org.seda.domain.Guney"
+    <constructor-arg name="greetingProvider" ref="helloProvider"/>
+</bean> 
+
+or
+
+<bean id="render1" class="org.seda.domain.Guney"
+    <constructor-arg name="greetingProvider" ref bean="hello_provider"/> //name'ini geçiyor
+</bean> 
+
+```
+•   **< property/>**, önecelikle uygun bir setter'ın ıolması gerekir. ref argümanı id, name veya alias'ı ile geçilir. 
+
+```java
+<bean id="selamProvider" class="org.seda.domain.Guney"
+    <property name="greeting" value="Selammmm"/> 
+</bean> 
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```java
+<bean id="renderer" class="org.seda.domain.Guney"
+    <constructor-arg name="greetingProvider">
+      <bean class="org.seda.domain.Duran" <property name="greeting" value="Hi Everybody" />
+  
+      </bean>
+</bean> 
