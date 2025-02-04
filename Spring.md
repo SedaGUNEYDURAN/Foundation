@@ -133,7 +133,7 @@ context.refresh();
 
 •   Dependency injection dediğimiz şey bean'in bütün collaborator'ını bean'e inject edilmesidir. 2 çeşit injection; setter, constructor. **İki injection çeşidi de depended olunan şey bir bean ise ref attribute'unu kullanırlar, bean değilse(bir primitive değer ya da string geçeceksek) value attribute'unu kullanırlar.** Contructor injection için <constructor-arg/>, setter injection için <property/> kullanılır. ref kullanarak bir başka bean'e referans geçeceksek id, name ya da aliaslardan biri ref'e değer olarak geçilmesi lazım. Injectionon türüne göre <constructor-arg/> veya <property/> argümanında ref kullanılır. 
 
-•   **< constructor-arg/>** , öncelikle uygun bir constructor olmalıdır. ref argümanı id, name, alias'ı ile geçilir. Resolve etmesi argümanın tipi ile olur. Type, index, name ile birden fazla aynı tipte objeyi inject etmeyi de sağlayabiliriz. 
+•   **< constructor-arg/>** , öncelikle uygun bir constructor olmalıdır. ref argümanı id, name, alias'ı ile geçilir. Resolve etmesi argümanın tipi ile olur. Type, index, name ile birden fazla aynı tipte objeyi inject etmeyi de sağlayabiliriz. **Beanlerin immutable olması gereken durumlarda constructor injection tercih edilmelidir. Zorunlu olan fieldlar için(nullpointerexception fırlatması söz konusu olan dependencyler varsa onların inject edildiğinden emin olmamız gerekeir.) kullanılır.**
 
 ```java
 <bean id="render1" class="org.seda.domain.Guney"
@@ -156,28 +156,46 @@ or
 
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+•  **Inner bean**: id veya name olmadan <bean/> tagi ile kullanılır. 
 
 ```java
 <bean id="renderer" class="org.seda.domain.Guney"
     <constructor-arg name="greetingProvider">
-      <bean class="org.seda.domain.Duran" <property name="greeting" value="Hi Everybody" />
+      <bean class="org.seda.domain.Duran" <property name="greeting" value="Hi Everybody" /> //inner Bean
   
       </bean>
 </bean> 
+```
+• **autowire**: Sprin IOC konteynırının dependencylerini bulup otomatik olarak yerine getirmesini sağlar. (Depended beanler hala xml içerisinde tanımlanmalıdır. )< property/> ve <constructor-arg> taglarını gerek kalmadığı için daha temiz bir XML dosyası olmasını sağlar. Defaultu no'dur. Üç değer ile bulur;constructor, byName(setter ister), byType(setter ister). Autowire byName olarak ayarlandıysa Spring container'ı "renderer" beaninin içinde ihtiyaç duyulan bağımlılıkları bean'in ismine göre karşılar.
+
+```java
+<bean id="renderer" autowire="byName" class="org.seda.domain.Guney">
+</bean>
+```
+
+renderer adında bir bean oluşturacağını ve bunun org.seda.domain.Guney sınıfından bir nesne olacağını söyler. Bu class şu şekilde tanımlanmış olsun;
+
+```java
+public class Guney {
+    private GreetingProvider greetingProvider;
+
+    // constructor and other methods...
+}
+```
+Spring, Guney classının kullanımda olan bir örneğini(beanini) oluşturmak için classı inceler. Sınıfın tanımına bakar ve içinde tanımlanmış olan alanları (private GreetingProvider greetingProvider) kontrol eder. Bu alana bağlı olan bağımlılık greetingProvider nesnesidir. Spring uygulama konfigürasyonundaki ve containerda tanımlanan tüm beanlerin id'lerini kontrol eder. Eğer greetingProvider isimli bir bean mevcutsa bu bean ile alan arasındaki eşleşmeyi sağlar. Yani  private GreetingProvider greetingProvider alanına otomatik olarak greetingProvider beaninin nesnesi enjekte edilir. 
+```java
+<bean id="greetingProvider" class="org.seda.services.HelloProvider" />
+<bean id="renderer" autowire="byName" class="org.seda.domain.Guney" />
+```
+Eğer burada böyle bir bean yoksa Spring byName yöntemi nedeniyle bu alanı null olarak bırakır. 
+
+
+or
+```java
+<bean id="renderer" autowire="byType" class="org.seda.domain.Guney">
+</bean>
+or
+<bean id="renderer" autowire="constructor" class="org.seda.domain.Guney">
+</bean>
+```
+ • 
