@@ -167,7 +167,7 @@ or
 </bean> 
 ```
 ### Autowire
-• Spring IOC konteynırının dependencylerini bulup otomatik olarak yerine getirmesini sağlar. (Depended beanler hala xml içerisinde tanımlanmalıdır. )< property/> ve <constructor-arg> taglarını gerek kalmadığı için daha temiz bir XML dosyası olmasını sağlar. autowire değerinin defaultu değeri no'dur. Üç değer ile bulur;constructor, byName(setter'ına name ile injectb eder), byType(constructor'ına type ile inject eder). Autowire byName olarak ayarlandıysa Spring container'ı "renderer" beaninin içinde ihtiyaç duyulan bağımlılıkları bean'in ismine göre karşılar.
+• Spring IOC konteynırının dependencylerini bulup otomatik olarak yerine getirmesini sağlar. (Depended beanler hala xml içerisinde tanımlanmalıdır. )< property/> ve <constructor-arg> taglarını gerek kalmadığı için daha temiz bir XML dosyası olmasını sağlar. autowire değerinin defaultu değeri no'dur. Üç değer ile bulur;constructor, byName(setter'ına name ile inject eder), byType(argumanın setter metodunun argumanına uyan setter metoduna inject eder). Autowire byName olarak ayarlandıysa Spring container'ı "renderer" beaninin içinde ihtiyaç duyulan bağımlılıkları bean'in ismine göre karşılar.
 
 ```java
 <bean id="renderer" autowire="byName" class="org.seda.domain.Guney">
