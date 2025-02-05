@@ -167,7 +167,7 @@ or
 </bean> 
 ```
 ### Autowire
-• Spring IOC konteynırının dependencylerini bulup otomatik olarak yerine getirmesini sağlar. (Depended beanler hala xml içerisinde tanımlanmalıdır. )< property/> ve <constructor-arg> taglarını gerek kalmadığı için daha temiz bir XML dosyası olmasını sağlar. Defaultu no'dur. Üç değer ile bulur;constructor, byName(setter ister), byType(setter ister). Autowire byName olarak ayarlandıysa Spring container'ı "renderer" beaninin içinde ihtiyaç duyulan bağımlılıkları bean'in ismine göre karşılar.
+• Spring IOC konteynırının dependencylerini bulup otomatik olarak yerine getirmesini sağlar. (Depended beanler hala xml içerisinde tanımlanmalıdır. )< property/> ve <constructor-arg> taglarını gerek kalmadığı için daha temiz bir XML dosyası olmasını sağlar. Defaultu no'dur. Üç değer ile bulur;constructor, byName(setter ister), byType(setter ister)(Burayı tam olarak anlamadım bazı kaynaklar byName ve byType için constructor injection'ı da kullanır diyor). Autowire byName olarak ayarlandıysa Spring container'ı "renderer" beaninin içinde ihtiyaç duyulan bağımlılıkları bean'in ismine göre karşılar.
 
 ```java
 <bean id="renderer" autowire="byName" class="org.seda.domain.Guney">
@@ -283,3 +283,38 @@ greet() metodu çağırıldığında Guney classındaki greet() metodu çağır�
  renderer.greet();
 ```
 
+
+--> Constructor ile injection yapılsaydı; 
+```java
+package org.seda.domain;
+
+import org.seda.services.GreetingProvider;
+
+public class Guney {
+    private GreetingProvider greetingProvider;
+
+    // Constructor Injection
+    public Guney(GreetingProvider greetingProvider) {
+        this.greetingProvider = greetingProvider;
+    }
+
+    public void greet() {
+        System.out.println(greetingProvider.getGreeting());
+    }
+}
+```
+
+```XML
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- GreetingProvider Bean -->
+    <bean id="greetingProvider" class="org.seda.services.GreetingProvider" />
+
+    <!-- Guney Bean -->
+    <bean id="renderer" class="org.seda.domain.Guney" autowire="constructor" />
+</beans>
+```
