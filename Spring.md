@@ -166,7 +166,8 @@ or
       </bean>
 </bean> 
 ```
-• **autowire**: Sprin IOC konteynırının dependencylerini bulup otomatik olarak yerine getirmesini sağlar. (Depended beanler hala xml içerisinde tanımlanmalıdır. )< property/> ve <constructor-arg> taglarını gerek kalmadığı için daha temiz bir XML dosyası olmasını sağlar. Defaultu no'dur. Üç değer ile bulur;constructor, byName(setter ister), byType(setter ister). Autowire byName olarak ayarlandıysa Spring container'ı "renderer" beaninin içinde ihtiyaç duyulan bağımlılıkları bean'in ismine göre karşılar.
+### Autowire
+• Spring IOC konteynırının dependencylerini bulup otomatik olarak yerine getirmesini sağlar. (Depended beanler hala xml içerisinde tanımlanmalıdır. )< property/> ve <constructor-arg> taglarını gerek kalmadığı için daha temiz bir XML dosyası olmasını sağlar. Defaultu no'dur. Üç değer ile bulur;constructor, byName(setter ister), byType(setter ister). Autowire byName olarak ayarlandıysa Spring container'ı "renderer" beaninin içinde ihtiyaç duyulan bağımlılıkları bean'in ismine göre karşılar.
 
 ```java
 <bean id="renderer" autowire="byName" class="org.seda.domain.Guney">
@@ -182,7 +183,7 @@ public class Guney {
     // constructor and other methods...
 }
 ```
-Spring, Guney classının kullanımda olan bir örneğini(beanini) oluşturmak için classı inceler. Sınıfın tanımına bakar ve içinde tanımlanmış olan alanları (private GreetingProvider greetingProvider) kontrol eder. Bu alana bağlı olan bağımlılık greetingProvider nesnesidir. Spring uygulama konfigürasyonundaki ve containerda tanımlanan tüm beanlerin id'lerini kontrol eder. Eğer greetingProvider isimli bir bean mevcutsa bu bean ile alan arasındaki eşleşmeyi sağlar. Yani  private GreetingProvider greetingProvider alanına otomatik olarak greetingProvider beaninin nesnesi enjekte edilir. 
+Spring, Guney classının kullanımda olan bir örneğini(beanini) oluşturmak için classı inceler. Sınıfın tanımına bakar ve içinde tanımlanmış olan alanları (private GreetingProvider greetingProvider) kontrol eder. Bu alana bağlı olan bağımlılık greetingProvider nesnesidir. Spring uygulama konfigürasyonundaki ve containerda tanımlanan tüm beanlerin id'lerini kontrol eder. Eğer greetingProvider isimli bir bean mevcutsa bu bean ile alan arasındaki eşleşmeyi sağlar. Yani  private GreetingProvider greetingProvider alanına otomatik olarak greetingProvider beani enjekte eder.
 ```java
 <bean id="greetingProvider" class="org.seda.services.HelloProvider" />
 <bean id="renderer" autowire="byName" class="org.seda.domain.Guney" />
@@ -198,4 +199,87 @@ or
 <bean id="renderer" autowire="constructor" class="org.seda.domain.Guney">
 </bean>
 ```
- • 
+ • Örnek kod;
+Spring'in ApplicationContext objesi oluşturulur ve belirtilen XML konfigürasyon dosyası yüklenir. XML dosyası, içinde olan tüm beanleri yükler ve başlatır. 
+
+```java
+package org.seda;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.seda.domain.Guney;
+
+public class Main {
+    public static void main(String[] args) {
+        // Spring konteynerini oluştur
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+
+        // Guney bean'ini al
+        Guney renderer = (Guney) context.getBean("renderer");
+
+        // greet methodunu çağır
+        renderer.greet();
+    }
+}
+```
+
+<bean id="greetingProvider" class="org.seda.services.GreetingProvider" /> burada greetingProvider bean'i tanımlanıyor yani GreetingProvider classından greetingProvider nesnesi oluşturuluyor. GreetingProvider'da bir contructor parametresi olmadığı için default constructor ile bir obje yaratılır.    
+  <bean id="renderer" autowire="byName" class="org.seda.domain.Guney" /> burada renderer bean'i tanımlanıyor yani Gunety classından renderer objesi oluşturuluyor. 
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- GreetingProvider Bean -->
+    <bean id="greetingProvider" class="org.seda.services.GreetingProvider" />
+
+    <!-- Guney (Renderer) Bean -->
+    <bean id="renderer" autowire="byName" class="org.seda.domain.Guney" />
+
+</beans>
+```
+
+<bean id="renderer" autowire="byName" class="org.seda.domain.Guney" /> ifadesindeki byName Guney classındaki   private GreetingProvider greetingProvider; ifadesini gördüğünde bu alanı inject edeceğini anlar. greetingProvider adını kullanarak, XML konfigürasyon dosyasında bu isme sahip başka bir bean olup olmadığını kontrol eder. <bean id="greetingProvider" class="org.seda.services.GreetingProvider" /> da greetingProvider bean'ini bulur. private GreetingProvider greetingProvider;'daki greetingProvider nesnesine xml'deki greetingProvider bean'i inject edilir. byName olduğu için bu enjeksiyon setter inject ile yapılacaktır. Bu inject için setGreetingProvider() metodunu kullanır, böylece greetingProvider value'sunu GreetingProvider objesine atanır. 
+
+```java
+package org.seda.domain;
+
+import org.seda.services.GreetingProvider;
+
+public class Guney {
+    private GreetingProvider greetingProvider;
+
+    // Setter Injection
+    public void setGreetingProvider(GreetingProvider greetingProvider) {
+        this.greetingProvider = greetingProvider;
+    }
+
+    public void greet() {
+        System.out.println(greetingProvider.getGreeting());
+    }
+}
+```
+
+```java
+package org.seda.services;
+
+public class GreetingProvider {
+    public String getGreeting() {
+        return "Hello, Spring!";
+    }
+}
+```
+
+Main classındaki aşağıdaki kod parçası renderer beanin bir instance'ını almak için kullanılır. Guney classının ilgili objesini döndür. rendere artık GreetingProvider nesnesine erişme yeteneğine sahiptir. 
+```java
+Guney renderer = (Guney) context.getBean("renderer");
+```
+
+greet() metodu çağırıldığında Guney classındaki greet() metodu çağırılır ve greetingProvider.getGreeting() ekrana bastırılır(Hello, Spring!). 
+```java
+ renderer.greet();
+```
+
