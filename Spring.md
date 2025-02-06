@@ -498,3 +498,112 @@ public class Main {
     }
 }
 ```
+
+•  Array , List, Set ister values ister bean referansları geçeriz ama Map key value pairları aldığı için enty elementini mapin içinde kullanırız.
+
+```java
+package com.example;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+public class MyService {
+    private String[] arrayValues;
+    private List<String> listValues;
+    private Set<String> setValues;
+    private Map<String, Integer> mapValues;
+
+    // Getter ve Setter metodları
+    public void setArrayValues(String[] arrayValues) {
+        this.arrayValues = arrayValues;
+    }
+
+    public void setListValues(List<String> listValues) {
+        this.listValues = listValues;
+    }
+
+    public void setSetValues(Set<String> setValues) {
+        this.setValues = setValues;
+    }
+
+    public void setMapValues(Map<String, Integer> mapValues) {
+        this.mapValues = mapValues;
+    }
+
+    public void displayInfo() {
+        System.out.println("Array Values: ");
+        for (String value : arrayValues) {
+            System.out.println(value);
+        }
+
+        System.out.println("List Values: " + listValues);
+
+        System.out.println("Set Values: " + setValues);
+
+        System.out.println("Map Values: ");
+        for (Map.Entry<String, Integer> entry : mapValues.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
+    }
+}
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="myService" class="com.example.MyService">
+        <!-- Array Injection -->
+        <property name="arrayValues">
+            <list>
+                <value>Value 1</value>
+                <value>Value 2</value>
+                <value>Value 3</value>
+            </list>
+        </property>
+
+        <!-- List Injection -->
+        <property name="listValues">
+            <list>
+                <value>List Item 1</value>
+                <value>List Item 2</value>
+                <value>List Item 3</value>
+            </list>
+        </property>
+
+        <!-- Set Injection -->
+        <property name="setValues">
+            <set>
+                <value>Set Item 1</value>
+                <value>Set Item 2</value>
+                <value>Set Item 3</value>
+            </set>
+        </property>
+
+        <!-- Map Injection -->
+        <property name="mapValues">
+            <map>
+                <entry>
+                    <key>Key 1</key>
+                    <value>1</value>
+                </entry>
+                <entry key="Key 2" value-ref="2" />
+                <entry>
+                    <key>Key 3</key>
+                    <value>3</value>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+</beans>
+```
+
+```java
+```
+
+
