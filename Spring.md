@@ -384,7 +384,7 @@ public class Main {
 }
 ```
 
-•  Set metoduyla resolve edebilmesi için property injectionda value inject edebilmek için name geçmek zorundayız. Constructor'a value inject ederken bir parametreyi eksik inject edersek ya da property injectionda olmayan bir property'i inject etmeye çalışırsak hata fırlatır; org.springframework.beans.factory.UnsatisfiedDependencyException 
+•  Set metoduyla resolve edebilmesi için property injectionda value inject edebilmek için name geçmek zorundayız. Constructor'a value inject ederken bir parametreyi eksik inject edersek ya da property injectionda olmayan bir property'i inject etmeye çalışırsak hata fırlatır; **org.springframework.beans.factory.UnsatisfiedDependencyException** 
 
 
 ```java
@@ -422,7 +422,7 @@ public class MyService {
     private int count;
     private double price;
 
-    // Constructor
+    // Constructor Injection
     public MyService(String message, int count, double price) {
         this.message = message;
         this.count = count;
