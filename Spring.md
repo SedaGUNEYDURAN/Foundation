@@ -384,8 +384,58 @@ public class Main {
 }
 ```
 
+•  Set metoduyla resolve edebilmesi için property injectionda value inject edebilmek için name geçmek zorundayız. Constructor'a value inject ederken bir parametreyi eksik inject edersek ya da property injectionda olmayan bir property'i inject etmeye çalışırsak hata fırlatır; org.springframework.beans.factory.UnsatisfiedDependencyException 
 
 
+```java
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class Main {
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        MyService myService = (MyService) context.getBean("myService");
+        myService.displayInfo();  // Bilgileri ekrana yazdırır.
+    }
+}
+```
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="myService" class="com.example.MyService">
+        <constructor-arg value="Hello, Constructor Injection!" />
+        <constructor-arg value="10" /> <!-- Integer type -->
+        <constructor-arg value="99.99" /> <!-- Double type -->
+    </bean>
+
+</beans>
+```
+```java
+package com.example;
+
+public class MyService {
+    private String message;
+    private int count;
+    private double price;
+
+    // Constructor
+    public MyService(String message, int count, double price) {
+        this.message = message;
+        this.count = count;
+        this.price = price;
+    }
+
+    public void displayInfo() {
+        System.out.println("Message: " + message);
+        System.out.println("Count: " + count);
+        System.out.println("Price: " + price);
+    }
+}
+```
 
 
 
