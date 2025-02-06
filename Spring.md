@@ -436,7 +436,65 @@ public class MyService {
     }
 }
 ```
+•  Hem constructor hem de Property injection ile value injection yaparsak;
 
+```java
+package com.example;
 
+public class MyService {
+    private String message;
+    private int count;
+    private double price;
 
- 
+    // Constructor
+    public MyService(String message) {
+        this.message = message;
+    }
+
+    // Setter metodları
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void displayInfo() {
+        System.out.println("Message: " + message);
+        System.out.println("Count: " + count);
+        System.out.println("Price: " + price);
+    }
+}
+}
+```
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="myService" class="com.example.MyService">
+        <constructor-arg value="Hello, Constructor Injection!" />
+        
+        <!-- Property injection -->
+        <property name="count" value="10" />
+        <property name="price" value="99.99" />
+    </bean>
+
+</beans>
+
+```
+```java
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class Main {
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        MyService myService = (MyService) context.getBean("myService");
+        myService.displayInfo();  // Bilgileri ekrana yazdırır.
+    }
+}
+```
