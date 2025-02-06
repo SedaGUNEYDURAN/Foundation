@@ -318,3 +318,75 @@ public class Guney {
     <bean id="renderer" class="org.seda.domain.Guney" autowire="constructor" />
 </beans>
 ```
+
+ • Injectionlarda bean yerine istersek null geçebiliriz. 
+
+```java
+package Greet;
+public class Guney {
+	private GreetingProvider greetingProvider;
+
+  public Guney(GreetingProvider greetingProvider) {
+	this.greetingProvider = greetingProvider;
+	}
+  public void render() {
+    	if(greetingProvider==null) {
+    		throw new RuntimeException("Bean'e null injection yapıldı: "+Guney.class.getName());
+    	}
+  }
+  public void greet() {
+      System.out.println(greetingProvider.getGreeting());
+  }
+}
+
+```
+```java
+package Greet;
+public class GreetingProvider {
+	 public String getGreeting() {
+	        return "Hello, Spring!";
+	    }
+}
+```
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- GreetingProvider Bean -->
+    <bean id="greetingProvider" class="Greet.GreetingProvider" />
+
+    <!-- Guney (Renderer) Bean -->
+    <!-- <bean id="renderer" autowire="constructor" class="Greet.Guney" /> -->
+    <bean id="renderer" class="Greet.Guney" >
+    <constructor-arg name="greetingProvider">
+    	<null/>
+    	</constructor-arg>
+    </bean>
+
+</beans>
+```
+```java
+package Greet;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class Main {
+	 public static void main(String[] args) {
+	        // Spring konteynerini oluştur
+	        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+	        // Guney bean'ini al
+	       Guney renderer = (Guney) context.getBean("renderer");
+	        renderer.render();
+	    }
+}
+```
+
+
+
+
+
+
+ 
