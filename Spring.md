@@ -183,7 +183,7 @@ public class Guney {
     // constructor and other methods...
 }
 ```
-Spring, Guney classının kullanımda olan bir örneğini(beanini) oluşturmak için classı inceler. Sınıfın tanımına bakar ve içinde tanımlanmış olan alanları (private GreetingProvider greetingProvider) kontrol eder. Bu alana bağlı olan bağımlılık greetingProvider nesnesidir. Spring uygulama konfigürasyonundaki ve containerda tanımlanan tüm beanlerin id'lerini kontrol eder. Eğer greetingProvider isimli bir bean mevcutsa bu bean ile alan arasındaki eşleşmeyi sağlar. Yani  private GreetingProvider greetingProvider alanına otomatik olarak greetingProvider beani enjekte eder.
+Spring, Guney classının kullanımda olan bir örneğini(beanini) oluşturmak için classı inceler. Sınıfın tanımına bakar ve içinde tanımlanmış olan alanları (private GreetingProvider greetingProvider) kontrol eder. Bu alana bağlı olan bağımlılık greetingProvider nesnesidir. Spring uygulama konfigürasyonundaki ve containerda tanımlanan tüm beanlerin id'lerini kontrol eder. Eğer greetingProvider isimli bir bean mevcutsa bu bean ile alan arasındaki eşleşmeyi sağlar. Yani  **private GreetingProvider greetingProvider alanına otomatik olarak greetingProvider beani enjekte eder.**
 ```java
 <bean id="greetingProvider" class="org.seda.services.HelloProvider" />
 <bean id="renderer" autowire="byName" class="org.seda.domain.Guney" />
