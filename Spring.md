@@ -2,11 +2,11 @@
 • Spring Java için uygulama geliştirme frameworküdür. Java'nın daha kolay kullanıma sahip olmasını sağlar. Javayı cloud-ready yapar. Hız, basitlik, üretkenlik, daha kolay, daha safe gibi özellikleri Spring'i, Java'da en fazla kullanılan framework yaptı. (**cloud-ready yazılım**: bulut platformalarının özelliklerinden yararlanacak şekilde geliştirilmiş olduğunu ifade eder.)   
 • Spring dediğimizde bir çatıyı kastediyoruz, bir çok componenti kapsar; Spring Cloud, Spring Roo, Spring HATEOAS ...   
 • Java Enterprise Edition, .Net'e ; Java SE ise C#'a karşılık geliyor gibi düşünebiliriz.  
-• **EJBs(Enterprise JavaBeans)**, J2EE'nin ana taşıyıcı componentidir. Temelde iki tipi vardır:; session beans(business logic için), entity beans(database'e mapping için). EJB yazdığımız zaman içinde run edeceğimiz containerın -EJB containerların yani application serverların- çok pahalı olduğu için daha lightweight, ucuz yapılarla değiştirilmeye evrildi ve EJB'siz geliştirme yapabilmek için Java EE' de spring geliştirildi. 2003'de ilk versiyonu çıktı. 
+• **EJBs(Enterprise JavaBeans)**, J2EE'nin ana taşıyıcı componentidir. Temelde iki tipi vardır:; session beans(business logic için), entity beans(database'e mapping için). EJB yazdığımız zaman içinde run edeceğimiz containerın -EJB containerların yani application serverların- çok pahalı olduğu için daha lightweight, ucuz yapılarla değiştirilmeye evrildi ve EJB'siz geliştirme yapabilmek için Java EE' de spring geliştirildi. 2003'de ilk versiyonu çıktı.    
 • EJB, sunucu tarafında çalıştırılan uygulamalar için tasarlanmıştır.EJB, yazılımları bağımsız, küçük bileşenler halinde geliştirmemizi sağlar. Bu bileşenler yani beansler belirli işlevleri yerine getirir. Beansler bir araya getirilerek daha büyük ve karmaşık uygulamar oluşturur.  
 • **Session Beans:** Kullanıcı ile sunucu arasındaki oturumları yönetir. Kullanıcılar sistemle etkileşime girdiğinde bu beansler devreye girer. İki ana türü vardır; stateless session beans(kullanıcı oturumuna bağlı değildir, istekler bağımsız olarak işlenir), stateless session beans(kullanıcı oturumuna bağlı olarak çalışır)   
 • **Entity Beans:** Veritabanındaki verileri temsil eder.   
-• **Message-driven Beans:** Mesaj tabanlı sistemlerde çalışmak için tasarlanmıştır. Örneğin bir kuyruğa gelen mesajları işlemek için kullanılır. 
+• **Message-driven Beans:** Mesaj tabanlı sistemlerde çalışmak için tasarlanmıştır. Örneğin bir kuyruğa gelen mesajları işlemek için kullanılır.     
 • Spring ile javayı kullanmanın üç farklı kategorik yöntemi vardır;
 >Spring enhance Java(Spring javanın özelliklerini geliştirir)   
 >Spring complements Java(Spring javanın yetenkelerini tanımlar ve ona ekleme yapar)    
@@ -224,7 +224,7 @@ public class Main {
 ```
 
 <bean id="greetingProvider" class="org.seda.services.GreetingProvider" /> burada greetingProvider bean'i tanımlanıyor yani GreetingProvider classından greetingProvider nesnesi oluşturuluyor. GreetingProvider'da bir contructor parametresi olmadığı için default constructor ile bir obje yaratılır.    
-  <bean id="renderer" autowire="byName" class="org.seda.domain.Guney" /> burada renderer bean'i tanımlanıyor yani Gunety classından renderer objesi oluşturuluyor. 
+  <bean id="renderer" autowire="byName" class="org.seda.domain.Guney" /> burada renderer bean'i tanımlanıyor yani Guney classından renderer objesi oluşturuluyor. 
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
