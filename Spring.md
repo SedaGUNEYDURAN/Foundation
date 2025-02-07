@@ -556,7 +556,7 @@ public class MyService {
        xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="myService" class="com.example.MyService">
+    <bean id="myService" class="CollectionInjectionn.MyService">
         <!-- Array Injection -->
         <property name="arrayValues">
             <list>
@@ -584,17 +584,17 @@ public class MyService {
             </set>
         </property>
 
-        <!-- Map Injection -->
+   
         <property name="mapValues">
             <map>
-                <entry>
-                    <key>Key 1</key>
-                    <value>1</value>
+                 <entry key="Key1">
+                    <value>1</value> <!-- Numerik değer -->
                 </entry>
-                <entry key="Key 2" value-ref="2" />
-                <entry>
-                    <key>Key 3</key>
-                    <value>3</value>
+                <entry key="Key2">
+                    <value>2</value> <!-- Numerik değer -->
+                </entry>
+                <entry key="Key3">
+                    <value>3</value> <!-- Numerik değer -->
                 </entry>
             </map>
         </property>
