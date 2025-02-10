@@ -12,3 +12,21 @@ Yukarıdaki kodda gürüldüğü gibi mapte null kontrolü ya da containsKey() k
 int messageId=mesagge.getId();
 hashMap.computeIfAbsent(messageId, k-> new HashMap<>());
 ```
+
+•   
+
+```java
+Boolean booleanValue = null;
+if(booleanValue){ //It can throw NullPointerException
+...
+}
+```
+
+Boolean reference type'dır ve null, false, true değerlerini alabilir. boolean ise primitive tiptir, true ve false değerrlerini alır. 
+
+```java
+Boolean booleanValue = null;
+if(Boolean.TRUE.equals(booleanValue)){ 
+...
+}
+```
