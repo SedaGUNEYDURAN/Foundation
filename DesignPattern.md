@@ -432,7 +432,7 @@ public class ManagerFactory implements ManagerFactory{
   }
 }
  ```
-• Birden fazla factory metodunu tek bir classta toplamak içinoluşturulan nesnelerin bir nesne ailesinin parçası olması gereklidir.--> Abstaract Factory
+• Birden fazla factory metodunu tek bir classta toplamak içinoluşturulan nesnelerin bir nesne ailesinin parçası olması gereklidir.--> Abstaract Factory   
 • Factory method, abstract bir yapı olmalı ki extend edilebilsin olabildiğince az parametre geçmeliyiz ki bir yerde bir iş yapsın. Aslolan Factory Method'ın nesne yaratmayı soyutlamasıdır, nesnenin nasıl yaratılacağı ayrı bir konudur ve nesneye bağlıdır.  
 • Bloch çözümünde; constructorlar yerine static metotları tavsiye eder. createNewEmployee(int,String,String), createNewTemporarayEmploye(int,String) constructorlarını bir class içerisinde tanımlayamayız. Ama static olarak tanımlarsak isimli kurucu(named constructors) haline gelir. Bu çözümde her sınıf kendi nesnesinin üreticicisidir, bundan dolayı ayrı ayrı arayüz ve gerçekleştirmelerine ihtiyaç duyulmaz. Factory methodla burada ayrışmaktadır.Factory method ile ilgili bir örnek daha; 
 
@@ -801,7 +801,7 @@ Burada ilk olarak Report classından bir obje oluşturulur ve parametreleri geç
 
 ## Dependency Injection
 • Avantajı, tanım tabanlı(declarative) bir yapı sunmasıdır. Bu şekilde nesnelerin birbirlerine olan bağımlılıkları ifade edilir ama bağımlılıkların nasıl yerine getireleceği Dependency Injection altyapısı tarafından gerçekleştirilir. Bu da karmaşıklığı azaltır ve değişimi kolaylaştırır.   
-• Dependency Injection bir kalıp olmakla birlikte genelde teknolojik destek ile gerçekleşir. 
+• Dependency Injection bir kalıp olmakla birlikte genelde teknolojik destek ile gerçekleşir.        
 • Dependency Injection, nesnelerin bağımlılıklarını doğrudan inşa etmek ve yönetmek yerine bu bağımlılıkları dışarıdan alarak yani enjekte ederek bağımlılıkların daha esnek ve test edilebilir olmasını sağlayan bir patterndir. (Loose couplingini güçlendirir. ) Üç temel yolla gerçekleşir.
   
   - **Constructor Injection**:Bağımlılıkların bir nesnenin constructorı aracılığı ile enjekte edilmesini sağlar. Bu yöntemle, classın ihtiyaç duyduğu tüm bağımlılıklar, nesne oluşturulurken constructor!a parametre olarak geçilir. Bu sayede bağımlılıklar sınıfın dışarıdan sağlanan bileşenleridir ve sınıf kendi başına bağımlılıkları yaratmaktan sorumlu değildir.
@@ -1358,11 +1358,11 @@ public class ProxyPatternDemo {
 ## Decorator
 • Amaç;nesneye dinamik olarak yeni özellikler kazandırmaktır. 
 • Sıklıkla, yeni sorumluluğu/yetkinliği tüm sınıfa değil, nesnelere eklemek isteriz. Sorumlulukları sınıfa eklemek için tipik olarak mirası kullanırız. Sınıflara yetkinlik eklemek için inheritance kullanılmasının en temel problemi, inheritance'ın bir derleme zaman(compile time) yapısı olmasıdır. Her yeni yetkinlik için kod değişikliği ve tekrar derleme(recompalition) gerekir. Böyle çok yetkinliğin ve kombinasyonların söz konusu olduğu hallerde, hem derin hem de geniş nesne hiyerarşileri oluşur hem de çoklu miras(multiple inheritance) kullanılmak zorunda kalınır. (n farklı sorumluluk için n! alt sınıfa ihtiyaç olabilir.) **Bunun yerine miras (inheritance) ile is-a ilişkisi yerine nesne bileşimi(object composition) ile has-a ilişkisi kullanılmadır.** Yeni sorumlulukları yeni alt sınıflarla yerine getirmektense -alt sınıf ihtiyacını doğuran şeyi bir dekorasyon/bezeme malzemesi- nesnesi olarak görmek ve sınıfın nesnelerine eklemek daha sağlıklıdır. Decorator pattern; nesne bileşimini(composition) sınıf kalıtımına(inheritance'a) tercih eder.  
-•  Sınıf kalıtımı, bir derleme zamanı yapısıdır ve çalışma zamanında değişmez. Nesne birleştirmesi(object composition) çalışma zamanı yapısı olduğu için değişiklik yapılabilir. Yani inheritance statik, compositıon dinamik bir yapıdır. Bu sebeple composition, çok sayıda farklı durumu ifade etmede esnekli sağlar. 
-• Builder ile decorator arasındaki fark;Builder bir nesneyi sıfırdan build eder. Decorator ise composite bir nesneyi yolda ekleye ekleye build ediyor. 
-• java.io'da decorator pattern'ı kullanılır. FileInputStream aslında bir InputStream'dir. FileInputStream kendi cinsinden constructor'ına obje alır. Bu demek oluyor ki filedan okursun zipleyen stream'e geçersin(filedan okuduğunu zipler yani).  
-• Web yapılarındaki filtreler de decorator pattern'ı kullanılır.Web uygulamalarında istemciden gelen isteğin ya da ona döndürülen cevabın önce farklı konularda işlenmesine ihtiyaç duyulur. Örneğin; oluşturulan cevap önce XML'e çevrilir sonra XSLT transformasyonuyla bezenir, sonra ziplenir en son olarak da şifrelenir. Bu işlemlerin tam tersi gelen istekler için yapılır. 
-• Decorator kalıbının Composite'den farkı, decoratorde sorumluluk decorator nesnelerinde, compositede ise composite nesnede olmasıdır. Composite'de bileşik nesneye eklenen nesneleri yönetmek bileşik nesnenin sorumluluğundayken Decorator kalıbında sorumluluk dekoratör nesnelerindedir. **Yani decarotor kalıbında bütün-parça ilişkisi yoktur, nesnenin süreç içinde donatılması söz kosudur.** Dekoratörleri bir araya getirerek composite bir obje oluşturmuyoruz, object composition'ı kullanarak dekoratörleri oluşturuyoruz. 
+•  Sınıf kalıtımı, bir derleme zamanı yapısıdır ve çalışma zamanında değişmez. Nesne birleştirmesi(object composition) çalışma zamanı yapısı olduğu için değişiklik yapılabilir. Yani inheritance statik, compositıon dinamik bir yapıdır. Bu sebeple composition, çok sayıda farklı durumu ifade etmede esnekli sağlar.    
+• Builder ile decorator arasındaki fark;Builder bir nesneyi sıfırdan build eder. Decorator ise composite bir nesneyi yolda ekleye ekleye build ediyor.     
+• java.io'da decorator pattern'ı kullanılır. FileInputStream aslında bir InputStream'dir. FileInputStream kendi cinsinden constructor'ına obje alır. Bu demek oluyor ki filedan okursun zipleyen stream'e geçersin(filedan okuduğunu zipler yani).      
+• Web yapılarındaki filtreler de decorator pattern'ı kullanılır.Web uygulamalarında istemciden gelen isteğin ya da ona döndürülen cevabın önce farklı konularda işlenmesine ihtiyaç duyulur. Örneğin; oluşturulan cevap önce XML'e çevrilir sonra XSLT transformasyonuyla bezenir, sonra ziplenir en son olarak da şifrelenir. Bu işlemlerin tam tersi gelen istekler için yapılır.    
+• Decorator kalıbının Composite'den farkı, decoratorde sorumluluk decorator nesnelerinde, compositede ise composite nesnede olmasıdır. Composite'de bileşik nesneye eklenen nesneleri yönetmek bileşik nesnenin sorumluluğundayken Decorator kalıbında sorumluluk dekoratör nesnelerindedir. **Yani decarotor kalıbında bütün-parça ilişkisi yoktur, nesnenin süreç içinde donatılması söz kosudur.** Dekoratörleri bir araya getirerek composite bir obje oluşturmuyoruz, object composition'ı kullanarak dekoratörleri oluşturuyoruz.     
 
  ```java
 // Kahve arayüzü
@@ -1684,11 +1684,11 @@ public class ArraysSort implements SortingStrategy {
 • MVC'de controllerın arka tarafında dispatch mekanizması Command pattern kullanılır.   
 • Command nesneleri, isteği metot olarak soyutlamak yerine daha yetkin bir şekilde sınıf olarak soyutlayan nesnelerdir.   
 • **Ne zaman sahip olunan durumda bir zorlukla karşılaşırsan ya yeni soyutlamalar oluştur ya da var olan soyutlamaların üstüne çık.** Bu daha geniş hareket etme olanağı sağlar.   
-• Strategy bir algoritmayı soyutlarken Command bir isteği soyutlamaktadır. Strategy'de bir algoritmanın ismi bellidir ama gerçekleşmesi farklılaşmaktadır. Command'de ise algoritmanın ismi de belli değildir. Bu yüzden execute gibi genel bir ad kullanılmaktadır. İki patternde karmaşıklığı farklı nedenlerle bile olsa bir üst soyutlamayı aşmayı ister.  
-• Command, Composite olabilir. Bu durumda bir istek, parçaları olan alt isteklerden oluşacak şekilde ifade edilir. 
-• Command, Memonto ile durumu saklayıp undo sonrasında geri alabilir. 
-• Command, nesnesini Protype ile kopyalanabilir. 
-• Command, prosedürel dillerdeki geri çağırma(call-back) fonksiyonlarının nesne alternatifleridir. Dolayısıyla Observer kalıbıyla birlikte kullanılabilir. 
+• Strategy bir algoritmayı soyutlarken Command bir isteği soyutlamaktadır. Strategy'de bir algoritmanın ismi bellidir ama gerçekleşmesi farklılaşmaktadır. Command'de ise algoritmanın ismi de belli değildir. Bu yüzden execute gibi genel bir ad kullanılmaktadır. İki patternde karmaşıklığı farklı nedenlerle bile olsa bir üst soyutlamayı aşmayı ister.    
+• Command, Composite olabilir. Bu durumda bir istek, parçaları olan alt isteklerden oluşacak şekilde ifade edilir.   
+• Command, Memonto ile durumu saklayıp undo sonrasında geri alabilir.    
+• Command, nesnesini Protype ile kopyalanabilir.    
+• Command, prosedürel dillerdeki geri çağırma(call-back) fonksiyonlarının nesne alternatifleridir. Dolayısıyla Observer kalıbıyla birlikte kullanılabilir.    
 
 ```java
 interface Command {
@@ -1838,11 +1838,11 @@ public class IteratorPatternExample {
 
 ## Mediator(Arabulucu) 
 •  Amaç; cok sayıda nesnenin birbiriyle haberleşmesini ve koordinasyonunu sağlamaktır.  Nesneleri birbirine doğrudan ulaşmaktan alıkoyarak gevşek bağımlılığa destek verir ve aralarındaki iletişimi serbestçe değiştirmemize izin verir.     
-•  Mediator'ın kullanımına örnek verecek olursak; Diyalog kutusunda menü, text alanı, button vb. pek çok farklı GUI nesnesi aralarında pek çok bağımlılık bulunur. Text yazılmadan buttonun  visible olmaması gibi. 
-• Nesneler concreteMediator(arabulucu) üzerinden bilgi alışverişinde bulunur. concreteMediator nesne ise diğer nesnelerlerle nasıl ve hangi durumlarda haberleşeceğini bilir. Bu şekilde **n tane nesne arasında muhtemelen n(n-1)/2 tane iletişim kanalı yerine concreteMediator nesnenin n tane nesne ile n tane iletişim kanalına sahip olması sağlanır.**
-• Mediator kalıbı uygulanmadığında nesneler arasında kurgulanacak many-to-many bağlantılar one-to-many olarak gerçekleşir. Nesnelere dağıtılacak olan haberleşme protokolu bilgisi, merkezi olarak mediator nesnesinden toplanır. Kontrol merkezileştirilmiş olur.  Böylece mediator karmaşıklığı azaltır. 
-• Arabulucu nesnenin thread-safe olması gerekebilir.Bu da ara bulucu nesnenin bakımını güçleştirir.  
-• Mediator tüm concreteMediator(arabulucular) için bir üst sınıftır. 
+•  Mediator'ın kullanımına örnek verecek olursak; Diyalog kutusunda menü, text alanı, button vb. pek çok farklı GUI nesnesi aralarında pek çok bağımlılık bulunur. Text yazılmadan buttonun  visible olmaması gibi.    
+• Nesneler concreteMediator(arabulucu) üzerinden bilgi alışverişinde bulunur. concreteMediator nesne ise diğer nesnelerlerle nasıl ve hangi durumlarda haberleşeceğini bilir. Bu şekilde **n tane nesne arasında muhtemelen n(n-1)/2 tane iletişim kanalı yerine concreteMediator nesnenin n tane nesne ile n tane iletişim kanalına sahip olması sağlanır.**   
+• Mediator kalıbı uygulanmadığında nesneler arasında kurgulanacak many-to-many bağlantılar one-to-many olarak gerçekleşir. Nesnelere dağıtılacak olan haberleşme protokolu bilgisi, merkezi olarak mediator nesnesinden toplanır. Kontrol merkezileştirilmiş olur.  Böylece mediator karmaşıklığı azaltır.     
+• Arabulucu nesnenin thread-safe olması gerekebilir.Bu da ara bulucu nesnenin bakımını güçleştirir.     
+• Mediator tüm concreteMediator(arabulucular) için bir üst sınıftır.   
 >Mediator: İletişimi yöneten interfacedir.. 
 >ConcreteMediator: Mediator arayüzünü uygulayan ve bileşenler arasındaki etkileşimi yöneten somut sınıftır.
 >Colleague: Mediator aracılığıyla iletişim kuran nesnedir.
@@ -2423,12 +2423,12 @@ loggerChain.logMessage(Logger.ERROR, "Bu bir error mesajıdır."); çağrısına
 >ERROR Logger: Bu bir hata mesajıdır.
 
 
-• Eğer bir isteği birden fazla nesne yerine getirebiliyorsa ve hangisininm yerine getireceği önceden bilinmiyorsa, ya da bilinse bile isteyen ile isteği yerine getiren arasında statik ilişki kurmak istenmiyorsa yani isteği kimin yerine getireceği dinamik olarak belirlenecekse, ya da isteği kiminm yerine getireceğinin merkezi bir yapıda belirlenmesi istenmiyorsa bu durumlarda chain of responsibility kullanabiliriz. 
-•  Exception mekanizmaları chain of resposibility kullanır. Run timeda fırlatılan exception nesnesi, bu nesneyi fırlatan metottan başlayarak çağrı zincirinde(call chain) geriye doğru giderek uygun handler nesnesini arar. Fırlatılan exception nesnesinin tipine uygun bir handler bulunduğunda arama durur ve exception fırlatılıp gereği yapılır. 
+• Eğer bir isteği birden fazla nesne yerine getirebiliyorsa ve hangisininm yerine getireceği önceden bilinmiyorsa, ya da bilinse bile isteyen ile isteği yerine getiren arasında statik ilişki kurmak istenmiyorsa yani isteği kimin yerine getireceği dinamik olarak belirlenecekse, ya da isteği kiminm yerine getireceğinin merkezi bir yapıda belirlenmesi istenmiyorsa bu durumlarda chain of responsibility kullanabiliriz.    
+•  Exception mekanizmaları chain of resposibility kullanır. Run timeda fırlatılan exception nesnesi, bu nesneyi fırlatan metottan başlayarak çağrı zincirinde(call chain) geriye doğru giderek uygun handler nesnesini arar. Fırlatılan exception nesnesinin tipine uygun bir handler bulunduğunda arama durur ve exception fırlatılıp gereği yapılır.   
 
 ## Visitor    
 • Amaç; bir işi birden çok nesneye, o nesnelerin arayüzlerini değiştirmeden yaptırmayı sağlamaktır.      
-• Bir koleksiyon ya da karmaşık nesne yapıları içindeki farklı nesneler üzerinde aynı türde işlemler yapmak istendiğinde, nesnelere yeni işlemler eklemenin zor ve yapı bozucu olduğu durumlarda kullanılır. İşlemler zamanla değiştiğinde her değişimde nesne sınıflarını değiştirmek zorundaysak visitor design patternı kullanılabilir.Böyle durumlarda visitor pattern ile yeni davranışları nesnelerin üzerinde tanımlamak yerine bir başka ziyaretçi nesne(visitor nesne) tanımlamak ve bu ziyaretçinin davranışlara ihtiyaç duyan nesneleri ziyaret ederek davranışları gerçekleştirmesine sağlanır. 
+• Bir koleksiyon ya da karmaşık nesne yapıları içindeki farklı nesneler üzerinde aynı türde işlemler yapmak istendiğinde, nesnelere yeni işlemler eklemenin zor ve yapı bozucu olduğu durumlarda kullanılır. İşlemler zamanla değiştiğinde her değişimde nesne sınıflarını değiştirmek zorundaysak visitor design patternı kullanılabilir.Böyle durumlarda visitor pattern ile yeni davranışları nesnelerin üzerinde tanımlamak yerine bir başka ziyaretçi nesne(visitor nesne) tanımlamak ve bu ziyaretçinin davranışlara ihtiyaç duyan nesneleri ziyaret ederek davranışları gerçekleştirmesine sağlanır.    
 • Bir interface ya da soyut sınıf tanımlanır ve her class bu interface'i kullanır. Bir Visitor interface'i ya da soyut sınıfı tanımlanır.Bu interface her class için bir ziyaret metodu içerir. Sınıflar visitor'ı kabul etmek için accept() metodu içerir.Bu metodun içinde visitorın ilgili metodu çağırılır. 
 
 ```java
@@ -2630,9 +2630,9 @@ public class StatePatternDemo {
 
 
 ## Interpreter  
-•   Amaç; bir dildeki cümleleri yorumlamak amacıyla yorumlayıcı tanımlamaktır. 
-•   Bir dilin gramerini ve kurallarını temsil eden sınıflar kullanılarak ifade edilen bir dizi işlemi gerçekleştirme yeteneği sağlar. Basit bir dilde yazılmış expression(ifadeleri) çözümlemej ve değerlendirmek için kullanılır. 
-•  Farklı veri formatları arasında dönüşüm yaparken, örneğin bir yapılandırma dosyasını yorumlamak için kullanılır. 
+•   Amaç; bir dildeki cümleleri yorumlamak amacıyla yorumlayıcı tanımlamaktır.   
+•   Bir dilin gramerini ve kurallarını temsil eden sınıflar kullanılarak ifade edilen bir dizi işlemi gerçekleştirme yeteneği sağlar. Basit bir dilde yazılmış expression(ifadeleri) çözümlemej ve değerlendirmek için kullanılır.    
+•  Farklı veri formatları arasında dönüşüm yaparken, örneğin bir yapılandırma dosyasını yorumlamak için kullanılır.   
 
 
 ```java
@@ -2869,7 +2869,7 @@ GoF'da yer almayan kalıplarda bulunur;Null Object
 ## Null Object
 •  Amacı; Verilen tipin nesnesi olmaması durumu için vekil olarak bir nesne sağlamak ve null obje, detayları diğer nesnelerden(collaboratorlar) saklayarak akıllı "hiç bir şey yapma" davranışı sağlamaktır. Bobby Woolf tarafından teklif edilmiştir. Bobbyn Wolf, bu patterni Object Structal sınıfına sokmaktadır.    
 •  Bir referansın hiç bir nesneyi göstermediği durumlarda sıklıkla karşılaşılır.Bu durumda null olan referansa erişmek sıkıntılı olduğundan NullPointerException vb. sıra dışı durum fırlatılmasını önlemek için null kontrolü yapılır. Aslında hiçbir zaman null referansı geçmemeli ve döndürmemeliyiz.    
-•  
+
 
 ```java
 // Arayüz tanımı
