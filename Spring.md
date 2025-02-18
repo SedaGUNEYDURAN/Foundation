@@ -603,7 +603,7 @@ public class MyService {
 </beans>
 ```
 
-```java
-```
 
+### Annotation
 
+• **Autowired**:  Spring container tarafından yönetilen bir bean'in başka bir bean'e otomatik olarak injecte edilmesini sağlar. 
