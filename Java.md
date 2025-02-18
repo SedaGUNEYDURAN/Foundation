@@ -1,4 +1,4 @@
-## Temeller
+# Temeller
 
 • Temelde baktığımızda javada new kullanmadan obje oluşturamayız. Ancak Stringler, Arrayler, Wrapperlar, Enumlar oluştururken new kullanmadan obje oluşturabiliriz. Bu durumu reflectionlarla da sağlayabiliyoruz. Kısaca javada new anahtar kelimesi kullanmadan da obje oluşturulabilir.    
 • **JavaBeans**, Java programlama dilinde yazılmış ve belirli bir standart yapıya uyan, yeniden kullanılabiliğr bileşenlerdir. Genellikle veri taşıma nesneleri(DTO) olarak veya GUI bileşenleri olarak kullanılır.    
@@ -46,8 +46,104 @@ mapToObj(i->new Object[]{sets.get(i),sets.get(i+1)}).
 filter(pair->"SEDA".equals(((ISet)pair[0]).getName()) && "GUNEY DURAN".equals(((ISet)pair[1]).getName()).
 forEach(pair-> createMethod((ISet)pair[0], (ISet)pair[1]));
 ```
+## Garbage Collector
+• **Garbage Coellector**:Common Language Runtime(CLR)'da otomatik bellek yöneticisi olarak çalışır. Bir uygulama için belleğin tahsisini ve serbest bırakılmasını yönetir. CLR ayağa kalktıktan sonra managed heap oluşur. Garbage collector , managed heap üzerindeki ensneleri yaşam durumuna göre bellekten siler. Stack'te tutulan değişkenler herhangi bir işlemi beklemeden kullanıldak sonra bellekten direkt silinir. Heap için ise devreye GC girer. 
 
+- **Memory Leak(Bellek Sızıntısı)**: new ile bir nesneyi allocate edip sonra silmeyi unuttuğumuzda karşılaşırız
+- **Memory Corruption(Bellek Bozulması)**: silinmiş bir nesneye erişmek istediğimizde karşılaşırız.
+- **Memory Error(Bellek Hatası):** bellekte henüz allocate olmamış bir nesneyi silmeye çalıştığımızda karşılaşırız
 
+• **Stack:**  local değişkenlerin, parametrelerin ve dönüş değerlerinin tuttulduğu bellek bölgesidir. Bir metod çağrısı meydana geldiğinde, stack frame adından metotla ilgili her şeyi tutan bir blok oluşturur. Her metot çağrısında o metoda özel stack frameler son çağırılan metodun stack frame'i üzerine biner(LIFO-Last In First Out). Stack sadece primitive tipleri değil, referans tiplerin referanslarını da tutabilir. Referans tipleri, stackte sadece referansları yani adresleri tutulabilir. Heapte gerçek nesneyi tutar. Metot çağrısı bittiği zaman o stack içindeki verilerle stackten otomatik olarak silinir. En üstteki stack frame her zaman çalıştırılan metodu gösterir. Metotların bu şekilde üst üste binip stackin limitini aşması durumunda **StackOverFlowException** fırlatır. Primitive tipler(byte, int, double, char, decimal, struct vb.) genellikle stackte tutulur. 
 
+• **Heap:** Referans tiplerin(class, interface, string vb.) tutulduğu belleğin diğer bir bölgesidir. Bu nesneler asla stackte tutulmaz. Stackte oluşan stack frameler içerisindeki referans tipler heapte bir alanı gösterir. Bu referans tiplerden genellikle new anahtar kelimesi ile yeni bir nesne yaratıldığında stack üzerinde değişkeni tutulurken, nesnenin kendisi heapte tutulur. Stack'ten stack frame silindiğinde heapte ilişkili olduğu yani referans verdiği nesneler silinmez ve nesne referanssız kalır.GC nesnelerin heapte alokasyonlarını kaldırır ve temizler. Temizlemeye başladığı durumlarda heap sınıdırı dolduğu zaman **OutOfMemoryException** fırlatır. 
+     - boxing-> stackten heap'e 
+     - unboxing -> heapten stack'e
+```java
+class Person {
+    String name;
+    Person(String name) {
+        this.name = name;
+    }
+}       
+```
+```java
+public class Main {
+    public static void main(String[] args) {
+        Person p = new Person("Alice");
+        changeName(p);
+    }
+    static void changeName(Person person) {
+        person.name = "Bob";
+    }
+}
+```
 
+ Yukarıdaki kodda new Person("Alice") ifadesi çalıştırıldığında bir Person nesnesi oluşturulur. Bu nesne heap bellek alanında yer alır. Oluşturulan p variable'ı Person sınıfına ait bir referans değişkenidir. Bu değişken heap'te oluşturulan Person nesnesinin referansını yani adresini içerir. p variable'ı stackte saklanır.  person.name = "Bob"; ifadesi ise heap'teki Person nesnesinin name özelliğini Bob olarak değiştirir.  
 
+ this.name="Bob" şeklinde bir ifade bulunsaydı; this, mevcut nesne instance'ını temsil eder. Yani this, heapteki nesneyi işaret eder. Heapteki Person nesnesinin name özelliğini Bob olarak değiştirir.  Stack belleğindeki referanslar, bu heap nesnesine işaret ettiği için, yapılan değişiklikler bu nesne üzerinde etkili olur. 
+
+ 
+• **Garbage Collector nesneleri nasıl temizler :** Bir nesneye erişiminin olup olmadığına bakarak çalışır. Eğer bir nesneye ya da referansa ulaşımı yoksa onu çöp olarak değerlendirir ve bellekten temizler. 
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        // Bir String dizisi oluşturuyoruz
+        String[] words = new String[5]; // Heap'te bir nesne oluşturuldu
+        words[0] = "Hello";
+        words[1] = "World";
+        words[2] = "Java";
+        words[3] = "Programming";
+        words[4] = "Language";
+
+        // Dizinin bazı elemanlarını null yapıyoruz
+        words[0] = null; // 0. indeks null oluyor
+        words[3] = null; // 3. indeks null oluyor
+
+        // Dizinin içeriklerini yazdırıyoruz
+        printArray(words);
+
+        // Garbage Collector bu aşamada devreye girmez
+    }
+
+    public static void printArray(String[] arr) {
+        for (String word : arr) {
+            System.out.print(word + " "); // null değerler olduğu için "null" yazacaktır
+        }
+    }
+}
+```
+Buradaki kodda String[] words = new String[5]; heapte bir String dizisi oluşturur. String dizisi başlangıçta tüm elemanları için null değerine sahiptir.  Array'in elemanlarına değer atadıktan sonra indexleri heapteki nesnselerini işaret eder.   words[0] = null; ve  words[3] = null; artık herhangi bir String nesnesini işaret etmez. Ama diğerleri hala işaret etmektedir. Bu durumda garbage collector nesneyi temizlemez, çünkü hala başka referanslar var. words[0] ve words[3] elemanlarındaki nesnelere olan referans kaldırıldığı içim garbage collector tarafından bunlar silinir. Dizi hala varlığını sürdürmeye devam eder , belirtilen indexler null değerine sahip olur. 
+
+```
+public class Main {
+    public static void main(String[] args) {
+        // Bir dizi oluşturuyoruz ve bellek alanında yer tahsis ediyoruz
+        int[] numbers = new int[5]; // Heap'te bir dizi nesnesi oluşturuldu
+        numbers[0] = 1;
+        numbers[1] = 2;
+        numbers[2] = 3;
+        numbers[3] = 4;
+        numbers[4] = 5;
+
+        // Dizi üzerinde bazı işlemler yapabiliriz
+        printArray(numbers);
+
+        // Diziye olan referans yok ediliyor
+        numbers = null; // Bu noktada diziye olan referans kayboldu
+    }
+
+    public static void printArray(int[] arr) {
+        for (int num : arr) {
+            System.out.print(num + " ");
+        }
+    }
+}
+```
+
+Yuklarıdaki kodda ise  numbers = null; ile dizinin referansına null atanmıştır. numbers değişkenin artık nesneye erişimi kalmadı demektir, bu array çöp olarak işaretlenir.  Garbage collector'un yaptığı işlemler;
+ - Mark; garbage collector heapte yaşayan yani referansı olan tüm nesneleri işaretler
+ - Sweep; işaretlenmeyen yani referansı olamayan nesneler bellekten silinir.
+ - Compact; silinen nesnelerin yerine referansı var olan nesneler kaydırılır, sıkıştırma işlemi yapılmış olur.
+
+Bu işlemlerin de olumsuz tarafı vardır. Garbage collector her döngüsünde heap2teb yaşayan nesnelerin referansı var mı yok mu diye kontrol eder. Heap'te çok fazla nesnemiz olursa donmalar meydana gelir, verimsizdir. Bu verimsizliğin önüne geçilmesi için Generational Garbage Collector'a geçilmiştir. 
