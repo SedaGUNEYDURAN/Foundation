@@ -146,4 +146,19 @@ Yuklarıdaki kodda ise  numbers = null; ile dizinin referansına null atanmışt
  - Sweep; işaretlenmeyen yani referansı olamayan nesneler bellekten silinir.
  - Compact; silinen nesnelerin yerine referansı var olan nesneler kaydırılır, sıkıştırma işlemi yapılmış olur.
 
-Bu işlemlerin de olumsuz tarafı vardır. Garbage collector her döngüsünde heap2teb yaşayan nesnelerin referansı var mı yok mu diye kontrol eder. Heap'te çok fazla nesnemiz olursa donmalar meydana gelir, verimsizdir. Bu verimsizliğin önüne geçilmesi için Generational Garbage Collector'a geçilmiştir. 
+Bu işlemlerin de olumsuz tarafı vardır. Garbage collector her döngüsünde heapte yaşayan nesnelerin referansı var mı yok mu diye kontrol eder. Heap'te çok fazla nesnemiz olursa donmalar meydana gelir, verimsizdir. Bu verimsizliğin önüne geçilmesi için Generational Garbage Collector'a geçilmiştir.    
+
+• **Generational garbage collector**: heap gen:0, gen:1, gen:2 olmak üzere üç tane generation'a sahiptir. İlk allocatede nesneler için gen:0'da yer allocate edilir. Garbage collectorün ilk döngüsünde mark, sweep, compact işlemlerini gerçekleştirir. Bu işlemlerden sonra hayatlarına devam eden nesneler gen 1'e taşınır gen:1'e taşınan nesneye yeni bir eleman atadığımızı düşünürsek yeni eleman için gen:0'da yer allocate edilir. GC ikinci döngüyü gerçekleştirir. Bu generarion yapısı gen:0'da olan nesneleri sınırlamaya yardımcı olur. Her döngüde gen:0 tüm nesnelerden temizlenir. Bir sonraki döngüde önceki döngüden sonra oluşan yeni nesneleri kontrol eder. Garbage collector bir nesneyi gen:2'ye taşımışsa o nesneyi long-lived bir nesne olarak kabul eder, gen:1 ve gen:2'yi çok fazla kontrol etmez ve daha az döngü gerçekleştirir. Long-lived nesneler garbage collector'ün iki döngüsünden geçip iki tane mark, sweep, compact, move işlemlerini gerçekleştirir. Nesnelerin büyüklüğüne göre bu kopyalama işlemi performansı çok etkiler. Generational garbage collector'in performans sorununa karşılık iki çözüm; small object(SOH) ve large object heap(LOH) denilen iki ayrı heap yapısı.  
+
+- SOH, üç generationlı yapıda kalmaya devam eder. LOH, SOH'daki gen:2 ile senkronize çalışan tek generationlı yapıdır. SOH'taki gen:2'de garbage collector döngüsü başladığında LOH'da da aynı döngü başlatılır. LOH'ta compact işlemi gerçekleştirilmez. Hangisine gideceği 85 kb değer ile belirlenir. Nesneler bu değere eşit veya büyükse LOH,değilse SOH. Böylece ekstra kopyalama işlemi yapılmaz ve performans yükselir.
+  
+• **Memory Allocate'i iyi yapmak için**;
+
+- StringBuilder kullanmalıyız,
+- Unboxing ve boxingten kaçınmalıyız,
+- list, hashmap, dictionary gidi koleksiyonlara değer vermeliyiz,
+- long-short lived diziler için ArrayPool sınıfını kullanabiliriz
+- Dispose pattern kullanmalıyız. 
+
+
+
