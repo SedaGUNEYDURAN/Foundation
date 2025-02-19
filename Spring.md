@@ -606,4 +606,82 @@ public class MyService {
 
 ### Annotation
 
-• **Autowired**:  Spring container tarafından yönetilen bir bean'in başka bir bean'e otomatik olarak injecte edilmesini sağlar. 
+• Anotasyon temelli konfigürasyonu etkinleştiemk için;
+```xml
+<context:annotation-config/>
+```
+
+Bu tag Spring container'ınanotasyonları dikkate alarak beanleri  çalıştırmasını sağlar. 
+
+• **Autowired**:  Spring container tarafından yönetilen bir bean'in başka bir bean'e otomatik olarak injecte edilmesini sağlar. Tek bir constructor varsa autowired kullanmaya gerek yoktur, inject etme işlemini kendisi otomatik olarak yapar.  
+```java
+package Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+public class Main {
+	 public static void main(String[] args) {
+	        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+	        MyService myService = context.getBean(MyService.class);
+	        myService.performSomeAction();
+	    }
+}
+```
+```java
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- Anotasyonları etkinleştir -->
+    <context:annotation-config/>
+    <bean id="myRepository" class="Autowired.MyRepository" />
+    <bean id="myService" class="Autowired.MyService">
+       <!-- <constructor-arg ref="myRepository" /> -->  <!--Annotation işle gerçekleştirildiği için bu satıra ihtiyaç yok-->
+    </bean>
+
+</beans>
+
+```
+
+```java
+package Autowired;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+public class MyService {
+	 private  MyRepository myRepository;
+	 	public MyService() {
+	 		System.out.println("Default constructor");
+	    }
+	 	@Autowired
+	    public MyService(MyRepository myRepository) {
+	    	System.out.println("constructor Autowired çalışıyor");
+	      this.myRepository = myRepository;
+	    }
+	 	@Autowired
+	    public void setMyRepository(MyRepository myRepository) {
+	 		System.out.println("setter Autowired çalışıyor");
+	        this.myRepository = myRepository;
+	    }
+
+	    public void performSomeAction() {
+	        myRepository.doSomething();
+	    }
+}
+```
+```java
+package Autowired;
+
+public class MyRepository {
+	 public void doSomething() {
+	        System.out.println("Doing something!");
+	    }
+}
+```
+
+MyService classında iki constructor var eğer @Autowired annotation kullanılmazsa hangisi kullanacağını bilmez bean. Setter ile inject etmek istediğimizde ise bir default constructor çağırılır sonrasında @Autowired ile gösterdiğimiz setter çağırılır. 
+
+
