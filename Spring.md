@@ -682,6 +682,6 @@ public class MyRepository {
 }
 ```
 
-MyService classında iki constructor var eğer @Autowired annotation kullanılmazsa hangisi kullanacağını bilmez bean. Setter ile inject etmek istediğimizde ise bir default constructor çağırılır sonrasında @Autowired ile gösterdiğimiz setter çağırılır. 
+MyService classında iki constructor var eğer @Autowired annotation kullanılmazsa hangisi kullanacağını bilmez bean. Setter ile inject etmek istediğimizde ise bir default constructor çağırılır sonrasında @Autowired ile gösterdiğimiz setter çağırılır.     
 
-
+• **Required**: Bean'in özelliklerinden birinin zorunlu olduğu anlamına gelir. Belirtilen özelliğin mutlaka inject edilmesi gerektiğini bildirir. Belirtilmezse hata fırlatır. Genellikle getter-setter metotlarla kullanılır. Spring 5.1 sürümünden itibaren @Required annotation'ı deprecated oldu. Bunun yerine constructor ve setter injection il bağımlılık zorunlu hale getirilmelidir. 
