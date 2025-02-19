@@ -611,9 +611,9 @@ public class MyService {
 <context:annotation-config/>
 ```
 
-Bu tag Spring container'ınanotasyonları dikkate alarak beanleri  çalıştırmasını sağlar. 
+Bu tag Spring container'ın anotasyonları dikkate alarak beanleri  çalıştırmasını sağlar. 
 
-• **Autowired**:  Spring container tarafından yönetilen bir bean'in başka bir bean'e otomatik olarak injecte edilmesini sağlar. Tek bir constructor varsa autowired kullanmaya gerek yoktur, inject etme işlemini kendisi otomatik olarak yapar.  
+• **@Autowired**:  Spring container tarafından yönetilen bir bean'in başka bir bean'e otomatik olarak injecte edilmesini sağlar. Tek bir constructor varsa autowired kullanmaya gerek yoktur, inject etme işlemini kendisi otomatik olarak yapar.  
 ```java
 package Autowired;
 import org.springframework.context.ApplicationContext;
@@ -684,4 +684,4 @@ public class MyRepository {
 
 MyService classında iki constructor var eğer @Autowired annotation kullanılmazsa hangisi kullanacağını bilmez bean. Setter ile inject etmek istediğimizde ise bir default constructor çağırılır sonrasında @Autowired ile gösterdiğimiz setter çağırılır.     
 
-• **Required**: Bean'in özelliklerinden birinin zorunlu olduğu anlamına gelir. Belirtilen özelliğin mutlaka inject edilmesi gerektiğini bildirir. Belirtilmezse hata fırlatır. Genellikle getter-setter metotlarla kullanılır. Spring 5.1 sürümünden itibaren @Required annotation'ı deprecated oldu. Bunun yerine constructor ve setter injection il bağımlılık zorunlu hale getirilmelidir. 
+• **@Required**: Bean'in özelliklerinden birinin zorunlu olduğu anlamına gelir. Belirtilen özelliğin mutlaka inject edilmesi gerektiğini bildirir. Belirtilmezse hata fırlatır. Genellikle getter-setter metotlarla kullanılır. Spring 5.1 sürümünden itibaren @Required annotation'ı deprecated oldu. Bunun yerine constructor ve setter injection ile bağımlılık zorunlu hale getirilmelidir. 
