@@ -702,4 +702,7 @@ MyService classında iki constructor var eğer @Autowired annotation kullanılma
  ```java
  context.getBean("renderer") // bean ismini kullanarak container alınır ve kullanılır. 
  ```
+Eğer bir isim vermezsek default olarak sınıf isminin ilk harfinin küçük halini bean ismi olarak alır. 
+
+- **Streotype:** belirli bir rolü ve işlevi yerine getiren beanleri sınıflandırma ve tanımalamak için kullanılan anotasyonları ifade eder. 
 
