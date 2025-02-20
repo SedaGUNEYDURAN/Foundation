@@ -685,3 +685,10 @@ public class MyRepository {
 MyService classında iki constructor var eğer @Autowired annotation kullanılmazsa hangisi kullanacağını bilmez bean. Setter ile inject etmek istediğimizde ise bir default constructor çağırılır sonrasında @Autowired ile gösterdiğimiz setter çağırılır.     
 
 • **@Required**: Bean'in özelliklerinden birinin zorunlu olduğu anlamına gelir. Belirtilen özelliğin mutlaka inject edilmesi gerektiğini bildirir. Belirtilmezse hata fırlatır. Genellikle getter-setter metotlarla kullanılır. Spring 5.1 sürümünden itibaren @Required annotation'ı deprecated oldu. Bunun yerine constructor ve setter injection ile bağımlılık zorunlu hale getirilmelidir. 
+
+• Beanlerin xml içerisinde tanımlanmasından kaçınmak için iki yöntem vardır; @Component, bean factory method   
+•**@Component**: Annotate ettiği sınıfın bir component olduğunu ifade eder. Yani spring beaninin annotation ile göstermemizi sağlar. Sınıflardan önce kullanılır ve o sınıfın instance'ını bean yapar. Sınıfın objelerini oluşturur, inject etmeye ya da edilmeye hazır hale getirir. Kısaca sınıfları Spring'in otomatik tarama mekanizmasıtarafından otomatik olarak algılanıp Spring container'a bir bean olarak kaydedilmesini sağlar.   
+	- Spring Framework'te XML configurasyon dosyasında kullanılır ve belirtilen paket içerisindeki componentlerin otomatik olarak taranmasını ve Spring containera bean olarak kaydedilmesini sağlar. Tarama sırasında @Component, @Service, @Repository, @Controller anotasyonlarla işaretlenmiş sınıfları tespit eder. Tespit edilen snıfları 
+```xml
+   <context:component-scan base-package="com.example.package" />
+```
