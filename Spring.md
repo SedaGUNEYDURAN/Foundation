@@ -606,7 +606,7 @@ public class MyService {
 
 ### Annotation
 
-• Anotasyon temelli konfigürasyonu etkinleştiemk için;
+• Anotasyon temelli konfigürasyonu etkinleştirmek için;
 ```xml
 <context:annotation-config/>
 ```
@@ -688,7 +688,8 @@ MyService classında iki constructor var eğer @Autowired annotation kullanılma
 
 • Beanlerin xml içerisinde tanımlanmasından kaçınmak için iki yöntem vardır; @Component, bean factory method   
 •**@Component**: Annotate ettiği sınıfın bir component olduğunu ifade eder. Yani spring beaninin annotation ile göstermemizi sağlar. Sınıflardan önce kullanılır ve o sınıfın instance'ını bean yapar. Sınıfın objelerini oluşturur, inject etmeye ya da edilmeye hazır hale getirir. Kısaca sınıfları Spring'in otomatik tarama mekanizmasıtarafından otomatik olarak algılanıp Spring container'a bir bean olarak kaydedilmesini sağlar.   
-	- Spring Framework'te XML configurasyon dosyasında kullanılır ve belirtilen paket içerisindeki componentlerin otomatik olarak taranmasını ve Spring containera bean olarak kaydedilmesini sağlar. Tarama sırasında @Component, @Service, @Repository, @Controller anotasyonlarla işaretlenmiş sınıfları tespit eder. Tespit edilen snıfları 
+	- Component annotation'ın kodda algılanabilmesi için configürasyon dosyasına aşağıdaki kod eklenmelidir. Bu kod; Spring Framework'te XML configurasyon dosyasında kullanılır ve belirtilen paket içerisindeki componentlerin otomatik olarak taranmasını ve Spring containera bean olarak kaydedilmesini sağlar. Tarama sırasında @Component, @Service, @Repository, @Controller anotasyonlarla işaretlenmiş sınıfları tespit eder. Tespit edilen sınıfları Spring containerına bean olarak kaydeder. Böylece classlar dependency injection mekanizmasında kullnılabilir hale gelir.    
+ 
 ```xml
    <context:component-scan base-package="com.example.package" />
 ```
