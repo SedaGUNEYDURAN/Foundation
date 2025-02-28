@@ -707,5 +707,56 @@ Eğer bir isim vermezsek default olarak sınıf isminin ilk harfinin küçük ha
 
 - context:annotation-config ile dependencyler çıkarılır.   context:component-scan ile sadece dependencyler değil,bütün bean definitionlarını çıkartır. 
 
+```xml
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- com.example.demo paketindeki bileşenleri tara -->
+    <context:component-scan base-package="com.example.demo" />
+    
+</beans>
+```
+```java
+package com.example.demo;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class MyComponent {
+    public void sayHello() {
+        System.out.println("Hello from MyComponent!");
+    }
+}
+```
+
+```java
+package com.example.demo;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class DemoApplication {
+    public static void main(String[] args) {
+        // applicationContext.xml dosyasını yükle
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        
+        // MyComponent bean'ini al ve metodunu çağır
+        MyComponent myComponent = context.getBean(MyComponent.class);
+        myComponent.sayHello();
+    }
+}
+```
+
+Program DemoApplication classındaki main metodu ile başlar. applicationContext dosyası yüklenir.  xml dosyasında bulunan   <context:component-scan base-package="com.example.demo" /> bilgisini görünce com.example.demo paketindeki tüm sınıfları taramaya başlar. @Component ile işaretli tüm sınıflar bulunur ve bunlar spring containerına bean olarak eklenir. Böylece MyComponent sınıfı Spring tarafından bir bean olarak tanımlanmış olur. DemoApplication classı, Spring'den MyComponent beanini ister(context.getBean(MyComponent.class);). Spring containerı, MyComponent beanin bulur ve döndürür. sayHello metodu çağırılır. 
+
+
+
+
+
 - **Streotype:** belirli bir rolü ve işlevi yerine getiren beanleri sınıflandırma ve tanımlamak için kullanılan anotasyonları ifade eder. 
 
