@@ -864,5 +864,30 @@ public class StandartOutputRenderer{
 	
 }
 ```
+
+• Qualifier annotation kullanmadan xml dosyasında da bunu tanımlayabiliriz; 
+```xml
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- Pizza bean'i -->
+    <bean id="pizza" class="com.example.demo.Pizza">
+        <qualifier value="pizzaBean"/>
+    </bean>
+
+    <!-- Burger bean'i -->
+    <bean id="burger" class="com.example.demo.Burger">
+        <qualifier value="burgerBean"/>
+    </bean>
+
+    <!-- FoodService bean'i -->
+    <bean id="foodService" class="com.example.demo.FoodService">
+        <property name="food" ref="pizza"/>
+    </bean>
+</beans>
+```
+
 - **Streotype:** belirli bir rolü ve işlevi yerine getiren beanleri sınıflandırma ve tanımlamak için kullanılan anotasyonları ifade eder. 
 
