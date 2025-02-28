@@ -851,7 +851,18 @@ public class FoodService {
 • main metodu applicationContext dosyasını yükler. <context:component-scan base-package="com.example.demo" />
 Springe bileşen tarama işlemine başlamasını söyler. Paket taranır ve @Component ile işaretli classlar bulunur. Bulunan classlar Spring containera bean olarak eklenir(Pizza, burger, ve foodService(bu @Service anotasyonundan dolayı bean olarak eklendi) beanleri).  
 FoodService beani oluşturulurken; Food türünden bir bağımlılık var. 
-@Qualifier("pizza") ile Spring, Pizza beanini seçer ve food değişkenine enjekte eder. main metodu, context.getBean(FoodService.class) ile FoodService beanini çağırır. foodService serveFood() metodu çağırır. serveFood() metodu da food.serve() metodunu çağırır. Food değişkenine enjekte edilen pizza beani çağırır. 
-
+@Qualifier("pizza") ile Spring, Pizza beanini seçer ve food değişkenine enjekte eder. main metodu, context.getBean(FoodService.class) ile FoodService beanini çağırır. foodService serveFood() metodu çağırır. serveFood() metodu da food.serve() metodunu çağırır. Food değişkenine enjekte edilen pizza beani çağırır.   
+• Injection yaparken ister instance variable olsun ister parametre olsun, classın ismi ile hangisi(@Component ile aday olanlardan)  ile eşleşirse onu getirir. --> @Qualifier annotation yöntemi olmadan çözüm
+```java
+public class HelloWorldGreetingProvider implements GreetingProvider{
+}
+```
+```java
+@Component
+public class StandartOutputRenderer{
+	private GreetingProvider helloWorldGreetingProvider;
+	
+}
+```
 - **Streotype:** belirli bir rolü ve işlevi yerine getiren beanleri sınıflandırma ve tanımlamak için kullanılan anotasyonları ifade eder. 
 
