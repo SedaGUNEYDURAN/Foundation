@@ -752,9 +752,9 @@ public class DemoApplication {
 }
 ```
 
-Program DemoApplication classındaki main metodu ile başlar. applicationContext dosyası yüklenir.  xml dosyasında bulunan   <context:component-scan base-package="com.example.demo" /> bilgisini görünce com.example.demo paketindeki tüm sınıfları taramaya başlar. @Component ile işaretli tüm sınıflar bulunur ve bunlar spring containerına bean olarak eklenir. Böylece MyComponent sınıfı Spring tarafından bir bean olarak tanımlanmış olur. DemoApplication classı, Spring'den MyComponent beanini ister(context.getBean(MyComponent.class);). Spring containerı, MyComponent beanin bulur ve döndürür. sayHello metodu çağırılır. 
+Program DemoApplication classındaki main metodu ile başlar. applicationContext dosyası yüklenir.  xml dosyasında bulunan   <context:component-scan base-package="com.example.demo" /> bilgisini görünce com.example.demo paketindeki tüm sınıfları taramaya başlar. @Component ile işaretli tüm sınıflar bulunur ve bunlar spring containerına bean olarak eklenir. Böylece MyComponent sınıfı Spring tarafından bir bean olarak tanımlanmış olur. DemoApplication classı, Spring'den MyComponent beanini ister(context.getBean(MyComponent.class);). Spring containerı, MyComponent beanin bulur ve döndürür. sayHello metodu çağırılır.   
 
-
+•**@Qualifier**: Birden fazla bean tanımı olduğunda Springin hangi bean'İn kullanılacağını belirtmek için kullanılır. Genellikle @Autowired ile birlikte kullanılır. Bir sınıfta belirli bir bean otomatik olarak inject edilirken (@Autowired) aynı türden birden fazla bean varsa Spring hangisinin kullanılacağına karar veremez ve **NoUniqueBeanDefinition** hatası fırlatır. Bu gibi durumda @Qualifier, Spring'e hangi bean seçmesi gerektiğini belirtir. 
 
 
 
