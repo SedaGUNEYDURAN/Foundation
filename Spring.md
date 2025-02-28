@@ -760,7 +760,98 @@ Program DemoApplication classındaki main metodu ile başlar. applicationContext
 ## @Qualifier
 •  Birden fazla bean tanımı olduğunda Springin hangi bean'İn kullanılacağını belirtmek için kullanılır. Genellikle @Autowired ile birlikte kullanılır. Bir sınıfta belirli bir bean otomatik olarak inject edilirken (@Autowired) aynı türden birden fazla bean varsa Spring hangisinin kullanılacağına karar veremez ve **NoUniqueBeanDefinition** hatası fırlatır. Bu gibi durumda @Qualifier, Spring'e hangi bean seçmesi gerektiğini belirtir. 
 
+```java
+package com.example.demo;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+public class DemoApplication {
+
+    public static void main(String[] args) {
+        // XML konfigürasyon dosyasını yükle
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+
+        // FoodService bean'ini al ve metodu çağır
+        FoodService foodService = context.getBean(FoodService.class);
+        foodService.serveFood();
+    }
+}
+
+```
+```xml
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- Bileşen taramasını etkinleştir -->
+    <context:component-scan base-package="com.example.demo" />
+</beans>
+
+```
+```java
+package com.example.demo;
+
+import org.springframework.stereotype.Component;
+
+@Component("pizza")
+public class Pizza implements Food {
+    @Override
+    public void serve() {
+        System.out.println("Serving a delicious pizza!");
+    }
+}
+
+```
+```java
+package com.example.demo;
+
+import org.springframework.stereotype.Component;
+
+@Component("burger")
+public class Burger implements Food {
+    @Override
+    public void serve() {
+        System.out.println("Serving a juicy burger!");
+    }
+}
+
+```
+```java
+package com.example.demo;
+
+public interface Food {
+    void serve();
+}
+```
+```java
+package com.example.demo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+@Service
+public class FoodService {
+
+    @Autowired
+    @Qualifier("pizza") // "pizza" bean'ini kullanacağını belirtiyoruz
+    private Food food;
+
+    public void serveFood() {
+        food.serve();
+    }
+}
+
+```
+
+• main metodu applicationContext dosyasını yükler. <context:component-scan base-package="com.example.demo" />
+Springe bileşen tarama işlemine başlamasını söyler. Paket taranır ve @Component ile işaretli classlar bulunur. Bulunan classlar Spring containera bean olarak eklenir(Pizza, burger, ve foodService(bu @Service anotasyonundan dolayı bean olarak eklendi) beanleri).  
+FoodService beani oluşturulurken; Food türünden bir bağımlılık var. 
+@Qualifier("pizza") ile Spring, Pizza beanini seçer ve food değişkenine enjekte eder. main metodu, context.getBean(FoodService.class) ile FoodService beanini çağırır. foodService serveFood() metodu çağırır. serveFood() metodu da food.serve() metodunu çağırır. Food değişkenine enjekte edilen pizza beani çağırır. 
 
 - **Streotype:** belirli bir rolü ve işlevi yerine getiren beanleri sınıflandırma ve tanımlamak için kullanılan anotasyonları ifade eder. 
 
