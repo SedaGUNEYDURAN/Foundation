@@ -690,15 +690,15 @@ MyService classında iki constructor var eğer @Autowired annotation kullanılma
 • Beanlerin xml içerisinde tanımlanmasından kaçınmak için iki yöntem vardır; @Component, bean factory method  
 
 ## @Component
-• Annotate ettiği sınıfın bir component olduğunu ifade eder. Yani spring beaninin annotation ile göstermemizi sağlar. Sınıflardan önce kullanılır ve o sınıfın instance'ını bean yapar. Sınıfın objelerini oluşturur, inject etmeye ya da edilmeye hazır hale getirir. Kısaca sınıfları Spring'in otomatik tarama mekanizmasıtarafından otomatik olarak algılanıp Spring container'a bir bean olarak kaydedilmesini sağlar.      
+• Annotate ettiği sınıfın, bir component olduğunu ifade eder. Yani spring beanini annotation ile göstermemizi sağlar. Sınıflardan önce kullanılır ve o sınıfın instance'ını bean yapar. Sınıfın objelerini oluşturur, inject etmeye ya da edilmeye hazır hale getirir. Kısaca sınıfları Spring'in otomatik tarama mekanizması tarafından otomatik olarak algılanıp Spring container'a bir bean olarak kaydedilmesini sağlar.      
 
-• Component annotation'ın kodda algılanabilmesi için configürasyon dosyasına aşağıdaki kod eklenmelidir. Bu kod; Spring Framework'te XML configürasyon dosyasında kullanılır ve belirtilen paket içerisindeki componentlerin otomatik olarak taranmasını ve Spring containera bean olarak kaydedilmesini sağlar. Tarama sırasında @Component, @Service, @Repository, @Controller anotasyonlarla işaretlenmiş sınıfları tespit eder. Tespit edilen sınıfları Spring containerına bean olarak kaydeder. Böylece classlar dependency injection mekanizmasında kullanılabilir hale gelir. Base package olarak tek bir paket verebildiğimiz gibi virgül ile noktalı virgül ile boşluk ile temple alt satıra geçerek ayrımlarla birden çok paket verebiliriz.
+• Component annotation'ın kodda algılanabilmesi için configürasyon dosyasına aşağıdaki kod eklenmelidir. Bu kod; Spring Framework'te XML configürasyon dosyasında kullanılır ve belirtilen paket içerisindeki componentlerin otomatik olarak taranmasını ve Spring containera bean olarak kaydedilmesini sağlar. Tarama sırasında @Component, @Service, @Repository, @Controller anotasyonlarla işaretlenmiş sınıfları tespit eder. Tespit edilen sınıfları Spring containerına bean olarak kaydeder. Böylece classlar dependency injection mekanizmasında kullanılabilir hale gelir. Base package olarak tek bir paket verebildiğimiz gibi virgül, noktalı virgül, boşluk, temp veya alt satıra geçerek ayrımlarla birden çok paket verebiliriz.
 ```xml
 <context:component-scan base-package="com.example.package" />
 ```
-•  context:annotation-config kullanımında @Autowired kullanıyorduk.  context:component-scan  kullandığımızda ise @Component kullanılmalıdır. context:component-scan kullandıüğımızda otomatik olarak <context:annotation-config/>  enable edilir.  
+•  context:annotation-config kullanımında @Autowired kullanıyorduk.  context:component-scan  kullandığımızda ise @Component kullanılmalıdır. context:component-scan kullandığımızda otomatik olarak <context:annotation-config/>  enable edilir.  
 
-@Component annotation'ı value alabilir. Spring konteynerındaki bean ismini tanımlamak için kullanılır.  
+@Component annotation'ı value alabilir. Spring konteynerındaki beanin ismini tanımlamak için kullanılır.  
  ```java
 @Component(value="renderer")
 @Component("renderer")
@@ -758,7 +758,7 @@ public class DemoApplication {
 Program DemoApplication classındaki main metodu ile başlar. applicationContext dosyası yüklenir.  xml dosyasında bulunan   <context:component-scan base-package="com.example.demo" /> bilgisini görünce com.example.demo paketindeki tüm sınıfları taramaya başlar. @Component ile işaretli tüm sınıflar bulunur ve bunlar spring containerına bean olarak eklenir. Böylece MyComponent sınıfı Spring tarafından bir bean olarak tanımlanmış olur. DemoApplication classı, Spring'den MyComponent beanini ister(context.getBean(MyComponent.class);). Spring containerı, MyComponent beanin bulur ve döndürür. sayHello metodu çağırılır.
 
 ## @Qualifier
-•  Birden fazla bean tanımı olduğunda Springin hangi bean'İn kullanılacağını belirtmek için kullanılır. Genellikle @Autowired ile birlikte kullanılır. Bir sınıfta belirli bir bean otomatik olarak inject edilirken (@Autowired) aynı türden birden fazla bean varsa Spring hangisinin kullanılacağına karar veremez ve **NoUniqueBeanDefinition** hatası fırlatır. Bu gibi durumda @Qualifier, Spring'e hangi bean seçmesi gerektiğini belirtir. 
+•  Birden fazla bean tanımı olduğunda Springin hangi bean'in kullanılacağını belirtmek için kullanılır. Genellikle @Autowired ile birlikte kullanılır. Bir sınıfta belirli bir bean otomatik olarak inject edilirken (@Autowired) aynı türden birden fazla bean varsa Spring hangisinin kullanılacağına karar veremez ve **NoUniqueBeanDefinition** hatası fırlatır. Bu gibi durumda @Qualifier, Spring'e hangi bean seçmesi gerektiğini belirtir. 
 
 ```java
 package com.example.demo;
@@ -861,7 +861,6 @@ public class HelloWorldGreetingProvider implements GreetingProvider{
 @Component
 public class StandartOutputRenderer{
 	private GreetingProvider helloWorldGreetingProvider;
-	
 }
 ```
 
@@ -888,6 +887,95 @@ public class StandartOutputRenderer{
     </bean>
 </beans>
 ```
+
+## @Primary 
+• Birden fazla injection için aday bean olduğu zaman @Primary annotation'ı  öncelik sağlıyor.    
+• Birden fazla kez @Primary annotation kullanırsak bu durumda NoUniqueBeanDefinitionException hatası fırlatır ve "more than one 'primary' bean found among candidates" der. 
+• Bir annotation kullanmaya başladığımız zaman naming convention
+çalışmaz hale gelir.(classın adının küçük harfle başlayan variable ismi durumuna göre bean oluşturması)
+
+```java
+package com.example.demo;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+
+@SpringBootApplication
+public class DemoApplication {
+
+    public static void main(String[] args) {
+        ApplicationContext context = SpringApplication.run(DemoApplication.class, args);
+
+        FoodService foodService = context.getBean(FoodService.class);
+        foodService.serveFood();
+    }
+}
+
+```
+```java
+package com.example.demo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class FoodService {
+
+    @Autowired
+    private Food food;
+
+    public void serveFood() {
+        food.serve();
+    }
+}
+```
+```java
+package com.example.demo;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class Burger implements Food {
+    @Override
+    public void serve() {
+        System.out.println("Serving burger...");
+    }
+}
+```
+```java
+package com.example.demo;
+
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Component;
+
+@Component
+@Primary
+public class Pizza implements Food {
+    @Override
+    public void serve() {
+        System.out.println("Serving pizza...");
+    }
+}
+
+```
+```java
+package com.example.demo;
+
+public interface Food {
+    void serve();
+}
+```
+
+Burada Pizza beani @Primary olarak işaretlenmiştir. FoodService sınıfı @Autowired ile Food türünden bir bean enject edilir. Spring, Food türünden bean enjekte ederken @Primary ile işaretlenmiş olan Pizza beanini tercih eder. 
+
+
+
+
+
+
+
+
 
 - **Streotype:** belirli bir rolü ve işlevi yerine getiren beanleri sınıflandırma ve tanımlamak için kullanılan anotasyonları ifade eder. 
 
