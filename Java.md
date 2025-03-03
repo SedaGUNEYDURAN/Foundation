@@ -160,5 +160,10 @@ Bu işlemlerin de olumsuz tarafı vardır. Garbage collector her döngüsünde h
 - long-short lived diziler için ArrayPool sınıfını kullanabiliriz
 - Dispose pattern kullanmalıyız. 
 
-
+• **@Retention** annotation, Java Reflection API'si kullanılarak çaluışma zamanında erişilebilecek anotasyonları belirtmek için kullnılır. Bir Anotasyonun ne kadar süreyle saklanacağını belirtir. 3 farklı;  
+ 
+ - **Source**: Anotasyon yalnızca kaynak kodda saklanır, derleme sırasında atılır.  
+ -  **Class**: Anotasyon derleme sırasında saklanır, ancak çalışma zamanında kullanılmaz.   
+ -  **Runtime**: Anotasyon çalışma zamanında saklanır ve kullanılır. Java Reflection API'si ile bu anotasyona erişebileceği anlamına gelir.      
+ 
 
