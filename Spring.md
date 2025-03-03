@@ -889,10 +889,9 @@ public class StandartOutputRenderer{
 ```
 
 ## @Primary 
-• Birden fazla injection için aday bean olduğu zaman @Primary annotation'ı  öncelik sağlıyor.    
-• Birden fazla kez @Primary annotation kullanırsak bu durumda NoUniqueBeanDefinitionException hatası fırlatır ve "more than one 'primary' bean found among candidates" der. 
-• Bir annotation kullanmaya başladığımız zaman naming convention
-çalışmaz hale gelir.(classın adının küçük harfle başlayan variable ismi durumuna göre bean oluşturması)
+• Birden fazla injection için aday bean olduğu zaman @Primary annotation'ı  öncelik sağlıyor.       
+• Birden fazla kez @Primary annotation kullanırsak bu durumda NoUniqueBeanDefinitionException hatası fırlatır ve "more than one 'primary' bean found among candidates" der.   
+• Bir annotation kullanmaya başladığımız zaman naming convention çalışmaz hale gelir.(classın adının küçük harfle başlayan variable ismi durumuna göre bean oluşturması)    
 
 ```java
 package com.example.demo;
@@ -970,9 +969,93 @@ public interface Food {
 Burada Pizza beani @Primary olarak işaretlenmiştir. FoodService sınıfı @Autowired ile Food türünden bir bean enject edilir. Spring, Food türünden bean enjekte ederken @Primary ile işaretlenmiş olan Pizza beanini tercih eder. 
 
 
+## Custom Qualifier
+• @Qualifier anotasyonunun yeterli olmadığı veya daha karmaşık ihtiyaçların olduğu durumlarda custom qualifier kullanılır. Custom Qualifier, Spring'te kendi @Qualifier anotasyonumuzu oluşturmamızı sağlar. Belirli beanleri seçerken daha ayrıntılı ve özelleştirilmiş kriterler kullnmamıza olanak tanır.  
 
+• Custom qualifier oluşturmak için izlenmesi gereken adımlar;
+	
+ - Öncelikle kendi anotasyonumuzu tanımlarız
+```java
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 
+@Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD, ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Qualifier
+public @interface CustomQualifier {
+    String value();
+}
+```
+Burada **@Target** bu anotasyonun nerelerde kullanılacağını belirttik(alanlar, parametreler, metodlar, sınıflar(interfaceler, enumlar, vs)). **@Retention** ile runtime da saklanmasını sağladık. @Qualifier bir nitelik belirleyici olarak kullandık.  
+
+ - Beanlerimizi bu özel notasyon ile işaretleriz.
+```java
+import org.springframework.stereotype.Component;
+
+@Component
+@CustomQualifier("serviceA")
+public class ServiceA implements MyService {
+    @Override
+    public void doSomething() {
+        System.out.println("Service A is doing something!");
+    }
+}
+```
+```java
+import org.springframework.stereotype.Component;
+
+@Component
+@CustomQualifier("serviceB")
+public class ServiceB implements MyService {
+    @Override
+    public void doSomething() {
+        System.out.println("Service B is doing something!");
+    }
+}
+
+```
+ - Dependency enjection ile oluşturğumuz anotasyonu kullanalım;
+```java
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+public class MyController {
+
+    private final MyService myService;
+
+    @Autowired
+    public MyController(@CustomQualifier("serviceA") MyService myService) {
+        this.myService = myService;
+    }
+
+    public void execute() {
+        myService.doSomething();
+    }
+}
+```   
+ - Şimdi main metodu ile applicationContext dosyası yüklenir ve beanler çağırılır;
+ ```java  
+package com.example.demo;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class Main {
+    public static void main(String[] args) {
+        // XML konfigürasyon dosyasını yükle
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+
+        // MyController bean'ini al ve metodu çağır
+        MyController myController = context.getBean(MyController.class);
+        myController.execute();
+    }
+}
+```
 
 
 
