@@ -968,6 +968,8 @@ public interface Food {
 
 Burada Pizza beani @Primary olarak işaretlenmiştir. FoodService sınıfı @Autowired ile Food türünden bir bean enject edilir. Spring, Food türünden bean enjekte ederken @Primary ile işaretlenmiş olan Pizza beanini tercih eder. 
 
+•  Bir pakette @Primary ve @Qualifier kullanırsak, @Qualifier öncelikli olur.  
+
 
 ## Custom Qualifier
 • @Qualifier anotasyonunun yeterli olmadığı veya daha karmaşık ihtiyaçların olduğu durumlarda custom qualifier kullanılır. Custom Qualifier, Spring'te kendi @Qualifier anotasyonumuzu oluşturmamızı sağlar. Belirli beanleri seçerken daha ayrıntılı ve özelleştirilmiş kriterler kullnmamıza olanak tanır.  
@@ -1056,6 +1058,8 @@ public class Main {
     }
 }
 ```
+
+
 
 
 
