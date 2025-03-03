@@ -115,7 +115,7 @@ public class Main {
 ```
 Buradaki kodda String[] words = new String[5]; heapte bir String dizisi oluşturur. String dizisi başlangıçta tüm elemanları için null değerine sahiptir.  Array'in elemanlarına değer atadıktan sonra indexleri heapteki nesnselerini işaret eder.   words[0] = null; ve  words[3] = null; artık herhangi bir String nesnesini işaret etmez. Ama diğerleri hala işaret etmektedir. Bu durumda garbage collector nesneyi temizlemez, çünkü hala başka referanslar var. words[0] ve words[3] elemanlarındaki nesnelere olan referans kaldırıldığı içim garbage collector tarafından bunlar silinir. Dizi hala varlığını sürdürmeye devam eder , belirtilen indexler null değerine sahip olur. 
 
-```
+```java
 public class Main {
     public static void main(String[] args) {
         // Bir dizi oluşturuyoruz ve bellek alanında yer tahsis ediyoruz
@@ -166,4 +166,19 @@ Bu işlemlerin de olumsuz tarafı vardır. Garbage collector her döngüsünde h
  -  **Class**: Anotasyon derleme sırasında saklanır, ancak çalışma zamanında kullanılmaz.   
  -  **Runtime**: Anotasyon çalışma zamanında saklanır ve kullanılır. Java Reflection API'si ile bu anotasyona erişebileceği anlamına gelir.      
  
+• **@interface**: Anotasyon tanımlamak için kullanılır. Anotasyonlar meta-veri eklemek ve bu meta veriyi runtimeda ya da derleme zamanında kullanmak için kullanılır. 
 
+```java
+//Anotasyonun oluşturulması
+public @interface MyCustomAnnotation {
+    String value();
+}
+```
+```java
+//Anotasyonun kullanımı
+@MyCustomAnnotation(value = "example")
+public class ExampleClass {
+    // Sınıf içeriği
+}
+```
+Bu örnekte MyCustomAnnotation adında bir anotasyon tanımlanmıştır ve value adluı parametreye sahiptir.   
