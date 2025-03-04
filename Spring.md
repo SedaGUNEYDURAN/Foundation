@@ -1171,7 +1171,7 @@ app.description=This is a simple Spring application.
  ```
 
 @Autowired ve @Value anotasyonları ile beanler ve value inject edilir. @Value ile application.properties dosyasından değerler injekte edildi. xml dosyasındaki context:property-placeholder bölümünde konfigürasyon dosyası belirtilir ve böylece application.properties dosyası yüklenir. @Value kullanılarak tanımlanan değerler, bu dosyadan çekilir. Eğer @Value'da tanımlanan bir değer properties dosyasında yoksa "No description provide" yazdırır. (bu ifadenin properties dosyasında olmadığını ama @Value ile değişkenin tanımlanıp çağırıldığını düşün;app.description=This is a simple Spring application.) 
-• Property dosyasının okunacağını context:property-placeholder  veya **@PropertySource** ile annotate ederiz. İkisini de kullanırsak hepsini birleştirir. Eğer birbirini ezecek durumlar varsa önce xml yüklenip sonradan annotationlar yüklendiği için xml ezilir. 
+• Property dosyasının okunacağını context:property-placeholder  veya **@PropertySource** ile annotate ederiz. İkisini de kullanırsak hepsini birleştirir. Eğer birbirini ezecek durumlar varsa önce xml yüklenip sonradan annotationlar yüklendiği için xml ezilir. Sonra yüklenen ilk yükleneni override eder. 
 
  ```java
 @Component
@@ -1250,7 +1250,7 @@ public class ConfigProperties {
 	@Value("${app.description:No description provided}")
 	private String appDescription;
 	
-	@Value("${app.enable:false}") //false değerini ata, propertiesdeki true ezildi
+	@Value("${app.enabled:false}") //bu bir default değer 
 	private boolean isEnabled;
 	
 	@Value("#{1 > 0 ? 'true' : 'false'}")
@@ -1309,6 +1309,9 @@ public class ConfigProperties {
 	}	
 }
  ```
+@Value("${app.enable:false}") ifadesi, app.enable propertysinin değerini properties dosyasından almayı dener. Eğer app.enable propertysi application.properties dosyasında tanımlı değilse false default değer olarak kullanılır. Fakat property dosyasında varsa property dosyasındaki değer kullanılır. 
+
+
  ```java
 app.name=MySpringApp
 app.version=1.0.0
@@ -1341,7 +1344,7 @@ app.enabled=true
 </beans>
  ```
 
-
+xml'de birden fazla properties dosyası eklemek istersek ,(virgül) ile ayırarak ekleyebiliriz.  
 
 - **Streotype:** belirli bir rolü ve işlevi yerine getiren beanleri sınıflandırma ve tanımlamak için kullanılan anotasyonları ifade eder. 
 
