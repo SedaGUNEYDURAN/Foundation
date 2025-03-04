@@ -1059,10 +1059,118 @@ public class Main {
 }
 ```
 
+## @Value
+• Bir değişkene ya da metoda değer enjekte etmek için kullanılır. Aynı zamanda environment değişkenlerini de inject edebilir. 
 
+ ```java
+package com.example.demo;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+public class Main {
+    public static void main(String[] args) {
+        // XML konfigürasyon dosyasını yükle
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 
+        // MyController bean'ini al ve metodu çağır
+        MyController myController = context.getBean(MyController.class);
+        myController.printConfig();
+    }
+}
+ ```
+ ```xml
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- Bileşen taramasını etkinleştir -->
+    <context:component-scan base-package="com.example.demo" />
+    
+    <!-- Property dosyasını yükle -->
+    <context:property-placeholder location="classpath:application.properties" />
+</beans>
+
+ ```
+ ```java
+package com.example.demo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+public class MyController {
+
+    @Autowired
+    private ConfigProperties configProperties;
+
+    public void printConfig() {
+        System.out.println("App Name: " + configProperties.getAppName());
+        System.out.println("Version: " + configProperties.getAppVersion());
+        System.out.println("Description: " + configProperties.getAppDescription());
+    }
+}
+
+ ```
+ ```java
+package com.example.demo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+public class MyController {
+
+    @Autowired
+    private ConfigProperties configProperties;
+
+    public void printConfig() {
+        System.out.println("App Name: " + configProperties.getAppName());
+        System.out.println("Version: " + configProperties.getAppVersion());
+        System.out.println("Description: " + configProperties.getAppDescription());
+    }
+}
+ ```
+ ```java
+package com.example.demo;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+@Component
+public class ConfigProperties {
+
+    @Value("${app.name}")
+    private String appName;
+
+    @Value("${app.version}")
+    private String appVersion;
+
+    @Value("${app.description:No description provided}")
+    private String appDescription;
+
+    // Getters for appName, appVersion, and appDescription
+    public String getAppName() {
+        return appName;
+    }
+
+    public String getAppVersion() {
+        return appVersion;
+    }
+
+    public String getAppDescription() {
+        return appDescription;
+    }
+}
+ ```
+ ```java
+app.name=MySpringApp
+app.version=1.0.0
+app.description=This is a simple Spring application.
+ ```
+
+@Autowired ve @Value anotasyonları ile beanler ve value inject edilir. @Value ile application.properties dosyasından değerler injekte edildi. xml dosyasındaki context:property-placeholder bölümünde konfigürasyon dosyası belirtilir ve böylece application.properties dosyası yüklenir. @Value kullanılarak tanımlanan değerler, bu dosyadan çekilir. Eğer @Value'da tanımlanan bir değer properties dosyasında yoksa "No description provide" yazdırır. (bu ifadenin properties dosyasında olmadığını ama @Value ile değişkenin tanımlanıp çağırıldığını düşün;app.description=This is a simple Spring application.) 
 
 - **Streotype:** belirli bir rolü ve işlevi yerine getiren beanleri sınıflandırma ve tanımlamak için kullanılan anotasyonları ifade eder. 
 
