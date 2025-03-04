@@ -1170,7 +1170,133 @@ app.version=1.0.0
 app.description=This is a simple Spring application.
  ```
 
-@Autowired ve @Value anotasyonları ile beanler ve value inject edilir. @Value ile application.properties dosyasından değerler injekte edildi. xml dosyasındaki context:property-placeholder bölümünde konfigürasyon dosyası belirtilir ve böylece application.properties dosyası yüklenir. @Value kullanılarak tanımlanan değerler, bu dosyadan çekilir. Eğer @Value'da tanımlanan bir değer properties dosyasında yoksa "No description provide" yazdırır. (bu ifadenin properties dosyasında olmadığını ama @Value ile değişkenin tanımlanıp çağırıldığını düşün;app.description=This is a simple Spring application.) 
+@Autowired ve @Value anotasyonları ile beanler ve value inject edilir. @Value ile application.properties dosyasından değerler injekte edildi. xml dosyasındaki context:property-placeholder bölümünde konfigürasyon dosyası belirtilir ve böylece application.properties dosyası yüklenir. @Value kullanılarak tanımlanan değerler, bu dosyadan çekilir. Eğer @Value'da tanımlanan bir değer properties dosyasında yoksa "No description provide" yazdırır. (bu ifadenin properties dosyasında olmadığını ama @Value ile değişkenin tanımlanıp çağırıldığını düşün;app.description=This is a simple Spring application.)      
+• **Spring Expression Language(SpEL)**: Spring Framework'te ifadeleri yazmak ve değerlendirmek için kullanılan bir dildir. Dinamik olarak değerlendirilmesi gereken ifadeleri yazmamızı ve değer atamalarını kolayca yapmamızı sağlar. @Value anotasyonu kullanılarak konfigürasyon dosyasındaki değerler dinamik olarak enjekte edilir. Koşullu ifadeler **#{...}** kullanılarak değerler dinamik olarak değerlendirilebilir ve farklı sonuçlar üretilebilir. 
+
+ ```java
+package Value;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class Main {
+	public static void main(String[] args) {
+        // XML konfigürasyon dosyasını yükle
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContextValue.xml");
+
+        // MyController bean'ini al ve metodu çağır
+        MyController myController = context.getBean(MyController.class);
+        myController.printConfig();
+    }
+}
+ ```
+ ```java
+package com.example.demo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+public class MyController {
+
+    @Autowired
+    private ConfigProperties configProperties;
+
+  public void printConfig() {
+	       System.out.println("App Name: " + configProperties.getAppName());
+	       System.out.println("Version: " + configProperties.getAppVersion());
+	       System.out.println("Description: " + configProperties.getAppDescription());
+	       System.out.println("Enabled: " + configProperties.isEnabled());
+	       System.out.println("SimpleCondition: " + configProperties.getSimpleCondition());
+	       System.out.println("Status: " + configProperties.getAppStatus());
+	 }
+}
+ ```
+ ```java
+package Value;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+@Component
+public class ConfigProperties {
+	@Value("${app.name}")
+	private String appName;
+
+	@Value("${app.version}")
+	private String appVersion;
+
+	@Value("${app.description:No description provided}")
+	private String appDescription;
+	
+	@Value("${app.enable:false}") //false değerini ata, propertiesdeki true ezildi
+	private boolean isEnabled;
+	
+	@Value("#{1 > 0 ? 'true' : 'false'}")
+	private String simpleCondition;
+//	// Koşullu ifade kullanımı (SpEL)
+  
+	@Value("#{${app.enabled} ? 'Application is enabled' : 'Application is disabled'}")
+    private String appStatus;
+
+	public String getAppName() {
+		return appName;
+	}
+
+	public void setAppName(String appName) {
+		this.appName = appName;
+	}
+
+	public String getAppVersion() {
+		return appVersion;
+	}
+
+	public void setAppVersion(String appVersion) {
+		this.appVersion = appVersion;
+	}
+
+	public String getAppDescription() {
+		return appDescription;
+	}
+
+	public void setAppDescription(String appDescription) {
+		this.appDescription = appDescription;
+	}
+
+	public boolean isEnabled() {
+		return isEnabled;
+	}
+
+	public void setEnabled(boolean isEnabled) {
+		this.isEnabled = isEnabled;
+	}
+
+	public String getSimpleCondition() {
+		return simpleCondition;
+	}
+
+	public void setSimpleCondition(String simpleCondition) {
+		this.simpleCondition = simpleCondition;
+	}
+
+	public String getAppStatus() {
+		return appStatus;
+	}
+
+	public void setAppStatus(String appStatus) {
+		this.appStatus = appStatus;
+	}	
+}
+ ```
+ ```java
+app.name=MySpringApp
+app.version=1.0.0
+app.description=This is a simple Spring application.
+app.enabled=true
+ ```
+
+
+
+
+
 
 - **Streotype:** belirli bir rolü ve işlevi yerine getiren beanleri sınıflandırma ve tanımlamak için kullanılan anotasyonları ifade eder. 
 
