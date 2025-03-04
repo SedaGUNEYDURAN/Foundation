@@ -1170,7 +1170,24 @@ app.version=1.0.0
 app.description=This is a simple Spring application.
  ```
 
-@Autowired ve @Value anotasyonları ile beanler ve value inject edilir. @Value ile application.properties dosyasından değerler injekte edildi. xml dosyasındaki context:property-placeholder bölümünde konfigürasyon dosyası belirtilir ve böylece application.properties dosyası yüklenir. @Value kullanılarak tanımlanan değerler, bu dosyadan çekilir. Eğer @Value'da tanımlanan bir değer properties dosyasında yoksa "No description provide" yazdırır. (bu ifadenin properties dosyasında olmadığını ama @Value ile değişkenin tanımlanıp çağırıldığını düşün;app.description=This is a simple Spring application.)      
+@Autowired ve @Value anotasyonları ile beanler ve value inject edilir. @Value ile application.properties dosyasından değerler injekte edildi. xml dosyasındaki context:property-placeholder bölümünde konfigürasyon dosyası belirtilir ve böylece application.properties dosyası yüklenir. @Value kullanılarak tanımlanan değerler, bu dosyadan çekilir. Eğer @Value'da tanımlanan bir değer properties dosyasında yoksa "No description provide" yazdırır. (bu ifadenin properties dosyasında olmadığını ama @Value ile değişkenin tanımlanıp çağırıldığını düşün;app.description=This is a simple Spring application.) 
+• Property dosyasının okunacağını context:property-placeholder  veya **@PropertySource** ile annotate ederiz. İkisini de kullanırsak hepsini birleştirir. Eğer birbirini ezecek durumlar varsa önce xml yüklenip sonradan annotationlar yüklendiği için xml ezilir. 
+
+ ```java
+@Component
+//Sadece bir tane Properties dosyası eklemek istiyorsak
+@PropertySource("classpath:application.properties")
+public class ConfigProperties {
+ ```
+ ```java
+@Component
+//Birden fazla Properties dosyası eklemek istiyorsak
+@PropertySources({
+	@PropertySource("classpath:application.properties"), 
+	@PropertySource("classpath:applicationProp.properties")})
+public class ConfigProperties {
+ ```
+
 • **Spring Expression Language(SpEL)**: Spring Framework'te ifadeleri yazmak ve değerlendirmek için kullanılan bir dildir. Dinamik olarak değerlendirilmesi gereken ifadeleri yazmamızı ve değer atamalarını kolayca yapmamızı sağlar. @Value anotasyonu kullanılarak konfigürasyon dosyasındaki değerler dinamik olarak enjekte edilir. Koşullu ifadeler **#{...}** kullanılarak değerler dinamik olarak değerlendirilebilir ve farklı sonuçlar üretilebilir. 
 
  ```java
