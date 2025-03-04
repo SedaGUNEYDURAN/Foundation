@@ -1186,6 +1186,12 @@ public class Main {
         // MyController bean'ini al ve metodu çağır
         MyController myController = context.getBean(MyController.class);
         myController.printConfig();
+
+	 // SpEL ile oluşturulan bean'lerin değerlerini yazdır
+        String conditionalBean = (String) context.getBean("conditionalBean");
+        String booleanConditionBean = (String) context.getBean("booleanConditionBean");
+        System.out.println("Conditional Bean: " + conditionalBean);
+        System.out.println("Boolean Condition Bean: " + booleanConditionBean);
     }
 }
  ```
@@ -1306,6 +1312,15 @@ app.enabled=true
     <context:component-scan base-package="Value" />
     <!-- Property dosyasını yükle -->
      <context:property-placeholder location="classpath:applicationProp.properties" />
+
+<!-- SpEL ile dinamik değer atanması -->
+    <bean id="conditionalBean" class="java.lang.String">
+        <constructor-arg value="#{1 > 0 ? 'Condition is true' : 'Condition is false'}"/>
+    </bean>
+
+    <bean id="booleanConditionBean" class="java.lang.String">
+        <constructor-arg value="#{${app.enabled} ? 'Application is enabled' : 'Application is disabled'}"/>
+    </bean>
 </beans>
  ```
 
