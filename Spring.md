@@ -48,7 +48,7 @@ public class A extends P implements I{ //P-> abstraction, I-> realization
 • Component bitmiş bir yapıdır, son üründür. Sadece API'sini,interface'ini, kullanarak iç yapısını bilmeye gerek kalmadan componentten hizmet alırız.   
 • Framework'ler bitmiş bir yapı, son ürün değildir. Semi-product, semi-completed application'dır. Tamamlanmaları lazım kullanılabilmek için. Tamamlanabilmek için de extend etmek gerekir. Extension dediğimiz  noktalara da **hook point** denir. Frameworkler farklı amaçlara sahip olabilir; Application development framework(Spring Security, JSF ...), Business domain framework(Acord)  
 • **Inversion of Controller(IoC)**, bir application'ın sahip olduğu akış kontrolünü elinden bırakması, karşı tarafa vermesi temelde frameworkler tarafından uygulanan bir mekanizmadır. Framework bir application tarafından extend edildiği zaman, çalıştırılıp framework'ü ayağa kaldırdığımız zaman (framework'ü ayağa kaldırmazsak kontrol bizde, application'ın kendisinde) framework kontrolü kendisi ele alır ve kendi nesneleri ve bizim hook pointler ile sağladığımız nesneler üzerindeki metot çağrılarını ne zaman yapacağını, objeleri nasıl oluşturacağının, hangi objeler arasında dependencyler olduğunu ve onları nasıl yöneteceğini, hangi metotları çağıracağını, hangi exceptionları oluşturacağını ... bütün bunlara karar verir. Bu pattern'a, prensibe, yaklaşıma Inversion of Controller denir. **Kısaca framework akış kontrolünü ele aldığı zaman IoC olur, framework neyi ne zaman yapacağına karar verir. Application'ımız framework'ün componenti olur.** Bütün frameworkler IoC prensibi ile çalışır diyebiliriz.   
-• IoC Container, objeleri  oluşturmak, lifecyclelarını yönetmek, dependencyleri yönetmek işini yapar. Spring'in IoC container'ı tarafından yönetilen objelere **bean** denir. Spring tarafından oluşturulmayan beanler, spring tarafından yönetilmezler. Bir beanden bir çok nesne oluşturabiliriz. Beanler birbirine referansta bulunabilirler.     
+• IoC Container, objeleri  oluşturmak, lifecyclelarını yönetmek, dependencyleri yönetmek işini yapar. Spring'in IoC container'ı tarafından yönetilen objelere **bean** denir. Spring tarafından oluşturulmayan beanler, spring tarafından yönetilmezler. Bir beanden bir çok nesne oluşturabiliriz. Beanler birbirine referansta bulunabilirler. **Beanler singletonlardır.**  Dolayısıyla bir beanden bir sınıftan sadece bir tane oluşturur, tek bir declaration için.  Aynı benaden farklı isimlerle farklı id'lerle birden fazla declaration yaparsak her birisi için ayrı singleton beanler oluşturulur. 
 • JavaBean default constructor'a sahip olan, varsa bütün fieldları private olan, set() ve get() metotlarına sahip olan bean'i kastediyoruz. Ama buradaki beanlerin böyle bir zorunlulukları yoktur, default constructorları olmak zorunda değildir.    
 • Spring IoC container'ına ulaşmakta kullanıdığımız temel interface; org.springframerwork.beans.BeanFactory   
 • Şu bean'i bana getir dediğimizde eğer bulamazsa **NoSuchDefinitionException**, aynı isimde, birden fazla karşılık gelecek bean tanımlanmışsa **NoUniqueBeanDefinitionException** hatasını fırlatır. (Bean'in birden fazla ismi olabilir bunlara **alias** denir.) Aynı id'den birden fazla kullanıldığında **BeanDefinitionParsingException** exceptionı alırız,aynı bean ile birden fazla objeyi ifade edebiliriz.     
@@ -1345,6 +1345,22 @@ app.enabled=true
  ```
 
 xml'de birden fazla properties dosyası eklemek istersek ,(virgül) ile ayırarak ekleyebiliriz.  
+
+
+## @Scope
+
+•  Bir beanin yaşam döngüsünü ve kapsamını belirlemek için kullanılır. Bean'in ne zaman ve nasıl oluşturulacağını, ne kadar süreyle geçerli olacağını, hangi bağlamlarda kullanılacağını belirler. Beanler singleton'dır, uygulama başlatıldığında bir kez oluşturulur ve tüm uygulama boyunca aynı bean kullanılır. Farklı @Scope türleri kullanılarak beanlerin farklı yaşam döngülerine ve kapsamlarına sahip olmasını sağlarız. Kapsam türleri;
+
+- **Singleton**: Default scope değeridir. Bean sadece bir kez oluşturulur ve tüm uygulama boyunca aynı örnek kullanılır. @Scope("singleton")
+- **Prototype**:Her istekte yeni bir bean örneği oluşturulur. @Scope("prototype")
+- **Request**: Het HTTP isteğinde yeni bir bean örneği oluşturulur. @RequestScope
+- **Session**:Her HTTP oturumunda yeni bir bean oluşturulur. Oturum bazlı veri yönetiminde kullanılır. @SessionScope
+- **GlobalSession**: Her küresel HTTP oturumunda yeni bir bean örneği oluşturulur. 
+ 
+ 
+
+
+
 
 - **Streotype:** belirli bir rolü ve işlevi yerine getiren beanleri sınıflandırma ve tanımlamak için kullanılan anotasyonları ifade eder. 
 
