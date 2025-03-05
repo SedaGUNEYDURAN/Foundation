@@ -1357,9 +1357,9 @@ xml'de birden fazla properties dosyası eklemek istersek ,(virgül) ile ayırara
 - **Session**:Her HTTP oturumunda yeni bir bean oluşturulur. Oturum bazlı veri yönetiminde kullanılır. @SessionScope
 - **GlobalSession**: Her küresel HTTP oturumunda yeni bir bean örneği oluşturulur. 
  
- 
+ ## @Profile
 
-
+• Bean'in belirli bir profil etki olduğunda oluşturulmasını sağlar.Uygulamanın farklı ortamlarda -geliştirme, test, üretim- farklı yapılandırmalara sahip olmasını sağlar. 
 
 
 - **Streotype:** belirli bir rolü ve işlevi yerine getiren beanleri sınıflandırma ve tanımlamak için kullanılan anotasyonları ifade eder. 
