@@ -27,8 +27,9 @@ public class VarExample {
 ```
 
 • **Stateful**, bir nesnenin ya da bileşenin durumunu yani state'ini muhafaza eden ve bu durumu birden fazla işlem boyunca koruyan bir kavramdır. Bu sayede nesne bir sürecin tamamı boyunca tutarlı bir şekilde çalışabilir.  Stateful bir bileşen kullanıcı veya uygulama için özel oturum bilgilerini, verileri ve parametreleri tutarak durum bilgisini saklar.    
-• **Stateless**, hiçbir durum bilgisini saklamaz. Her işlem bağımsızdır ve kendi bağlamında değerlendirili. Örneğin; RESTful API  genellikle stateless bir yapıya sahiptir, çünkü her istek kendi başına eline alınır.   
+• **Stateless**, hiçbir durum bilgisini saklamaz. Her işlem bağımsızdır ve kendi bağlamında değerlendirili. Örneğin; RESTful API  genellikle stateless bir yapıya sahiptir, çünkü her istek kendi başına eline alınır.      
 
+## Stream
 • **Stream**: Bir veri kaynağından elde edilen sıralı bir veri akışıdır. Streamler lazy'dir. Yani veriler üzerinde işlem yapmadan önce işlem dizisi oluşturulur ve bu dizi ihtiyaç duyulduğunda çağırılır. Böylece kaynakların kullanımının daha verimli olması sağlanır. Stream API; koleksiyonlar üzerinde filtrelemeler, dönüşümler ve işlemler yapmayı daha kolay ve okunabilir hale getirir. 
    
    - Aşağıdaki örnek kodda filter metodu streamdeki öğeleri belirli bir koşula göre filtreler. this::isValidSet, bir metod referansıdır. isValidSet metodunun her öğeye uygulanacağı anlamına gelir. isValidSet metodundan true döndüren öğeler streamde kalır. forEach(set->{...}) ise streamde kalan her bir set için belirtilen işlemi uygular.    
@@ -46,6 +47,24 @@ mapToObj(i->new Object[]{sets.get(i),sets.get(i+1)}).
 filter(pair->"SEDA".equals(((ISet)pair[0]).getName()) && "GUNEY DURAN".equals(((ISet)pair[1]).getName()).
 forEach(pair-> createMethod((ISet)pair[0], (ISet)pair[1]));
 ```
+• **anyMatch()**: Stream içindeki herhangi bir elemanın belirli bir koşulu sağlayıp sağlamadığını kontrol etmek için kullanılır. Herhangi bir eleman koşulu sağlıyorsa true sağlamıyorsa false döner. 
+```java
+import java.util.Arrays;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
+
+        boolean hasEven = numbers.stream().anyMatch(n -> n % 2 == 0);
+
+        System.out.println(hasEven);  // true
+    }
+}
+
+```
+
+
 ## Garbage Collector
 • **Garbage Coellector**:Common Language Runtime(CLR)'da otomatik bellek yöneticisi olarak çalışır. Bir uygulama için belleğin tahsisini ve serbest bırakılmasını yönetir. CLR ayağa kalktıktan sonra managed heap oluşur. Garbage collector , managed heap üzerindeki ensneleri yaşam durumuna göre bellekten siler. Stack'te tutulan değişkenler herhangi bir işlemi beklemeden kullanıldak sonra bellekten direkt silinir. Heap için ise devreye GC girer. 
 
