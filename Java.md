@@ -201,3 +201,15 @@ public class ExampleClass {
 }
 ```
 Bu örnekte MyCustomAnnotation adında bir anotasyon tanımlanmıştır ve value adluı parametreye sahiptir.   
+
+
+## Binary Search Tree
+• Binary search tree sadece elemanlar sıralı olduğunda çalışır. Şimdi aklından 1-240.000 arasında bir sayı tuttuğunu ve her tahminde az, çok diye yönlendirme verdiğimi düşün ve bunların sıralı oladuğunu düşün. En kötü durumda tek tek 1,2,3,4,5... şeklinde bulursun. Ama yarıya böle böle tahmin edersen (120.000-yüksek dediğimde sayıların sayısını elemiş olduk, 60.000- yüksek sayılarını 4'te 3 ünü elemiş olduk) işte bu şekilde aramaya binary search denir. En kötü durumda (worst case) logndir. 2 tabanında 240000 dersek bunun sonucu nedir ? 18  (240.000->120.000->60.000->30.000->15.000->7500->3750->1875->938->469->235->118->59->30->15->8->4->2->1 toplam 18 adım)
+
+## Big O Notation
+Big O notasyonu işlem sayısını karşılaştırmamızı sağlar. 
+• O(logn): log time olarak bilir. Örnek; binary search
+• O(n): n boyutunda bir listemiz varsa ve tek tek bütün elemanlar kontrol ediliyorsa n kere işlem yapmak gerekir. Örnek; linear time olarak bilinir. Örnek: Simple search
+• O(n*logn): Örnek: Hızlı sıralama algortimalarıdır. Quicksort gibi
+• O(n^2): Örnek: Yavaş sıralama algoritması. Selection sort gibi 
+• O(n!): yavaş algoritma. Buna travelling saleperson problem denir.
