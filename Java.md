@@ -220,6 +220,39 @@ Bu örnekte MyCustomAnnotation adında bir anotasyon tanımlanmıştır ve value
 
  • ArrayListin sonuna eklemek O(1) karmaşıklığa sahip gibi düşünülebilir ancak sabit boyutlu bir dizide tüm elemanları kopyalayıp daha büyük bir dizi üretmemiz gerekir bu da O(n) karmaşıklığa sahiptir. ArrayLis dinamik de olabilir, bu durumda da boyut genişletmemiz gerektiği için tüm elemanlar yine kopyalanır ve O(n) karmaşıklığa sahip olur 
  • Arrayler ve Listler diğer veri yapılarını uygulamak için kullanılır.
+## Stack
+ • LIFO(Last In, First Out) prensibi ile çalışır.Dizi ve linked list mantığın ile oluşturulabilirler. Bir eleman eklendiğinde en tepeye eklenir, bir eleman okudunduğunda en tepedeki okunur ve stackten çıkarılır. İki temel aksiyonu vardır; push(insert), pop(read and delete).    
+
+ - Push: stack'e eleman ekleme işlemi yapar, yeni eklenen eleman top olur.
+ - Pop: stack'ten eleman çıkarır, top elemanı çıkarır.
+ - Peek: kullanıcıya veri ödndürür, top elemanını döndürür.
+    
+• ProgramLAR run timeda metot ve fonksiyon çağrılarını izlemek için **call stack** kullanır.Her metot çağırıldığında call stacke, stack frame eklenir. Stack frame metodun local değişkenlerini, parametrelerini, geri dönüş adresini(metotlar arasında gezinirken, hangi metoda dönülerek programın devam edileceğini) içerir. Java'nın JVM'i bu işlemi gerçekleştirir ve metot çağrıları sırasında stack'i yönetir.    
+
+## Recursion
+ • Bir fonksiyonun kendisini çağırmasıdır. Her recursion fonksiyonun iki durumu vardır; base case and recursive case. 
+ • Normal recursive fonksiyonda bir metot kendini çağırır, bu işlemler diğer işlemler yapılmadan önce yapılır. Bu ne anlama gelir dersek her çağrı stack frame oluşturur ve hafızada yer kaplar. İşlemler çağrı tamamlandıktan sonra devam eder. Her recursive çağrı stacke bir frame ekler.  normalRecursiveFactorial(5) çağrılır ve stacke frame eklenir.  
+normalRecursiveFactorial(4) çağırılır ve yeni bir stack frame eklenir.   
+normalRecursiveFactorial(3) çağrılır ve stack frame eklenir.  
+Bu normalRecursiveFactorial(0) çağrılana kadar devam eder. Her recursive çağrıda, önceki çağrıların yürütme durumu stacktedir. Fonksiyon tamamlandığında; stack, frameleri birer birer kaldırır ve geri dönüş işlemlerini yapar. 
+ ```java
+public int normalRecursiveFactorial(int n) {
+    if (n == 0) {
+        return 1;
+    }
+    return n * normalRecursiveFactorial(n - 1);
+}
+
+```
+ • **Tail Recursion**: Rekürsif çağrı en son işlem olarak yapılır. Bu metodun döndürülen değeri doğrudan rekürsif metodu içerir, başka bir işlem yapılmaz. Bu ne demek oluyor dersek stack'in derinliği artmaz ve mevcut stack frame yeniden kullanılabilir.Ancak Javada JVM tail recursion optimizasyonu(TRO) yapmaz. 
+ ```java
+public int tailRecursiveFactorial(int n, int result) {
+    if (n == 0) {
+        return result;
+    }
+    return tailRecursiveFactorial(n - 1, n * result);
+}
+ ```
  
 ## Selection Sort
  • Şimdi 5 elemanı sıralayacağımızı düşünelim.(67,12,56,4,24). İlk eleman 67 bütün eleamnlarla karşılaştırılır. Kendisinden büyük bir sayı olmadığı için birinci sırada olur, bu işlem için 4 karşılaştır yapılır. 2. elemana geçilir ve karşılaştırılır.12, 56'dan küçük bu durumda 56 ile karşılaştırmaya devam edilir.Totelde 4 karşılaştır yapıldıktan sonra 2. sayının 56 olduğu belli olur. Bu şekilde bir bir azalarak sıralama yapılır. ilk elamnı bulmada n, ikinci elemanı bulmada n-1, üçüncü elemanı bulmada n-2 ... işlem yapılır. Bu durumda n(n+1)/2 işlem yapılır. Bu ne demek (n^2+n)/2 sabit sayılar bigO notasyonunda gösterilmediğine göre O(n^2) karmaşıklığa sahiptir. 
