@@ -254,7 +254,7 @@ public int tailRecursiveFactorial(int n, int result) {
 }
  ```
 ## Simple Search Algoritması
- • Belirli bir öğeyi bulabilmek için lineer arama yöntemidir. Time complexity:O(N) 
+ • Belirli bir öğeyi bulabilmek için lineer arama yöntemidir. Time complexity:O(n) 
  
 ## Travelling Saleperson Problem (TSP)
  • Bir optimizasyon problemidir. Problemin çözümü için en verimli algoritmanın bilinmediği durumdur. Tüm olası çözümleri denemek için gerekir bu durumda time complexity;O(n!)'dür. Bİr gezginin belirli bir dizi şehri ziyaret ederek her birini tam bir kez geçmesi ve toplam yolculuk mesafesini minimumda tutması gereken bir optimizasyon problemidir. 
@@ -263,8 +263,12 @@ public int tailRecursiveFactorial(int n, int result) {
 
 ## Divide & Conquer
  • Euclid’s algorithm; İki pozitif tam sayının en büyük ortak böleninin bulunması(EBOB).
- • QuickSort algoritması divide&conquer mantığı ile çalışır ve oldukça hızlıdır. EKalan kullnımı yapmaz space complexity(1), time complexity: O(n*logn) . iŞLEME pivot seçimi yapılarak başlanır ancak pivot seçimi dengeli yapılmazsa worst case'de time complexity:  O(n^2)'ye gider. Pivot her seferinde listenin en büyük ya da en küçük elemanı seçilirse bu durumda bir taraf boş kalacağı için n,n-1,n-2,n-3....,1 elemanla işlem yapılması gerekir.Bu da  n(n+1)/2 tane işlem yapmamız anlamına gelir bunun karmaşıklı da O(n^2)'dir. 
-
+ • **QuickSort algoritması** divide&conquer mantığı ile çalışır ve oldukça hızlıdır. Bestcase'de ek alan kullanımı yapmaz space complexity(1), time complexity: O(n*logn). 
+ 
+ - Pivot seçimi dengeli olduğunda; her bölme adımında, her eleman pivotla bir kez karşılaştırılır bu durumda her bölme adımında  O(n) zaman harcanır, Rekürsif ya da iteratif olarak yaklaşık logn derinliğinde alt listeler oluşturulur bu durumda karmaşıklığı O(n*logn) olur. 
+ - İşleme pivot seçimi yapılarak başlanır ancak pivot seçimi dengeli yapılmazsa worst case'de time complexity:  O(n^2)'ye gider. Pivot her seferinde listenin en büyük ya da en küçük elemanı seçilirse bu durumda bir taraf boş kalacağı için n,n-1,n-2,n-3....,1 elemanla işlem yapılması gerekir.Bu da  n(n+1)/2 tane işlem yapmamız anlamına gelir bunun karmaşıklı da O(n^2)'dir.
+ - Eğer rekürsif yaklaşım(call stack) ile yazılırsa bu durumda her rekürsif çağrı stackte yer kaplar. Bu durumda pivot seçiminin dengeli olmasına göre space complexity worst case'de O(n)'e, best casede ise O(logn)'e gider. Ek bir liste kullanmadan liste üzerinde hareket edersek(in-place) space complexity  O(1)'dir.
+ 
 
  ![image](https://github.com/user-attachments/assets/8987afbc-fbc3-4667-baa8-8b914eee0367)
 
