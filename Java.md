@@ -262,7 +262,7 @@ public int tailRecursiveFactorial(int n, int result) {
  • Şimdi 5 elemanı sıralayacağımızı düşünelim.(67,12,56,4,24). İlk eleman 67 bütün eleamnlarla karşılaştırılır. Kendisinden büyük bir sayı olmadığı için birinci sırada olur, bu işlem için 4 karşılaştır yapılır. 2. elemana geçilir ve karşılaştırılır.12, 56'dan küçük bu durumda 56 ile karşılaştırmaya devam edilir.Totelde 4 karşılaştır yapıldıktan sonra 2. sayının 56 olduğu belli olur. Bu şekilde bir bir azalarak sıralama yapılır. ilk elamnı bulmada n, ikinci elemanı bulmada n-1, üçüncü elemanı bulmada n-2 ... işlem yapılır. Bu durumda n(n+1)/2 işlem yapılır. Bu ne demek (n^2+n)/2 sabit sayılar bigO notasyonunda gösterilmediğine göre O(n^2) karmaşıklığa sahiptir. 
 
 ## Divide & Conquer
- • Euclid’s algorithm; İki pozitif tam sayının en büyük ortak böleninin bulunması(EBOB).
+ • Euclid’s algorithm; İki pozitif tam sayının en büyük ortak böleninin bulunması(EBOB).   
  • **QuickSort algoritması** divide&conquer mantığı ile çalışır ve oldukça hızlıdır. Bestcase'de ek alan kullanımı yapmaz space complexity(1), time complexity: O(n*logn). 
  
  - Pivot seçimi dengeli olduğunda; her bölme adımında, her eleman pivotla bir kez karşılaştırılır bu durumda her bölme adımında  O(n) zaman harcanır, Rekürsif ya da iteratif olarak yaklaşık logn derinliğinde alt listeler oluşturulur bu durumda karmaşıklığı O(n*logn) olur. 
