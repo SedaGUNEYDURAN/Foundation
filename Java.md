@@ -253,9 +253,20 @@ public int tailRecursiveFactorial(int n, int result) {
     return tailRecursiveFactorial(n - 1, n * result);
 }
  ```
+## Simple Search Algoritması
+ • Belirli bir öğeyi bulabilmek için lineer arama yöntemidir. Time complexity:O(N) 
  
+## Travelling Saleperson Problem (TSP)
+ • Bir optimizasyon problemidir. Problemin çözümü için en verimli algoritmanın bilinmediği durumdur. Tüm olası çözümleri denemek için gerekir bu durumda time complexity;O(n!)'dür. Bİr gezginin belirli bir dizi şehri ziyaret ederek her birini tam bir kez geçmesi ve toplam yolculuk mesafesini minimumda tutması gereken bir optimizasyon problemidir. 
 ## Selection Sort
  • Şimdi 5 elemanı sıralayacağımızı düşünelim.(67,12,56,4,24). İlk eleman 67 bütün eleamnlarla karşılaştırılır. Kendisinden büyük bir sayı olmadığı için birinci sırada olur, bu işlem için 4 karşılaştır yapılır. 2. elemana geçilir ve karşılaştırılır.12, 56'dan küçük bu durumda 56 ile karşılaştırmaya devam edilir.Totelde 4 karşılaştır yapıldıktan sonra 2. sayının 56 olduğu belli olur. Bu şekilde bir bir azalarak sıralama yapılır. ilk elamnı bulmada n, ikinci elemanı bulmada n-1, üçüncü elemanı bulmada n-2 ... işlem yapılır. Bu durumda n(n+1)/2 işlem yapılır. Bu ne demek (n^2+n)/2 sabit sayılar bigO notasyonunda gösterilmediğine göre O(n^2) karmaşıklığa sahiptir. 
+
+## Divide & Conquer
+ • Euclid’s algorithm; İki pozitif tam sayının en büyük ortak böleninin bulunması(EBOB).
+ • QuickSort algoritması divide&conquer mantığı ile çalışır ve oldukça hızlıdır. EKalan kullnımı yapmaz space complexity(1), time complexity: O(n*logn) . iŞLEME pivot seçimi yapılarak başlanır ancak pivot seçimi dengeli yapılmazsa worst case'de time complexity:  O(n^2)'ye gider. Pivot her seferinde listenin en büyük ya da en küçük elemanı seçilirse bu durumda bir taraf boş kalacağı için n,n-1,n-2,n-3....,1 elemanla işlem yapılması gerekir.Bu da  n(n+1)/2 tane işlem yapmamız anlamına gelir bunun karmaşıklı da O(n^2)'dir. 
+
+
+ ![image](https://github.com/user-attachments/assets/8987afbc-fbc3-4667-baa8-8b914eee0367)
 
 ## Big O Notation
 Big O notasyonu işlem sayısını karşılaştırmamızı sağlar. Düşük karmaşıklıktan yüksek karmaşıklığa;  
