@@ -230,7 +230,7 @@ Bu örnekte MyCustomAnnotation adında bir anotasyon tanımlanmıştır ve value
 • ProgramLAR run timeda metot ve fonksiyon çağrılarını izlemek için **call stack** kullanır.Her metot çağırıldığında call stacke, stack frame eklenir. Stack frame metodun local değişkenlerini, parametrelerini, geri dönüş adresini(metotlar arasında gezinirken, hangi metoda dönülerek programın devam edileceğini) içerir. Java'nın JVM'i bu işlemi gerçekleştirir ve metot çağrıları sırasında stack'i yönetir.    
 
 ## Recursion
- • Bir fonksiyonun kendisini çağırmasıdır. Her recursion fonksiyonun iki durumu vardır; base case and recursive case. 
+ • Bir fonksiyonun kendisini çağırmasıdır. Her recursion fonksiyonun iki durumu vardır; base case and recursive case.   
  • Normal recursive fonksiyonda bir metot kendini çağırır, bu işlemler diğer işlemler yapılmadan önce yapılır. Bu ne anlama gelir dersek her çağrı stack frame oluşturur ve hafızada yer kaplar. İşlemler çağrı tamamlandıktan sonra devam eder. Her recursive çağrı stacke bir frame ekler.  normalRecursiveFactorial(5) çağrılır ve stacke frame eklenir.  
 normalRecursiveFactorial(4) çağırılır ve yeni bir stack frame eklenir.   
 normalRecursiveFactorial(3) çağrılır ve stack frame eklenir.  
@@ -258,11 +258,11 @@ public int tailRecursiveFactorial(int n, int result) {
  • Şimdi 5 elemanı sıralayacağımızı düşünelim.(67,12,56,4,24). İlk eleman 67 bütün eleamnlarla karşılaştırılır. Kendisinden büyük bir sayı olmadığı için birinci sırada olur, bu işlem için 4 karşılaştır yapılır. 2. elemana geçilir ve karşılaştırılır.12, 56'dan küçük bu durumda 56 ile karşılaştırmaya devam edilir.Totelde 4 karşılaştır yapıldıktan sonra 2. sayının 56 olduğu belli olur. Bu şekilde bir bir azalarak sıralama yapılır. ilk elamnı bulmada n, ikinci elemanı bulmada n-1, üçüncü elemanı bulmada n-2 ... işlem yapılır. Bu durumda n(n+1)/2 işlem yapılır. Bu ne demek (n^2+n)/2 sabit sayılar bigO notasyonunda gösterilmediğine göre O(n^2) karmaşıklığa sahiptir. 
 
 ## Big O Notation
-Big O notasyonu işlem sayısını karşılaştırmamızı sağlar. Düşük karmaşıklıktan yüksek karmaşıklığa;
-• O(1)
-• O(logn): log time olarak bilir. Örnek; binary search
-• O(n): n boyutunda bir listemiz varsa ve tek tek bütün elemanlar kontrol ediliyorsa n kere işlem yapmak gerekir. Örnek; linear time olarak bilinir. Örnek: Simple search
-• O(n*logn): Örnek: Hızlı sıralama algortimalarıdır. Quicksort gibi
-• O(n^2): Örnek: Yavaş sıralama algoritması. Selection sort gibi 
-• O(2^n):
-• O(n!): yavaş algoritma. Buna travelling saleperson problem denir.
+Big O notasyonu işlem sayısını karşılaştırmamızı sağlar. Düşük karmaşıklıktan yüksek karmaşıklığa;  
+• O(1)  
+• O(logn): log time olarak bilir. Örnek; binary search   
+• O(n): n boyutunda bir listemiz varsa ve tek tek bütün elemanlar kontrol ediliyorsa n kere işlem yapmak gerekir. Örnek; linear time olarak bilinir. Örnek: Simple search   
+• O(n*logn): Örnek: Hızlı sıralama algortimalarıdır. Quicksort gibi   
+• O(n^2): Örnek: Yavaş sıralama algoritması. Selection sort gibi    
+• O(2^n):  
+• O(n!): yavaş algoritma. Buna travelling saleperson problem denir.   
