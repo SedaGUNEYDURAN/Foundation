@@ -231,7 +231,9 @@ Bu örnekte MyCustomAnnotation adında bir anotasyon tanımlanmıştır ve value
 
 
 ## Hash Table
-• Değerleri key ve value olarak depolar. Her key'e karşılık gelen bir tane değer bulunur. Bir anahtar bir kez var olabilir;bir değer biden fazla olabilir. **Ekleme sırasına göre depolama yapmaz.** Oldukça hızlıdır; search, insert, delete time complexity'si O(1)'dir.Worst case durumda ise search,insert, delete time complexity'si O(n)'e gider.  
+• Değerleri key ve value olarak depolar. Her key'e karşılık gelen bir tane değer bulunur. Bir anahtar bir kez var olabilir;bir değer biden fazla olabilir. **Ekleme sırasına göre depolama yapmaz.** Oldukça hızlıdır; search, insert, delete time complexity'si O(1)'dir.Worst case durumda ise search,insert, delete time complexity'si O(n)'e gider. Worst case durum; hash tablosundaki bütün itemlar aynı slottadır.  
+![image](https://github.com/user-attachments/assets/15603aae-a349-47e5-9f19-dcf7ba7941d5)
+
 
  - HashMap'e gönderilen değerler sırasız,
  - LinkedHashMap'e gönderilen değerler ekleme sırasına göre,
@@ -249,7 +251,10 @@ phone_book={} <---- same as phone_book=dict()
 • Birden fazla elemanın aynı hash tablosunda aynı slotu gösterdiği durumlarda hash çakışmaları(hash collisions) olur. Bu hash fonksiyounun zayıf olduğunu veya tabloda çok fazla veri olduğunu gösterir. İyi bir hash tablosunda collision az olmalıdır. Bunun çözümü için farklı yöntemler vardır;  
 
  - **Seperate Chaining**; Her çakışma sonucu elemanlar bir linked liste eklenir. Worst case senaryoda zincirdeki eleman sayısı n'e gider ve elemanın yerini bulmak veya eklemk için listenin sonuna kadar gitmek gerekir. Bu durumda karmaşıklığı O(n)'e gider.
- - **Open Addressing**; Lineer probing(H(x)+i ile hesaplanır,H(x) modudur. Çakışma olduğuğunda moda 1 ekelnerek indisi bulunur.Sınırı vardır.Hash tablosu dolduktan sonra devam edilmez. ), quadratic probic(H(x)+i^2 ile hesaplanır, çok sıkışık durumlarda kullanılır) veya double hashing ile çakışmaları çözmek için boş bir yer aranır. Eğer tablonun doluluk oranı(load factor) çok yüksekse ve uygun b,r yer bulmak zorlaşırsa, bu arama işlemi tablonun tamamını dolaşmayı gerektirebilir. Bu durumda ekleme işleminin karmaşıklığı O(n)'e gider.  
+ - **Open Addressing**; Lineer probing(H(x)+i ile hesaplanır,H(x) modudur. Çakışma olduğuğunda moda 1 ekelnerek indisi bulunur.Sınırı vardır.Hash tablosu dolduktan sonra devam edilmez. ), quadratic probic(H(x)+i^2 ile hesaplanır, çok sıkışık durumlarda kullanılır) veya double hashing ile çakışmaları çözmek için boş bir yer aranır. Eğer tablonun doluluk oranı(load factor) çok yüksekse ve uygun b,r yer bulmak zorlaşırsa, bu arama işlemi tablonun tamamını dolaşmayı gerektirebilir. Bu durumda ekleme işleminin karmaşıklığı O(n)'e gider.
+
+• **Load Factory**;Hash tablosundaki item sayısı / total slot sayısıdır. Diyelim ki 5 slotu bulunan bir hash tablomuz var. Bu 5 slotta toplam 2 eleman var. Bu hash tablosunun load factor'si 2/5'dir. Yani load factory'nin 1'den büyük olması array'deki slotlardan daha fazla sayıda item olduğu anlamına gelir. Böyle durumlarda tablo yeniden boyutlandırılmalıdır(resizing). Ve genellikle size iki katına çıkarılır yani slot sayısı. Genel kurala göre load factory **0.7** 'den büyükse tablo boyutlandırılmalıdır. Resizing pahalıdır buyüzden da genellikle yapmak istemeyiz ama hash tabloları yeniden boyutlandırmayla bile O(1) complexitye sahiptir.  
+
 • **Caching** veri ve işlemlere daha hızlı erişim sağlamak için kullanılan bir optimizasyon yöntemidir. Sıkça erişilen veya yeniden kullanılan verilerin geçici bir depolama alanında(cache) tutulmasıdır. Böylece, bu verilere erişim gerektiğinde daha yavaş bir kaynaktan(veritabanı, remote server vs.) almak yerine doğrudan cache'den hızlı bir şekilde alınabilir. Cache'de tutulan veri, hash fonksiyonu ile bir anahtar değere dönüştürülerek bir hashtable'da tutulur. 
 
  - **Cache Kontrol**, Bir veriye ihtiyaç duyulduğunda önce cache kontrol edilir.
@@ -301,7 +306,7 @@ public int tailRecursiveFactorial(int n, int result) {
 
 ## Big O Notation
 Big O notasyonu işlem sayısını karşılaştırmamızı sağlar. Düşük karmaşıklıktan yüksek karmaşıklığa;  
-• O(1)  
+• O(1): sabit zaman  
 • O(logn): log time olarak bilir. Örnek; binary search   
 • O(n): n boyutunda bir listemiz varsa ve tek tek bütün elemanlar kontrol ediliyorsa n kere işlem yapmak gerekir. Örnek; linear time olarak bilinir. Örnek: Simple search   
 • O(n*logn): Örnek: Hızlı sıralama algortimalarıdır. Quicksort gibi   
