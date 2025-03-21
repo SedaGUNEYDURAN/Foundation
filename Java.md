@@ -231,7 +231,7 @@ Bu örnekte MyCustomAnnotation adında bir anotasyon tanımlanmıştır ve value
 
 
 ## Hash Table
-• Değerleri key ve value olarak depolar. Her key'e karşılık gelen bir tane değer bulunur. Bir anahtar bir kez var olabilir;bir değer biden fazla olabilir. **Ekleme sırasına göre depolama yapmaz.** 
+• Değerleri key ve value olarak depolar. Her key'e karşılık gelen bir tane değer bulunur. Bir anahtar bir kez var olabilir;bir değer biden fazla olabilir. **Ekleme sırasına göre depolama yapmaz.** Oldukça hızlıdır; search, insert, delete time complexity'si O(1)'dir.Worst case durumda ise search,insert, delete time complexity'si O(n)'e gider.  
 
  - HashMap'e gönderilen değerler sırasız,
  - LinkedHashMap'e gönderilen değerler ekleme sırasına göre,
@@ -240,11 +240,17 @@ Bu örnekte MyCustomAnnotation adında bir anotasyon tanımlanmıştır ve value
 •  Hash map, map, dictionariy, associative array'ler olarak da bilinirler.
 • Verileri depolamak için bir dizi kullandıklarından ve arama yapması arrayler gibi hızlıdır. 
 • Python'da yeni bir hash tablosu oluşturmak için shortcut vardır. 
+
 ```java
 phone_book={} <---- same as phone_book=dict()
 ```
+
 • Diyelim ki http://adit.io adresine gitmek istiyoruz url'i yazdığımızda 173.255.248.55 IP adresine gidiyor. Buna DNS resolution deniyor ve hashmap ile işlem yapıyor.  
-• **Caching** veri ve işlemlere daha hızlı erişim sağlamak için kullanılan bir optimizasyon yöntemidir. Sıkça erişilen veya yeniden kullanılan verilerin geçici bir depolama alanında(cache) tutulmasıdır. Böylece, bu verilere erişim gerektiğinde daha yavaş bir kaynaktan(veritabanı, remote server vs.) almak yerine doğrudan cache'den hızlı bir şekilde alınabilir. 
+• Birden fazla elemanın aynı hash tablosunda aynı slotu gösterdiği durumlarda hash çakışmaları(hash collisions) olur. Bu hash fonksiyounun zayıf olduğunu veya tabloda çok fazla veri olduğunu gösterir. İyi bir hash tablosunda collision az olmalıdır. Bunun çözümü için farklı yöntemler vardır;  
+
+ - **Seperate Chaining**; Her çakışma sonucu elemanlar bir linked liste eklenir. Worst case senaryoda zincirdeki eleman sayısı n'e gider ve elemanın yerini bulmak veya eklemk için listenin sonuna kadar gitmek gerekir. Bu durumda karmaşıklığı O(n)'e gider.
+ - **Open Addressing**; Lineer probing(H(x)+i ile hesaplanır,H(x) modudur. Çakışma olduğuğunda moda 1 ekelnerek indisi bulunur.Sınırı vardır.Hash tablosu dolduktan sonra devam edilmez. ), quadratic probic(H(x)+i^2 ile hesaplanır, çok sıkışık durumlarda kullanılır) veya double hashing ile çakışmaları çözmek için boş bir yer aranır. Eğer tablonun doluluk oranı(load factor) çok yüksekse ve uygun b,r yer bulmak zorlaşırsa, bu arama işlemi tablonun tamamını dolaşmayı gerektirebilir. Bu durumda ekleme işleminin karmaşıklığı O(n)'e gider.  
+• **Caching** veri ve işlemlere daha hızlı erişim sağlamak için kullanılan bir optimizasyon yöntemidir. Sıkça erişilen veya yeniden kullanılan verilerin geçici bir depolama alanında(cache) tutulmasıdır. Böylece, bu verilere erişim gerektiğinde daha yavaş bir kaynaktan(veritabanı, remote server vs.) almak yerine doğrudan cache'den hızlı bir şekilde alınabilir. Cache'de tutulan veri, hash fonksiyonu ile bir anahtar değere dönüştürülerek bir hashtable'da tutulur. 
 
  - **Cache Kontrol**, Bir veriye ihtiyaç duyulduğunda önce cache kontrol edilir.
  - **Cache Hit**, eğer istenen veri cache'de mevcutsa bu veriye hızlıca erişilir.
