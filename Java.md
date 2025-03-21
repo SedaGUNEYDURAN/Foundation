@@ -229,6 +229,27 @@ Bu örnekte MyCustomAnnotation adında bir anotasyon tanımlanmıştır ve value
     
 • ProgramLAR run timeda metot ve fonksiyon çağrılarını izlemek için **call stack** kullanır.Her metot çağırıldığında call stacke, stack frame eklenir. Stack frame metodun local değişkenlerini, parametrelerini, geri dönüş adresini(metotlar arasında gezinirken, hangi metoda dönülerek programın devam edileceğini) içerir. Java'nın JVM'i bu işlemi gerçekleştirir ve metot çağrıları sırasında stack'i yönetir.    
 
+
+## Hash Table
+• Değerleri key ve value olarak depolar. Her key'e karşılık gelen bir tane değer bulunur. Bir anahtar bir kez var olabilir;bir değer biden fazla olabilir. **Ekleme sırasına göre depolama yapmaz.** 
+
+ - HashMap'e gönderilen değerler sırasız,
+ - LinkedHashMap'e gönderilen değerler ekleme sırasına göre,
+ - TreeMap'e gönderilen değerler keylerine göre küçükten büyüğe doğru sıralanarak depolanır.
+   
+•  Hash map, map, dictionariy, associative array'ler olarak da bilinirler.
+• Verileri depolamak için bir dizi kullandıklarından ve arama yapması arrayler gibi hızlıdır. 
+• Python'da yeni bir hash tablosu oluşturmak için shortcut vardır. 
+```java
+phone_book={} <---- same as phone_book=dict()
+```
+• Diyelim ki http://adit.io adresine gitmek istiyoruz url'i yazdığımızda 173.255.248.55 IP adresine gidiyor. Buna DNS resolution deniyor ve hashmap ile işlem yapıyor.  
+• **Caching** veri ve işlemlere daha hızlı erişim sağlamak için kullanılan bir optimizasyon yöntemidir. Sıkça erişilen veya yeniden kullanılan verilerin geçici bir depolama alanında(cache) tutulmasıdır. Böylece, bu verilere erişim gerektiğinde daha yavaş bir kaynaktan(veritabanı, remote server vs.) almak yerine doğrudan cache'den hızlı bir şekilde alınabilir. 
+
+ - **Cache Kontrol**, Bir veriye ihtiyaç duyulduğunda önce cache kontrol edilir.
+ - **Cache Hit**, eğer istenen veri cache'de mevcutsa bu veriye hızlıca erişilir.
+ - **Cache Miss**, eğer veri cache'de yoksa, daha yavaş kaynaktan veri alınır ve cache eklenir. 
+
 ## Recursion
  • Bir fonksiyonun kendisini çağırmasıdır. Her recursion fonksiyonun iki durumu vardır; base case and recursive case.   
  • Normal recursive fonksiyonda bir metot kendini çağırır, bu işlemler diğer işlemler yapılmadan önce yapılır. Bu ne anlama gelir dersek her çağrı stack frame oluşturur ve hafızada yer kaplar. İşlemler çağrı tamamlandıktan sonra devam eder. Her recursive çağrı stacke bir frame ekler.  normalRecursiveFactorial(5) çağrılır ve stacke frame eklenir.  
