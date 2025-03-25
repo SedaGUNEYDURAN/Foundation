@@ -20,7 +20,8 @@
  - Peek: kullanıcıya veri ödndürür, top elemanını döndürür.
     
 • ProgramLAR run timeda metot ve fonksiyon çağrılarını izlemek için **call stack** kullanır.Her metot çağırıldığında call stacke, stack frame eklenir. Stack frame metodun local değişkenlerini, parametrelerini, geri dönüş adresini(metotlar arasında gezinirken, hangi metoda dönülerek programın devam edileceğini) içerir. Java'nın JVM'i bu işlemi gerçekleştirir ve metot çağrıları sırasında stack'i yönetir.    
-
+## Queue
+• Stack gibidir, rastgele elemanlara erişemezsin. Yalnızca iki işlem vardır; kuyruğa alma ve kuyruktan çıkarma. Listeye iki öğe eklersek ilk eklediğimiz son eklediğimizden önce çıkar; FIFO(First in First out) prensibi ile çalışır.   
 ## Hash Table
 • Değerleri key ve value olarak depolar. Her key'e karşılık gelen bir tane değer bulunur. Bir anahtar bir kez var olabilir;bir değer biden fazla olabilir. **Ekleme sırasına göre depolama yapmaz.** Oldukça hızlıdır; search, insert, delete time complexity'si O(1)'dir.Worst case durumda ise search,insert, delete time complexity'si O(n)'e gider. Worst case durum; hash tablosundaki bütün itemlar aynı slottadır.  
 ![image](https://github.com/user-attachments/assets/15603aae-a349-47e5-9f19-dcf7ba7941d5)
@@ -54,6 +55,13 @@ phone_book={} <---- same as phone_book=dict()
 • **ConcurrentHashMap**; Thread ortamlarında kullanılmak üzere tasarlanmış bir thread safe veri yapısıdır.Hashmap birden fazla thread tarafından eşzamanlı olarak kullnıldığında tutarsızlık sorunları yaşanabilir, ConcurrentHashMap ile birden çok iş parçacığının yani threadın aynı anda güvenli bir şekilde herhangi bir komplikasyon olmadan tek bir nesne üzerinde çalışabilir.Hashtable tread safe olsa da tüm işlemleri tamamen senkronize eder. Bu durumda bir thread çalışırken diğer thread beklemek zorundadır, bu da performansı düşürür. ConcurrentHashmap'de kilit segmentasyonu yaklaşımı kullanılır, böylece yalnızca gerekli bölümler (bucketlar) kitlenir. Bu da kilitlenmelerin kapsamını daraltır ve performansı artırır.
 • HashMap, null bir anahtar eklenmesine izin verir, bu durumda hash fonksiyonu null için özel bir muamele yapar. Ancak ConcurrentHashMap buna izin vermez.ConcurrentHashMap value olarak da null değer alamaz. Bu multithread durumlarda olası belirsizlikleri önlemektedir. 
 
+## Graph
+•  Bir graph algoritmasıdır.Graph bir dizi bağlantıyı modeller. Nodelardan ve edgelerden oluşur. Bir node birden çok mode ile bağlantılı olabilir ve bu nodelara neighbor denir. 
+![image](https://github.com/user-attachments/assets/cb48b1eb-79ed-4b92-9d30-a97e1223c868)
+• İki çeşittir; undirected ve directed. Undirected graphlar oklara sahip değildir ve her iki düğüm birbirinin komşusudur. Bazı düğümleri de işaret eden oklar vardır ancak onların işaret ettikleri oklarla nodelar yoktur, bunlar directed'dır.  
+![image](https://github.com/user-attachments/assets/77df6825-161b-44bb-9ba7-46a4b3ec8935)
+
+• **BFS(Breadth First Search):**  İki şey arasındaki en kısa mesafeyi bulmamızı sağlar.  
 
 ## Recursion
  • Bir fonksiyonun kendisini çağırmasıdır. Her recursion fonksiyonun iki durumu vardır; base case and recursive case.   
