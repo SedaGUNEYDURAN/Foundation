@@ -62,7 +62,7 @@ phone_book={} <---- same as phone_book=dict()
 ![image](https://github.com/user-attachments/assets/cb48b1eb-79ed-4b92-9d30-a97e1223c868)
 • İki çeşittir; undirected ve directed. Undirected graphlar oklara sahip değildir ve her iki düğüm birbirinin komşusudur. Bazı düğümleri de işaret eden oklar vardır ancak onların işaret ettikleri oklarla nodelar yoktur, bunlar directed'dır.  
 ![image](https://github.com/user-attachments/assets/77df6825-161b-44bb-9ba7-46a4b3ec8935)
-
+• Tree, graph'ın hiçbir kenarı geri işaret etmediği özel bir türüdür. 
 • **BFS(Breadth First Search):**  İki şey arasındaki en kısa mesafeyi bulmamızı sağlar.  
 
 ## Recursion
