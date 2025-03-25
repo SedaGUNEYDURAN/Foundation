@@ -22,6 +22,8 @@
 • ProgramLAR run timeda metot ve fonksiyon çağrılarını izlemek için **call stack** kullanır.Her metot çağırıldığında call stacke, stack frame eklenir. Stack frame metodun local değişkenlerini, parametrelerini, geri dönüş adresini(metotlar arasında gezinirken, hangi metoda dönülerek programın devam edileceğini) içerir. Java'nın JVM'i bu işlemi gerçekleştirir ve metot çağrıları sırasında stack'i yönetir.    
 ## Queue
 • Stack gibidir, rastgele elemanlara erişemezsin. Yalnızca iki işlem vardır; kuyruğa alma ve kuyruktan çıkarma. Listeye iki öğe eklersek ilk eklediğimiz son eklediğimizden önce çıkar; FIFO(First in First out) prensibi ile çalışır.   
+![image](https://github.com/user-attachments/assets/0c621ace-4285-46ae-8b3a-2e6e9692c9ad)
+
 ## Hash Table
 • Değerleri key ve value olarak depolar. Her key'e karşılık gelen bir tane değer bulunur. Bir anahtar bir kez var olabilir;bir değer biden fazla olabilir. **Ekleme sırasına göre depolama yapmaz.** Oldukça hızlıdır; search, insert, delete time complexity'si O(1)'dir.Worst case durumda ise search,insert, delete time complexity'si O(n)'e gider. Worst case durum; hash tablosundaki bütün itemlar aynı slottadır.  
 ![image](https://github.com/user-attachments/assets/15603aae-a349-47e5-9f19-dcf7ba7941d5)
