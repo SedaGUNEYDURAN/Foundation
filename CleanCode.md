@@ -62,5 +62,134 @@ Entity: İş alanı(business domain) nesneleridir. (JPA, EntityFramework vb. fra
 
 
   - **Mixed-Instance Cohesion**: Bir sınıfın bazı özellikleri bazı nesneleri için geçerli bazı nesneleri için geçerli değildir.    Bir class, farklı yazılım alanlarının(domain) nesnelerinin özelliklerini bir araya getirir.  Nesneler, alanlarına has olmalıdır, birden fazla alan tek bir nesneden temsil edilmemelidir.
+
+
+
+# Coupling (Bağlılık )
+• Koordinasyon karmaşıklığı, bir işin kendi başına ifade edilebilirliğinin ya da diğerleriyle ne kadar ilgili(relatedness) olduğunun ölçüsüdür. İlgililik, bağlılıktır(coupling) ve bağımlılığı düşük olan bileşenlerin karmaşıklığı da düşüktür.Aslolan şey veri alışverişi değil hizmet alışverişidir. **Olabilecek en iyi coupling; veriler üzerinden değil davranışlar üzerinden olandır.**
+
+  - **Low/loose/weak  coupling**: Bir classın başka bir classa olan bağımlılığı mümkün olduğunca azdır. Classlar arasındaki 
+      etkileşim interfaces veya abstracts yoluyla gerçekleştirilir. 
+  - **Tight coupling**: Bir classın bir classa bağımlılığı fazladır. Bir classsın iç detayları diğer classlar tarafından çok 
+      fazla kullanılıyorsa vardır. Bakımı zordur ve kötü tasarımın işaretidir.  
+![image](https://github.com/user-attachments/assets/1d17e8c3-e133-42cc-b682-6617e283ac0d)
+
+• En kötüsünden en iyisine doğru coupling tipleri;
+
+  - İçerik(Content): Yapıların birbirlerinin iç yapılarına, gerçekleştirmelerine (implementation) bağımlı olduğu durumlardır. 
+      Yanlış soyutlama temel sebeptir. Doğrudan alan erişimi ya da set/get metotları yoluyla veri alışverişi en sık görülendir. 
+      Birlikte değiştirme sorunu oluşturur.   
+  - Common(Coupling):Global veri ve değişkenleri kullanan yapılar arasındaki bağımlılıktır. Sabitler, statik özellikler ve 
+      davranışlar yanında Singleton gibi kalıplarda görülür.   
+  - Dışsal(External):Yapıları arasında, ortak kullandıkları dış bir bileşen ya da sistemin format, arayüz, veri yapısı vb.
+      dayatmasından kaynaklanan bağımlılıktır. Façade ve Repository gibi kalıplarla azaltılabilir.   
+  - Control: Yapıların flag geçerek birbirlerinin akışlarını kontrol ettikleri bağımlılıktır. İçerik bağımlılığının özel bir 
+      halidir.  
+  - Veri yapısı bağımlılığı: Yapıların birbirlerine karmaşık veri yapısı geçerek oluşturdukları bağımlılıktır. Geçilen nesne
+      değil veri yapısıdır.  Örneği;
+
+```java
+interface Stack<E> {
+    void push(E element);
+    E pop();
+    boolean isEmpty();
+    boolean contains(E element);
+}
+
+class ArrayStack<E> implements Stack<E> {
+    private E[] elements;
+    private int size;
+    private static final int DEFAULT_CAPACITY = 16;
     
+    @SuppressWarnings("unchecked")
+    public ArrayStack() {
+        elements = (E[]) new Object[DEFAULT_CAPACITY];
+    }
+    
+    public void push(E element) {
+        if (size == elements.length) {
+            resize();
+        }
+        elements[size++] = element;
+    }
+    
+    public E pop() {
+        if (size == 0) {
+            throw new EmptyStackException();
+        }
+        E element = elements[--size];
+        elements[size] = null; // Avoid memory leaks
+        return element;
+    }
+    
+    public boolean isEmpty() {
+        return size == 0;
+    }
+    
+    public boolean contains(E element) {
+        for (int i = 0; i < size; i++) {
+            if (elements[i].equals(element)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private void resize() {
+        E[] newElements = (E[]) new Object[elements.length * 2];
+        System.arraycopy(elements, 0, newElements, 0, size);
+        elements = newElements;
+    }
+}
+
+class Set<E> {
+    private Stack<E> stack;
+    
+    public Set(Stack<E> stack) {
+        this.stack = stack;
+    }
+    
+    public void add(E element) {
+        if (!stack.contains(element)) {
+            stack.push(element);
+        }
+    }
+    
+    public boolean contains(E element) {
+        return stack.contains(element);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Stack<Integer> stack = new ArrayStack<>();
+        Set<Integer> set = new Set<>(stack);
+        
+        set.add(1);
+        set.add(2);
+        set.add(1); // Duplicate, should not be added
+        System.out.println(set.contains(1)); // true
+        System.out.println(set.contains(3)); // false
+    }
+}
+ ```
+      
+  - Veri bağımlılığı: Yapıların birbirlerine basit/ilkel/atomik veri geçerek oluşturdukları bağımlılıktır. Veri yapısı 
+      bağımlılığının daha basit halidir.   
+  - Mesaj:Interface bilgisi dışında başka hiçbir bilgi gerektirmeyen şeklidir. Olması gereken en sağlıklı bağımlılıktır. 
+      Metotlar, sınıflar, modüller, katmanlar ve sistemler arasında uygulanabilir.   
+  - Sıfır bağımlılık(no coupling): sistem olabilmek için mümkün olmayan bağımlılıktır.  
+      
+• Literatürde anlam bağımlılığı (semantic coupling) gibi farklı isim ve içerikte bağımlılıklar da vardırç. Nesne-merkezli dillerde farklı bağımlılık türleri:
+
+  - **Miras bağımlılığı(Inheritance coupling)**: Üst yapı ile ondan türetilen yapı arasındaki bağımlılıktır. is-a bağımlılığıdır.Miras ile üst tipten neyin devralındığına göre iki temel çeşidi vardır:
+    > **Interface Inheritance:** sadece interface devralındığından bağımlılık mesaj seviyesindedir. Sağlıklı bir bağımlılıktır. 
+    > **Implementation Inheritance:** Üst tip ile alt tip arasında içerik bağımlılığı kurulur.Yapısal tip benzerliği olan durumlarda dışında kullanmamak tavsiye edilir. Classları extend etmektir. Bundan kaçınmak için bazı patternler bile geliştirilmiştir; decorator gibi
+  - **Soyut bağımlılık(abstract coupling)**: Soyut olan üst yapılara olan bağımlılıktır.Hem is-a hem has-a ilişkisinde kullanır. Soyut bağımlılıkta, gerçekleştirme
+      mirası(implementation inheritance) ile arayüz mirası(interface inheritance) kullanılır. Mesaj bağımlılığının bir üst,
+      daha iyi halidir. Abstract couplingte has-a halinde nesneler birbirlerinin interfacelerini belirleyen üst tipi belirler, gerçek tipi bilmez(polymorphism).
+      Dependency Inversion(DI) ile elde edilir. Burada hem is-a hem de has-a bağımlılıkları soyuttur. 
+    ![image](https://github.com/user-attachments/assets/d857b78c-7cc7-4ea9-a6da-5c2bb115c429)
+
+• **Cohesion ile coupling arasındaki fark**; Coupling;İki veya daha fazla modül arasındaki ilişkiye odaklanır. Cohesion: bir modül içindeki öğelerin birbirleriyle ne derece ilgili olduğuna odaklanır. **Yüksek cohesion, düşük coupling istenen durumdur.** Genel olarak yazılımda istenen şey kod geliştirmeye açık, değiştirilmeye kapalı yazılmalıdır.    
 •  
