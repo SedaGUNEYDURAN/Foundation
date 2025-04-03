@@ -202,4 +202,4 @@ public class ExampleClass {
 ```
 Bu örnekte MyCustomAnnotation adında bir anotasyon tanımlanmıştır ve value adluı parametreye sahiptir.   
 
-
+• **Atomic Metotlar;** genellikle entitylerin içindedir. Birden fazla atomic metodu koordine eden yapılar bir üst katmanda olabilirdi. 
