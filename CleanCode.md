@@ -197,4 +197,16 @@ public class Main {
 • **Anemic Domain Model;** Procedural bir design şeklidir. İş alanını temsil eden nesnelerin(domain object), iş alanıyla ilgili sadece veriyi taşıyıp herhangi bir davranışa sahip olmadığı durumdur. Dolayısıyla nesneler arasındaki bağımlılık, arayüzlerindeki davranışlar yerine, doğrudan erişerek ya da set/get metotlarıyla veri üzerindedir. İş davranışları servis nesnelerine yığılmakta ve orada prosedürel bir şekilde Fowler’ın **Transaction Script** olarak adlandırdığı anti pattern gerçekleştirilmektedir. 
 
   - Örneği; Objenin üzerinde bilgileri tutar. Account objemiz var diyelim; id, balance gibi verileri tutuyor ama bu bilgilerle ilgili davranışlar başka yerde(çoğunlukla bizim service dediğimiz objelerde). Dolasıyla service bu nesne üzerinden davranışlarla hizmet almak yerine ya doğrudan erişerek (çoğunlukla set/get metotları ile)  veriye ulaşır. Veriyi alır, veriye ulaşır ve tekrar set eder. Serviceler implementain detaylarını alıyorlar, implemente edip geriye döndürüyorlar.
-    
+
+
+
+
+
+
+
+
+
+## İsimlendirme
+• İsimlendirme yaparken neden var olduğunu, ne yaptığını, nasıl kullanıldığını anlatmalıdır.    
+• Aşırı benzer adlandırmalardan kaçınmak gerekir. Bize zaman kaybettirebilir;  XYZControllerForEfficientHandlingOfStrings ve XYZControllerForEfficientStorageOfStrings gibi.     
+• İsimlendirme yaparken küçük harf L ve büyük harf O kullanımına dikkat etmelisin. (o ve 1'e benzedikleri için)  
