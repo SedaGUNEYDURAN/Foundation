@@ -100,16 +100,18 @@ public int tailRecursiveFactorial(int n, int result) {
 
 ## Divide & Conquer
  • Euclid’s algorithm; İki pozitif tam sayının en büyük ortak böleninin bulunması(EBOB).   
- • **QuickSort algoritması** divide&conquer mantığı ile çalışır ve oldukça hızlıdır. Pivot seçimi yapılarak iki parçaya bölünür;pivottan küçük olanlar ve pivottan büyük olanlar.Bestcase'de ek alan kullanımı yapmaz space complexity(1), time complexity: O(n*logn). 
+ • **QuickSort algoritması** divide&conquer mantığı ile çalışır ve oldukça hızlıdır. Pivot seçimi yapılarak iki parçaya bölünür;pivottan küçük olanlar pivotun solunda ve pivottan büyük olanlar pivotun sağında Bu işlem rekürsif olarak bölerek sağlanır. Bestcase'de ek alan kullanımı yapmaz space complexity(1), time complexity: O(n*logn). 
  
  - Pivot seçimi dengeli olduğunda; her bölme adımında, her eleman pivotla bir kez karşılaştırılır bu durumda her bölme adımında  O(n) zaman harcanır, Rekürsif ya da iteratif olarak yaklaşık logn derinliğinde alt listeler oluşturulur bu durumda karmaşıklığı O(n*logn) olur. 
  - İşleme pivot seçimi yapılarak başlanır ancak pivot seçimi dengeli yapılmazsa worst case'de time complexity:  O(n^2)'ye gider. Pivot her seferinde listenin en büyük ya da en küçük elemanı seçilirse bu durumda bir taraf boş kalacağı için n,n-1,n-2,n-3....,1 elemanla işlem yapılması gerekir.Bu da  n(n+1)/2 tane işlem yapmamız anlamına gelir bunun karmaşıklı da O(n^2)'dir.
- - Eğer rekürsif yaklaşım(call stack) ile yazılırsa bu durumda her rekürsif çağrı stackte yer kaplar. Bu durumda pivot seçiminin dengeli olmasına göre space complexity worst case'de O(n)'e, best casede ise O(logn)'e gider. Ek bir liste kullanmadan liste üzerinde hareket edersek(in-place) space complexity  O(1)'dir.
+ - Eğer rekürsif yaklaşım(call stack) ile yazılırsa bu durumda her rekürsif çağrı stackte yer kaplar. Bu durumda pivot seçiminin dengeli olmasına göre space complexity worst case'de O(n)'e, best casede ise O(logn)'e gider. Ek bir liste kullanmadan liste üzerinde hareket edersek(in-place) space complexity  O(1)'dir.   
  
 
  ![image](https://github.com/user-attachments/assets/8987afbc-fbc3-4667-baa8-8b914eee0367)
 
- • **MergeSort algoritması** divide&conquer mantığı ile çalışır ve oldukça hızlıdır. Veri setini önce küçük parçalara ayırır sonrasında sıralayarak birleştirir. Her durumda time complexity; O(nlogn). Ekstra bellek gerektirir, space complexity; O(n). Çünkü parçaları birleştirmek için geçici bir alan kullanır.  
+ • **MergeSort algoritması** divide&conquer mantığı ile çalışır ve oldukça hızlıdır. Veri setini önce küçük parçalara ayırır sonrasında sıralayarak birleştirir. Her durumda time complexity; O(nlogn). Ekstra bellek gerektirir, space complexity; O(n). Çünkü parçaları birleştirmek için geçici bir alan kullanır.   
+
+ 
 ## Big O Notation
 Big O notasyonu işlem sayısını karşılaştırmamızı sağlar. Düşük karmaşıklıktan yüksek karmaşıklığa;  
 • O(1): sabit zaman  
