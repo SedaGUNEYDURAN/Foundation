@@ -109,7 +109,7 @@ public int tailRecursiveFactorial(int n, int result) {
 
  ![image](https://github.com/user-attachments/assets/8987afbc-fbc3-4667-baa8-8b914eee0367)
 
- • **MergeSort algoritması** divide&conquer mantığı ile çalışır ve oldukça hızlıdır. Veri setini önce küçük parçalara ayırır sonrasında sıralayarak birleştirir. Her durumda time complexity; O(nlogn). Ekstra bellek gerektirir, space complexity; O(n). Çünkü parçaları birleştirmek için geçici bir alan kullanır.   
+ • **MergeSort algoritması** divide&conquer mantığı ile çalışır ve oldukça hızlıdır. Veri setini önce küçük parçalara ayırır sonrasında birleştirirken sıralama işlemi yapılır. Eğer bölme sırasında 3 eleman kalırsa 2'ye 1 şekilnde bölüm yapılır. Her durumda time complexity; O(nlogn). Ekstra bellek gerektirir, space complexity; O(n). Çünkü parçaları birleştirmek için geçici bir alan kullanır.   
 
  
 ## Big O Notation
