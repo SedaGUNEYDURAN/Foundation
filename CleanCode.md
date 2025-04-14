@@ -290,4 +290,4 @@ public class GuessStatisticsMessage {
 
 
 ## Fonksiyonlar
-• Bir satır 1 50 karakterden uzun olmamalıdır. Bir fonksiyon ise 100 satırdan daha uzun olmamalıdır. Bir fonksiyon için 20 satır idealdir. Bir fonksiyonun girintisi 2'den daha fazla olmamalıdır. 
+• Bir satır 1 50 karakterden uzun olmamalıdır. Bir fonksiyon ise 100 satırdan daha uzun olmamalıdır. Bir fonksiyon için 20 satır idealdir. Fonksiyonun girintisi 2'den daha fazla olmamalı ve sadece tek bir iş yapmalıdır. 
