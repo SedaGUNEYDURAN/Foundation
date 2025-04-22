@@ -212,7 +212,7 @@ public class Main {
 • İsimlendirme yaparken küçük harf L ve büyük harf O kullanımına dikkat etmelisin. (o ve 1'e benzedikleri için)    
 • Noise words gereksizdir. Variable tanımlarken variable adında variable geçmemelidir(piVariable). Table tanımlarken table ile adlandırmak saçmadır. NameString diye bir adlandırma olabilir mi ? Name integer olamayacağına göre String olarak belirtmeye gerek yoktur. Ayrıca ileride variable'ın tipini değiştirirsek adını da değiştirmek zorunda kalırız.   
 • Adlandırmalar telafuz edilebilir şekilde olmalıdır. Biri ile konuşurken bahsedebileceğimiz anlaşılabilecek şekilde olmalıdır. Gereksiz yere kısaltarak anlaşılırlıktan fedakarlık edilmemelidir.
-• Clean Code kitabının yazarı Martin Fowler, interface adlandırması yaparken kullanıcıya verdiği interfacein interface oldupunu kullanıcıya çaktırmak istemediğini söylüyor bunun(IShapeFactory) yerine ShapeFactoryImp, CShapeFactory ifadelerini kullanımayı tercih ettiğini söylüyor. (Bence IShapeFactory'nin kullanımı çok daha açık)   
+• Clean Code kitabının yazarı Martin Fowler, interface adlandırması yaparken kullanıcıya verdiği interfacein interface oldupunu kullanıcıya çaktırmak istemediğini söylüyor bunun(IShapeFactory) yerine ShapeFactoryImp, CShapeFactory ifadelerini kullanımayı tercih ettiğini söylüyor. (Bence IShapeFactory'nin kullanımı çok daha açık) . Interface'i implemente eden metodun isminin ShapeFactoryImp olması daha açık bir ifade olur baktığımızda bu classın bu interface'i implemete ettiğini direkt olarak anlarız. 
 • Method isimleri bir fiil olmalıdır, eylem belirtmelidir. (postPayment, deletePage)  
 • Constructorlar aşırı yüklendiğinde (overloaded), argümanları tanımlayan adlara sahip static factory metotları kullanılır.    
 **Complex fulcrumPoint=Complex.FromRealNumber(23.0); ** şeklinde yazmak Complex fulcrumPoint= new Complex(23.0);  şeklinde yazmaktan daha iyidir.   
@@ -290,4 +290,11 @@ public class GuessStatisticsMessage {
 
 
 ## Fonksiyonlar
-• Bir satır 1 50 karakterden uzun olmamalıdır. Bir fonksiyon ise 100 satırdan daha uzun olmamalıdır. Bir fonksiyon için 20 satır idealdir. Fonksiyonun girintisi 2'den daha fazla olmamalı ve sadece tek bir iş yapmalıdır. 
+• Bir satır 1 50 karakterden uzun olmamalıdır. Bir fonksiyon ise 100 satırdan daha uzun olmamalıdır. Bir fonksiyon için 20 satır idealdir. Fonksiyonun girintisi 2'den daha fazla olmamalı ve sadece tek bir iş yapmalıdır.    
+• Metotlardan null döndürmemeye dikkat etmeliyiz.   
+• Fonksiyonun parametre almaması istenen durumdur ama gerekli durumlarda 1,2 parametre alabilir. Ancak 3 ve daha fazlası özel durumlar gerektirir, kullanmayı tercih etmemeliyiz. Geçtiğimiz argüman sistemin durumunda değişiklik yapmak amaçlı olmalıdır.Örneğin bir dosya açık ve metot ile bu dosyayı kapatmak istiyoruz. Açık olan dosyayı argüman olarak geçeriz fonksiyona    .
+• Bir metoda flag'i argüman olarak geçmek çok tercih edilmemesi gereken çirkin bir görüntüdür. 
+•  Birden çok argüman geçmek yerine bazı arghümanlardan nesne yaratarak argüman sayısını azaltmak aslında daha mantıklıdır.   
+
+> Circle makeCircle(double x, double y, double radius) yerine;
+> Circle makeCircle(Point center, double radius); 
