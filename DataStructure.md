@@ -1,15 +1,16 @@
 ## Binary Search Tree
-• Binary search tree sadece elemanlar sıralı olduğunda çalışır. Şimdi aklından 1-240.000 arasında bir sayı tuttuğunu ve her tahminde az, çok diye yönlendirme verdiğimi düşün ve bunların sıralı oladuğunu düşün. En kötü durumda tek tek 1,2,3,4,5... şeklinde bulursun. Ama yarıya böle böle tahmin edersen (120.000-yüksek dediğimde sayıların sayısını elemiş olduk, 60.000- yüksek sayılarını 4'te 3 ünü elemiş olduk) işte bu şekilde aramaya binary search denir. En kötü durumda (worst case) logndir. 2 tabanında 240000 dersek bunun sonucu nedir ? 18  (240.000->120.000->60.000->30.000->15.000->7500->3750->1875->938->469->235->118->59->30->15->8->4->2->1 toplam 18 adım)
+• Binary search tree sadece elemanlar sıralı olduğunda çalışır. Şimdi aklından 1-240.000 arasında bir sayı tuttuğunu ve her tahminde az, çok diye yönlendirme verdiğimi düşün ve bunların sıralı oladuğunu düşün. En kötü durumda tek tek 1,2,3,4,5... şeklinde bulursun. Ama yarıya böle böle tahmin edersen (120.000-yüksek dediğimde sayıların sayısını elemiş olduk, 60.000- yüksek sayılarını 4'te 3 ünü elemiş olduk) işte bu şekilde aramaya binary search denir. En kötü durumda (worst case) logn'dir. 2 tabanında 240000 dersek bunun sonucu nedir ? 18     
+>(240.000->120.000->60.000->30.000->15.000->7500->3750->1875->938->469->235->118->59->30->15->8->4->2->1 toplam 18 adım)
 ## Array & Linked List
-• Array'de tüm elemanlar bitişik-yanyana olarak depolanır. Bilgisayarı çekmeceli bir dolap gibi düşünelim. Her çekmecenin bir adresi vardır. Bir çekmeceye bir şey koymak istediğimizde bu çekmecenin bir adresi olduğunu düşünelim. Bunu gibi bir eleman eklemek istediğimizde de bilgisayar bize bir adres verir oraya ekleriz elemanımızı. Şemsiyemizi bir çekmeceye koyduk yanındaki çekmeceye de eldivenlerimizi koymak istiyoruz ama yan çekmece dolu ikisinin de bir arada durmasını istediğimiz için iki eşyayı da yan yana boş olan başka çekmecelere taşımamız gerekir. Ya da ya taraftaki dolu çekmeceyi sornaki çekmeceye onun içindeki sonrakini diyerek bütün elemanların yerini değiştirmemiz gerekir. Arrayden eleman silmek için de aynı durum geçerlidir. Random access'e izin verdiği için arraylar sıklıkla tercih edilir.  
-• Linked Listye eleman eklemek istediğimizde  bilgisayardan biraz alan isteriz, bilgisayarda bize bir bir adres verir. Her bir eleman kendinden sonraki elemanın adresini verir. Yer değiştirmek zorunda olmadığımız için de eleman eklemek kolaydır. Diyelim ki ortaya eleman eklemek istiyoruz önceki elemanın gösterdiği adresi değiştirmemiz gerekir ve yeni eklediğimiz elemana bir sonraki eleamnın adresini eklemeliyiz. Ancak son elemana ulaşmak istiyorsun diyelim bunun için 1. eleman 2. elemanı 2. eleman 3. elemanın adresini gösterir ve son elemana kadar bu şekilde ilerlemek zorunda kalırsın. Kısaca sadece sequential access ile elemanlara erişilir. 
-• Array'de her item'in addressini biliyoruz. Şöyle düşün 5. elemanını arıyorsun bu durumda array indeksi 0'dan başladığına göre 4. indekste 5. elemanın bulunuyor. Ancak linkedListte elemanlar yanyana dizili olmadığı için böyle bir tahmin söz konusu değil tek tek gezmen gerekecek.
-• Bu durumda ne olur; 
+• Array'de tüm elemanlar bitişik-yanyana olarak depolanır. Bilgisayarı çekmeceli bir dolap gibi düşünelim. Her çekmecenin bir adresi vardır. Bir çekmeceye bir şey koymak istediğimizde bu çekmecenin bir adresi olduğunu düşünelim. Bunu gibi bir eleman eklemek istediğimizde de bilgisayar bize bir adres verir oraya ekleriz elemanımızı. Şemsiyemizi bir çekmeceye koyduk yanındaki çekmeceye de eldivenlerimizi koymak istiyoruz ama yan çekmece dolu ikisinin de bir arada durmasını istediğimiz için iki eşyayı da yan yana boş olan başka çekmecelere taşımamız gerekir. Ya da ya taraftaki dolu çekmeceyi sornaki çekmeceye onun içindeki sonrakini diyerek bütün elemanların yerini değiştirmemiz gerekir. Arrayden eleman silmek için de aynı durum geçerlidir. Random access'e izin verdiği için arraylar sıklıkla tercih edilir.     
+• Linked Listye eleman eklemek istediğimizde  bilgisayardan biraz alan isteriz, bilgisayarda bize bir bir adres verir. Her bir eleman kendinden sonraki elemanın adresini verir. Yer değiştirmek zorunda olmadığımız için de eleman eklemek kolaydır. Diyelim ki ortaya eleman eklemek istiyoruz önceki elemanın gösterdiği adresi değiştirmemiz gerekir ve yeni eklediğimiz elemana bir sonraki eleamnın adresini eklemeliyiz. Ancak son elemana ulaşmak istiyorsun diyelim bunun için 1. eleman 2. elemanı 2. eleman 3. elemanın adresini gösterir ve son elemana kadar bu şekilde ilerlemek zorunda kalırsın. Kısaca sadece sequential access ile elemanlara erişilir.   
+• Array'de her item'in addressini biliyoruz. Şöyle düşün 5. elemanını arıyorsun bu durumda array indeksi 0'dan başladığına göre 4. indekste 5. elemanın bulunuyor. Ancak linkedListte elemanlar yanyana dizili olmadığı için böyle bir tahmin söz konusu değil tek tek gezmen gerekecek.   
+• Bu durumda ne olur;   
 
 - Bir elemanı arrayde bulmak O(1), LinkedList'te bulmak O(n) karmaşıklığa sahip olur. 
 - Bir eleman eklemek/çıkarmak arraye O(n), LinkedList'te ise O(1) karmaşıklığa sahip olur.
 
- • ArrayListin sonuna eklemek O(1) karmaşıklığa sahip gibi düşünülebilir ancak sabit boyutlu bir dizide tüm elemanları kopyalayıp daha büyük bir dizi üretmemiz gerekir bu da O(n) karmaşıklığa sahiptir. ArrayLis dinamik de olabilir, bu durumda da boyut genişletmemiz gerektiği için tüm elemanlar yine kopyalanır ve O(n) karmaşıklığa sahip olur 
+ • ArrayListin sonuna eklemek O(1) karmaşıklığa sahip gibi düşünülebilir ancak sabit boyutlu bir dizide tüm elemanları kopyalayıp daha büyük bir dizi üretmemiz gerekir bu da O(n) karmaşıklığa sahiptir. ArrayLis dinamik de olabilir, bu durumda da boyut genişletmemiz gerektiği için tüm elemanlar yine kopyalanır ve O(n) karmaşıklığa sahip olur.   
  • Arrayler ve Listler diğer veri yapılarını uygulamak için kullanılır.
 
  ## Stack
@@ -19,7 +20,7 @@
  - Pop: stack'ten eleman çıkarır, top elemanı çıkarır.
  - Peek: kullanıcıya veri ödndürür, top elemanını döndürür.
     
-• ProgramLAR run timeda metot ve fonksiyon çağrılarını izlemek için **call stack** kullanır.Her metot çağırıldığında call stacke, stack frame eklenir. Stack frame metodun local değişkenlerini, parametrelerini, geri dönüş adresini(metotlar arasında gezinirken, hangi metoda dönülerek programın devam edileceğini) içerir. Java'nın JVM'i bu işlemi gerçekleştirir ve metot çağrıları sırasında stack'i yönetir.    
+• Programlar run timeda metot ve fonksiyon çağrılarını izlemek için **call stack** kullanır.Her metot çağırıldığında call stacke, stack frame eklenir. Stack frame metodun local değişkenlerini, parametrelerini, geri dönüş adresini(metotlar arasında gezinirken, hangi metoda dönülerek programın devam edileceğini) içerir. Java'nın JVM'i bu işlemi gerçekleştirir ve metot çağrıları sırasında stack'i yönetir.    
 ## Queue
 • Stack gibidir, rastgele elemanlara erişemezsin. Yalnızca iki işlem vardır; kuyruğa alma ve kuyruktan çıkarma. Listeye iki öğe eklersek ilk eklediğimiz son eklediğimizden önce çıkar; FIFO(First in First out) prensibi ile çalışır.   
 ![image](https://github.com/user-attachments/assets/0c621ace-4285-46ae-8b3a-2e6e9692c9ad)
@@ -33,9 +34,9 @@
  - LinkedHashMap'e gönderilen değerler ekleme sırasına göre,
  - TreeMap'e gönderilen değerler keylerine göre küçükten büyüğe doğru sıralanarak depolanır.
    
-•  Hash map, map, dictionariy, associative array'ler olarak da bilinirler.
-• Verileri depolamak için bir dizi kullandıklarından ve arama yapması arrayler gibi hızlıdır. 
-• Python'da yeni bir hash tablosu oluşturmak için shortcut vardır. 
+•  Hash map, map, dictionariy, associative array'ler olarak da bilinirler.   
+• Verileri depolamak için bir dizi kullandıklarından ve arama yapması arrayler gibi hızlıdır.   
+• Python'da yeni bir hash tablosu oluşturmak için shortcut vardır.   
 
 ```java
 phone_book={} <---- same as phone_book=dict()
@@ -53,9 +54,10 @@ phone_book={} <---- same as phone_book=dict()
 
  - **Cache Kontrol**, Bir veriye ihtiyaç duyulduğunda önce cache kontrol edilir.
  - **Cache Hit**, eğer istenen veri cache'de mevcutsa bu veriye hızlıca erişilir.
- - **Cache Miss**, eğer veri cache'de yoksa, daha yavaş kaynaktan veri alınır ve cache eklenir. 
-• **ConcurrentHashMap**; Thread ortamlarında kullanılmak üzere tasarlanmış bir thread safe veri yapısıdır.Hashmap birden fazla thread tarafından eşzamanlı olarak kullnıldığında tutarsızlık sorunları yaşanabilir, ConcurrentHashMap ile birden çok iş parçacığının yani threadın aynı anda güvenli bir şekilde herhangi bir komplikasyon olmadan tek bir nesne üzerinde çalışabilir.Hashtable tread safe olsa da tüm işlemleri tamamen senkronize eder. Bu durumda bir thread çalışırken diğer thread beklemek zorundadır, bu da performansı düşürür. ConcurrentHashmap'de kilit segmentasyonu yaklaşımı kullanılır, böylece yalnızca gerekli bölümler (bucketlar) kitlenir. Bu da kilitlenmelerin kapsamını daraltır ve performansı artırır.
-• HashMap, null bir anahtar eklenmesine izin verir, bu durumda hash fonksiyonu null için özel bir muamele yapar. Ancak ConcurrentHashMap buna izin vermez.ConcurrentHashMap value olarak da null değer alamaz. Bu multithread durumlarda olası belirsizlikleri önlemektedir. 
+ - **Cache Miss**, eğer veri cache'de yoksa, daha yavaş kaynaktan veri alınır ve cache eklenir.
+  
+• **ConcurrentHashMap**; Thread ortamlarında kullanılmak üzere tasarlanmış bir thread safe veri yapısıdır.Hashmap birden fazla thread tarafından eşzamanlı olarak kullnıldığında tutarsızlık sorunları yaşanabilir, ConcurrentHashMap ile birden çok iş parçacığının yani threadın aynı anda güvenli bir şekilde herhangi bir komplikasyon olmadan tek bir nesne üzerinde çalışabilir.Hashtable tread safe olsa da tüm işlemleri tamamen senkronize eder. Bu durumda bir thread çalışırken diğer thread beklemek zorundadır, bu da performansı düşürür. ConcurrentHashmap'de kilit segmentasyonu yaklaşımı kullanılır, böylece yalnızca gerekli bölümler (bucketlar) kitlenir. Bu da kilitlenmelerin kapsamını daraltır ve performansı artırır.   
+• HashMap, null bir anahtar eklenmesine izin verir, bu durumda hash fonksiyonu null için özel bir muamele yapar. Ancak ConcurrentHashMap buna izin vermez.ConcurrentHashMap value olarak da null değer alamaz. Bu multithread durumlarda olası belirsizlikleri önlemektedir.    
 
 ## Graph
 •  Bir graph algoritmasıdır.Graph bir dizi bağlantıyı modeller. Nodelardan ve edgelerden oluşur. Bir node birden çok mode ile bağlantılı olabilir ve bu nodelara neighbor denir. 
