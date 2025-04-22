@@ -297,4 +297,37 @@ public class GuessStatisticsMessage {
 •  Birden çok argüman geçmek yerine bazı arghümanlardan nesne yaratarak argüman sayısını azaltmak aslında daha mantıklıdır.   
 
 > Circle makeCircle(double x, double y, double radius) yerine;
-> Circle makeCircle(Point center, double radius); 
+> Circle makeCircle(Point center, double radius);
+ 
+• Daha sade ve anlaşılır kod için hata işleme ile ana işlemler birbirinden ayrılmalıdır. Aşağıdaki kodda delete metodu hata işleme görevini icra etmektedir. deletePageAndAllReferences ise silme işlemlerini gerçekleştirmektedir. Bu ayrım kodu okuyan kişinin hata işlevini bir kenara bırakıp sadece ana işlevi anlayabilmesine olanak sağlamaktır. Eğer bir metotta try varsa metotun ana odağının buradda olduğu anlaşılmalı, metodun başında olmalı. catch veya finally'den sonra herhangi bir işlem yapılmamalı. Fonksiyonun hata işleme amaçlı olduğu bu şekilde açık bir şekilde görelebilir.   
+
+```java
+
+public void delete(Page page) {
+ try {
+ deletePageAndAllReferences(page);
+ }
+ catch (Exception e) {
+ logError(e);
+ }
+ }
+
+```
+
+```java
+ private void deletePageAndAllReferences(Page page) throws Exception {
+ deletePage(page);
+ registry.deleteReference(page.name);
+ configKeys.deleteKey(page.name.makeKey());
+ }
+```
+
+```java
+ private void logError(Exception e) {
+ logger.log(e.getMessage());
+ }
+```
+
+
+• Bazı programcılar Edsger Dijkstra’s kuralları ile oluşturulmmuş yapıyla yazar. Bu kurala göre bir fonksiyon içindeki her bloğun bir girişi bir de çıkışı olmalıdır. Fonksiyonda bir return ifadesi olması gerektiğini; break, continue, goto gibi ifadelerin hiçbir zaman olmaması gerektiği anlamına gelir 
+• Fonksiyonlar bir dilin fiilidir, classlar isimleridir gibi düşünmelisin. 
