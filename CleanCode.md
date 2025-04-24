@@ -201,6 +201,53 @@ public class Main {
 
 
 
+## SOLİD
+• **Single Responsibility Principle:**  Bir sınıfın değişmesi için asla birden fazla sebep olmamalıdır, tek sorumluluğa sahip olmalıdır.Dijkstra'nın Separation of Concerns prensibi bir uygulamasıdır. SRP'yi yukarıdan aşağıya doğru tanımlamak için; 
+
+> Paket:birlikte release edilen yapılar aynı pakette olmalıdır
+> Class:sadece bir şeyi soyutlamalı ve sadece o şeyle ilgili veri ve davranışa sdahip olmalı
+> Metot: Sınıfın soyutladğığ şeyle ilgili tekrar kullanılabilecek bölünemez tek bir iş yapmalıdır. 
+> Block: metot seviyesine çıkamamış dolayısıyla da tekrar kullnımı söz konusu olmayan ama ya hep ya hiç şeklinde çalışan bir grup cümle olmalıdır.
+> Statement: Bir metodun ya da bir bloğun parçası olarak bir işin tek bir adımını rahat anlaşılır şekilde gerçekleştirmelidir. Bir satırda sadece bir statement olmalıdır ve sadece bir adımı yerine getirmelidir. Tek bir cümlelelik karmaşık ifadelerin hiç bir alt parçası başka yerde tekrar kullnılmamalıdır. Eğer aynı blokta ya da metotta kullanılacaksa bu alt parçalara ayrı bir cümle olmalı ve sonucu local bir değişkende saklanıp tekrar kullanılmalıdır.
+
+```java
+double w=a+ ++b *c/a+b+2*c/a;
+```
+
+```java
+//Öncelik sıralaması;parantez > artırma-eksiltme operatörleri > çarpma-bölme > toplama-çıkarma  
+//w=a+ (++b *c/a)+b+(2*c/a); çöcelikleri parantez olarak gösterdik
+double w=0.0;
+++b;
+double d=b*c/a
+double f=d*c/a
+w=a+d+b+f 
+```
+
+Yüksek ifade gücüne sahip yapılar SRP'ye tersmiş gibi görünebilir ama bu ifadeler bağlamsaldır ve kültürel bir normdur.Buna güzel bir örnek Builder kalıbıdır.  Aşağıdaki kodda aynı objeyi döndürdüğü için yeni metot çağrıları yapmakta bir problem yoktur.
+
+```java
+return Response.status(Response.Status.OK).entity(message).type(MediaType.TEXT_PLAIN).build();
+```
+Fonksiyonel stilde stream ile veri işlemede(average'a kadar hep stream döndürür); 
+
+```java
+Arrays.stream(array).filter(x->x%2==0).map(n->n*n).average().ifPresent(System.out::println);
+```
+
+Aynı satorda farklı nesneler üzerindeki çağrıları zincirleyen ifadeler kullanılmamalıdır. Aşağıdaki gibi örneklerde null gelmesi gibi problemler de taşır;
+
+```java
+//nesneler; ShoppingCard / List<Item> / Item / List<Customer> / int
+shoppingCard.getItemList().get(0).recommendedBy().size();
+```
+```java
+//olması gerektiği şekil
+List<Item> listItem= shoppingCard.getItemList().get(0);
+int remommendedBySize= listItem.recommendedBy(),size();
+> 
+>
+> 
 
 
 
