@@ -204,9 +204,40 @@ public class Main {
 ## SOLİD
 • **Single Responsibility Principle:**  Bir sınıfın değişmesi için asla birden fazla sebep olmamalıdır, tek sorumluluğa sahip olmalıdır.Dijkstra'nın Separation of Concerns prensibi bir uygulamasıdır. SRP'yi yukarıdan aşağıya doğru tanımlamak için; 
 
-> Paket:birlikte release edilen yapılar aynı pakette olmalıdır
-> Class:sadece bir şeyi soyutlamalı ve sadece o şeyle ilgili veri ve davranışa sdahip olmalı
-> Metot: Sınıfın soyutladğığ şeyle ilgili tekrar kullanılabilecek bölünemez tek bir iş yapmalıdır. 
+- Paket:birlikte release edilen yapılar aynı pakette olmalıdır
+- Class:sadece bir şeyi soyutlamalı ve sadece o şeyle ilgili veri ve davranışa sdahip olmalı
+- Metot: Sınıfın soyutladığı şeyle ilgili tekrar kullanılabilecek bölünemez tek bir iş yapmalıdır. Metıtlar dört tipe ayrılır.   
+  • Constructors, nesne oluşturma ve initialization. Burada nesne oluşturma haricinde başka bir iş yapmamaya dikkat etmeliyiz.
+Nesnenin karmaşıklıüğına göre çok parametre alabilirler. Ancak dikkat etmeliyiz ki çok fazla parametre kötü tasarlanmış bir classında göstergesidir.Bu durumun önüne geçmek için kurucuları daha az parametre alacak hale getirip diğer geçilmesi gereken parametreleri statick factory metotlarıyla geçebiliriz. Parametrelerin oluşturulması gerektiği durumlar istemciler için problemdir. Böyle duumlarda yaratımsal kalıplar(creational patterns) kullanımalıdır. İstemcinin hem nesne yaratması hem de parametre oluşturup geçmesi gerektiği durumlardan kaçınmalıyız. 
+
+
+
+  Constructorlarda sıklıkla init(), initialization() vb isimlere sahip, initialization yapan metotların çağırıldığı görülür. Bu tür metotlar yerine nesne başlatma bloklarını kullanmayı tercih etmeliyiz.
+   > **Instance Initialization Blocks(Nesne Başlatma Blokları);** constructorlardan bağımsız olarak kullanılan kod bloklarıdır. Bir nesne için belirli initialization işlemlerini ortak bir şekilde yapmaktır. {} içinde tanımlanır, constructordan önce veya sonra tanımlanabilir. Classın bir nesnesi oluşturulduğunda bu bloklar **her zaman**  constructordan önce otomatik olarak çağırılır.(Nesne oluştulmuşsa constructor çok çağırılmış demek değil midir? 
+ Bir nesne oluşturulurken "new ClassName()" dediğimizde derleyici ilk olarak classı yükler ve bellekte yer ayırma işlemleri yapar. Nesne başlatma blokları yürütülür böylece gerekli olan ön hazırlıklar yapılır sonrasında constructor çağırılır ve  nesneyle ilgili son düzenlemeler yapılarak oluşturulur.  )
+
+  ```java
+   public class Example {
+    // Nesne başlatma bloğu
+    {
+        System.out.println("Bu bir nesne başlatma bloğudur.");
+    }
+
+    // Constructor
+    public Example() {
+        System.out.println("Constructor çalıştırıldı.");
+    }
+
+    public static void main(String[] args) {
+        Example obj = new Example();
+    }
+}
+```
+
+
+ - Set/Get, bilgi alıp verme
+ - toString, equals(),java.lang.Object gibi devralınan metotlar yüksek birlikteliğe sahiplerdir -> hr sorumlulukları bellidir hem de uygun arayüzleri vardır. 
+ - İşi yapan metotlar, ikiye ayrılırlar; atomic/worker metotlar(yaptıkları işler daha alt parçalara bölünemez), yöneten/yönetsel/koordinative metotlar(bir süreci yerine getirirler yani birden fazla atomic metodun çalışmasını koordine ederler, bir sürü atomic metodu bir arada götüren(atomic metotları ayrı olarak atomic olarak yazmamış) metotlar yönetsel ya da atomic metot değillerdir).
 > Block: metot seviyesine çıkamamış dolayısıyla da tekrar kullnımı söz konusu olmayan ama ya hep ya hiç şeklinde çalışan bir grup cümle olmalıdır.
 > Statement: Bir metodun ya da bir bloğun parçası olarak bir işin tek bir adımını rahat anlaşılır şekilde gerçekleştirmelidir. Bir satırda sadece bir statement olmalıdır ve sadece bir adımı yerine getirmelidir. Tek bir cümlelelik karmaşık ifadelerin hiç bir alt parçası başka yerde tekrar kullnılmamalıdır. Eğer aynı blokta ya da metotta kullanılacaksa bu alt parçalara ayrı bir cümle olmalı ve sonucu local bir değişkende saklanıp tekrar kullanılmalıdır.
 
