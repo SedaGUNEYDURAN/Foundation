@@ -65,9 +65,9 @@ public class App{
 - Dosya çalıştırılır;
   > ./target/native-demo 
 - native image ile uyumsuz olabilecek kütüphanelere dikkat edilmelidir(reflection yoğun kullanımı, dynamic proxy,JNI, classpath scanning ...). Eğeruyumsuz durumlar varsa bunlar için ek olarak configürasyon dosyaları gerekir.
-> java -agentlib:native-image-agent=config-output-dir=./META-INF/native-image -jar yourapp.jar
-**agentlib:native-image-agent=**; (ajan)Runtimeda reflection, proxylerin ve diğer özel durumların kullanılmasını takip eder.
-**config-output-dir=./META-INF/native-image**; Elde edilen configürasyon dosyalarını bu klasöre yazar. Configürasyon dosyaları ./META-INF/native-image
-**-jar yourapp.jar**; Uyugulamyı başlatır ve arkadan ajan gerekli bilgileri toplar. 
+> java -agentlib:native-image-agent=config-output-dir=./META-INF/native-image -jar yourapp.jar  
+**agentlib:native-image-agent=**; (ajan)Runtimeda reflection, proxylerin ve diğer özel durumların kullanılmasını takip eder.   
+**config-output-dir=./META-INF/native-image**; Elde edilen configürasyon dosyalarını bu klasöre yazar. Configürasyon dosyaları ./META-INF/native-image   
+**-jar yourapp.jar**; Uyugulamyı başlatır ve arkadan ajan gerekli bilgileri toplar.   
 - Native image oluşturmak fazla CPU ve RAM tüketir, en az 8 GB RAM önerilir.
 
