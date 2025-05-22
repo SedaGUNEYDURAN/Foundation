@@ -1,3 +1,5 @@
+## Temel Tanımlar  
+
 •**Protokol;** bir işi düzenleyen kurallar dizisidir.Ağ protokolleri de ağlar 
 arası bağlantı ve iletişimi düzenler.   
 • **IP(Internet Protocol**),ABD'nin savunma amaçlı geliştirdiği bir 
@@ -396,7 +398,7 @@ Paketin vuracağı C adresinin MAC adresini bulur ve paketi o bacaktan ağa
 çıkartır. Router IP paketinin alıcı ve gönderen IP adresleri kısmına dokunmaz. 
 Değişen tek şey MAC adresidir;
 
-![Uploading image.png…]()
+![image](https://github.com/user-attachments/assets/7446d610-8fbb-4b59-9820-fa6824e672e1)
 
 • **NAT(Network Address Translation):** Bir ağda bulunan bilgisayarın kendi ağı 
 dışında başka bir ağa veya internete çıkarken farklı bir IP adresi kullanabilmesi 
@@ -407,7 +409,11 @@ adresini silip kendisinin dışa bakan bacağının IP adresini yazar. Bu arada
 paketin içeride hangi makinenin hangi portundan gelen paket , dışarıdaki hangi 
 makinenin hangi portuna gittiğine dair bir tabloya yazar. NAT’tan C’ye giden 
 paket;
-![Uploading image.png…]()
+
+![image](https://github.com/user-attachments/assets/c99d2866-7b57-498f-bba9-f679a5d76c63)
+
+
+
 
 • Paket C’ye ulaştığında C makinesi bu paketin A’dan geldiğini anlayamaz. 
 Çünkü pakette A’ nın adresi bulunmamakta.C m. akinesi cevap verecekti 
