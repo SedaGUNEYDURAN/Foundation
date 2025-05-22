@@ -23,7 +23,7 @@
 • Programlar run timeda metot ve fonksiyon çağrılarını izlemek için **call stack** kullanır.Her metot çağırıldığında call stacke, stack frame eklenir. Stack frame metodun local değişkenlerini, parametrelerini, geri dönüş adresini(metotlar arasında gezinirken, hangi metoda dönülerek programın devam edileceğini) içerir. Java'nın JVM'i bu işlemi gerçekleştirir ve metot çağrıları sırasında stack'i yönetir.    
 ## Queue
 • Stack gibidir, rastgele elemanlara erişemezsin. Yalnızca iki işlem vardır; kuyruğa alma(enqueue) ve kuyruktan çıkarma(dequeue). Listeye iki öğe eklersek ilk eklediğimiz son eklediğimizden önce çıkar; FIFO(First in First out) prensibi ile çalışır.
-
+• Time Complexity; Eleman eklemek O(1), eleman çıkarmak O(1), eleman aramak O(n)'dir. 
 ## Hash Table
 • Değerleri key ve value olarak depolar. Her key'e karşılık gelen bir tane değer bulunur. Bir anahtar bir kez var olabilir;bir değer biden fazla olabilir. **Ekleme sırasına göre depolama yapmaz.** Oldukça hızlıdır; search, insert, delete time complexity'si O(1)'dir.Worst case durumda ise search,insert, delete time complexity'si O(n)'e gider. Worst case durum; hash tablosundaki bütün itemlar aynı slottadır.  
 ![image](https://github.com/user-attachments/assets/15603aae-a349-47e5-9f19-dcf7ba7941d5)
@@ -65,7 +65,7 @@ phone_book={} <---- same as phone_book=dict()
 ![image](https://github.com/user-attachments/assets/77df6825-161b-44bb-9ba7-46a4b3ec8935)
 
 • Tree, graph'ın hiçbir kenarı geri işaret etmediği özel bir türüdür.     
-• **BFS(Breadth First Search):**  İki şey arasındaki en kısa mesafeyi bulmamızı sağlar.  Nodeları ekleme sırasına göre kontrol etmek gerekir. Bu yüzdende -FIFO prensibi ile çalıştığı için- queue kullanılabilir. Bir düğüm kontrol edildikten sonra tekrar kontrol edilmemelidir, algoritma sonsuz döngüye girebilir. Bunu önlemek için bir düğüm gezildiğinde kaydedilmeli, visited set veya liste tutulmalıdır.  
+• **BFS(Breadth First Search):**  İki şey arasındaki en kısa mesafeyi bulmamızı sağlar.  Nodeları ekleme sırasına göre kontrol etmek gerekir. Bu yüzdende -FIFO prensibi ile çalıştığı için- queue kullanılabilir. Bir düğüm kontrol edildikten sonra tekrar kontrol edilmemelidir, algoritma sonsuz döngüye girebilir. Bunu önlemek için bir düğüm gezildiğinde kaydedilmeli, visited set veya liste tutulmalıdır. Time complexity; O(V+E)'dir(V:vertices E:edges ) 
 
 Aşağıdaki graph;
 
@@ -74,6 +74,13 @@ Aşağıdaki graph;
 için algortimanın çalışma şekli;
 
 ![image](https://github.com/user-attachments/assets/0c621ace-4285-46ae-8b3a-2e6e9692c9ad)
+
+Burada algoritmada Peggy'nin iki komşusu var ama her node bir kere ziyaret edilomeli.Bu yüzden gezilen nodelar işaretlenmeli ve tekrar gezilerek ekstra maaliyet çıkarılmamalı(eğer bunu yapmazsak infinite loop :) );  
+| Alice | Claire | Bob |  
+| Claire | Bob | Peggy |  
+| Bob | Peggy| Thom | Jonny |   
+| Peggy| Thom | Jonny| Anuj |  
+ 
 
 ## Recursion
  • Bir fonksiyonun kendisini çağırmasıdır. Her recursion fonksiyonun iki durumu vardır; base case and recursive case.   
