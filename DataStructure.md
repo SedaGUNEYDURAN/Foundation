@@ -22,7 +22,7 @@
     
 • Programlar run timeda metot ve fonksiyon çağrılarını izlemek için **call stack** kullanır.Her metot çağırıldığında call stacke, stack frame eklenir. Stack frame metodun local değişkenlerini, parametrelerini, geri dönüş adresini(metotlar arasında gezinirken, hangi metoda dönülerek programın devam edileceğini) içerir. Java'nın JVM'i bu işlemi gerçekleştirir ve metot çağrıları sırasında stack'i yönetir.    
 ## Queue
-• Stack gibidir, rastgele elemanlara erişemezsin. Yalnızca iki işlem vardır; kuyruğa alma ve kuyruktan çıkarma. Listeye iki öğe eklersek ilk eklediğimiz son eklediğimizden önce çıkar; FIFO(First in First out) prensibi ile çalışır.   
+• Stack gibidir, rastgele elemanlara erişemezsin. Yalnızca iki işlem vardır; kuyruğa alma(enqueue) ve kuyruktan çıkarma(dequeue). Listeye iki öğe eklersek ilk eklediğimiz son eklediğimizden önce çıkar; FIFO(First in First out) prensibi ile çalışır.   
 ![image](https://github.com/user-attachments/assets/0c621ace-4285-46ae-8b3a-2e6e9692c9ad)
 
 ## Hash Table
@@ -62,11 +62,11 @@ phone_book={} <---- same as phone_book=dict()
 ## Graph
 •  Bir graph algoritmasıdır.Graph bir dizi bağlantıyı modeller. Nodelardan ve edgelerden oluşur. Bir node birden çok mode ile bağlantılı olabilir ve bu nodelara neighbor denir. 
 ![image](https://github.com/user-attachments/assets/cb48b1eb-79ed-4b92-9d30-a97e1223c868)  
-• İki çeşittir; undirected ve directed. Undirected graphlar oklara sahip değildir ve her iki düğüm birbirinin komşusudur. Bazı düğümleri de işaret eden oklar vardır ancak onların işaret ettikleri oklarla nodelar yoktur, bunlar directed'dır.    
+• İki çeşittir; undirected ve directed. Undirected graphlar oklara sahip değildir ve her iki düğüm birbirinin komşusudur. Bazı düğümleri de işaret eden oklar vardır ancak onların oklarla işaret ettikleri nodelar yoktur, bunlar directed'dır.  Diyelim ki Seda nodu Furkan node'unu gösteriyor ama Furkan nodu herhangi bir node'u göstermiyor. Bu durumda Furkan node'u Seda node'unu komşusudur ama Seda node'u Furkan node'unun  komşusu değildir.   
 ![image](https://github.com/user-attachments/assets/77df6825-161b-44bb-9ba7-46a4b3ec8935)
 
 • Tree, graph'ın hiçbir kenarı geri işaret etmediği özel bir türüdür.     
-• **BFS(Breadth First Search):**  İki şey arasındaki en kısa mesafeyi bulmamızı sağlar.  nodeları ekleme sırasına göre kontroln etmek gerekir. Bu yüzdende queue kullanılabilir. FIFO prensibi ile çalıştığı için. Bir düğüğm kontrol edildikten sonra tekrar kontrol edilmemelidir, algoritma sonsuz döngüye girebilir. Bunu önlemek için bir düğüm gezildiğinde kaydedilmeli, visited set veya liste tutulmalıdır.  
+• **BFS(Breadth First Search):**  İki şey arasındaki en kısa mesafeyi bulmamızı sağlar.  Nodeları ekleme sırasına göre kontrol etmek gerekir. Bu yüzdende -FIFO prensibi ile çalıştığı için- queue kullanılabilir. Bir düğüm kontrol edildikten sonra tekrar kontrol edilmemelidir, algoritma sonsuz döngüye girebilir. Bunu önlemek için bir düğüm gezildiğinde kaydedilmeli, visited set veya liste tutulmalıdır.  
 
 ## Recursion
  • Bir fonksiyonun kendisini çağırmasıdır. Her recursion fonksiyonun iki durumu vardır; base case and recursive case.   
