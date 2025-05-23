@@ -65,22 +65,7 @@ phone_book={} <---- same as phone_book=dict()
 ![image](https://github.com/user-attachments/assets/77df6825-161b-44bb-9ba7-46a4b3ec8935)
 
 • Tree, graph'ın hiçbir kenarı geri işaret etmediği özel bir türüdür.     
-• **BFS(Breadth First Search):**  İki şey arasındaki en kısa mesafeyi bulmamızı sağlar.  Nodeları ekleme sırasına göre kontrol etmek gerekir. Bu yüzdende -FIFO prensibi ile çalıştığı için- queue kullanılabilir. Bir düğüm kontrol edildikten sonra tekrar kontrol edilmemelidir, algoritma sonsuz döngüye girebilir. Bunu önlemek için bir düğüm gezildiğinde kaydedilmeli, visited set veya liste tutulmalıdır. Time complexity; O(V+E)'dir(V:vertices E:edges ) 
 
-Aşağıdaki graph;
-
-![image](https://github.com/user-attachments/assets/3837a1c7-81d0-4f96-a64e-772590568a23)
-
-için algortimanın çalışma şekli;
-
-![image](https://github.com/user-attachments/assets/0c621ace-4285-46ae-8b3a-2e6e9692c9ad)
-
-Burada algoritmada Peggy'nin iki komşusu var ama her node bir kere ziyaret edilomeli.Bu yüzden gezilen nodelar işaretlenmeli ve tekrar gezilerek ekstra maaliyet çıkarılmamalı(eğer bunu yapmazsak infinite loop :) );  
-| Alice | Claire | Bob |  
-| Claire | Bob | Peggy |  
-| Bob | Peggy| Thom | Jonny |   
-| Peggy| Thom | Jonny| Anuj |  
- 
 
 ## Recursion
  • Bir fonksiyonun kendisini çağırmasıdır. Her recursion fonksiyonun iki durumu vardır; base case and recursive case.   
@@ -106,6 +91,9 @@ public int tailRecursiveFactorial(int n, int result) {
     return tailRecursiveFactorial(n - 1, n * result);
 }
  ```
+
+# Arama Algortimaları 
+
 ## Simple Search Algoritması
  • Belirli bir öğeyi bulabilmek için lineer arama yöntemidir. Time complexity:O(n) 
  
@@ -114,6 +102,22 @@ public int tailRecursiveFactorial(int n, int result) {
 ## Selection Sort
  • Şimdi 5 elemanı sıralayacağımızı düşünelim.(67,12,56,4,24). İlk eleman 67 bütün eleamnlarla karşılaştırılır. Kendisinden büyük bir sayı olmadığı için birinci sırada olur, bu işlem için 4 karşılaştır yapılır. 2. elemana geçilir ve karşılaştırılır.12, 56'dan küçük bu durumda 56 ile karşılaştırmaya devam edilir.Totelde 4 karşılaştır yapıldıktan sonra 2. sayının 56 olduğu belli olur. Bu şekilde bir bir azalarak sıralama yapılır. ilk elamnı bulmada n, ikinci elemanı bulmada n-1, üçüncü elemanı bulmada n-2 ... işlem yapılır. Bu durumda n(n+1)/2 işlem yapılır. Bu ne demek (n^2+n)/2 sabit sayılar bigO notasyonunda gösterilmediğine göre O(n^2) karmaşıklığa sahiptir. 
 
+• **BFS(Breadth First Search):**  İki şey arasındaki en kısa mesafeyi bulmamızı sağlar. Graph ya da tree yapılarında kullanılan temel arama algoritmasıdır.  Nodeları ekleme sırasına göre kontrol etmek gerekir. Bu yüzdende -FIFO prensibi ile çalıştığı için- queue kullanılabilir. Bir düğüm kontrol edildikten sonra tekrar kontrol edilmemelidir, algoritma sonsuz döngüye girebilir. Bunu önlemek için bir düğüm gezildiğinde kaydedilmeli, visited set veya liste tutulmalıdır.Başlangıç node'unda başlar ve komşularını keşfederek ara bulamadıkça alt seviyelere iner yani genişliğine arar. Başlangıç node'u belirlenir ve queue'ya eklenir. Queue boş olmadığı sürece queue'dan bir node çıkarılır ve ziyaret edilmiş olarak işaretlenir, komşu olan ve daha önce ziyaret edilmemiş node'lar queue'ya eklenir. Queue boşaldığında erişebilen tüm node'lar gezilmiş demektir.Edge ağırlığı olmayan durumlarda dijkstra algoritmasına göre daha avantajlıdır.  Time complexity; O(V+E)'dir(V:vertices E:edges ) 
+
+Aşağıdaki graph;
+
+![image](https://github.com/user-attachments/assets/3837a1c7-81d0-4f96-a64e-772590568a23)
+
+için algortimanın çalışma şekli;
+
+![image](https://github.com/user-attachments/assets/0c621ace-4285-46ae-8b3a-2e6e9692c9ad)
+
+Burada algoritmada Peggy'nin iki komşusu var ama her node bir kere ziyaret edilomeli.Bu yüzden gezilen nodelar işaretlenmeli ve tekrar gezilerek ekstra maaliyet çıkarılmamalı(eğer bunu yapmazsak infinite loop :) );  
+| Alice | Claire | Bob |  
+| Claire | Bob | Peggy |  
+| Bob | Peggy| Thom | Jonny |   
+| Peggy| Thom | Jonny| Anuj |  
+ 
 ## Divide & Conquer
  • Euclid’s algorithm; İki pozitif tam sayının en büyük ortak böleninin bulunması(EBOB).   
  • **QuickSort algoritması** divide&conquer mantığı ile çalışır ve oldukça hızlıdır. Pivot seçimi yapılarak iki parçaya bölünür;pivottan küçük olanlar pivotun solunda ve pivottan büyük olanlar pivotun sağında Bu işlem rekürsif olarak bölerek sağlanır. Bestcase'de ek alan kullanımı yapmaz space complexity(1), time complexity: O(n*logn). 
