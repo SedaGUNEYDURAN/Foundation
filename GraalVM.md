@@ -1,11 +1,14 @@
 • **JDK(Java Development Kit):** Java programlama diliyle yazılım geliştirmek için kullanılan bir araçtır. Java uygulamalarını yazmak, derlemek ve çalıştırmak için gerekli bileşenleri içerir;
-- **Java Derleyici(javac):** Java kodlarını derleryerek byte kodlara çevirir.  
+- **Java Derleyici(javac):** Java kodlarını derleyerek byte kodlara çevirir.  İki gruba ayrılır;
+
+> JIT(Just In Time) Derleme: Runtime da kodu derleyerek daha hızlı çalışmasını sağlayan VE JVM üzerinde çalışan bir mekanizmadır. Kodlar, byte kod çevirilir ve yorumlanarak çalıştılır ama sık kullanılan kod parçalarını makine koduna çevirerek CPU üzerinden doğrudan çalışmasını sağlar.Statik bir derleyici gibi kodu bir kere derleyip bırakmaz. Çalışma zamanı boyunca yapılan değişiklikleri de gözönünde bulundurur. 
+> AOT(Ahead of Time): Runtime'dan önce uygulama makine koduna çevrilir. Uygulama çalıştırıldığında ek bir derleme süreci olmaz, optimize edilmiş makine kodu çalışır. Başlangıç hızını arttırır, hafıza kullanımını azaltır. 
 - **JRE(Java Runtime Environment):** Java uygulamalarını çalıştırmak için gerekli olan kütüphaneleri ve sanal makineyi içerir.
-- **JVM(Java Virtual Machine):** Java kodlarını çalıştıran sanal makinediğr.
+- **JVM(Java Virtual Machine):** Java kodlarını çalıştıran sanal makinedir.
 - **jdb(Hata Ayıklama Aracı):** Java programlarındaki hataları bulmak ve düzeltmek için kullanılır.
 - **Java API Kütüphanesi:** Java'nın temel fonksiyonlarını sağlayan hazır bileşenlerdir.  
 
-## GraalVM
+# GraalVM
 • Hem java hem de başka dillerde yazılmış kodları hızlı ve verimli çalıştırmak için geliştirilmiş derleme platformudur. Yüksek performanslı JDK'dır. Farklı programlama dillerinde yazılmış kodları tek bir ortamda çalıştırabilir. Düşün ki bir python bir de java ile yazılmış programın var, birlikte çalıştırman gerekiyor ama sorun şu ki java JVM ile ile python interpreter ile çalışır. Bu noktada graalVM devreye giriyor. Farklı dilde yazılmış kodları tek bir çatı altında toplayarak çalıştırır.   
 • Graal derleyicisini içerir. Graal derleyicisi kodu hızlı ve verimli çalışacak şekilde dönüştürür, daha az kaynak tüketmesini sağlar.     
 • **Native Image**: Normalde Java programları JVM üzerinde çalışır; JVM açılır, sınıflar yüklenir...  Bu nedenle de program başlatıldığında geç açılır. GraalVM, Java programını doğrudan çalışan hızlı, bellek kullanımı düşük makineye özgü(native) binary bir dosyaya dönüştürebilir. Bu dosya JVM'e ihtiyaç duymaz. Açılış süresi çok kısadır. Bellek tüketimi çok düşüktür. Micro servisler için de çok avantajlıdır.  "java -jar" yerine ./program gibi çalıştırabiliriz.  Native image oluşturabilmek için gereksinimler;
@@ -71,3 +74,10 @@ public class App{
 **-jar yourapp.jar**; Uyugulamyı başlatır ve arkadan ajan gerekli bilgileri toplar.   
 - Native image oluşturmak fazla CPU ve RAM tüketir, en az 8 GB RAM önerilir.
 
+
+  
+
+## Quarkus
+    • Cloud tabanlı, container dostu Java uygulamaları geliştirmek için bir frameworktür.Özellikler mikroservisler ve serverless mimariler için uygundur.
+    •**Quarkus**, GraalVM'in native image derleme işleminden faydalanarak Java'nın AOT derleme yönetemi ile çalıştırabilir.Bu sayede uygulamalar daha hızlı başlar, daha düşük bellek tüketir ve performans artar. 
+• 
