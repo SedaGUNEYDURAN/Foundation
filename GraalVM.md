@@ -75,9 +75,16 @@ public class App{
 - Native image oluşturmak fazla CPU ve RAM tüketir, en az 8 GB RAM önerilir.
 
 
-  
-
+• **Helidon**, açık kaynaklı Java tabanlı bulut uygulamaları oluşturmayı kolaylaştıran frameworktür. Hızlı başlatma süresi, düşük bellek tüketimi, GraalVM desteği gibi avantajları vardır.   
+• **Micronaut**, Spring ve Grails gii frameworklere benzer ancak onlardan daha hızlı başlatma süresi ve bellek kullanımına sahiptir. GraalVM desteği sunar. AWS Lambda, Google Cloud Functions, Microsoft Azure gibi cloud hizmetleriyle entegredir. Dependency Injection runtimeda değil compile time da, bu da performansı arttırır.   
+ 
 ## Quarkus
-    • Cloud tabanlı, container dostu Java uygulamaları geliştirmek için bir frameworktür.Özellikler mikroservisler ve serverless mimariler için uygundur.
-    •**Quarkus**, GraalVM'in native image derleme işleminden faydalanarak Java'nın AOT derleme yönetemi ile çalıştırabilir.Bu sayede uygulamalar daha hızlı başlar, daha düşük bellek tüketir ve performans artar. 
+    • Cloud tabanlı, container dostu Java uygulamaları geliştirmek için bir frameworktür.Özellikler mikroservisler ve serverless mimariler için uygundur.  
+    •**Quarkus**, GraalVM'in native image derleme işleminden faydalanarak Java'nın AOT derleme yönetemi ile çalıştırabilir.Bu sayede uygulamalar daha hızlı başlar, daha düşük bellek tüketir ve performans artar.   
 • 
+
+
+
+### Performansı Etkileyen Başka Faktörler
+•  **Dinamik Linkleme**: Programın derleme aşamasında tüm kütüphaneleri dahil etmek yerine çalıştırılması sırasında ihtiyaç duyulan kütüphanelerin yüklenmesini sağlar. Bu da bellek kullanımını optimize eder. Ayrıca kütüphaneler bağımsız olarak güncellenebilir böylece programın yeniden derlenmesine gerek kalmaz. Kütüphaneler hariç tutulduğu için programın exe dosyasının boyutu küçük olur. Ancak dezavantajları da vardır; run time da kütüphanelerin yüklenmesi fazla zaman alabilir, programın çalışması için gerekli kütüphanelerin sistemde bulunması gerekir. Bellek yönetimi ve güncellenebilirlikden dolayı tercih edilir.     
+•  **Statik Linkleme**: Programın derlenmesi aşamasında bütün kütüphaneler dahil edilir. Dosya boyutu dinamik belleğe göre daha büyüktür. Güncellenebilimesi için uygulamanın tekrar derlenmesi gerekir. Runtimeda uygulama daha hızlı çalışır. Bağımsız ve taşınabilir uygulamalar için tercih edilir. 
