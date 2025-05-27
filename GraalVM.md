@@ -79,8 +79,9 @@ public class App{
 • **Micronaut**, Spring ve Grails gii frameworklere benzer ancak onlardan daha hızlı başlatma süresi ve bellek kullanımına sahiptir. GraalVM desteği sunar. AWS Lambda, Google Cloud Functions, Microsoft Azure gibi cloud hizmetleriyle entegredir. Dependency Injection runtimeda değil compile time da, bu da performansı arttırır.   
  
 ## Quarkus
-    • Cloud tabanlı, container dostu Java uygulamaları geliştirmek için bir frameworktür.Özellikler mikroservisler ve serverless mimariler için uygundur.  
-    •**Quarkus**, GraalVM'in native image derleme işleminden faydalanarak Java'nın AOT derleme yönetemi ile çalıştırabilir.Bu sayede uygulamalar daha hızlı başlar, daha düşük bellek tüketir ve performans artar.   
+
+• Cloud tabanlı, container dostu Java uygulamaları geliştirmek için bir frameworktür.Özellikler mikroservisler ve serverless mimariler için uygundur.  
+•**Quarkus**, GraalVM'in native image derleme işleminden faydalanarak Java'nın AOT derleme yönetemi ile çalıştırabilir.Bu sayede uygulamalar daha hızlı başlar, daha düşük bellek tüketir ve performans artar.   
 • 
 
 
