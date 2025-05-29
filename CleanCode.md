@@ -65,7 +65,7 @@ Entity: İş alanı(business domain) nesneleridir. (JPA, EntityFramework vb. fra
 
 
 
-# Coupling (Bağlılık )
+### Coupling (Bağlılık )
 • Koordinasyon karmaşıklığı, bir işin kendi başına ifade edilebilirliğinin ya da diğerleriyle ne kadar ilgili(relatedness) olduğunun ölçüsüdür. İlgililik, bağlılıktır(coupling) ve bağımlılığı düşük olan bileşenlerin karmaşıklığı da düşüktür.Aslolan şey veri alışverişi değil hizmet alışverişidir. **Olabilecek en iyi coupling; veriler üzerinden değil davranışlar üzerinden olandır.**
 
   - **Low/loose/weak  coupling**: Bir classın başka bir classa olan bağımlılığı mümkün olduğunca azdır. Classlar arasındaki 
@@ -408,4 +408,87 @@ public void delete(Page page) {
 
 
 • Bazı programcılar Edsger Dijkstra’s kuralları ile oluşturulmmuş yapıyla yazar. Bu kurala göre bir fonksiyon içindeki her bloğun bir girişi bir de çıkışı olmalıdır. Fonksiyonda bir return ifadesi olması gerektiğini; break, continue, goto gibi ifadelerin hiçbir zaman olmaması gerektiği anlamına gelir.    
-• Fonksiyonlar bir dilin fiilidir, classlar isimleridir gibi düşünmelisin. 
+• Fonksiyonlar bir dilin fiilidir, classlar isimleridir gibi düşünmelisin.
+
+
+## Comments
+• Yorumlar aslında kendimizi ifade edemediğimizde kullanılır yani hatalı olduğumuz durumların telafisidir. Hatalı olduğumuz durumlar diyoruz çünkü koda bakan ilk anda ne yaptığımızı anlayamamaktadır. Clean code değil yani yazdığımız kod.   
+• Kod gelişir ve değişir zaman ile. Ancak programcılar genellikle bu gelişimi yorumlara yansıtmazlar ve yorumlar eski kalır, kodu ifade etmez hale gelir zamanla.  
+• Bir metodun ne yaptığını ne yapacağını bir yprumla bilgiyle vermektense adı ile anlatmaya çalışnmalıyız ne yaptığını adı belirtmeli  
+• Bir API yazarken yorumlarla desteklemekten çok iyi tanımlamayla desteklemeliyiz. Diyelim ki büyük genel bir API yazıyoruz o zaman javadoc kullanmalıyız.    
+ 
+ - **Javadoc**:Java programlama dilinde yazılmış class, interface, metotların ve fieldların dokümantasyonunu oluşturmak için kullanılan bir araçtır. Java ile gelir. Source kod üzerindeki özel commentlerden HTML formatında otomatik dokümantasyon üretilebilir.   
+
+ 
+```java
+/**
+* Bu class matematiksel işlemler içerir
+* @author Seda GÜNEY DURAN
+* @version 1.1
+*/
+public class Matematik(){
+  /**
+   *İki sayıyı toplar
+   *@param a birinci sayı
+   *@param b iklinci sayı
+   *@return a ve b'nin toplamı
+  */
+    public int topla(int a, int b){
+      return a+b;
+    }
+} 
+*/
+```
+
+Bu dosyanın HTML çıktısını oluşturabilmek için; **javadoc -d doc className.java**
+
+ 
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Matematik Class Documentation</title>
+</head>
+<body>
+    <h1>Matematik</h1>
+    <p>Bu class matematiksel işlemler içerir.</p>
+    
+    <h2>Author</h2>
+    <p>Seda GÜNEY DURAN</p>
+    
+    <h2>Version</h2>
+    <p>1.1</p>
+    
+    <h2>Method Summary</h2>
+    <table border="1">
+        <tr>
+            <th>Method</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><code>int topla(int a, int b)</code></td>
+            <td>İki sayıyı toplar.</td>
+        </tr>
+    </table>
+    
+    <h2>Method Detail</h2>
+    <h3>topla</h3>
+    <p><strong>Parameters:</strong></p>
+    <ul>
+        <li><code>a</code> - Birinci sayı</li>
+        <li><code>b</code> - İkinci sayı</li>
+    </ul>
+    <p><strong>Returns:</strong> <code>a</code> ve <code>b</code>'nin toplamı.</p>
+</body>
+</html>
+ 
+```
+
+> **@param**: metoda gönderilen parametreyi açıklar.  
+> **@return**: metodun geri dönüş değerini açıklar.  
+> **@throws** ve **@exception**: metodun fırlatabileceği istisnaları açıklar.  
+> **@author**: yazarı belirtir.  
+> **@version**:sürüm bilgisi  
+> **@see**:ilgili başka bir class/metoda yönlendirir.  
+> **@since**: hangi sürümden itibaren mevcut olduğunu belirtir.   
