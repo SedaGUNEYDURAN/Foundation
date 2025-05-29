@@ -492,3 +492,67 @@ Bu dosyanın HTML çıktısını oluşturabilmek için; **javadoc -d doc classNa
 > **@version**:sürüm bilgisi  
 > **@see**:ilgili başka bir class/metoda yönlendirir.  
 > **@since**: hangi sürümden itibaren mevcut olduğunu belirtir.   
+
+
+• İç içe çok fazla try-catch olduğunda bunun acısını commentlerle çıkarmamalıyız. Son try-catch'i farklı bir fonksiyona yönlendirerrek karmaşık görüntüden kaçınabiliriz. 
+
+```java
+private void startSending(){
+  try{
+    doSending();
+  } catch(SocketException e){
+    // normal. someone stopped the request.
+  } catch(Exception e){
+      try{
+        response.add(ErrorResponder.makeExceptionString(e));
+        response.closeAll();
+      } catch(Exception e1) {
+        //Give me a break! 
+      }
+  }
+}
+```
+
+Bu duruma çözüm olarak ;
+
+```java
+private void startSending(){
+  try{
+     doSending();
+  } catch(SocketException e){
+     // normal. someone stopped the request.
+  } catch(Exception e){
+     addExceptionAndCloseResponse(e);
+  }
+}
+private void addExceptionAndCloseResponse(Exception e){
+  try{
+    response.add(ErrorResponder.makeExceptionString(e));
+    response.closeAll();
+  } catch(Exception e1) {
+  }
+}
+```
+
+• Fonksiyonlarla ya da variablelara atayarak açıklayabileceğin şeyler için yorum yazarak olayı karmaşıklaştırma şimdi aşağıdaki koda bakalım ; 
+
+```java
+// does the module from the global list <mod> depend on the
+// subsystem we are part of?
+if (smodule.getDependSubsystems().contains(subSysMod.getSubSystem()))
+```
+Açıkçası ben böyle kodlarda yorum satırlarını başta ignorluyorum her yazılımcı gibi. Ancak ilk başta bakıldığında da kod anlaşılmıyor. Ne yapmış, nerden ne gelmiş, ne içeriyor diye bakıyor bir süre insan. Ama kodu aşağıdaki gibi yazsaydık; 
+
+```java
+ArrayList moduleDependees = smodule.getDependSubsystems();
+String ourSubSystem = subSysMod.getSubSystem();
+if (moduleDependees.contains(ourSubSystem))
+```
+Karmaşık tamamen gitti, açık sade anlaşılır bir kod oluştu. Gereksiz yorumlar da yok. 
+
+• Sıklıkla kullanılan position markerlar redundattır. Genellikle bazı işlevleri bir arada yapan kod parçaları için kullanılır(Kervan yolda da düzülür kafasıyla başladığım kodlarda yoldayken bu çok uzun oldu buna ayrı bir class açmak lazım diye düşündüğüm durumlarda kullanıyorum(kötü yazılımcı alert!)) Aşağıdaki gibi;
+
+```java
+// COI-VOCI //////////////////////////////////
+
+```
