@@ -417,7 +417,7 @@ public void delete(Page page) {
 • Bir metodun ne yaptığını ne yapacağını bir yprumla bilgiyle vermektense adı ile anlatmaya çalışnmalıyız ne yaptığını adı belirtmeli  
 • Bir API yazarken yorumlarla desteklemekten çok iyi tanımlamayla desteklemeliyiz. Diyelim ki büyük genel bir API yazıyoruz o zaman javadoc kullanmalıyız.    
  
- - **Javadoc**:Java programlama dilinde yazılmış class, interface, metotların ve fieldların dokümantasyonunu oluşturmak için kullanılan bir araçtır. Java ile gelir. Source kod üzerindeki özel commentlerden HTML formatında otomatik dokümantasyon üretilebilir.   
+ - **Javadoc**:Java programlama dilinde yazılmış class, interface, metotların ve fieldların dokümantasyonunu oluşturmak için kullanılan bir araçtır. Java ile gelir. Source kod üzerindeki özel commentlerden HTML formatında otomatik dokümantasyon üretilebilir. (HTML formatında üretiliyor diye kalkıp da bunu HTML kodu ile süslemeye-paragraf girintisi, başlık, <h1>,<h2> falan fistan- çalışma, yazılımcının işi değil bu, dosyadan sorumlu olan kişi, işi bu olan kişi yapsın bunu)  
 
  
 ```java
@@ -550,9 +550,17 @@ if (moduleDependees.contains(ourSubSystem))
 ```
 Karmaşık tamamen gitti, açık sade anlaşılır bir kod oluştu. Gereksiz yorumlar da yok. 
 
-• Sıklıkla kullanılan position markerlar redundattır. Genellikle bazı işlevleri bir arada yapan kod parçaları için kullanılır(Kervan yolda da düzülür kafasıyla başladığım kodlarda yoldayken bu çok uzun oldu buna ayrı bir class açmak lazım diye düşündüğüm durumlarda kullanıyorum(kötü yazılımcı alert!)) Aşağıdaki gibi;
+• Sıklıkla kullanılan position markerlar redundanttır. Genellikle bazı işlevleri bir arada yapan kod parçaları için kullanılır(Kervan yolda da düzülür kafasıyla başladığım kodlarda yoldayken bu çok uzun oldu buna ayrı bir class açmak lazım diye düşündüğüm durumlarda kullanıyorum ama kullanmamalıyım (kötü yazılımcı alert!)) Aşağıdaki gibi;
 
 ```java
 // COI-VOCI //////////////////////////////////
 
 ```
+
+• Koda ekleme yapan kişilerin yorum satırı ile kimin eklemeyi yaptığını yazması, uzun kodlarda }'dan sonra yorum satırı olarak neyin kapandığını belirtilmesi(//try gibi)   tamamen gereksizdir.    
+• Gereksiz olan bütün commentler silinmeli, kendimize hatırlatıcı olarak tuttuğumuz şeyleri commitlememeliyiz, bizden sonra gelenler onların çok önemli olduğunu düşünüp silmekten korkabilirler oysaki onlar birer çöp.   
+• İlla comment yazmak zorundaysak genel yorum yazılmamalı (classın başında)   
+
+
+## Formatting
+• 
