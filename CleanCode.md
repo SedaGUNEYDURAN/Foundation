@@ -368,16 +368,16 @@ public class GuessStatisticsMessage {
 
 
 ## Fonksiyonlar
-• Bir satır 1 50 karakterden uzun olmamalıdır. Bir fonksiyon ise 100 satırdan daha uzun olmamalıdır. Bir fonksiyon için 20 satır idealdir. Fonksiyonun girintisi 2'den daha fazla olmamalı ve sadece tek bir iş yapmalıdır.    
-• Metotlardan null döndürmemeye dikkat etmeliyiz.   
-• Fonksiyonun parametre almaması istenen durumdur ama gerekli durumlarda 1,2 parametre alabilir. Ancak 3 ve daha fazlası özel durumlar gerektirir, kullanmayı tercih etmemeliyiz. Geçtiğimiz argüman sistemin durumunda değişiklik yapmak amaçlı olmalıdır.Örneğin bir dosya açık ve metot ile bu dosyayı kapatmak istiyoruz. Açık olan dosyayı argüman olarak geçeriz fonksiyona    .
-• Bir metoda flag'i argüman olarak geçmek çok tercih edilmemesi gereken çirkin bir görüntüdür. 
-•  Birden çok argüman geçmek yerine bazı arghümanlardan nesne yaratarak argüman sayısını azaltmak aslında daha mantıklıdır.   
+• Bir satır 1 50 karakterden uzun olmamalıdır. Bir fonksiyon ise 100 satırdan daha uzun olmamalıdır. Bir fonksiyon için 20 satır idealdir. Fonksiyonun girintisi 2'den daha fazla olmamalı ve sadece tek bir iş yapmalıdır.       
+• Metotlardan null döndürmemeye dikkat etmeliyiz.      
+• Fonksiyonun parametre almaması istenen durumdur ama gerekli durumlarda 1,2 parametre alabilir. Ancak 3 ve daha fazlası özel durumlar gerektirir, kullanmayı tercih etmemeliyiz. Geçtiğimiz argüman sistemin durumunda değişiklik yapmak amaçlı olmalıdır.Örneğin bir dosya açık ve metot ile bu dosyayı kapatmak istiyoruz. Açık olan dosyayı argüman olarak geçeriz fonksiyona.    
+• Bir metoda flag'i argüman olarak geçmek çok tercih edilmemesi gereken çirkin bir görüntüdür.    
+•  Birden çok argüman geçmek yerine bazı arghümanlardan nesne yaratarak argüman sayısını azaltmak aslında daha mantıklıdır.      
 
 > Circle makeCircle(double x, double y, double radius) yerine;
 > Circle makeCircle(Point center, double radius);
  
-• Daha sade ve anlaşılır kod için hata işleme ile ana işlemler birbirinden ayrılmalıdır. Aşağıdaki kodda delete metodu hata işleme görevini icra etmektedir. deletePageAndAllReferences ise silme işlemlerini gerçekleştirmektedir. Bu ayrım kodu okuyan kişinin hata işlevini bir kenara bırakıp sadece ana işlevi anlayabilmesine olanak sağlamaktır. Eğer bir metotta try varsa metotun ana odağının buradda olduğu anlaşılmalı, metodun başında olmalı. catch veya finally'den sonra herhangi bir işlem yapılmamalı. Fonksiyonun hata işleme amaçlı olduğu bu şekilde açık bir şekilde görelebilir.   
+• Daha sade ve anlaşılır kod için hata işleme ile ana işlemler birbirinden ayrılmalıdır. Aşağıdaki kodda delete metodu hata işleme görevini icra etmektedir. deletePageAndAllReferences ise silme işlemlerini gerçekleştirmektedir. Bu ayrım kodu okuyan kişinin hata işlevini bir kenara bırakıp sadece ana işlevi anlayabilmesine olanak sağlamaktır. Eğer bir metotta try varsa metotun ana odağının buradda olduğu anlaşılmalı, metodun başında olmalı. catch veya finally'den sonra herhangi bir işlem yapılmamalı. Fonksiyonun hata işleme amaçlı olduğu bu şekilde açık bir şekilde görelebilir.     
 
 ```java
 
@@ -417,7 +417,7 @@ public void delete(Page page) {
 • Bir metodun ne yaptığını ne yapacağını bir yprumla bilgiyle vermektense adı ile anlatmaya çalışnmalıyız ne yaptığını adı belirtmeli  
 • Bir API yazarken yorumlarla desteklemekten çok iyi tanımlamayla desteklemeliyiz. Diyelim ki büyük genel bir API yazıyoruz o zaman javadoc kullanmalıyız.    
  
- - **Javadoc**:Java programlama dilinde yazılmış class, interface, metotların ve fieldların dokümantasyonunu oluşturmak için kullanılan bir araçtır. Java ile gelir. Source kod üzerindeki özel commentlerden HTML formatında otomatik dokümantasyon üretilebilir. (HTML formatında üretiliyor diye kalkıp da bunu HTML kodu ile süslemeye-paragraf girintisi, başlık, <h1>,<h2> falan fistan- çalışma, yazılımcının işi değil bu, dosyadan sorumlu olan kişi, işi bu olan kişi yapsın bunu)  
+ - **Javadoc**:Java programlama dilinde yazılmış class, interface, metotların ve fieldların dokümantasyonunu oluşturmak için kullanılan bir araçtır. Java ile gelir. Source kod üzerindeki özel commentlerden HTML formatında otomatik dokümantasyon üretilebilir. (HTML formatında üretiliyor diye kalkıp da bunu HTML kodu ile süslemeye-paragraf girintisi, başlık, h1,h2 falan fistan- çalışma, yazılımcının işi değil bu, dosyadan sorumlu olan kişi, işi bu olan kişi yapsın bunu)  
 
  
 ```java
