@@ -563,4 +563,6 @@ Karmaşık tamamen gitti, açık sade anlaşılır bir kod oluştu. Gereksiz yor
 
 
 ## Formatting
-• 
+• Amacı ; açık olmaktır. Team ile ortak belirlenen kurallara hareket edilmelidir.      
+• Class isimleri basit ve açık olmalıdır. Kodda aşağıdaya indikçe detay artmalıdır
+•Vertical Openness Between Concepts
