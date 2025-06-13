@@ -368,7 +368,7 @@ public class GuessStatisticsMessage {
 
 
 ## Fonksiyonlar
-• Bir satır 1 50 karakterden uzun olmamalıdır. Bir fonksiyon ise 100 satırdan daha uzun olmamalıdır. Bir fonksiyon için 20 satır idealdir. Fonksiyonun girintisi 2'den daha fazla olmamalı ve sadece tek bir iş yapmalıdır.       
+• Bir satır 150 karakterden uzun olmamalıdır. Bir fonksiyon ise 100 satırdan daha uzun olmamalıdır. Bir fonksiyon için 20 satır idealdir. Fonksiyonun girintisi 2'den daha fazla olmamalı ve sadece tek bir iş yapmalıdır.       
 • Metotlardan null döndürmemeye dikkat etmeliyiz.      
 • Fonksiyonun parametre almaması istenen durumdur ama gerekli durumlarda 1,2 parametre alabilir. Ancak 3 ve daha fazlası özel durumlar gerektirir, kullanmayı tercih etmemeliyiz. Geçtiğimiz argüman sistemin durumunda değişiklik yapmak amaçlı olmalıdır.Örneğin bir dosya açık ve metot ile bu dosyayı kapatmak istiyoruz. Açık olan dosyayı argüman olarak geçeriz fonksiyona.    
 • Bir metoda flag'i argüman olarak geçmek çok tercih edilmemesi gereken çirkin bir görüntüdür.    
@@ -563,6 +563,33 @@ Karmaşık tamamen gitti, açık sade anlaşılır bir kod oluştu. Gereksiz yor
 
 
 ## Formatting
-• Amacı ; açık olmaktır. Team ile ortak belirlenen kurallara hareket edilmelidir.      
-• Class isimleri basit ve açık olmalıdır. Kodda aşağıdaya indikçe detay artmalıdır
-•Vertical Openness Between Concepts
+• Amacı ; açık olmaktır. Team ile ortak belirlenen kurallara hareket edilmelidir. Bireysel kurallar karmaşıklık yaratır.          
+• Class isimleri basit ve açık olmalıdır. Kodda aşağıdaya indikçe detay artmalıdır.  
+• Yakın ilişkili olan variablelar olabildiğince class bazında korunmalıdır bunlara dışarıdan ulaşımı oldukça azaltmalıyız. Dışarıdan bir göz baktığında kodu anlamak için class class gezmek zorunda kalmamalı.   
+• Variable bildirimleri mümkün olduğunca en üstte olmalı, mümkün olduğunca da kullanımına yakın yerlerde tanımlanmalıdır. (Olabildiğince global olmamalı variablelar)    
+• Instance variablelar(bir classın instance'ı tarafından oluşturulan nesneye özgü variablelar), classın en üstünde bildirilmelidir. (Çünkü classın çoğu metodu kullanır)   
+• Bir metot diğerini çağırıyorsa çağırılan metot, çağıran metodun hemen altında olmalıdır, okunabilirliğin arttırılması için.    
+• Conceptual Affinity(Kavramsal Yakınlık) durumlarında da olabildğince yakında tanımlanmaları gerekir illa birbirini çağırmaları gerekmez. Aşağıdaki kod parçasında fonksiyonlar birbirilerini çağırmıyor ancak aynı görevin farklı varyasyonlarını gerçekleştiriyorlar ve metot adlandırmaları da kavramsal olarak yakın hatta aynıdır. Okuyucunun kafasının karışmaması için bu metotlar arka arkaya tanımlanmalıdır.   
+
+
+```java
+static public void assertFalse(String message, boolean condition) {
+assertTrue(message, !condition);
+}
+static public void assertFalse(boolean condition) {
+assertFalse(null, condition);
+}
+```
+
+• Bir satır okurken olabildğince scroll hareket ettirmeden okunabilecek sekilde yazılmış olmalıdır(en fazla 150 karakterden oluşsun ben satır)   
+• Atama operatörlerini vurgulamak için sağ ver sol taraflarına boşluklar bırakırız buna **white space** denir. Fonsiyonlar ile argümanlar yakından ilişkili olduğu için aralarında boşluk olmamalıdır parantez ile fonksiyon adlandırması arasında boşluk olmalıdır. 
+
+```java
+ private void measureLine(String line) {
+ lineCount++;
+ int lineSize = line.length();
+ totalChars += lineSize;
+ lineWidthHistogram.addLine(lineSize, lineCount);
+ recordWidestLine(lineSize);
+ }
+```
