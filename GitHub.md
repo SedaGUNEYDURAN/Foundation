@@ -157,7 +157,7 @@ git log --since=="2023-01-01"
 ```java
 git log --until="2023-12-31"
 ```
-•  Commit bilgilerini özelleltirilmiş bir formatta gösterir.Her commit bir satırda gösterilir.
+•  Commit bilgilerini özelleltirilmiş bir formatta gösterir.Her commit bir satırda gösterilir. **--pretty** komutu;çıktının görünüm şeklini yani formatını özelliştirmemi<i sağlar. **oneline** komutu; commit hashinin kısaltılmış halini ve sade ilk satırdaki commit mesajını verir ve her commit tek satırda görülür
 ```java
 git log --pretty=oneline
 ```
@@ -210,8 +210,13 @@ git reset --hard origin/master
 ```
 Localdeki master branchin commit geçmişini siler ve remotedaki(origin/master) branchi ile localdaeki branchimizi aynı hale getirir. 
 
+• Pushlamadığın commitlerini görmek için
+```java
+git log origin/master..HEAD --oneline --graph
+```
 
-
-
-
+**origin/master** : remote sunucudaki master branchin   
+**HEAD** : içinde bulunduğun branchin lokaldeki en güncel hali   
+**origin/master..HEAD** --> Benim local master branchimde olup da henüz Github'a gönderilmemiş yani push edilmemiş commitler nelerdir   
+**HEAD..origin/master** --> git pull yapmadığımızda ortaya çıkar. Githubda olup benim localimde olmayan neler var diye bakmak istersek   
 
