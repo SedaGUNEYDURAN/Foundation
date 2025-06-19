@@ -193,12 +193,22 @@ git checkout hashCodu
 ```java
 git show hashCode
 ```
-•  
+•  Diyelim ki bugfix için açtık bugfix21543 olsun adı. Ama değişiklikleri yanlışlıkla master branch'te yaptık, commitlemiş de olabilir yanlışlıkla. Bu durumda tek tek elle bugfix branchine taşımamıza gerek yok kodumuzu. Öncelikle açtığımız bugfix21543 branchini silmeliyiz(Eğer aynı adı kullanmak istiyorsak branchimizde)  
 ```java
+git checkout -b bugfix21543
 ```
 
+Bu komutla masterdaki değişiklikleri bugfix21543 adında yeni bir branch açıp ona taşıyoruz ve bugfix21543 brancgine geçiyoruz. 
+```java
+git checkout master
+```
 
+Master branch'e geçtik 
 
+```java
+git reset --hard origin/master
+```
+Localdeki master branchin commit geçmişini siler ve remotedaki(origin/master) branchi ile localdaeki branchimizi aynı hale getirir. 
 
 
 
