@@ -1,3 +1,5 @@
+# SQL SORGULARI
+
 •  Kullanıcıları listelemek için,
 ```SQL
 	SELECT user,host FROM mysql.user;
@@ -155,14 +157,74 @@ Bu ifade tablonun sütunlarını, veri türlerini, kısıtlamaları ve diğer ö
 
 
 
+# Bağlantılar
+•  Programlar database ile konuşmak için SQL komutlarını kullanır. Komutu Java kodunun içinde çalıştırmak istersek veritabanına bir bağlantı kurulur ve komutu göndeririz. Komutun gönderimi için Statement veya PreparedStatement kullanırız.    
+• **Statement(Güvensiz Yöntem)**; SQL sorgusu direkt metin olarak yazıldığı için dışarıdan gelen verilerle birleştirildiğinde tehlikeli olabilmekte.   
 
+```java
+Statement statement=connection.createStatement();
+ResultSet re=statement.executeQuery("SELECT * FROM MESSAGE WHERE ID=5");
+```
 
+• **PreparedStatement**; SQL sorgularını önceden derleyip parametreli bir şekilde çalıştırmamızı sağlar. Java'da veritabanı işlemleri için kullanılan JDBC(Java Database Connectivity) API'sinin bir parçasıdır. SQL injection yapılamaz, kod daha temiz ve okunaklı olur, sorgular önceden derlendiüği için daha hızlı çalışır.   
 
+```java
+PreparedStatement pStatement=connection.preparedStatement("SELECT * FROM MESSAGE WHERE ID=?");  //? bir placeholder'dır(yer tutucu)
+pStatement.setLong(1,5); // ilk ? placeholder'ı yerine 5 sayısını koyar. 
+ResultSet re=pStatement.executeQuery();
+```
 
+• **Örnek bir bağlantı;**
 
+```java
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
+public class JdbcExample {
+    public static void main(String[] args) {
+        String url = "jdbc:mysql://localhost:3306/your_database"; // Veritabanı bağlantı adresi
+        String user = "your_username"; // Veritabanı kullanıcı adı
+        String password = "your_password"; // Veritabanı şifresi
+	long userId = 1; // örnek değer
+   try (
+	 // Veritabanına bağlan
+        Connection connection = DriverManager.getConnection(url, user, password);
+	//Sorguyu çalıştır
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM usersb WHERE id=?");
+	){
+		//parametreyi yerleştir
+     		ps.setLong(1, userId);
+		//sorguyu çalıştır
+		ResultSet rs= ps.executeQuery();
+		while(rs.next()){
+			String name = resultSet.getString("name");
+                	String email = resultSet.getString("email");
+                	System.out.println("Ad: " + name + ", E-posta: " + email);;	
+		}
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
 
+```
+
+```SQL
+CREATE DATABASE testdb;
+USE testdb;
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(100)
+);
+INSERT INTO users(is,name,email) VALUES
+(1,'Seda Güney Duran', 'seda2guney@gmail.com'),
+(2,'Furkan Duran', 'furkanduran@gmail.com');
+
+```
 
 
 
