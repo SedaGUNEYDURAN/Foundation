@@ -596,3 +596,101 @@ assertFalse(null, condition);
 
 
 ## Objects and Data Structures
+• Aşağıdaki Concrete (Somut) Point kodunu inceleyelim;
+
+```java
+public class Point {
+    public double x;
+    public double y;
+}
+
+```
+Bu kodu incelediğimizde x, y koordinatlarının kulanımını gördüğümüz için kartezyen koordinat sisteminin kullanıldığını söyleyebiliyoruz. x, y değişkenlerine doğrudan erişilebiliyor(public). Verinin nasıl tutulduğu ve işlendiği açıkta. Değişkenler private olsaydı da get, set metotları ile erişilseydi de uygulamanın iç yapısı hala açık olurdu. Manipülasyona açık çünkü x ve y birbirinden bağımsız olarak değiştirilebiliyor. 
+
+• Aşağıdaki Abstract (Soyut) Point kodunu inceleyelim;
+
+```java
+public interface Point {
+    double getX();
+    double getY();
+    void setCartesian(double x, double y);
+    double getR();
+    double getTheta();
+    void setPolar(double r, double theta);
+}
+```
+
+Bu kodu incelediğimizde koordinatlar kartezyen mi polar mı bilmiyoruz, bilmek zorunda da değiliz. Yapı hangi sistemin kullanıldığını gizliyor.Veriyi tek tek değiştiremiyoruz, bir bütün olarak(atomik) değiştirmemiz zorunlu(setCartesian(double x, double y), setPolar(double r, double theta)  ) Bu yapı bize esneklik de sağlıyor. İleride koordinat sistemini değiştirmek istersek sınıfı değiştirmeden yapabiliriz, interface'i implemente eden sınıfı değiştirmemiz yeterli olur. **Abstract yapı ne yapılabileceğini tanımlar, nasıl yapıldığını söylemez.**    
+
+•  Yazılımcı duruma göre prosedürel ya da nesne yönelimli yaklaşım kullanır. 
+
+Aşağıdaki Prosedürel kodu inceleyelim;
+
+```java
+public class Square {
+ public Point topLeft;
+ public double side;
+}
+public class Rectangle {
+ public Point topLeft;
+ public double height;
+ public double width;
+}
+public class Circle {
+ public Point center;
+ public double radius;
+}
+public class Geometry {
+ public final double PI = 3.141592653589793;
+ public double area(Object shape) throws NoSuchShapeException 
+ {
+ if (shape instanceof Square) {
+ Square s = (Square)shape;
+ return s.side * s.side;
+ }
+ else if (shape instanceof Rectangle) {
+ Rectangle r = (Rectangle)shape;
+ return r.height * r.width;
+ }
+ else if (shape instanceof Circle) {
+ Circle c = (Circle)shape;
+ return PI * c.radius * c.radius;
+ }
+ throw new NoSuchShapeException();
+ }
+}
+```
+Veri yapıları(circle, square...) pasif yapıdadır. Geometri classı tüm şekillerin işlemlerini gerçekleştiriyor. Yeni metot eklemek kolaydır. Mevcut şekil sınıflarına dokunmadan sadece Geometry classı ile eklenir.  Dezavantajı ise yeni bir şekil türü eklendiğinde (triangle vs) bütün fonksiyonları güncellemek gerekir. Çünkü her şekil için ayrı ayrı işlem tanımı yapmak gerekir. Prosedürel yaklaşımda veriler pasif, işlemler aktiftir.       
+Aşağıdaki Polymorphic kodu inceleyelim;
+
+
+```java
+public class Square implements Shape {
+ private Point topLeft;
+ private double side;
+ public double area() {
+ return side*side;
+ }
+}
+public class Rectangle implements Shape {
+ private Point topLeft;
+ private double height;
+ private double width;
+ public double area() {
+ return height * width;
+ }
+}
+public class Circle implements Shape {
+ private Point center;
+ private double radius;
+ public final double PI = 3.141592653589793;
+ public double area() {
+ return PI * radius * radius;
+ }
+}
+```
+
+Classların hepsi Shape classını implemente ediyor yani ortak bir türü temsil ediyorlar.  Her şeklin area() metodu var ama her şekil kendi alanını kendi formülüne göre hesaplıyor. Yani area() metodu polimorfik çalışıyor. Object oriented programlamada yeni bir tür (burada şekil) eklemek kolaydır, yeni bir class açarsın override ederek metotlarını tanımlarsın. Ancak yeni fonksiyon eklemek biraz zordur çünkü her sınıfa bu fonksiyonu eklemek gerekir. Object oriented(nesne yönelimli yaklaşımda) classlar merkezi unsurdu. Her class kendi davranışını barındırır. 
+
+•  Yeni veri türleri(şekil, kullanıcı rolü, ürün tipi vs.) sıklıkla ekleniyorsa, yani sistem zaman içerisinde genişliyorsa ve tür çeşitliliği artıyorsa **Object Oriented  Yaklaşım** daha uygun olur. Çünkü yeni sınıf eklemek kolaydır ve mevcut kodu bozmaz.    
+•  Eğer veri türleri sabit kalıyor ancak veriler üzerine sıklıkla yeni işlemler geliştiriliyorsa **Prosedürel(işlem odaklı) Yaklaşım** daha uygun olur. 
