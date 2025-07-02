@@ -694,3 +694,13 @@ Classların hepsi Shape classını implemente ediyor yani ortak bir türü temsi
 
 •  Yeni veri türleri(şekil, kullanıcı rolü, ürün tipi vs.) sıklıkla ekleniyorsa, yani sistem zaman içerisinde genişliyorsa ve tür çeşitliliği artıyorsa **Object Oriented  Yaklaşım** daha uygun olur. Çünkü yeni sınıf eklemek kolaydır ve mevcut kodu bozmaz.    
 •  Eğer veri türleri sabit kalıyor ancak veriler üzerine sıklıkla yeni işlemler geliştiriliyorsa **Prosedürel(işlem odaklı) Yaklaşım** daha uygun olur. 
+• **Law of Demeter (LoD-Demeter Yasası)**, bir programın(başka bir yazılımcı API'yını kullanıyor gibi düşün) manipüle ettiği objenin yani nesnenin iç yapısını bilmemesi gerektiğini söyler. Classlar arasında low coupling olması gerektiğini belirtir, bağımlılıkları azaltır. Böylece daha kolay test edilebilir hale gelir. Her sınıfın kendi sorumluluğuna odaklanmasını sağlar, bakımı kolaydır.(talk to friends, not to strangers)   A classının b metodu yalnızca şu nesneelrin metotlarını çağırabilmelidir;
+
+- Kendi sınıfının (A sınıfının) diğer metotlarını
+- b metodu tarafından oluşturlan bir nesneyi
+- b metoduna parametre olarak gelen nesneleri
+- Classın instance variable olarak tuttuğu nesneleri   
+
+Yapılamamsı gereken durumlar;
+
+- Zincirleme çağrılar yapılamamalıdır(k.getA().getB().getC().do() ) Böyle bir durumda k nesnesi üzerinden, kendi doğrudan tanımadığı nesnelerin iç yapısına müdahale edilebiliyor.    
