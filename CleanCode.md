@@ -692,15 +692,34 @@ public class Circle implements Shape {
 
 Classların hepsi Shape classını implemente ediyor yani ortak bir türü temsil ediyorlar.  Her şeklin area() metodu var ama her şekil kendi alanını kendi formülüne göre hesaplıyor. Yani area() metodu polimorfik çalışıyor. Object oriented programlamada yeni bir tür (burada şekil) eklemek kolaydır, yeni bir class açarsın override ederek metotlarını tanımlarsın. Ancak yeni fonksiyon eklemek biraz zordur çünkü her sınıfa bu fonksiyonu eklemek gerekir. Object oriented(nesne yönelimli yaklaşımda) classlar merkezi unsurdu. Her class kendi davranışını barındırır. 
 
-•  Yeni veri türleri(şekil, kullanıcı rolü, ürün tipi vs.) sıklıkla ekleniyorsa, yani sistem zaman içerisinde genişliyorsa ve tür çeşitliliği artıyorsa **Object Oriented  Yaklaşım** daha uygun olur. Çünkü yeni sınıf eklemek kolaydır ve mevcut kodu bozmaz.    
-•  Eğer veri türleri sabit kalıyor ancak veriler üzerine sıklıkla yeni işlemler geliştiriliyorsa **Prosedürel(işlem odaklı) Yaklaşım** daha uygun olur. 
-• **Law of Demeter (LoD-Demeter Yasası)**, bir programın(başka bir yazılımcı API'yını kullanıyor gibi düşün) manipüle ettiği objenin yani nesnenin iç yapısını bilmemesi gerektiğini söyler. Classlar arasında low coupling olması gerektiğini belirtir, bağımlılıkları azaltır. Böylece daha kolay test edilebilir hale gelir. Her sınıfın kendi sorumluluğuna odaklanmasını sağlar, bakımı kolaydır.(talk to friends, not to strangers)   A classının b metodu yalnızca şu nesneelrin metotlarını çağırabilmelidir;
+•  Yeni veri türleri(şekil, kullanıcı rolü, ürün tipi vs.) sıklıkla ekleniyorsa, yani sistem zaman içerisinde genişliyorsa ve tür çeşitliliği artıyorsa **Object Oriented  Yaklaşım** daha uygun olur. Çünkü yeni sınıf eklemek kolaydır ve mevcut kodu bozmaz.       
+•  Eğer veri türleri sabit kalıyor ancak veriler üzerine sıklıkla yeni işlemler geliştiriliyorsa **Prosedürel(işlem odaklı) Yaklaşım** daha uygun olur.     
+• **Law of Demeter (LoD-Demeter Yasası)**, bir programın(başka bir yazılımcı API'yını kullanıyor gibi düşün) manipüle ettiği objenin yani nesnenin iç yapısını bilmemesi gerektiğini söyler. Classlar arasında low coupling olması gerektiğini belirtir, bağımlılıkları azaltır. Böylece daha kolay test edilebilir hale gelir. Her sınıfın kendi sorumluluğuna odaklanmasını sağlar, bakımı kolaydır.(talk to friends, not to strangers)   A classının b metodu yalnızca şu nesnelerin metotlarını çağırabilmelidir;
 
 - Kendi sınıfının (A sınıfının) diğer metotlarını
-- b metodu tarafından oluşturlan bir nesneyi
-- b metoduna parametre olarak gelen nesneleri
+- b metodu tarafından oluşturulan bir nesneyi
+- b metoduna parametre olarak geçilen nesneleri
 - Classın instance variable olarak tuttuğu nesneleri   
 
 Yapılamamsı gereken durumlar;
 
-- Zincirleme çağrılar yapılamamalıdır(k.getA().getB().getC().do() ) Böyle bir durumda k nesnesi üzerinden, kendi doğrudan tanımadığı nesnelerin iç yapısına müdahale edilebiliyor.    
+- Zincirleme çağrılar yapılamamalıdır(k.getA().getB().getC().do() ). Bu gibi durumlara **train wreck** denilmektedir. Böyle bir durumda k nesnesi üzerinden, kendi doğrudan tanımadığı nesnelerin iç yapısına müdahale edilebiliyor.
+ 
+ ```java   
+final String outputDir = ctxt.getOptions().getScratchDir().getAbsolutePath();
+```
+Yukarıdaki kod yerine aşağıdaki kod tercih edilmelidir. 
+
+ ```java 
+Options opts = ctxt.getOptions();
+File scratchDir = opts.getScratchDir();
+final String outputDir = scratchDir.getAbsolutePath();
+```
+
+- Hibrit(melez) yapılardan kaçınılmalıdır. Kodda bazen bir yapının hem davranışı yani fonksiyonları oluyor hem de içindeki veriler public oluyor. Bu tür yapılar, ne tam anlamıyla nesne ne de data structure olabiliyor. Fonksiyon eklemek zorlaşıyor çünkü bu yapılar zaten davranış içeriyor ve içi de dışarıya açık olduğu için kontrol zorlaşıyor. Herkes yapıya erişebildiği, değiştirebildiği için yeni veri eklemek zorlaşıyor çünkü bir şey değiştiğinde her şey bozulabiliyor. Veriyi mi koruyacağım yoksa davranışımı ikilemi yüzünden kod karmaşıklaşıyor. **Nesne davranış içeriyorsa veriler private olmalı, dışarısıyla sadece fonksiyonlar üzerinden etkileşim kurulabilmelidir.** **Eğer bir yapı sadece veri yapısı içeriyorsa(DTO, struct..) davranış ekleme.**
+
+> **Nesneye ne istediğimizi söylemeliyiz ne yapılacağını değil**
+> **Nesneler veri değil davranış sağlar**
+
+• Bir data structure'ın en temel biçimi metotları olmayan classtır. Sadece veri taşıyan bu classlara **DTO(Data Transfer Object)- Veri Taşıma Nesnesi** denir. Genellikle veritabanı ile uygulama arasında veri aktarırken, bir mesajı soket üzerinden gönderirken, API'lar arası veri taşırken kullanılırlar. Amacı bir veriyi bir yerden başka bir yere taşımaktır, veriyi işlemek değil. 
+• private olarak tanımladığımız variablelara getter ve setter üzerinden dolaylı olarak eriştiğimiz yapılara quasi-encapsulation(sözde kapsüllemem) denir. Bu erişim biçimi gerçek kapsülleme sağlamaz. Sadece veriye erişmenin yolu farklıdır. 
