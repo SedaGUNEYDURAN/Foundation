@@ -694,14 +694,15 @@ Classların hepsi Shape classını implemente ediyor yani ortak bir türü temsi
 
 •  Yeni veri türleri(şekil, kullanıcı rolü, ürün tipi vs.) sıklıkla ekleniyorsa, yani sistem zaman içerisinde genişliyorsa ve tür çeşitliliği artıyorsa **Object Oriented  Yaklaşım** daha uygun olur. Çünkü yeni sınıf eklemek kolaydır ve mevcut kodu bozmaz.       
 •  Eğer veri türleri sabit kalıyor ancak veriler üzerine sıklıkla yeni işlemler geliştiriliyorsa **Prosedürel(işlem odaklı) Yaklaşım** daha uygun olur.     
-• **Law of Demeter (LoD-Demeter Yasası)**, bir programın(başka bir yazılımcı API'yını kullanıyor gibi düşün) manipüle ettiği objenin yani nesnenin iç yapısını bilmemesi gerektiğini söyler. Classlar arasında low coupling olması gerektiğini belirtir, bağımlılıkları azaltır. Böylece daha kolay test edilebilir hale gelir. Her sınıfın kendi sorumluluğuna odaklanmasını sağlar, bakımı kolaydır.(talk to friends, not to strangers)   A classının b metodu yalnızca şu nesnelerin metotlarını çağırabilmelidir;
+### Law of Demeter (LoD-Demeter Yasası)
+• Bir programın(başka bir yazılımcı API'yını kullanıyor gibi düşün) manipüle ettiği objenin yani nesnenin iç yapısını bilmemesi gerektiğini söyler. Classlar arasında low coupling olması gerektiğini belirtir, bağımlılıkları azaltır. Böylece daha kolay test edilebilir hale gelir. Her sınıfın kendi sorumluluğuna odaklanmasını sağlar, bakımı kolaydır.(talk to friends, not to strangers)   A classının b metodu yalnızca şu nesnelerin metotlarını çağırabilmelidir;
 
 - Kendi sınıfının (A sınıfının) diğer metotlarını
 - b metodu tarafından oluşturulan bir nesneyi
 - b metoduna parametre olarak geçilen nesneleri
 - Classın instance variable olarak tuttuğu nesneleri   
 
-Yapılamamsı gereken durumlar;
+Yapılamaması gereken durumlar;
 
 - Zincirleme çağrılar yapılamamalıdır(k.getA().getB().getC().do() ). Bu gibi durumlara **train wreck** denilmektedir. Böyle bir durumda k nesnesi üzerinden, kendi doğrudan tanımadığı nesnelerin iç yapısına müdahale edilebiliyor.
  
@@ -721,5 +722,5 @@ final String outputDir = scratchDir.getAbsolutePath();
 > **Nesneye ne istediğimizi söylemeliyiz ne yapılacağını değil**
 > **Nesneler veri değil davranış sağlar**
 
-• Bir data structure'ın en temel biçimi metotları olmayan classtır. Sadece veri taşıyan bu classlara **DTO(Data Transfer Object)- Veri Taşıma Nesnesi** denir. Genellikle veritabanı ile uygulama arasında veri aktarırken, bir mesajı soket üzerinden gönderirken, API'lar arası veri taşırken kullanılırlar. Amacı bir veriyi bir yerden başka bir yere taşımaktır, veriyi işlemek değil. 
+• Bir data structure'ın en temel biçimi metotları olmayan classtır. Sadece veri taşıyan bu classlara **DTO(Data Transfer Object)- Veri Taşıma Nesnesi** denir. Genellikle veritabanı ile uygulama arasında veri aktarırken, bir mesajı soket üzerinden gönderirken, API'lar arası veri taşırken kullanılırlar. Amacı bir veriyi bir yerden başka bir yere taşımaktır, veriyi işlemek değil.    
 • private olarak tanımladığımız variablelara getter ve setter üzerinden dolaylı olarak eriştiğimiz yapılara quasi-encapsulation(sözde kapsüllemem) denir. Bu erişim biçimi gerçek kapsülleme sağlamaz. Sadece veriye erişmenin yolu farklıdır. 
