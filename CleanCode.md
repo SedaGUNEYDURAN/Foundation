@@ -285,19 +285,19 @@ int remommendedBySize= listItem.recommendedBy(),size();
 
 ## İsimlendirme
 
-• İsimlendirme yaparken neden var olduğunu, ne yaptığını, nasıl kullanıldığını anlatmalıdır. İyi isimlendirme comment satırı istemez.    
-• Aşırı benzer adlandırmalardan kaçınmak gerekir. Bize zaman kaybettirebilir;  XYZControllerForEfficientHandlingOfStrings ve XYZControllerForEfficientStorageOfStrings gibi.     
-• İsimlendirme yaparken küçük harf L ve büyük harf O kullanımına dikkat etmelisin. (o ve 1'e benzedikleri için)    
-• Noise words gereksizdir. Variable tanımlarken variable adında variable geçmemelidir(piVariable). Table tanımlarken table ile adlandırmak saçmadır. NameString diye bir adlandırma olabilir mi ? Name integer olamayacağına göre String olarak belirtmeye gerek yoktur. Ayrıca ileride variable'ın tipini değiştirirsek adını da değiştirmek zorunda kalırız.   
-• Adlandırmalar telafuz edilebilir şekilde olmalıdır. Biri ile konuşurken bahsedebileceğimiz anlaşılabilecek şekilde olmalıdır. Gereksiz yere kısaltarak anlaşılırlıktan fedakarlık edilmemelidir.   
-• Clean Code kitabının yazarı Martin Fowler, interface adlandırması yaparken kullanıcıya verdiği interfacein interface oldupunu kullanıcıya çaktırmak istemediğini söylüyor bunun(IShapeFactory) yerine ShapeFactoryImp, CShapeFactory ifadelerini kullanımayı tercih ettiğini söylüyor. (Bence IShapeFactory'nin kullanımı çok daha açık) . Interface'i implemente eden metodun isminin ShapeFactoryImp olması daha açık bir ifade olur baktığımızda bu classın bu interface'i implemete ettiğini direkt olarak anlarız. 
-• Method isimleri bir fiil olmalıdır, eylem belirtmelidir. (postPayment, deletePage)  
+• İsimlendirme yaparken neden var olduğunu, ne yaptığını, nasıl kullanıldığını anlatmalıdır. İyi isimlendirme comment satırı istemez.      
+• Aşırı benzer adlandırmalardan kaçınmak gerekir. Bize zaman kaybettirebilir;  XYZControllerForEfficientHandlingOfStrings ve XYZControllerForEfficientStorageOfStrings gibi.        
+• İsimlendirme yaparken küçük harf L ve büyük harf O kullanımına dikkat etmelisin. (o ve 1'e benzedikleri için)       
+• Noise words gereksizdir. Variable tanımlarken variable adında variable geçmemelidir(piVariable). Table tanımlarken table ile adlandırmak saçmadır. NameString diye bir adlandırma olabilir mi ? Name integer olamayacağına göre String olarak belirtmeye gerek yoktur. Ayrıca ileride variable'ın tipini değiştirirsek adını da değiştirmek zorunda kalırız.      
+• Adlandırmalar telafuz edilebilir şekilde olmalıdır. Biri ile konuşurken bahsedebileceğimiz anlaşılabilecek şekilde olmalıdır. Gereksiz yere kısaltarak anlaşılırlıktan fedakarlık edilmemelidir.      
+• Clean Code kitabının yazarı Martin Fowler, interface adlandırması yaparken kullanıcıya verdiği interfacein interface oldupunu kullanıcıya çaktırmak istemediğini söylüyor bunun(IShapeFactory) yerine ShapeFactoryImp, CShapeFactory ifadelerini kullanımayı tercih ettiğini söylüyor. (Bence IShapeFactory'nin kullanımı çok daha açık) . Interface'i implemente eden metodun isminin ShapeFactoryImp olması daha açık bir ifade olur baktığımızda bu classın bu interface'i implemete ettiğini direkt olarak anlarız.    
+• Method isimleri bir fiil olmalıdır, eylem belirtmelidir. (postPayment, deletePage)     
 • Constructorlar aşırı yüklendiğinde (overloaded), argümanları tanımlayan adlara sahip static factory metotları kullanılır.    
-**Complex fulcrumPoint=Complex.FromRealNumber(23.0); ** şeklinde yazmak Complex fulcrumPoint= new Complex(23.0);  şeklinde yazmaktan daha iyidir.   
+**Complex fulcrumPoint=Complex.FromRealNumber(23.0); ** şeklinde yazmak Complex fulcrumPoint= new Complex(23.0);  şeklinde yazmaktan daha iyidir.      
 
 
-• Metot yazarken tek bir işi yapmasına odaklanmalıyız, uzun anlaşılması zor, variableların her yerde kullanıldığı ve birden çok işin yapıldığı metotlar gelişime açık değildir. Bir değişiklik olduğunda bütün yapısını değiştirmek zorunda kalabiliriz.    
-Bu metot birden çok işi bir arada yapıyor,single responsibility ilkesine uymuyor, variablelar her yere saçılmış durumda.   
+• Metot yazarken tek bir işi yapmasına odaklanmalıyız, uzun anlaşılması zor, variableların her yerde kullanıldığı ve birden çok işin yapıldığı metotlar gelişime açık değildir. Bir değişiklik olduğunda bütün yapısını değiştirmek zorunda kalabiliriz.       
+Bu metot birden çok işi bir arada yapıyor,single responsibility ilkesine uymuyor, variablelar her yere saçılmış durumda.      
 
 ```java
 private void printGuessStatistics(char candidate, int count) {
@@ -417,8 +417,9 @@ public void delete(Page page) {
 • Bir metodun ne yaptığını ne yapacağını bir yprumla bilgiyle vermektense adı ile anlatmaya çalışnmalıyız ne yaptığını adı belirtmeli  
 • Bir API yazarken yorumlarla desteklemekten çok iyi tanımlamayla desteklemeliyiz. Diyelim ki büyük genel bir API yazıyoruz o zaman javadoc kullanmalıyız.    
  
- - **Javadoc**:Java programlama dilinde yazılmış class, interface, metotların ve fieldların dokümantasyonunu oluşturmak için kullanılan bir araçtır. Java ile gelir. Source kod üzerindeki özel commentlerden HTML formatında otomatik dokümantasyon üretilebilir. (HTML formatında üretiliyor diye kalkıp da bunu HTML kodu ile süslemeye-paragraf girintisi, başlık, h1,h2 falan fistan- çalışma, yazılımcının işi değil bu, dosyadan sorumlu olan kişi, işi bu olan kişi yapsın bunu)  
-
+ ### Javadoc
+  •  Java programlama dilinde yazılmış class, interface, metotların ve fieldların dokümantasyonunu oluşturmak için kullanılan bir araçtır. Java ile gelir. Source kod üzerindeki özel commentlerden HTML formatında otomatik dokümantasyon üretilebilir. API yazdığını düşün, kullanananın nasıl kullanacağını, metodun ne yaptığını anlatan bölümler yazmamıza olanak verir. Çağırdığımız metodun üstüne geldiğimizde mouse ile açıklaması parametrelerini ve return olarak ne döndüğü gibi bilgileri yazabilir. (HTML formatında üretiliyor diye kalkıp da bunu HTML kodu ile süslemeye-paragraf girintisi, başlık, h1,h2 falan fistan- çalışma, yazılımcının işi değil bu, dosyadan sorumlu olan kişi, işi bu olan kişi yapsın bunu)  
+• Öncelikle sınıf, metot ve alanlara Javadoc yorumları eklemeliyiz. İlgili alana gelip /** yazıp Enter'a basarsak eclipse otomatik olarak Javadoc şablonu oluşturur. 
  
 ```java
 /**
@@ -440,50 +441,7 @@ public class Matematik(){
 */
 ```
 
-Bu dosyanın HTML çıktısını oluşturabilmek için; **javadoc -d doc className.java**
-
- 
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Matematik Class Documentation</title>
-</head>
-<body>
-    <h1>Matematik</h1>
-    <p>Bu class matematiksel işlemler içerir.</p>
-    
-    <h2>Author</h2>
-    <p>Seda GÜNEY DURAN</p>
-    
-    <h2>Version</h2>
-    <p>1.1</p>
-    
-    <h2>Method Summary</h2>
-    <table border="1">
-        <tr>
-            <th>Method</th>
-            <th>Description</th>
-        </tr>
-        <tr>
-            <td><code>int topla(int a, int b)</code></td>
-            <td>İki sayıyı toplar.</td>
-        </tr>
-    </table>
-    
-    <h2>Method Detail</h2>
-    <h3>topla</h3>
-    <p><strong>Parameters:</strong></p>
-    <ul>
-        <li><code>a</code> - Birinci sayı</li>
-        <li><code>b</code> - İkinci sayı</li>
-    </ul>
-    <p><strong>Returns:</strong> <code>a</code> ve <code>b</code>'nin toplamı.</p>
-</body>
-</html>
- 
-```
+Bu dosyanın HTML çıktısını oluşturabilmek için; **javadoc -d doc className.java** (Yazılımcının bilmesine pek de gerek yok)
 
 > **@param**: metoda gönderilen parametreyi açıklar.  
 > **@return**: metodun geri dönüş değerini açıklar.  
@@ -723,4 +681,7 @@ final String outputDir = scratchDir.getAbsolutePath();
 > **Nesneler veri değil davranış sağlar**
 
 • Bir data structure'ın en temel biçimi metotları olmayan classtır. Sadece veri taşıyan bu classlara **DTO(Data Transfer Object)- Veri Taşıma Nesnesi** denir. Genellikle veritabanı ile uygulama arasında veri aktarırken, bir mesajı soket üzerinden gönderirken, API'lar arası veri taşırken kullanılırlar. Amacı bir veriyi bir yerden başka bir yere taşımaktır, veriyi işlemek değil.    
-• private olarak tanımladığımız variablelara getter ve setter üzerinden dolaylı olarak eriştiğimiz yapılara quasi-encapsulation(sözde kapsüllemem) denir. Bu erişim biçimi gerçek kapsülleme sağlamaz. Sadece veriye erişmenin yolu farklıdır. 
+• private olarak tanımladığımız variablelara getter ve setter üzerinden dolaylı olarak eriştiğimiz yapılara quasi-encapsulation(sözde kapsüllemem) denir. Bu erişim biçimi gerçek kapsülleme sağlamaz. Sadece veriye erişmenin yolu farklıdır.   
+
+## Error Handling 
+• Bir try-catch-finally ifadesinin try bölümü kod çalıştırdığımızda, yürütmenin herhangi bir noktasında sonlandırılabileceğini ve catch'ten devam edebileceğini ifade eder. Catch ise programımızın try bölümünde ne olursa olsun yani hata yakalansa bile programın mantığı bozulmamalı, veriler tutarsız hale gelmemelidir, yarım kalan işlemler düzgün bir şekilde tamamlanmalı, nesne durumları(state) beklenen halde bırakılmalıdır.  
