@@ -684,4 +684,88 @@ final String outputDir = scratchDir.getAbsolutePath();
 • private olarak tanımladığımız variablelara getter ve setter üzerinden dolaylı olarak eriştiğimiz yapılara quasi-encapsulation(sözde kapsüllemem) denir. Bu erişim biçimi gerçek kapsülleme sağlamaz. Sadece veriye erişmenin yolu farklıdır.   
 
 ## Error Handling 
-• Bir try-catch-finally ifadesinin try bölümü kod çalıştırdığımızda, yürütmenin herhangi bir noktasında sonlandırılabileceğini ve catch'ten devam edebileceğini ifade eder. Catch ise programımızın try bölümünde ne olursa olsun yani hata yakalansa bile programın mantığı bozulmamalı, veriler tutarsız hale gelmemelidir, yarım kalan işlemler düzgün bir şekilde tamamlanmalı, nesne durumları(state) beklenen halde bırakılmalıdır.  
+• Bir try-catch-finally ifadesinin try bölümü kod çalıştırdığımızda, yürütmenin herhangi bir noktasında sonlandırılabileceğini ve catch'ten devam edebileceğini ifade eder. Catch ise programımızın try bölümünde ne olursa olsun yani hata yakalansa bile programın mantığı bozulmamalı, veriler tutarsız hale gelmemelidir, yarım kalan işlemler düzgün bir şekilde tamamlanmalı, nesne durumları(state) beklenen halde bırakılmalıdır. 
+• Her bir exception hatanın kaynağını ve konumunu belirlemek için yeterli bilgi sağlamalıdır. Stack trace alınabilir ancak işlemin amacını bize söylemez. 
+• **Checked Exceptions:** Derleyici bu exceptionların mutlaka ele alınmasını ister, try/catch ile yakalanmalı ya da throws ile metot signature' bildirilmelidir. Genellikle dış ssitemlerle iletişim kurarken (dosya yazma, okuma, ağ işlemleri..) kullanılır.   
+
+
+ ```java
+import java.io.*;
+
+public class CheckedExample {
+    public static void readFile(String fileName) throws IOException {
+        FileReader reader = new FileReader(fileName); // IOException fırlatabilir
+        reader.read();
+        reader.close();
+    }
+
+    public static void main(String[] args) {
+        try {
+            readFile("dosya.txt");
+        } catch (IOException e) {
+            System.out.println("Dosya okuma hatası: " + e.getMessage());
+        }
+    }
+}
+ ```
+
+ - Checked exception kullanımı Open/closed Principle ile çelişir Diyelim ki A metodu checked exception(IOException) fırlatıyor. Bu hatayı gerçekten yakalan kod C kodunda, yani 3 seviye yukarıda A->B->C. Bu durumda hata potansiyeli taşıdığı için B metodu bu hatayı throws ile belirtmeli. Yani kodun alt seviyesinden yapılmış bir değişiklik yukarıdaki tüm katmanların metot imzalarını etkilemek zorunda kalır. Ama Open/Closed ilkesine göre kodu değiştirmeden yenidavranış ekleyebilmeliyiz. 
+
+• **Unchecked Exceptions:** Derleyici, bu istisnaların ele alınıp alınmadığını kontrol etmez. try/catch, throw ile belirtmek zorunda değiliz.Genellikle programın mantıksal hatalarıyla ilgilidir.(null referans, bölme hataları vb.) 
+
+ ```java
+public class UncheckedExample {
+    public static void divide(int a, int b) {
+        int result = a / b; // ArithmeticException oluşabilir
+        System.out.println("Sonuç: " + result);
+    }
+
+    public static void main(String[] args) {
+        divide(10, 0); // Sıfıra bölme hatası ArithmeticException
+    }
+}
+ ```
+
+• **Exception Wrapping**: Alt seviyede oluşan hatayı daha genel ve üst seviyeye uygun bir exception türü ile paketlemektir. Orijinal hatayı kaybetmeyiz, içine gömeriz. Alt seviyelerdeki hatalar üst seviyelerde anlamsız olabilir, kodun her yerine IOException,SQLException dağılmaması için uygulamaya özel bir exception ile sararız. Sade ,merkezi, okunabilir hale gelir.  
+
+ ```java
+public class Uygulama {
+    public static void main(String[] args) {
+        DosyaServisi servis = new DosyaServisi();
+
+        try {
+            String veri = servis.oku("veri.txt");
+            System.out.println("Dosya içeriği: " + veri);
+        } catch (DosyaOkumaHatasi e) {
+            System.out.println("Hata: " + e.getMessage());
+            // Orijinal hataya ulaşmak istersen:
+            e.getCause().printStackTrace();
+        }
+    }
+}
+
+ ```
+ ```java
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+public class DosyaServisi {
+    public String oku(String yol) {
+        try {
+            return new String(Files.readAllBytes(Paths.get(yol)));
+        } catch (IOException e) {
+            // Burada teknik hatayı kendi uygulama hatamıza sarıyoruz
+            throw new DosyaOkumaHatasi("Dosya okunamadı: " + yol, e);
+        }
+    }
+}
+
+ ```
+ ```java
+public class DosyaOkumaHatasi extends RuntimeException {
+    public DosyaOkumaHatasi(String mesaj, Throwable neden) {
+        super(mesaj, neden);
+    }
+}
+ ```
