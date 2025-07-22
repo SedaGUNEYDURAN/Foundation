@@ -684,9 +684,9 @@ final String outputDir = scratchDir.getAbsolutePath();
 • private olarak tanımladığımız variablelara getter ve setter üzerinden dolaylı olarak eriştiğimiz yapılara quasi-encapsulation(sözde kapsüllemem) denir. Bu erişim biçimi gerçek kapsülleme sağlamaz. Sadece veriye erişmenin yolu farklıdır.   
 
 ## Error Handling 
-• Bir try-catch-finally ifadesinin try bölümü kod çalıştırdığımızda, yürütmenin herhangi bir noktasında sonlandırılabileceğini ve catch'ten devam edebileceğini ifade eder. Catch ise programımızın try bölümünde ne olursa olsun yani hata yakalansa bile programın mantığı bozulmamalı, veriler tutarsız hale gelmemelidir, yarım kalan işlemler düzgün bir şekilde tamamlanmalı, nesne durumları(state) beklenen halde bırakılmalıdır. 
-• Her bir exception hatanın kaynağını ve konumunu belirlemek için yeterli bilgi sağlamalıdır. Stack trace alınabilir ancak işlemin amacını bize söylemez. 
-• **Checked Exceptions:** Derleyici bu exceptionların mutlaka ele alınmasını ister, try/catch ile yakalanmalı ya da throws ile metot signature' bildirilmelidir. Genellikle dış ssitemlerle iletişim kurarken (dosya yazma, okuma, ağ işlemleri..) kullanılır.   
+• Bir try-catch-finally ifadesinin try bölümü kod çalıştırdığımızda, yürütmenin herhangi bir noktasında sonlandırılabileceğini ve catch'ten devam edebileceğini ifade eder. Catch ise programımızın try bölümünde ne olursa olsun yani hata yakalansa bile programın mantığı bozulmamalı, veriler tutarsız hale gelmemelidir, yarım kalan işlemler düzgün bir şekilde tamamlanmalı, nesne durumları(state) beklenen halde bırakılmalıdır.     
+• Her bir exception hatanın kaynağını ve konumunu belirlemek için yeterli bilgi sağlamalıdır. Stack trace alınabilir ancak işlemin amacını bize söylemez.    
+• **Checked Exceptions:** Derleyici bu exceptionların mutlaka ele alınmasını ister, try/catch ile yakalanmalı ya da throws ile metot signature' bildirilmelidir. Genellikle dış ssitemlerle iletişim kurarken (dosya yazma, okuma, ağ işlemleri..) kullanılır.      
 
 
  ```java
