@@ -769,3 +769,14 @@ public class DosyaOkumaHatasi extends RuntimeException {
     }
 }
  ```
+
+• Null değeri döndürmemeye dikat etmeliyiz. Bunun yerine ya exception fırlatmalıyız ya da special case object döndürmeliyiz.Mesela bir liste ile ilgili bir durum olduğunda **Collection.emptyList()** döndürebiliriz. Bu metot bize boş ama güvenli bir liste verir.    
+
+• Null döndürmekten daha kötüsü metoda null geçmektir. Bunu önlemek için **assert** ifadesini kullanabiliriz. Ancak bu yöntemde runtimeda hata almamızın önene geçmez. Metoda null değeri geçilmesini yasaklamalıyız.    
+ 
+ -**assert**: Programın belirli bir noktada doğru olduğunu varsaydığımız bir koşulu test etmek için kullanılır. Eğer bu koşul yanlışsa Assert Error fırlatılır. Geliştirme ve test aşammalarında hataların erken farkedilmesi için kullanılır. Java assert default olarak devre dışıdır. Programı çalıştırabilmek için; **java -ea ProgramAdi** . -ea aneble assertions anlamına gelir.     
+ 
+ ```java
+int age = 15;
+assert age >= 18 : "Yaş 18'den küçük, oy kullanamaz!"; // age 18 den küçükse runtimeda AssertionError fırlatır ve hata mesajını gösterir. 
+ ```
