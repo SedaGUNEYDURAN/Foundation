@@ -5,6 +5,10 @@
 •  İlk önce kök düğüm oluşturulur. Sadece sağ ve sol çocuklar eklenir. Sol çocuklar daima parenttan küçük olmalıdır. Sağ çocuklar parent'tan büyük olmalıdır. Her eklenen düğüm leaf durumundadır(leaflerin çocuğu olmaz). Arama yapıldığında karşılaştırılmaya roottan başlanır. Karmaşıklığı Big O(logn). Delete ve insert işlemlerinin maaliyetleri yüksektir. Denge sorunu vardır.    
   
   -isLeaf();Bir ağaç veri yapısında belirli bir düğümün yaprak düğüm olup olmadığını kontrol etmek için kullanılır. Yaprak düğümler, hiçbir alt düğüme sahip olmayan son düğümlerdir.
+
+  •  **Heap**, binary tree üzerine kuruludur. Full complete tree doldurma yapmaktır amaç(yukarıdan aşağıya, soldan sağa doldurma işlemi yapılır.). İki türü vardır;
+>Max heap: parent düğümü child düğümünden büyük ya da eşit olmalıdır.   
+>Min heap ; parent düğümü child düğümünden küçük ya da eşit olmalıdır.
   
 ## Array & Linked List
 • Array'de tüm elemanlar bitişik-yanyana olarak depolanır. Bilgisayarı çekmeceli bir dolap gibi düşünelim. Her çekmecenin bir adresi vardır. Bir çekmeceye bir şey koymak istediğimizde bu çekmecenin bir adresi olduğunu düşünelim. Bunu gibi bir eleman eklemek istediğimizde de bilgisayar bize bir adres verir oraya ekleriz elemanımızı. Şemsiyemizi bir çekmeceye koyduk yanındaki çekmeceye de eldivenlerimizi koymak istiyoruz ama yan çekmece dolu ikisinin de bir arada durmasını istediğimiz için iki eşyayı da yan yana boş olan başka çekmecelere taşımamız gerekir. Ya da ya taraftaki dolu çekmeceyi sornaki çekmeceye onun içindeki sonrakini diyerek bütün elemanların yerini değiştirmemiz gerekir. Arrayden eleman silmek için de aynı durum geçerlidir. Random access'e izin verdiği için arraylar sıklıkla tercih edilir.     
