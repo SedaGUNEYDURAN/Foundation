@@ -1,6 +1,6 @@
 # Error Handling
 • **throw** Program çalışırken bir exception oluşturmak ve onu fırlatmak için kullanılır. Program akışında bir şeyler ters giderse programı durdurur ve exceptionı üst seviyeye gönderir. sadece bir exception objes ile kullanılabilir. Fırlatılacak olan exception genellikle new ile yaratılır. Fırlatılan exception Throwable sınıfından türemiş olmalıdır. throw çalıştığında akış durur, programın geri kalan kısmı çalışmaz.     
-• Exception'ı yakalayabilmek için **catch** ya da metot signatureda **throws** ile belirtilmelidir. 
+• Exception'ı yakalayabilmek için **catch** ya da metot signatureda **throws** ile belirtilmelidir.    
 • Java Reflection API kullanarak "method.invoke" metodu ile bir method çağırılır.Eğer çağırılan method bir exception fırlatırsa, bu exception doğrudan Reflection API tarafından fırlatılmaz. Bunun yerine InvocationTargetException exception'ını ile sarmalanır. Gerçek exception saklanmış olur. Asıl hataya neden olan exception **getCause()** methodu ile bulunur.    
 
 ## Exceptions
