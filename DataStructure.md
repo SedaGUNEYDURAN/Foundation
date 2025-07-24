@@ -131,13 +131,18 @@ Burada algoritmada Peggy'nin iki komşusu var ama her node bir kere ziyaret edil
 
  • **MergeSort algoritması** divide&conquer mantığı ile çalışır ve oldukça hızlıdır. Veri setini önce küçük parçalara ayırır sonrasında birleştirirken sıralama işlemi yapılır. Eğer bölme sırasında 3 eleman kalırsa 2'ye 1 şekilnde bölüm yapılır. Her durumda time complexity; O(nlogn). Ekstra bellek gerektirir, space complexity; O(n). Çünkü parçaları birleştirmek için geçici bir alan kullanır.   
 
+## Algoritma Complexity
+•  Bir algoritmanın performansını, ölçmek için kullanılan kavramdır. Algoritmanın performansı ne kadar hızlı çalıştığına, ne kadar kaynak yani bellek, zaman tükettiğine bakılarak hesaplanır.Asimptotik olarak Big-O notasyonu ile ifade edilir. İki türü vardır;  
+      
+- **Time Complexity:** algoritmanın çalışmasını tamamlamak için ihtiyaç duyduğu süredir.
+- **Space Coplexity:** algortimanın çalışması sırasında ihtiyaç duyduğu bellek miktarıdır. 
  
-## Big O Notation
+### Big O Notation
 Big O notasyonu işlem sayısını karşılaştırmamızı sağlar. Düşük karmaşıklıktan yüksek karmaşıklığa;  
-• O(1): sabit zaman  
-• O(logn): log time olarak bilir. Örnek; binary search   
-• O(n): n boyutunda bir listemiz varsa ve tek tek bütün elemanlar kontrol ediliyorsa n kere işlem yapmak gerekir. Örnek; linear time olarak bilinir. Örnek: Simple search   
+• O(1): sabit zaman, giriş verisinin büyüklüğünden bağımsızdır.  
+• O(logn): log time olarak bilinir yani logaritmik zamanlıdır. Giriş verisinin büyüklüğünün logaritması ile orantılıdır. Örnek; binary search   
+• O(n): doğrusal zamanlıdır. Giriş verisinin büyüklüğü ile doğru orantılıdır.  n boyutunda bir listemiz varsa ve tek tek bütün elemanlar kontrol ediliyorsa n kere işlem yapmak gerekir. Örnek; linear time olarak bilinir. Örnek: Simple search   
 • O(n*logn): Örnek: Hızlı sıralama algortimalarıdır. Quicksort gibi   
-• O(n^2): Örnek: Yavaş sıralama algoritması. Selection sort gibi    
+• O(n^2): kare zamanlıdır. Giriş verisinin büyüklüğünün karesi ile orantılıdır.Örnek: Yavaş sıralama algoritması. Selection sort gibi    
 • O(2^n):  
 • O(n!): yavaş algoritma. Buna travelling saleperson problem denir.   
