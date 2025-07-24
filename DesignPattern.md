@@ -314,8 +314,17 @@ public class A{
   - **Protected Variable:** Değişimlere karşı bir modelin veya sistemin esnekliğini artırmak için değişim noktalarını ve kararsızlıkları bir koruyucu katman ile izole edilir. Bu sayede diğer bölümler bu değişimden etkilenmez.
 
 # Designs Pattern
-•Design Pattern, nesne yaratmayı soyutlar ve nesne yaratma kodlarının etrafa dağılmasını önler.  
-## Singleton
+• Design Pattern, nesne yaratmayı soyutlar ve nesne yaratma kodlarının etrafa dağılmasını önler.  Design Pattern'ları temel olarak 3 başlık altında inceleyebiliriz; Creational Patterns, Structual Patterns, Behavioral Pattern.    
+
+## Creational Patterns
+• Nesne oluşturma sürecini kontrol eder. 5 ana başlık altında inceleyebiliriz;
+ - Singleton:Sadece bir instance'ı olan sınıf sağlar.
+ - Factory Method: Alt sınıfların hangi nesneyi oluşturacağına karar vermesini sağlar.
+ - Abstract Factory: İlgili nesne gruplarını oluşturmak için interface sağlar.
+ - Builder: Karmaşık nesneleri adım adım oluşturur.
+ - Protype: Mevcut nesnelerden koptalar oluşturarak yeni nesneler üretir.
+    
+### Singleton
 •Kısaca bir classtan sadece bir nesne yaratmaktır. Bir sınıftan bir tane nesne olmasından kasıt ise, herkesin istediği zaman bu sınıfın bir nesnesini oluşturmaya çalışmaması, oluşturamaması, var olan tek nesneyi kullanmasıdır. Singleton class oluşturmanın en az iki yolu vardır; 
   
   - Nesne yaratmayı kontrol etmek
@@ -391,7 +400,7 @@ public enum Singleton {
 • Singleton sınıfının nesnelerinin sayısı değişebilir, benzer yöntemler sayısı kontrol edilebilen nesneler oluşturulabilir.    
 • Bazı patternlerin gerçekleştirilmesinde Singleton pattern kullanılır; Abstract Factory, Builder, Prototype.    
 
-## Factory Method
+### Factory Method
 • Kısaca nesne yaratmayı soyutlamaktır. Bir nesne yaratmak için bir arayüz tanımlanır, fakat hangi sınıfın nesnesinin oluşturulacağını alt sınıflar karar verir. Factory method bir sınıfın nesne oluşturmasını alt sınıflara ötelenmesine izin verir,nesne oluşturma işlemini istemciden soyutlayarak. Böylece istemcinin hangi tür nesne oluşturacağını bilmeden nesne oluşturmasına olanak tanır.  
 
  ```java
@@ -504,7 +513,7 @@ public class Main {
 Bu örnekte main metodu çalışır. Logistics türünden RoadLogistics nesnesi oluşturulur.  roadLogistics.planDelivery() metodu çağırılır. planDelivery() metodu içinde RoadLogistics içinde override edilmiş olan createTransport() metodu çağırılır.Burada  createTransport() metodu Logistics sınıfının abstract bir metodu olmasına rağmen roadLogistics nesnesi RoadLogistic sınıfında tanımlı createTransport metodu çalıştırılır. RoadLogistic nesnesi RoadLogistics.createTransport() metodu bir Truck nesnesi döndürür. 
 transport.deliver() Truck nesnesi üzerinden deliver() metodunu çağırır. Track.deliver() metodu Kara yoluyla teslimat yapılıyor. mesajını ekrana bastırır.n
 
-## Abstract Factory
+### Abstract Factory
 • Temel amacı nesne ailesi yaratmayı soyutlamaktır. Birbiriyle ilgili ya da bağımlı nesne ailelerini, nesnelerin somut sınıflarını belirtmeden yaratmak için bir interface sağlamaktır.     
 • Abstract  Factory, tek nesne yerine, nesne ailesi oluşturmak üzere kullanılan bir kalıptır. Abstract Factory bir sınıftır, Factory Method ise bir metottur. Factory Method tek bir objenin, Abstract Factory birden fazla objenin yaratılmasını soyutlar. Bu nedenle Abstaract Factory birden fazla Factory Methoda sahiptir.    
 • Factory method tek bir nesneyi yaratmaktan sorumludur. Yaratılan nesne bir değil birden çok ise yapılacak şey birden fazla Factory method kullanmaktır. Bu durumda farklı Factory Methodlar farklı interfacelerde bulunur. Çünkü objeler arasında bir ilgi ya da bağımlılık yoktur. Benzer şekilde her bir obje için interface'i gerçekleştiren dolayısıyla da Factory Method'u ezen sınıflar oluşturulur. Elimizdeki nesneler , bir nesne ailesi oluşturuyorsa yani bu nesneler birbirleriyle ilgili nesnelerse, her birisi için ayrı ayrı oluşturulan ve farklı sınıflara konan Factory Method'larını bir araya toplayan sınıfın birlikteliğini düşürmez. Bu classa Abstract Factory denilir. **Kısaca abstract factory, birden fazla factory method kullanılarak oluşturulur.**   
@@ -616,7 +625,7 @@ public class ClassicTable implements Table {
 
 Burada ModernFurnitureFactory classından FurnitureFactory nesnesi yaratır(modernFactory). modernFactory nesnesi createChair() metodunu çağırır ve ClassicChair nesnesi yaratılır, bu nesne modernChair'a atanır.modernChair nesnesi  sitOn() metodunu çağırır ve  ekrana Sitting on a classic chair bastırır . 
 
-## Builder
+### Builder
 • Amaç karmaşık nesne yaratma sürecini kurgulamaktır. Proje karmaşıklıklaştıkça veya aynı nesne için farklı konfigürasyonlar söz konusu olduğunda nesne de karmaşıklaşır. Constructor çağrısı yaparak builder pattern'i ile bir süreç içinde yapılır. Bu kalıpta yaratmak(create) yerine inşa söz konusudur. Bu sebeple builder kelimesi ile süreçsellik vurgusu yapılmıştır.  
 • Bir nesnenin karmaşık olduğunun en temel göstergesi, çok parametre alan constructorlardır. -> Telecoping constructor anti-pattern(uzun kurucu anti pattern'i) Constructora geçilen parametrelerin de oluşturulması gerektiği düşünüldüğünde, bu sürecin soyutlanması gerektiği açıktır.  
 • Varsayılan constructor ve set metotları, uzun constructor problemini başka bir probleme çevirmektedir. Pek çok set metodunun çağrılmasının yanında yapılacak yanlışların, oluşturlan nesnenin durumunda problemlere yol açması da mümkündür. Ayrıca bu yaklaşım nesnnenin durumunu değişebilir yani mutable halde bırakmaktadır.  
@@ -724,7 +733,7 @@ class House {
 
 Burada House classının içinde, constructor ve zorunlu alanları içerir. HouseBuilder inner classının constructorı zorunlu parametreleri alır. Opsiyonel özellikler için setter benzeri metodları sağlar ve her bir metot HouseBuilder nesnesini döenr. build() metodu sonunda House nesnesini oluşturur. HouseBuilder inner classı static olarak tanımlanmıştır bu sayede HouseBuilder'ın instance'ın yaratmadan doğradan bu metotları kullanabildik. 
 
-## Prototype 
+### Prototype 
 •Bir örnek nesneden kopyalamayla  yeni nesneler türetmektir.Karmaşık nesneleri sıfırdan yaratmak yerine, hali hazırda elde var olan nesnelerden kopyalayarak(clone) elde etmek yoluna gidilebilir. Durumu kopyalanarak çoğaltılan nesne **prototip** ya da örnek nesnedir. Diyelim ki elimizde bir Account nesnesi var ama bunun da tipleri var frozenAccount, normalAccount, negativeAccount. Account nesnesi çok fazla parametre istediğinde nesne oluşturmak çok olur. Aşağıdaki gibi bir durumda parametre geçmesi oldukça zor ve karışıktır. 
 
  ```java
@@ -805,7 +814,7 @@ public class Report implements Document {
 Burada ilk olarak Report classından bir obje oluşturulur ve parametreleri geçilir. originalReport.clone(), clone() metodu çağrısı yapılır.clone() metodunda, (Report) super.clone() döner. Bu ne demek? klonlama işlemini "Object" sınıfındaki clone() metodundan çağırır. Bu da Cloneable interface'ini uygulayan nesnenin yani originalReport nesnesinin bir kopyası(swallow) oluşturulur. Clonable interface'i uygulanamıyorsa CloneNotSupportedException hatası fırlatılır. Oluşturulan kopya Object classında oluşturuldupu için Object tipindedir. Uygun tipe dönüştürülmesi için (Report) super.clone() şeklinde yazılır ve döndürülür.   
 • Prototype kalıbı nesnelerin nasıl üretileceğini çözer. Prototype kalıbı nesnelerin nerede oluşturulacağı ile ilgilenmez dolayısıyla nesne yaratmayı soyutlamaz.  Protipten yeni nesne ürütmeyi bir factory metodunun ardına koymak çok daha uygundur. Factory metoduna parametre geçilerek, nesne olması gereken haliyle geriye döndürülebilir.   
 
-## Dependency Injection
+### Dependency Injection
 • Avantajı, tanım tabanlı(declarative) bir yapı sunmasıdır. Bu şekilde nesnelerin birbirlerine olan bağımlılıkları ifade edilir ama bağımlılıkların nasıl yerine getireleceği Dependency Injection altyapısı tarafından gerçekleştirilir. Bu da karmaşıklığı azaltır ve değişimi kolaylaştırır.   
 • Dependency Injection bir kalıp olmakla birlikte genelde teknolojik destek ile gerçekleşir.        
 • Dependency Injection, nesnelerin bağımlılıklarını doğrudan inşa etmek ve yönetmek yerine bu bağımlılıkları dışarıdan alarak yani enjekte ederek bağımlılıkların daha esnek ve test edilebilir olmasını sağlayan bir patterndir. (Loose couplingini güçlendirir. ) Üç temel yolla gerçekleşir.
@@ -948,10 +957,18 @@ public class Client implements ServiceInjector {
 
 
 
-# Structural Pattern(Yapısal Kalıplar)
-• Yapısal kalıplar,sınıflar ve nesnelerin daha büyük yapılar oluşturmak üzere nasıl bir araya geldikleriyle ilgilidir. Kalıtım(inheritance ya da is-a) ve birleştirme(composition ya da has-a)  yapısal ilişkidir. Yapısal kalıplarda var olan interfaceleri, classları ve objeleri, kalıtım ve composition yoluyla bir araya getirerek yeni fonksiyonel yapılar oluşturulur.
+## Structural Pattern(Yapısal Kalıplar)
+• Yapısal kalıplar,sınıflar ve nesnelerin daha büyük yapılar oluşturmak üzere nasıl bir araya geldikleriyle ilgilidir. Kalıtım(inheritance ya da is-a) ve birleştirme(composition ya da has-a)  yapısal ilişkidir. Yapısal kalıplarda var olan interfaceleri, classları ve objeleri, kalıtım ve composition yoluyla bir araya getirerek yeni fonksiyonel yapılar oluşturulur. Nesnelerin yapısını ve ilişkilerini organize eder. Yedi alt başlıkta inceleyebilir; 
+ 
+ - Flyweight: Hafıza tasarrufu için ortak nesne paylaşımını sağlar.
+ - Adapter: Uyumsuz arayüzleri birbirine bağlar.
+ - Composite: Nesneleri ağaç yapısında gruplayarak tek bir nesne gibi işlem yapar.
+ - Facade:Karmaşık sistemlere basit bir interface sunar. 
+ - Proxy: Başka bir nesneye erişimi kontrol eder. 
+ - Decorator: Nesneye dinamik olarak yeni davranışlar ekler. 
+ - Bridge: Abstraction ile implementasyonu birbirinden ayırır. 
 
-## Flyweight
+### Flyweight
 • Amacı;nesneleri paylaşarak, nesne sayısını azaltmaktır .   
 • Flyweight object, farklı bağlamlarda ortak olarak kullanılabilen nesnedir. Nesne farklı bağlamlar tarafından ortaklaşa kullanılır ancak nesne her bağlamda bağımsız olarak davranır. 500 sayfalık bir kitap düşünelim her sayfa için ayrı bir nesne oluşturmak çok maliyetli olacaktır. Bunun yerine bir sayfa nesnesi oluşturup tekrar tekrar kullanıbilmelidir. 4. sayfayı gösterirken 4. sayfa nesneye yüklenmeli, 7. sayfa gösterilirken nesneninin içini boşaltıp 7. sayfa yüklenmelidir.      
 • Nesnelerin durumu ikiye ayrılır; 
@@ -1043,7 +1060,7 @@ public class WrapperCacheDemo {
 
 • Her nesne havu flyweight nesne değildir, flyweight nesne farklı bağlamlarda tekrar tekrar kullanılıyor olmalıdır.  
  
-## Adapter
+### Adapter
 • Bir classın interface'in, bir başka sınıfın beklediği interface'e çevirir. Adaptör, uyumsuz arayüzleri sebebiyle çalışamayacak classların bir arada çalışmasını sağlar. Bir adaptör classı kullanarak uyumsuz classların interfacelerini uyumlu hale getirir.    
 • Adapter classı, uyumsuz class ile istemcinin kendisi ile çalışmasını bildiği interface arasına girer ve uyumsuz classı, o interface ile uyumlu hale getirir. Yani işimize yarayan çağırmasını bildiğimiz arayüze sahip olmayan nesneyi kullanılabilir yapar. İstediğimiz arayüze sahip olmayan nesnenin arayüzüne dokunmadan, onu adaptör yardımıyla sarmalayarak gerçekleşir. Uyumsuz nesnenin yeni arayüzü adaptör tarafından belirlenmiş oluyor. Adaptor, uyumsuz nesnenin wrapperı olmuş oluyor.  
 
@@ -1143,7 +1160,7 @@ class BidirectionalAdapter implements TurkishPlug, USPlug {
 
 • Entegrasyon katmanlarında da sıklıkla Adaptor kalıbından faydalanılır. 
 
-## Composite
+### Composite
 • Bütün parça ilişkisini birbirlerinden ayırmaktır amacı. Parça bütün ilişkisini göstermek için nesneleri ağaç yapılarında ifade edilir. Composite nesne, istemcilerin tekil nesneleri ve bu nesnelerin compositelerini(bileşiklerini) aynı şekilde işlemesine izin verir.  Composite nesnenin kullanımının istemciye fazladan yük getirmemesini sağlar.   
 • Composite kalıbında, parçalar ile bütünün ortak bir arayüze sahip olması sağlanır. Böylece istemci composite nesneyi de parçaları da aynı şekilde kullanır. Sonrasında bileşik nesne ile parçalar arasındaki ilişki düzenlenir. Bu amaçla composite nesnenin bir collection interface'ine sahip olması sağlanır. Dolayısıyla istemci, bütün-parça ilişkisinin karmaşıklığından uzak tutulur ve parçalar ile uğraşmayıp sadece bütün ile iletişimde olur.  
 • Parça bütün ilişkisinin olduğu yerlerde composite kalıbı kullanılabilir. Composite nesnede aynı zamanda parçadır. Composite nesnelerdeki metotların iterative olması gerekebilir. 
@@ -1234,7 +1251,7 @@ File: File2.txt
  
 • 
 
-## Façade
+### Façade
 • Karmaşık bir alt sistemi kullanmayı kolaylaştırmayı amaçlar.Bir altsistemdeki arayüzlere bileşik bir arayüz sağlar. Buradaki arayüz terimi Java'daki interface ile karıştılmamalıdır, burada söz konusu olan API(Application Programming Interface). API, kullanıcıların veya diğer sistemlerin belirli işlevleri veya veri yapılarını nasıl kullanabileceklerini tanımlar ve karmaşık sistemlerin daha anlaşılır bir şekilde kullanılabilmesini sağlar.      
 • Sistemlerin karmaşıklığını yönetmek için parçalayark alt sistemlere bölebiliriz. Bu durumda alt sistemler birbirinin istemcisi durumuna gelir. Alt sistemler arasındaki bağımlılıkların da olabildiğince asgari düzeyde tutmak gerekir.    
 • Facade alt sistemlere bir giriş noktası sağlar, alt sistemlerin interface'i olur. Pek çok ince(fine-grained) interfaceden oluşan bir sistemi, kalın(coarsa-grained) bir arayüze dönüştürür.    
@@ -1289,7 +1306,7 @@ class SubtitleManager {
 
  ```
 
-## Proxy
+### Proxy
 • Amaç bir nesneye erişimi kontrol etmektir. Ona olan erişimi kontrol etmek amacıyla bir başka nesne için geçiş(surrogate) ya da ara nesne(gerçeği yerine geçen(sahte) nesne) sağlar. Bu nesneye Proxy denir. İstemci olabildiğince kısıtlardan haberadr olmamalı, sanki asıl nesne ile çalışıyormuş gibi, normal çalışmasına devam etmelidir. Geçiş nesnesinin arayüzü, saklanan nesne ile aynı olursa istemci bu durumdan haberdar olmaz, asıl nesne ile aradaki nesneyi ayırt edemez.    
 • Proxy nesne istemciyi asıl nesneden yalıtır ve asıl nesneye olan bağımlılığı ortadan kaldırır. Proxy nesne kısıtları yöneterek asıl nesnenin birlikteliğini yükseltmeye da yardımcı olur.    
 • Proxy'nin kullanıldığı yaygın durumlar; lazy loading, güvenlik, önbellekleme ve ağ erişimi.    
@@ -1361,7 +1378,7 @@ public class ProxyPatternDemo {
 • Proxy ile Adapter arasındaki fark; proxynin sakladığı nesne ile proxy nesnesi aynı interface implement eder. Adapter ise farklı interfacededir.    
 • Proxy ile Facade arasındaki fark; proxynin sakladığı nesne ile proxy aynı arayüzdedir. Facade, farklı arayüzleri basitleştirerek bir yerde toplamaktadır. Facade olduğunda clienların durumdan haberi olurken proxyde clientların durumdan haberi yoktur.      
 
-## Decorator
+### Decorator
 • Amaç;nesneye dinamik olarak yeni özellikler kazandırmaktır. 
 • Sıklıkla, yeni sorumluluğu/yetkinliği tüm sınıfa değil, nesnelere eklemek isteriz. Sorumlulukları sınıfa eklemek için tipik olarak mirası kullanırız. Sınıflara yetkinlik eklemek için inheritance kullanılmasının en temel problemi, inheritance'ın bir derleme zaman(compile time) yapısı olmasıdır. Her yeni yetkinlik için kod değişikliği ve tekrar derleme(recompalition) gerekir. Böyle çok yetkinliğin ve kombinasyonların söz konusu olduğu hallerde, hem derin hem de geniş nesne hiyerarşileri oluşur hem de çoklu miras(multiple inheritance) kullanılmak zorunda kalınır. (n farklı sorumluluk için n! alt sınıfa ihtiyaç olabilir.) **Bunun yerine miras (inheritance) ile is-a ilişkisi yerine nesne bileşimi(object composition) ile has-a ilişkisi kullanılmadır.** Yeni sorumlulukları yeni alt sınıflarla yerine getirmektense -alt sınıf ihtiyacını doğuran şeyi bir dekorasyon/bezeme malzemesi- nesnesi olarak görmek ve sınıfın nesnelerine eklemek daha sağlıklıdır. Decorator pattern; nesne bileşimini(composition) sınıf kalıtımına(inheritance'a) tercih eder.  
 •  Sınıf kalıtımı, bir derleme zamanı yapısıdır ve çalışma zamanında değişmez. Nesne birleştirmesi(object composition) çalışma zamanı yapısı olduğu için değişiklik yapılabilir. Yani inheritance statik, compositıon dinamik bir yapıdır. Bu sebeple composition, çok sayıda farklı durumu ifade etmede esnekli sağlar.    
@@ -1474,7 +1491,7 @@ public class Main {
 }
  ```
 
-## Bridge
+### Bridge
 • Amaç soyutlama ile gerçekleştirilmesini birbirinden ayırarak birbirinden bağımsız olarak değiştirilebilmesini sağlar.Temelde iki prensibi alır; değişen ile değişmeyen ksıımları ayırmak ve composition'ı kalıtıma tercih etmektir.    
 • Normalde soyutlamalar ile gerçekleştirilmeleri birbirinden ayrı değildir aralarında kalıtım yani is-a ilişkisi vardır. Soyutlama arayüzü, farklı alt tipleri ise arayüzün farklı gerçekleştirmelerini belirler. 
   
@@ -1557,11 +1574,24 @@ public class BridgePatternDemo {
  ```
 
 
-# Davranışsal Kalıplar(Behavioral Pattern)
-• Davranışsal kalıplar , algoritmalar ve sorumlulukları sınıflara atamak ile ilgilir. Sadece sınıflar ve nesnelerle değil aynı zamanda onların arasıbndaki haberleşmeyle de ilgilidir.    
-• Davranışsal sınıf kalıpları kalıtımı kullanırken, davranışsal nesneler kalıpları composition kullanır. Yani hem has a hem de is a ilişkisi bulunur.    
+## Davranışsal Kalıplar(Behavioral Pattern)
+• Davranışsal kalıplar , algoritmalar ve sorumlulukları sınıflara atamak ile ilgilir. Sadece sınıflar ve nesnelerle değil aynı zamanda onların arasındaki haberleşmeyle de ilgilidir.    
+• Davranışsal sınıf kalıpları kalıtımı kullanırken, davranışsal nesneler kalıpları composition kullanır. Yani hem has a hem de is a ilişkisi bulunur.   
+• Nesnelerin birbiriyle nasıl iletişim kurduğunu ve davranışlarını tanımlar. On bir ana başlık altında inceleyebiliriz;
 
-## Strategy   
+- Strategy: Algoritmaları kapsülleyip değiştirilebilir hale getirir. 
+- Command: İstekleri nesne olarak kapsüller, geri alma gibi işlemleri destekler. 
+- Iterator: Collectionlar üzerinde dolşamayı sağlar. 
+- Mediator: Nesneler arasındaki iletişimi merkezi nesne üzerinden yönetir. 
+- Template: Algortimanın iskeletini tanımlar, bazı adımları alt sınıflara bırakır. 
+- Observer: Bir nesne değiştiğinde bağlı olan diğer nesneleri otomatik bilgilendirir. 
+- Memento: Nesnenin iç durumunu kaydedip ger, yüklemeye olanak tanır. 
+- Chain of Responsibility: İstekleri zincir şekilde işleyicilere iletir. 
+- Visitor: Nesne yapısını değiştirmeden yeni işlemler eklemeye olanak tanımlar. 
+- State: Nesnenin iç durumuna göre davranışını değiştirir. 
+- Interpreter: Dil gramerini claslar aracılığıyla yorumlar.
+
+### Strategy   
 •   Amaç; bir işi yapmanın farklı yollarını, o işi isteyen istemciden bağımsız ve birbiri yerine geçebilecek şekilde ifade eder.   
 • Durum kontrolleri yapılırken kullanır gibi düşün; if-else if yapısının  ya da switch-case yapısının bir dalı olarak ifade ederek algoritma aile gerçekleştirilir. Ancak bu çözüm uzun vadeli değildir ve çoğunlukla tek bir algoritma olduğu düşüncesine dayanır, değişimi göz önüne almaz. Algoritmanın farklı iki implementationını aynı yerde birbirini etkileyecek aralarında coupling oluşturacak şekilde implement etmemeliyiz. İstemci algoritmalardan bağımsız olmalıdır.  istemci algoritmaları yapmamalı, algoritmalardan hizmet istemeli.    
 • Farklı algoritmaları istemciden bağımsız bir şekilde kendilerine has farklı yerlerde gerçekleştirmek ve onları birbiri yerine geçebilecek şekilde kullanmalıyız. Bu durumda hem algoritmalar birbirinden ayrılacak ve aralarında gelişigüzel bağımlılıklar oluşmayacak hem de istemci bu algoritmaları gerçekleştirenlere doğrudan bağımlı olmayacaktır. **Kısacası strategy kalıbının çözümü bir arayüzü gerçekleştiren kardeş sınıflardır.** Her kardeş sınıf ayrı bir algoritmayı yerine getirir.  Hangi sınıfın kullanılacağını ise bir başka nesne, çoğunlukla bağlam karar verir.   
@@ -1683,7 +1713,7 @@ public class ArraysSort implements SortingStrategy {
 }
  ```
 
-## Command   
+### Command   
 •  Amaç; istekte bulunan istemci  ile isteği yerine getiren arasındaki bağımlılığı azaltmak ve metot seviyesinde ifade edilen isteği nesne seviyesinde soyutlayarak ek yetkinlikler kazandırmaktır.   
 • İki şeyi çözer; istemciler mesajı sadece hangi nesnenin aldığını bilmekle kalmazlar aynı zamanda hangi metodun da mesajı yerine getirdiğinde habersiz olurlar(strtegy patternı ile sağlarız) ve yan metotlarla(helper metod) karmaşıklaşan nesne daha odaklı hale gelir. Bu iki sorunu, isteği yerine getiren metodun nesne olarak modellenmesi yani sınıf olarak tanımlanması ile çözer. Ayrıca Strategy pattern ile isteği yerine getiren nesne saklanabildiğinden, gerçekte isteği yerine getiren metot saklanmış olur.     
 • Bir metod iken, nesne seviyesine çıkarılan isteğe Command denir. Command kalıbı, Strategy'nin daha genel hali olarak, sadece isteği alan nesnenin değil metodun da saklandığı çözüm olarak görülür. **Command'i soyut olarak temsil eden, arayüzdür. Arayüzün üzerindeki metodun ismi execute()'dur.** Her alt sınıf, somut Command nesnesi, execute()'u hangi emiri yerine getirdiğine göre ezer.Yani execute()'un ne yapacağına Command nesnesi karar verir. Her farklı emirde execute() metodu, eski halde bir metot olarak gerçekleştirilen isteğe karşılık gelir. Dolayısıyla execute() metodunun gerçekte ne yaptığını belirleyen bu metoda sahip olan alt sınıf alt sınıf yani emir nesnesidir.Ayrıca her Command nesnesi, temsil ettiği istekle ilgili redo/undo gibi farklı yardımcı metotlara sahip olabilir.   
@@ -1771,7 +1801,7 @@ public class CommandPatternDemo {
 ```
 
 
-## Iterator   
+### Iterator   
 •   Amaç; collectionlardaki birden fazla nesneye sıralı erişim için bir yol sağlamaktır.    
 • Iterator kalıbında öncelikle collection nesnesinin olması gereklidir. Collection nesnenin elemanların ulaşan Iterator nesneleri oluşturulur. Her Iterator nesnesi erişimle ilgili farklı bir davranışa sahip olabilir.Çünkü farklı collectionlarda farklı erişim kyöntemleri olabilir.   
 •  Aynı anda birden fazla Iterator aynı collection üzerinde çalışabilir. Ama bu sırada ekleme çıkarma söz konusu ise exception fırlatır buna dikkat edilmelidir.   
@@ -1842,7 +1872,7 @@ public class IteratorPatternExample {
 }
 ```
 
-## Mediator(Arabulucu) 
+### Mediator(Arabulucu) 
 •  Amaç; cok sayıda nesnenin birbiriyle haberleşmesini ve koordinasyonunu sağlamaktır.  Nesneleri birbirine doğrudan ulaşmaktan alıkoyarak gevşek bağımlılığa destek verir ve aralarındaki iletişimi serbestçe değiştirmemize izin verir.     
 •  Mediator'ın kullanımına örnek verecek olursak; Diyalog kutusunda menü, text alanı, button vb. pek çok farklı GUI nesnesi aralarında pek çok bağımlılık bulunur. Text yazılmadan buttonun  visible olmaması gibi.    
 • Nesneler concreteMediator(arabulucu) üzerinden bilgi alışverişinde bulunur. concreteMediator nesne ise diğer nesnelerlerle nasıl ve hangi durumlarda haberleşeceğini bilir. Bu şekilde **n tane nesne arasında muhtemelen n(n-1)/2 tane iletişim kanalı yerine concreteMediator nesnenin n tane nesne ile n tane iletişim kanalına sahip olması sağlanır.**   
@@ -1943,7 +1973,7 @@ public class MediatorPatternExample {
 ```
 
 
-## Template Method  
+### Template Method  
 •   Amaç;bir algoritmanın genel yapısını ifade edip, değişecek adımları içi doldurulacak şekilde bırakmaktır.Bir algoritmanın yapısını değiştirmeden, bazı adımlarının alt sınıflarda tekrar tanımlanmasına imkan sağlar.     
 • Algoritmanın iskeleti bellidir, adımların bazılarının detayı da belli olabilir ama geri kalan adımlarının detayı belli değildir. Bu durumda iskelet algoritmayı, detayı belli olmayan adımların içi sonra dolduralacak şekilde ifade ediyor demektir. Bu durumda bir metotta algoritmanın akışı ifade edilir ve bu akışta per çok metot çağrısı yapılır.Akışta davranışı belli olan metotlara gerçekleştirme verilir ve bunlar somut metotlardır. Ama belirsizlik ya da değişiklik içeren adımlara karşı gelen metotlar soyut bırakılır ve alt sınıflar bu soyut metotları gerçekleştirir. **Bir algoritmanın akışını, somut ve soyut metot çağrıları şeklinde veren metoda template ya da kalıp metot denir.** Template metot soyut sınıf içerisinde bulunur.    
 •  Bir sınıfta birden fazla template metot olabilir, template metotlar birbirini çağırabilir. Genişletebilir pek çok frameworkde kullanılır.    
@@ -2022,7 +2052,7 @@ Bu örnekte main metodunda iki farklı sınıf(PastaCooking ve SaladCoking) inst
 >Salata karıştırılıyor.  
 >Hazırlanan yemek servis edildi.  
 
-## Observer(Abone)   
+### Observer(Abone)   
 •   Amaç; bir nesnenin durumundaki değişikliklerden haberdar olmaktır.  Observer(abone) nesne, durumundaki değişikliklerden haberdar olmak istediği konu(subject, observable) nesneye abone olur. Konu nesne, durumunda bir değişiklik o9lduğunda, kendisine abone olan nesneleri bilgilendirir. 
 >Observable: Durumdaki değişikliklerin takip edildiği nesne, konu yada subject, publisher.   
 >Observer: Söz konusu olan nesneye abone olup, ondaki değişikliklerden haberdar olmak isteyen nesne, abone ya da subscriber.
@@ -2201,7 +2231,7 @@ public class Main {
 
 • Observer kalıbının ilk defa Smalltalk'ta MVC kalıbında kullanıldığı bilinmektedir. MVC'de Model konudur ve View'da observer'dır. 
 
-## Memento  
+### Memento  
 •   Bir nesnenin  iç durumunu saklayarak, bu durumun daha sonra geri yüklenmesini sağlar. Amaç; nesne üzerindeki değişiklikleri kaydedip geri alabilmektir. Memento kalıbı ile durumu saklanan nesne daha basit hale gelir, aksi taktirde nesne kendi tarihselliğini tutması gerekirdi.      
 •  Memento kalıbı ile durumu tutulan nesne encapsulatıon'ı bozulmaz. Memento, nesnenin sadece durumu saklanma ihtiyacı duyulan kısmını gereken derinlikte saklar. Tarihselliğin gerekli olduğu durumlarda çok daha karmaşık memento nesneleri kullanılabilir. 
 >Originator: Durum bilgisini tutan ve bu durumu geri yüklenebilir bir biçimde saklayabilen nesne
@@ -2315,7 +2345,7 @@ public class PhotoEditorExample {
 >Current Photo Settings: Brightness=30%, Crop=Square, Filter=Black & White   
 >Current Photo Settings: Brightness=70%, Crop=Landscape, Filter=Vintage   
 
-## Chain of Responsibility(Sorumluluk Zinciri)  
+### Chain of Responsibility(Sorumluluk Zinciri)  
 •   Amaç;istekte bulunan istemci ile isteği yerine getiren arasındaki bağımlılığı azaltmaktır.   
 •   Bazen isteği kimin yerine getireceğinin belirlenmesini merkezileştirmekten kaçınmak gerekebilir. Bu durumda isteği kimin yerine getireceği, doğrudan isteği yerine getirecek hedef tarafından belirlenir. Bu yaklaşımda hedef nesneyi bulmayı merkezi bir sorumluluk olmaktan çıkarmak ve sorumluluğu hedef nesnelerin kendisine yaymak biraz pahalı olabilir ama etkin bir çözümdür.    
 •   İstemci ile isteği yerine getiren nesneler arasındaki bağımlılığı azaltmanın yollarından birisi Chain of Responsibility patternidir. Pattern bir nesne hiyerarşisini bir arayüz arkasına saklamakla kalmaz, kendisini yerine getirecek nesneyi bulması için isteği hiyerarşideki nesneler arasında gezdirir.    
@@ -2432,7 +2462,7 @@ loggerChain.logMessage(Logger.ERROR, "Bu bir error mesajıdır."); çağrısına
 • Eğer bir isteği birden fazla nesne yerine getirebiliyorsa ve hangisininm yerine getireceği önceden bilinmiyorsa, ya da bilinse bile isteyen ile isteği yerine getiren arasında statik ilişki kurmak istenmiyorsa yani isteği kimin yerine getireceği dinamik olarak belirlenecekse, ya da isteği kiminm yerine getireceğinin merkezi bir yapıda belirlenmesi istenmiyorsa bu durumlarda chain of responsibility kullanabiliriz.    
 •  Exception mekanizmaları chain of resposibility kullanır. Run timeda fırlatılan exception nesnesi, bu nesneyi fırlatan metottan başlayarak çağrı zincirinde(call chain) geriye doğru giderek uygun handler nesnesini arar. Fırlatılan exception nesnesinin tipine uygun bir handler bulunduğunda arama durur ve exception fırlatılıp gereği yapılır.   
 
-## Visitor    
+### Visitor    
 • Amaç; bir işi birden çok nesneye, o nesnelerin arayüzlerini değiştirmeden yaptırmayı sağlamaktır.      
 • Bir koleksiyon ya da karmaşık nesne yapıları içindeki farklı nesneler üzerinde aynı türde işlemler yapmak istendiğinde, nesnelere yeni işlemler eklemenin zor ve yapı bozucu olduğu durumlarda kullanılır. İşlemler zamanla değiştiğinde her değişimde nesne sınıflarını değiştirmek zorundaysak visitor design patternı kullanılabilir.Böyle durumlarda visitor pattern ile yeni davranışları nesnelerin üzerinde tanımlamak yerine bir başka ziyaretçi nesne(visitor nesne) tanımlamak ve bu ziyaretçinin davranışlara ihtiyaç duyan nesneleri ziyaret ederek davranışları gerçekleştirmesine sağlanır.    
 • Bir interface ya da soyut sınıf tanımlanır ve her class bu interface'i kullanır. Bir Visitor interface'i ya da soyut sınıfı tanımlanır.Bu interface her class için bir ziyaret metodu içerir. Sınıflar visitor'ı kabul etmek için accept() metodu içerir.Bu metodun içinde visitorın ilgili metodu çağırılır. 
@@ -2537,7 +2567,7 @@ public class VisitorPatternExample {
 
 • **Double dispatch**;bir anti pattern gibidir. Bir nesnenin bir metodu çağırırken hem o nesnenin tipine hem de parametre olarak aldığı nesnenin tipine bağlı olarak doğru metodun seçilmesini sağlar. Genelde nesneye dayalı dillerde metot çağrılarında tek bir dinamik dispatch yapılır, yani metodun hangi sınıfa ait olduğuna göre hangi versiyonun çalıştırılacağına karar verir. Visitor patternini kullanmadığımız durumlarda double dispatcher durumu ortaya çıkabilir. 
 
-## State  
+### State  
 •   Amaç; bir nesnenin karmaşık durumlarına bağlı olan davranışlarının değişmesine izin vermektir. Nesne sanki sınıfı değişiyormuş gibi görünür.    
 •  Nesnenin durumunu farklı alanlarda ifade etmek ve nesne üzerinde yapılan metot çağrılarına duruma bağlı cevapları if-else ya da switch-case yapılarıyla yönetildiği yani durumlara bağlı olarak farklı davranış sergilemesi gereken nesneler olduğu durumlarda state pattern kullanılır. State kalıbında, nesnenin durumları ayrı ayrı ele alınır ve bir arayüzü gerçekleştiren sınıflarda diğer durumlardan yalıtılır. Bu şekilde her durum için ayrı bir sınıf oluşturulur ve duruma bağlı davranışların, içinde bulunan duruma özgü halleri burada gerçekleştirir. Sınıfların ortak davranışları ise üstteki tipte soyut olarak toplanır.     
 • State kalıbının uygulanmasındaki en temel karar noktası durumların yönetimiyle ilgilidir. Nesnenin hangi durumda olduğuna kim karar verecek ve durumlar arasındaki geçişleri kim yönetecek? İki alternatif vardır; durum değişimleri durumların kendileri tarafından yönetilir(yönetim dağıtılır) ya da durum değişimleri merkezi olarak yönetilir. Durum değişimleri merkezi olarak yönetildiğinde; merkezi bir nesne, arabulucu(mediator) olarak davranır ve durumlardan gelen bilgiye göre bir sonraki durumu belirler. Durum sayısı az olduğunda merkezi yapının kullanılması, durum sayısı arttığında ise merkezi yapı ile durum daha da karmaşıklaşacağı için dağıtık yapının kullanılması mantıklıdır.    
@@ -2635,7 +2665,7 @@ public class StatePatternDemo {
 ```
 
 
-## Interpreter  
+### Interpreter  
 •   Amaç; bir dildeki cümleleri yorumlamak amacıyla yorumlayıcı tanımlamaktır.   
 •   Bir dilin gramerini ve kurallarını temsil eden sınıflar kullanılarak ifade edilen bir dizi işlemi gerçekleştirme yeteneği sağlar. Basit bir dilde yazılmış expression(ifadeleri) çözümlemej ve değerlendirmek için kullanılır.    
 •  Farklı veri formatları arasında dönüşüm yaparken, örneğin bir yapılandırma dosyasını yorumlamak için kullanılır.   
@@ -2869,10 +2899,9 @@ public class SubstractionExpression implements Expression {
 
 
 ```
+Bazı design patternler Martin Fowler gibi yazılım mimarları tarafından tanımlanmış olsa da klasik tasarım desenleri listesinde yani GoF(Gang of Four)'da yer almaz. GoF kitabı (Design Patterns: Elements of Reusable Object- Oriented Software) 1994' de yayınlandı ve 23 temel design patterni kapsar. Bunun dışında bulunan bazı design patternlar ; Null Object, Special Case Pattern 
 
-GoF'da yer almayan kalıplarda bulunur;Null Object 
-
-## Null Object
+### Null Object
 •  Amacı; Verilen tipin nesnesi olmaması durumu için vekil olarak bir nesne sağlamak ve null obje, detayları diğer nesnelerden(collaboratorlar) saklayarak akıllı "hiç bir şey yapma" davranışı sağlamaktır. Bobby Woolf tarafından teklif edilmiştir. Bobbyn Wolf, bu patterni Object Structal sınıfına sokmaktadır.    
 •  Bir referansın hiç bir nesneyi göstermediği durumlarda sıklıkla karşılaşılır.Bu durumda null olan referansa erişmek sıkıntılı olduğundan NullPointerException vb. sıra dışı durum fırlatılmasını önlemek için null kontrolü yapılır. Aslında hiçbir zaman null referansı geçmemeli ve döndürmemeliyiz.    
 
@@ -2927,4 +2956,9 @@ public class Main {
 }
 ```
 
-Yukarıdaki kodda NullKullanici class'ı null durumu için bir nesne oluşturur.bilgiVer(() metodunda, kullanıcının mevcut olmadığına dair bir mesaj çıkarır. null kontrolü gerektiren durumları ortadan kaldırmış olduk. Çünkü artık bir kullanıcı nesnesi "null" olduğunda bile bilgiVer metodunu çağırabilir.   
+Yukarıdaki kodda NullKullanici class'ı null durumu için bir nesne oluşturur.bilgiVer(() metodunda, kullanıcının mevcut olmadığına dair bir mesaj çıkarır. null kontrolü gerektiren durumları ortadan kaldırmış olduk. Çünkü artık bir kullanıcı nesnesi "null" olduğunda bile bilgiVer metodunu çağırabilir.      
+
+### Special Case Pattern
+•  Kodda sıkça karşılaşılan null kontrollerini veya özel durumlar için if blokları yerine bu durumları kapsayan özel sınıflar tanımlar. Kod karmaşıklığını azaltır, tekrarlayan kontrolleri ortadan kaldırır. Polimorfizm sayesinde özel durumlar da genel davranışa uyum sağlar. İstisnai veya nadir durumları ana koddan ayırarak temiz ve sürdürülebilir bir yapı oluşturur.  
+•  Normal davranıştan sapma gösteren özel durumlar için, aynı interface'i kullanan ama farklı davranan alt classlar tanımlanır. Şöyle düşünelim; bir blok uygulamamız var ve bu bloktaki yazı yazan her yazarın bir id'si var. Bazı yazılar da bot tarafından yazılıyor. Botun bir yazar profili yok bu durumda id'si null olur ama bunun yerine Author classından türeyen bir Bot classı tanımlayıp botun yazar gibi davranmasını sağlayabilir. Ama yazardan farklı olarak özel durumları olur mesela botun yazar sayfası olmaz. Bu gibi durumlarda Special Case Pattern kullanılabilir. 
+• Nesnelerin özel durumlarına göre davranışlarını değiştirebildiği için behavioral patternler arasında yer alabilir. Bazı kaynaklara göre de uygulama mimarisini deseni olarak sınıflandırılabilir. Martin Fowler'da 
