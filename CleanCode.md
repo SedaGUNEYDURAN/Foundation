@@ -780,3 +780,25 @@ public class DosyaOkumaHatasi extends RuntimeException {
 int age = 15;
 assert age >= 18 : "Yaş 18'den küçük, oy kullanamaz!"; // age 18 den küçükse runtimeda AssertionError fırlatır ve hata mesajını gösterir. 
  ```
+
+
+
+## Boundaries
+• Provider of third-party bir çok ortamda çalışabilecek geniş kitleye hitap etmeyi amaçlar, kullanıcılar ise kendi ihtiyaçlarına özel bir interface ister.    
+• **Boundary Interface**,  bir sistemin veya bileşenin dış dünyayla nasıl iletişim kurduğunu tanımlayan interfacedir. Diğer classların veya sistemlerin eriştiği public metotlara ve veri yapılara sahiptir.   
+
+ ```java
+Map<String, Sensor> sensors = new HashMap<>();
+Sensor s = sensors.get(sensorId);
+ ```
+Bu kodda Map veri yapısı doğrudan sistemin diğer parçalarına gösteriliyor. Yani Map boundary interfacedir çünkü başka yerler onun metotlarına direkt erişiyor(get, put vs.). İyi tasarım bu mudur ? Değildir Geniş ve kontrolsüz interfaceleri diğer yerlere yaymamalıyız. Bunun yerine bir classın içinde encapsulation yapılmalı.   
+
+ ```java
+public class Sensors {
+   private Map sensors = new HashMap();
+   public Sensor getById(String id) {
+     return (Sensor) sensors.get(id);
+   }
+}
+ ``` 
+Burada ise Map interface'i gizlendi sadece getById() metodu dışarıya açık Map artık **internal implementation detail** oldu. Artık Boundary interface, sadece Sensors classının public metodudur.    
