@@ -82,31 +82,23 @@ sunucusuna gidilir.
 
 ## Ağ (network) katmanı
 • Veri paketlerinin ağa iletilmesinden ve ağdan 
-çekilmesinden sorumludur. Ana fonksiyonu kaynak makineden hedef makineye paketlerin yönlendirilmesidir. Tanımlanan adresler yönlendirilmiş protokol ile tanımlanır. Kaynak cihazdan hedef cihaza göndermek için kullanılan protokollere yönlendirme protokolü denir.
- •**Router(Yönlendiriciler)**, IP dünyasında gateway olarak adlandırılır ve mantıksal ağları birbirine bağlamakta kullnılır. LAN'ların Wanlara veya uzaktaki diğer LAN'lara bağlantısında kullanılır. Paketlerin gönderen ve alan düğüm arasında birden fazla yol varsa en uygun yolun seçilmesi ana görevleridir. Metrik değere göre paketler yönlendirilir; yol uzunluğu, güvenirlik, gecikme, band genişliği
- • Yönlendirme tablosu, en uygun yolun belirlenmesi için kullanılan parametrelerin tutulduğu bir matristir. Her protokol için birer yönlendirme tablosu tutulur. 
- • **Statik Yönlendirme**: IP ağlarda özel ağı belirten bir gösterici olarak tanımlanır. Arıza durumlarında kendisini güncellemez, optimum yok uzunluğu kullanmaz, yüksek seviyede güvenlik sağlar. Herbir statik router kendi router tablosunu korumakla yükümlüdür. Bu sayede bir saldırı olup router etkisiz kalırsa diğer routerlar bundan etkilenmez.
+çekilmesinden sorumludur. Ana fonksiyonu kaynak makineden hedef makineye paketlerin yönlendirilmesidir. Tanımlanan adresler yönlendirilmiş protokol ile tanımlanır. Kaynak cihazdan hedef cihaza göndermek için kullanılan protokollere yönlendirme protokolü denir.   
+ •**Router(Yönlendiriciler)**, IP dünyasında gateway olarak adlandırılır ve mantıksal ağları birbirine bağlamakta kullnılır. LAN'ların Wanlara veya uzaktaki diğer LAN'lara bağlantısında kullanılır. Paketlerin gönderen ve alan düğüm arasında birden fazla yol varsa en uygun yolun seçilmesi ana görevleridir. Metrik değere göre paketler yönlendirilir; yol uzunluğu, güvenirlik, gecikme, band genişliği   
+ • Yönlendirme tablosu, en uygun yolun belirlenmesi için kullanılan parametrelerin tutulduğu bir matristir. Her protokol için birer yönlendirme tablosu tutulur.    
+ • **Statik Yönlendirme**: IP ağlarda özel ağı belirten bir gösterici olarak tanımlanır. Arıza durumlarında kendisini güncellemez, optimum yok uzunluğu kullanmaz, yüksek seviyede güvenlik sağlar. Herbir statik router kendi router tablosunu korumakla yükümlüdür. Bu sayede bir saldırı olup router etkisiz kalırsa diğer routerlar bundan etkilenmez.   
  • Ağ içerisindeki konumuna göre routerlar ikiye ayrılır;
-    - Merkez: Daha güçlü donanıma ve daha iyi router algoritmasına ihtiyaç duyarlar.Port yoğunluğu ve paket işleme başarımı yüksek olur. Şaşeli üretilirler; farklı türde WAN portunu destekleyebilmek ve standartını desteklemek, esnek çözüm sunmak için. 
-    - Kenar: Basit, işlem gücü fazla olmayan algortimalarla işlemlerini gerçekleştirirler. 1, 2 LAN'ın WAN!a veya uzak ofislerin merkezi LAN'a bağlanmasında kullanılır. 
- • ROS; ağ yöneticisine konfigürasyonun yapılması için bir arayüz sunar. Routerlara ağ katmanı protokolüne uygun ROS yüklenmelidir. 
- •  Router algoritmaları, tabloların dinamik olarak güncellenmesi için kullanılır. Router algoritmaları;
-  - **En etkili kural** yönlendiricinin ağdaki diğer routerlara ulaşabildiği en az hop sayısının olduğudur. Her yönlendirici için bir derinlik ağacı belirlenir. Ağacın derinliği en az olacak şekilde ayarlanır.
-  - **En kısa yol yönlendirmesi**, ağ içerisindeki herhangi bir router ağın tüm topolojisine sahiptir ->Dijkstra algoritması. Her router kendisine komşu olan düğümleri listeler. Kendisinden bir yönlendirici daha ilerleyerek bu işlem tekrarlanır. Böylece tüm ağ topolojisinin bilgileri toplanır. Yönlendirme tablosu yol durumuna göre kendini yeniler, günceller.
-  - **Sel yönlendirmesi**, gelen paketler, paketin geldiği yol hariç diğer bütün yönlendirilebilen yollara gönderilmesidir. Paketler sürekli olarak ağda dolaşır. Bunu önlemek için; paket başlığına hop sayacı kullanılır. Routerların gönderdikleri paketleri paketleri bir saklayıcıda saklamasıdır.
-  - **Uzaklık vektöre algoritması**, uzaklık bilgisini veya atlama sayısını metrik olarak kullanır. Uzaklık vektörü, routerların hemen komşusu olan routerlara göre hesaplanır. Router tablosu bilgisi yayma yoluyla bildirilir ve her router kendisine gelen yeni durumları tuttuğu tabloya yansıtır. Kendi router tablolarını bağlı oldukları routerlara bakarak dinamik şekilde oluştururlar. Router bilgisi ikinci el bilgi olduğu içinm doğruluğu hiçbir zaman kanıtlanamaz, bu güvenlik açığıdır.
-  - **Bağlantı durumu algoritması**, daha çok merkez routerlarla kullanılmaktadır. En uygun yolun bulunabilmesi için metrik değer+uzaklık bilgisi+ routerların yapmış olduğu bağlantılar. Ağ içindeki bir yönlendirici ağın tüm topolojisi hakkında bilgi sahibidir. Herhangi bir router kendisinden olan bağlantıda bir değişiklik algılandığı zaman tüm ağa yayma yoluyla bildirir->yalnızca algılanan değişikliği. Paketleme sıra numarası verilir. Router'a ait daha güncel yani daha büyük sıra numaralı paket geldiğinde eski paket yok edilir. Tablolar güncellenirken birinci el bilgiler kullanılır. Hatayı elimine eder, buluşma zamanını azaltarak sıfıra yaklaştırır.
- •  Router protokolleri; router üzerinde koşan ve tablonun güncellenmesini sağlayan kurallardır. İç ve dış olmak üzere iki sınıfa ayrılır. İç; büyük olmayan özel ağ içindeki yönlendiriciler arasında. Dış; birbirinden bağımsız ve geniş ağlar arasındaki yönlendiriciler
-•  Router protokolleri dinamik yönlendirme tablosu oluşturmak için ;RIP,OSPF,EGP gibi protokoller
-•  Router protokolleri;IP, IPX, DECnet ..
-   
-
-
-
-
-
-
-  
+    - Merkez: Daha güçlü donanıma ve daha iyi router algoritmasına ihtiyaç duyarlar.Port yoğunluğu ve paket işleme başarımı yüksek olur. Şaşeli üretilirler; farklı türde WAN portunu destekleyebilmek ve standartını desteklemek, esnek çözüm sunmak için.    
+    - Kenar: Basit, işlem gücü fazla olmayan algortimalarla işlemlerini gerçekleştirirler. 1, 2 LAN'ın WAN!a veya uzak ofislerin merkezi LAN'a bağlanmasında kullanılır.     
+ • ROS; ağ yöneticisine konfigürasyonun yapılması için bir arayüz sunar. Routerlara ağ katmanı protokolüne uygun ROS yüklenmelidir.    
+ •  Router algoritmaları, tabloların dinamik olarak güncellenmesi için kullanılır. Router algoritmaları;   
+  - **En etkili kural** yönlendiricinin ağdaki diğer routerlara ulaşabildiği en az hop sayısının olduğudur. Her yönlendirici için bir derinlik ağacı belirlenir. Ağacın derinliği en az olacak şekilde ayarlanır.   
+  - **En kısa yol yönlendirmesi**, ağ içerisindeki herhangi bir router ağın tüm topolojisine sahiptir ->Dijkstra algoritması. Her router kendisine komşu olan düğümleri listeler. Kendisinden bir yönlendirici daha ilerleyerek bu işlem tekrarlanır. Böylece tüm ağ topolojisinin bilgileri toplanır. Yönlendirme tablosu yol durumuna göre kendini yeniler, günceller.    
+  - **Sel yönlendirmesi**, gelen paketler, paketin geldiği yol hariç diğer bütün yönlendirilebilen yollara gönderilmesidir. Paketler sürekli olarak ağda dolaşır. Bunu önlemek için; paket başlığına hop sayacı kullanılır. Routerların gönderdikleri paketleri paketleri bir saklayıcıda saklamasıdır.    
+  - **Uzaklık vektöre algoritması**, uzaklık bilgisini veya atlama sayısını metrik olarak kullanır. Uzaklık vektörü, routerların hemen komşusu olan routerlara göre hesaplanır. Router tablosu bilgisi yayma yoluyla bildirilir ve her router kendisine gelen yeni durumları tuttuğu tabloya yansıtır. Kendi router tablolarını bağlı oldukları routerlara bakarak dinamik şekilde oluştururlar. Router bilgisi ikinci el bilgi olduğu içinm doğruluğu hiçbir zaman kanıtlanamaz, bu güvenlik açığıdır.     
+  - **Bağlantı durumu algoritması**, daha çok merkez routerlarla kullanılmaktadır. En uygun yolun bulunabilmesi için metrik değer+uzaklık bilgisi+ routerların yapmış olduğu bağlantılar. Ağ içindeki bir yönlendirici ağın tüm topolojisi hakkında bilgi sahibidir. Herhangi bir router kendisinden olan bağlantıda bir değişiklik algılandığı zaman tüm ağa yayma yoluyla bildirir->yalnızca algılanan değişikliği. Paketleme sıra numarası verilir. Router'a ait daha güncel yani daha büyük sıra numaralı paket geldiğinde eski paket yok edilir. Tablolar güncellenirken birinci el bilgiler kullanılır. Hatayı elimine eder, buluşma zamanını azaltarak sıfıra yaklaştırır.    
+ •  Router protokolleri; router üzerinde koşan ve tablonun güncellenmesini sağlayan kurallardır. İç ve dış olmak üzere iki sınıfa ayrılır. İç; büyük olmayan özel ağ içindeki yönlendiriciler arasında. Dış; birbirinden bağımsız ve geniş ağlar arasındaki yönlendiriciler    
+•  Router protokolleri dinamik yönlendirme tablosu oluşturmak için ;RIP,OSPF,EGP gibi protokoller    
+•  Router protokolleri;IP, IPX, DECnet ..   
 - **Internet katmanında** iletim katmanından gelen paketler internet paketleri halini 
 alır, paketlerin yönlendirilmesi yapılır.Bu katmanda 4 adet protokol çalışır; 
   ✓ **ARP:** IP adreslerini MAC adreslerine çevirir.Elde edilen MAC adresi ARP 
