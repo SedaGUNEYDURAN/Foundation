@@ -806,6 +806,78 @@ Burada ise Map interface'i gizlendi sadece getById() metodu dışarıya açık M
 • **Learning Tests(Öğrenme Testleri)**:Third party bir kütüphane kullanıldığında o kütüphanenin nasıl çalıştığını anlamak için yazılan testlerdir. Birim testlerden farkı; amaç hata yakalamak değil kütüphaneyi tanımaktır. Aşamaları;İlgili third-party kütüphane uygulamaya eklenir. Dokümantasyona kısaca göz atılabilir bakılmadan da geçilebilir(bazen dokumantasyon uzun ve karışık olduğu için hiçbir şey anlaşılmayabilir.)API'ın kullanmak istediğimiz temel davranışı test edilir. Kod çalışmaz ya da eksik çalışırsa dokümantasyon incelenerek eksikler tamamlanır. Bu şekilde işlem devam eder. Kütüphaneye dair öğrenilenler bu kütüphanede saklanmış olur ve gelecekte kullanmak için referans olur.   
 • Bilinmeyen ile bilinen arasından boundary;  henüz tamamlanmamış bir sistemle çalışmamız gereken durumlarda karşımıza çıkar. Bilinmeyen bir sistemin API'si henüz tanımlanmadığı için projemize bağlayabilmemiz mümkün değildir. Bunun çözümü olarak geliştiriciler hayali bir interface ile ilerler. İhtiyaç duyduğumuz bir şekilde interface tanımlarız. Kodun geri kallanından ayrıdı ve modülerdir. Kodun geri kalanından ayrıdır ve geliştiriciye ait olduğu için de kontrol altındadır. Gerçek interface tanımlandığında ise gerçek API ile hayali interfaceimiz arasında bir adapter yazarız. Böylece mevcut kodumuz değişmez. API değişikliklerinde tek bir noktadan müdahale edebilir.z Bu tasarım bize kodda testler için **seam** yani dikiş yeri oluşturur.   
 
-![Uploading sdkhsjk.PNG…]()
+
+<img width="443" height="200" alt="sdkhsjk" src="https://github.com/user-attachments/assets/25fee6ec-dbe9-4e35-8051-c0e3b62abf2a" />
 
 Bir radyo iletişim sistemi tasarladığımızı varsayalım .Transmitter adlı alt sistem henüz tanımlanmamış, nasıl çalışacağı bilinmiyor ancak sistemin geri kalanının geliştirilmesi gerekiyor. Biz Transmitter adında bir interface  tanımlıyoruz Bu interfacede transmit(frequency, stream) gibi bir metodumuz var. Bu metot aslında ileride gelecek olan API'nin nasıl çalışmasını istediğimizi gösteriyor. Communication Control classı, sistemin iletişim kontrolünü sağlıyor. Transmitter interface'ini kullanarak çalışıyor yani gerçek API'ya bağlı değil. FakeTransmitter adından fake bir classımız var. Bu class Transmitter classını implemente ediyor. Bu sayede gerçek API'a gerek kalmadan sistem test edilebiliyor. TransmitterAdapter, gerçek API geldiği zaman API ile sistem arasında köprü kurar. API değişirse de sadece TransmitterAdapter değişir ve diğer kodlar etkilenmez.   
+
+```java
+public interface Transmitter {
+    void transmit(double frequency, InputStream dataStream);
+}
+
+```
+```java
+public class CommunicationsController {
+    private final Transmitter transmitter;
+
+    public CommunicationsController(Transmitter transmitter) {
+        this.transmitter = transmitter;
+    }
+
+    public void sendData(double frequency, InputStream dataStream) {
+        // İş mantığı burada
+        transmitter.transmit(frequency, dataStream);
+    }
+}
+```
+```java
+public class FakeTransmitter implements Transmitter {
+    @Override
+    public void transmit(double frequency, InputStream dataStream) {
+        System.out.println("FakeTransmitter: Transmitting on frequency " + frequency);
+        // Test amaçlı veri işleme simülasyonu
+    }
+}
+
+```
+```java
+public class CommunicationsControllerTest {
+    @Test
+    public void testSendData() {
+        Transmitter fake = new FakeTransmitter();
+        CommunicationsController controller = new CommunicationsController(fake);
+
+        InputStream dummyStream = new ByteArrayInputStream("Test data".getBytes());
+        controller.sendData(101.1, dummyStream);
+    }
+}
+
+```
+```java
+public class RealTransmitterAPI {
+    public void keyOn(double frequency) {
+        // Gerçek donanımı aktive eder
+    }
+
+    public void sendAnalog(InputStream stream) {
+        // Veriyi gönderir
+    }
+}
+
+```
+```java
+public class TransmitterAdapter implements Transmitter {
+    private final RealTransmitterAPI realAPI;
+
+    public TransmitterAdapter(RealTransmitterAPI realAPI) {
+        this.realAPI = realAPI;
+    }
+
+    @Override
+    public void transmit(double frequency, InputStream dataStream) {
+        realAPI.keyOn(frequency);
+        realAPI.sendAnalog(dataStream);
+    }
+}
+```
