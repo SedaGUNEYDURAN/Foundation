@@ -882,3 +882,66 @@ public class TransmitterAdapter implements Transmitter {
 }
 ```
 FakeTransmitter geliştirme ve test aşamasında kullanılır, simüle etmemizi sağlar. Testlerin hızlı ve bağımsız olarak yapılabilmesine olanak sağlar. TransmitterAdapter ise gerçek API ile bağlantı kurar yani gerçek sistemle çalışır, işlemi gerçekleştirir. Sistemi gerçek API'ye bağlar.  
+## Unit Tests
+### TDD (Test Driven Development-Test Güdümlü Geliştirme)
+• **Önce test et sonra kod.**  Bu yaklaşıma göre koddan önce test yazılır. Kodun doğruluğunu ve tasarım kalitesini artırmayı hedefler.Bu yaklaşım sadece bir test yazmaktan ibaret değildir, aynı zamanda bir tasarım yaklaşımıdır.   
+• **TDD'nin üç kuralı**
+
+- Başarısız bir unit test yazmadan kod yazamazsınız. Kod yazmaya başlanmadan önce, kodun ne yapması gerektiği test ile tanımlanmalıdır.
+```java
+@Test
+public void testAddTwoNumbers() {
+    Calculator calc = new Calculator();
+    assertEquals(5, calc.add(2, 3)); // Bu test başarısız olur çünkü add() metodu yok
+}
+```
+
+-  Test yazılırken gereksiz detaylara girilmemelidir. Sadece testin başarısız olmasını sağlayacak kadar yazılmalıdır. Test derlenmiyor(mesela metot yoksa) başarısızlıktır ve yeterlidir.
+ ```java
+assertEquals(5, calc.add(2, 3));
+assertEquals(7, calc.add(4, 3));
+assertEquals(0, calc.add(0, 0)); // Bunlar henüz gereksiz
+```
+-  Yalnızca mevcut testi geçecek kadar yazılmalıdır. Fazladan mantık, ekstra özellik, tahminsel kod yasaktır. 
+
+
+Önce bir test yazılır ve bu başarısız olur bu aşamada kod yoktur. Sonrasında testi geçecek basit bir kod yazılır. Kod iyileştirilir. Kod testle doğduğu için hatalar erken yakalanır, modülerlik artar . 
+
+ ```java
+public int add(int a, int b) {
+    // Gelecekte negatif sayılarla uğraşacağım, o yüzden ekstra kontrol ekleyeyim. 
+    if (a < 0 || b < 0) {
+        throw new IllegalArgumentException("Negatif sayı yok!");
+    }
+    return a + b;
+}
+ ```
+
+Sonuç olarak TDD yaklaşımı benimsenmiş kod aşağıdaki gibi gözükür. 
+
+```java
+// 1. RED: Test yazılır
+@Test
+public void testAdd() {
+    Calculator calc = new Calculator();
+    assertEquals(5, calc.add(2, 3)); // Bu test başarısız olur çünkü add() yok
+}
+
+// 2. GREEN: Testi geçecek kod yazılır
+public class Calculator {
+    public int add(int a, int b) {
+        return a + b;
+    }
+}
+
+// 3. REFACTOR: Kod sadeleştirilir, test geçmeye devam eder
+// (Bu örnekte refactor gerekmedi ama daha karmaşık durumlarda olur)
+```
+
+•  Test edilebilir tasarım kodun daha küçük bağımsız birimlerden oluşmasını sağlar. Mock ve stub kullanımı ile dış bağımlılıkları izole edilir. Classlar genellikle interface üzerinden test edilir. Refactor sonrası testler sayesinde bozulma riski azalır. 
+
+
+> JUnit, test yazmak
+> Mockito, mock nesneler oluşturmak
+> AssertJ, daha okunabilir assertionlar
+> Hamcrest, matcher bazlı testler
