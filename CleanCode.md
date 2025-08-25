@@ -939,9 +939,135 @@ public class Calculator {
 ```
 
 •  Test edilebilir tasarım kodun daha küçük bağımsız birimlerden oluşmasını sağlar. Mock ve stub kullanımı ile dış bağımlılıkları izole edilir. Classlar genellikle interface üzerinden test edilir. Refactor sonrası testler sayesinde bozulma riski azalır. 
+• **Test double**, yazılım testlerinde gerçek nesnelerin yerine kullanılan sahte nesneleri ifade eder. Amaç, testin izole, hızlı, kontrollü ve tahmin edilebilir olmasını sağlamaktır. Çeşitli test double türleri vardır; dummy, stub, spy, mock, fake.   
+
+- **Dummy**: Sadece prametre olarak geçilir, testte kullanılmaz. Genellikle null olmayan zorunlu parametreler için kullanılır. Nesne gereklidir ama aktif rol oynamaz.    
+
+```java
+class Logger {
+    public void log(String message) {
+        // Gerçek loglama
+    }
+}
+
+class PaymentProcessor {
+    private Logger logger;
+
+    public PaymentProcessor(Logger logger) {
+        this.logger = logger;
+    }
+
+    public boolean process() {
+        // logger kullanılmaz
+        return true;
+    }
+}
+
+// Dummy Logger
+class DummyLogger extends Logger {
+    public void log(String message) {
+        // hiçbir şey yapmaz
+    }
+}
+```
+
+- **Stub**: Test edilen kodun bağımlı olduğu bir bileşenin sabit, önceden tanımlanmış cevaplar vermesini sağlar. Davranış kontrolü yapılmaz, sadece veri döner. Gerçek nesnenin yerine geçer ama pasif roldedir.    
+
+```java
+class UserService {
+    private UserRepository repo;
+
+    public UserService(UserRepository repo) {
+        this.repo = repo;
+    }
+
+    public String getUserName(int id) {
+        User user = repo.findById(id);
+        return user.getName();
+    }
+}
+
+// Stub
+class StubUserRepository implements UserRepository {
+    public User findById(int id) {
+        return new User(id, "Alice");
+    }
+}
+```
+
+Burada StubUserRepository,findById çağrısına sabit bir veri döner. Testin amacı UserService'in davranışını kontrol etmektir.  
+    
+- **Fake**: Basitleştirilmiş versiyonunun gerçek mantığını içerir. Genellikle bellek içi veri yapıları kullanılır. Gerçek davranışın simülasyonu istendiğinde ama tam sistem kullanılmak istenmediğinde(In-memory database, sahte e-posta servisleri )  
+
+```java
+class FakeUserRepository implements UserRepository {
+    private Map<Integer, User> users = new HashMap<>();
+
+    public void save(User user) {
+        users.put(user.getId(), user);
+    }
+
+    public User findById(int id) {
+        return users.get(id); // gerçek mantık ama basit
+    }
+}
+```
+
+- **Spy**: Gerçek nesne gibi davranır ama çağrılar izlenebilir. Hem veri sağlar hem de davranış kontrolü yapılabilir. Gerçek davranışın korunmak istendiği aynı zamanda da çağrıların izlenmesi gerektiği durumlarda kullanılır.   
+
+```java
+UserRepository realRepo = new FakeUserRepository();
+UserRepository spyRepo = spy(realRepo);
+
+spyRepo.findById(1);
+verify(spyRepo).findById(1); // çağrı kontrolü
+```
+
+- **Mock**: test edilen kodun bağımlı olduğu bileşenin çağırılma şekli ve sıklığı gibi davranışlarını kontrol eder. Aktif bir roldedir; hem davranış hem de veri dönebilir.    
+
+```java
+@Test
+void testUserService() {
+    UserRepository mockRepo = mock(UserRepository.class);
+    when(mockRepo.findById(1)).thenReturn(new User(1, "Alice"));
+
+    UserService service = new UserService(mockRepo);
+    String name = service.getUserName(1);
+
+    assertEquals("Alice", name);
+    verify(mockRepo).findById(1); // çağrıldı mı kontrolü
+}
+```
 
 
 > JUnit, test yazmak
 > Mockito, mock nesneler oluşturmak
 > AssertJ, daha okunabilir assertionlar
 > Hamcrest, matcher bazlı testler
+
+• Kodumuzu esnek, sürdürülebilir tutan birim testlerdir. Çünkü test ne kadar kapsamlı olursa kodda değişiklik yapmaktan o kadar az korkarız. Test olmadan yapılan her değişiklik olası bir bugdır. 
+• Clean test yazmanın en önemli kriteri readabilitydir. Testi okuyan kişi kodun ne yaptığını hızlıca anlayabilmelidir. Karmaşık testler, hataları gizler ve güveni azaltır.    
+• **Build-Operate-Check** patterni temiz ve okunabilir test yazımı için kullanılan bir yapıdır. Test mantığını üç aşamaya ayırarak hem yazan hem de okuyan için anlaşılır hale getirir.    
+
+- **Build**: Test verisi hazırlanır. Gerekli nesneler, durumlar oluşturulur.   
+- **Operate**: Test edilen işlem gerçekleştirilir. Yani sistem üzerinde bir eylem yapılır.   
+- **Check**: Sonuçlar doğrulanır. Beklenen çıktılarla karşılaştırma yapılır.  
+
+
+```java
+  @Test
+void shouldReturnDiscountedPrice() {
+    // BUILD
+    Product product = new Product("Laptop", 1000);
+    DiscountService discountService = new DiscountService();
+
+    // OPERATE
+    double discountedPrice = discountService.applyDiscount(product, 0.1);
+
+    // CHECK
+    assertEquals(900, discountedPrice);
+}
+
+```
+
+• **Domain Specific Language(DSL)**: Belirli bir domaine özgü olarak tasarlanmış, o alanın ihtiyaçlarını karşılamak için optimize edilmiş bir dil veya API'dır. Java, python gibi genel diller her şeyi yapabilirken DSL'ler sadece belirli bir şeyi çok iyi yapar. JUnit test API'si, Kotlin DSL, SQL, HTML, regular expression ... 
