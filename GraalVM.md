@@ -20,9 +20,18 @@
 > export PATH=$GRAALVM_HOME/bin:$PATH
 - Native image, GraalVM içinde gelmez, kurulmalıdır;
 > gu install native-image
-- Maven/Gradle build işlemleri için
-- Hava projesi oluşturulur;
+ 
+- Maven/Gradle build işlemleri için Java projesi oluşturulur;
 > mvn archetype:generate -DgroupId=com.example -DartifactId=native-demo -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+- Dosya yapısı;   
+native-demo/   
+├── pom.xml   
+└── src/   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;     └── main/   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;          └── java/    
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;              └── com/      
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;                    └── example/   
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;                    └── App.java  
 - Basit bir class yazıyoruz;
 
 ```java
