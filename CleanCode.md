@@ -1070,4 +1070,83 @@ void shouldReturnDiscountedPrice() {
 
 ```
 
-• **Domain Specific Language(DSL)**: Belirli bir domaine özgü olarak tasarlanmış, o alanın ihtiyaçlarını karşılamak için optimize edilmiş bir dil veya API'dır. Java, python gibi genel diller her şeyi yapabilirken DSL'ler sadece belirli bir şeyi çok iyi yapar. JUnit test API'si, Kotlin DSL, SQL, HTML, regular expression ... 
+• **Domain Specific Language(DSL)**: Belirli bir domaine özgü olarak tasarlanmış, o alanın ihtiyaçlarını karşılamak için optimize edilmiş bir dil veya API'dır. Java, python gibi genel diller her şeyi yapabilirken DSL'ler sadece belirli bir şeyi çok iyi yapar. JUnit test API'si, Kotlin DSL, SQL, HTML, regular expression ...    
+
+• **A Dual Standard**: Test kodları ile production kodları aynı temizlik ve okunabilirlik standartlarına sahip olmalı ama verimlilik gibi bazı kriterlerde farklılık gösterebilir.  Normal şartlarda mental mappingten kaçınmak önerilir ancak testlerde kontrollü şekilde bu durum esnetilebilir(Mental mapping: Kodun okunması için okuyucunun kafasında bir şeyleri eşleştiriyor olması gerektiği durumdur. Bir harfin ne anlama geldiğini anlamak gibi. Hata yapma ihtimalini arttırır, okunabilirlik azalır. )    
+
+• **One Assert per Test**: Her testte tek assert olmalıdır görüşü vardır. Bu görüşe göre her test fonksiyonu tek bir sonucu doğrular. Bu durum okunabilirliği artttırır, hata tespitini kolaylaştırır, amaç netleşir, refactoring kolaylaşır. Ancak tek bir assert kullanımı yapabilmemiz için test karmaşık olmamalı, tek bir davranışı kapsamalı. Tek bir assert kullanarak yazamadığımız testlerde ne yapmalıyız? Arka arkaya assert kullanımı okunabilirliği düşürmekte buyüzden testi parçalamalıyız. Testi parçaladığımızda ise given ve when metotlarında kod tekrar sorunu oluşur..  
+
+-**Given-When-Then** : Testlerin okunabilirliğini arttırmak için kullanılan yaygın bir yapıdır.    
+>**given:** Testin başlagıç durumu
+>**when:**eylem
+>**then:** beklenen sonuç 
+
+```java
+public void testGetPageHierarchyAsXml() throws Exception {
+  givenPages(...);
+  whenRequestIsIssued(...);
+  thenResponseShouldBeXML(); // sadece format kontrolü
+}
+
+public void testGetPageHierarchyHasRightTags() throws Exception {
+  givenPages(...);
+  whenRequestIsIssued(...);
+  thenResponseShouldContain(...); // sadece içerik kontrolü
+}
+
+```
+
+Bu kod tekrarını iki yöntem ile çözebiliriz: Template Method Pattern, @BeforeEach    
+
+- **Template Method Pattern:** Behavioral patterndir. Bir algoritmanın iskeleti bir abstract classta tanımlanır ve bazı adımların detaylarını sub classlara bırakır. Given ve when ortaktır ve bir base classa konulur, her test sınıfı then bölümünü tanımlar.   
+- **@BeforeEach:** JUnit'te bu notasyon, her testten önce çalışacak bir metodu tanımlar. Ortak hazırlık adımları @BeforeEach metoduna alınır. Her @Test sadece kendi assertini içerir. Her doğrulama için ayrı bir test classı oluştururuz.   
+
+
+```java
+public abstract class BasePageHierarchyTest {
+
+    protected Response response;
+
+    @BeforeEach
+    public void setup() throws Exception {
+        givenPages("PageOne", "PageOne.ChildOne", "PageTwo");
+        response = whenRequestIsIssued("root", "type:pages");
+    }
+
+    protected void givenPages(String... pageNames) {
+        // Sayfaları oluştur
+    }
+
+    protected Response whenRequestIsIssued(String root, String query) {
+        // İstek gönder ve yanıtı döndür
+        return sendRequest(root, query);
+    }
+}
+
+```
+
+```java
+public class PageHierarchyXmlTest extends BasePageHierarchyTest {
+
+    @Test
+    public void shouldReturnXmlFormat() {
+        assertTrue(response.isXml());
+    }
+}
+
+```
+
+```java
+public class PageHierarchyTagTest extends BasePageHierarchyTest {
+
+    @Test
+    public void shouldContainExpectedTags() {
+        assertTrue(response.contains("<name>PageOne</name>"));
+        assertTrue(response.contains("<name>PageTwo</name>"));
+        assertTrue(response.contains("<name>ChildOne</name>"));
+    }
+}
+
+```
+
+• 
