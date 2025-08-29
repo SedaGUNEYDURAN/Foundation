@@ -1045,7 +1045,7 @@ void testUserService() {
 > AssertJ, daha okunabilir assertionlar
 > Hamcrest, matcher bazlı testler
 
-• Kodumuzu esnek, sürdürülebilir tutan birim testlerdir. Çünkü test ne kadar kapsamlı olursa kodda değişiklik yapmaktan o kadar az korkarız. Test olmadan yapılan her değişiklik olası bir bugdır. 
+• Kodumuzu esnek, sürdürülebilir tutan birim testlerdir. Çünkü test ne kadar kapsamlı olursa kodda değişiklik yapmaktan o kadar az korkarız. Test olmadan yapılan her değişiklik olası bir bugdır.    
 • Clean test yazmanın en önemli kriteri readabilitydir. Testi okuyan kişi kodun ne yaptığını hızlıca anlayabilmelidir. Karmaşık testler, hataları gizler ve güveni azaltır.    
 • **Build-Operate-Check** patterni temiz ve okunabilir test yazımı için kullanılan bir yapıdır. Test mantığını üç aşamaya ayırarak hem yazan hem de okuyan için anlaşılır hale getirir.    
 
@@ -1077,9 +1077,9 @@ void shouldReturnDiscountedPrice() {
 • **One Assert per Test**: Her testte tek assert olmalıdır görüşü vardır. Bu görüşe göre her test fonksiyonu tek bir sonucu doğrular. Bu durum okunabilirliği artttırır, hata tespitini kolaylaştırır, amaç netleşir, refactoring kolaylaşır. Ancak tek bir assert kullanımı yapabilmemiz için test karmaşık olmamalı, tek bir davranışı kapsamalı. Tek bir assert kullanarak yazamadığımız testlerde ne yapmalıyız? Arka arkaya assert kullanımı okunabilirliği düşürmekte buyüzden testi parçalamalıyız. Testi parçaladığımızda ise given ve when metotlarında kod tekrar sorunu oluşur..  
 
 -**Given-When-Then** : Testlerin okunabilirliğini arttırmak için kullanılan yaygın bir yapıdır.    
->**given:** Testin başlagıç durumu
->**when:**eylem
->**then:** beklenen sonuç 
+>**given:** Testin başlagıç durumu   
+>**when:** eylem   
+>**then:** beklenen sonuç     
 
 ```java
 public void testGetPageHierarchyAsXml() throws Exception {
@@ -1149,4 +1149,9 @@ public class PageHierarchyTagTest extends BasePageHierarchyTest {
 
 ```
 
-• 
+• Clean test yazmanın 5 altın kuralı vardır:   
+ - Fast : Developer, yavaş testleri sıksık çalıştırmaz. Bu da hataların geç farkedilmesine neden olur.     
+ - Independent: Her test kendi başına çalışabilmelidir, birbirini etkilememelidir. Bir testin başarısız olması diğer testi etkilememelidir.    
+ - Repetable: Testler çevrimdışı bile çalışabilmelidir. Her ortamda çalışabilmelidir. Ortam bağımlılıkları(saat, tarih, dosya sistemi, ağ bağlantısı gibi faktörler) testin güvenirliğini azaltır.    
+ - Self Validating: Testin sonucu net olmalıdır. Manuel okuma, log karşılaştırma yapılmamalıdır.    
+ - Timely: Production koddan önce yazılmış olmalıdır.    
