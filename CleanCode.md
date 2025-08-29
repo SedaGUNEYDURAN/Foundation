@@ -938,10 +938,10 @@ public class Calculator {
 // (Bu örnekte refactor gerekmedi ama daha karmaşık durumlarda olur)
 ```
 
-•  Test edilebilir tasarım kodun daha küçük bağımsız birimlerden oluşmasını sağlar. Mock ve stub kullanımı ile dış bağımlılıkları izole edilir. Classlar genellikle interface üzerinden test edilir. Refactor sonrası testler sayesinde bozulma riski azalır. 
+•  Test edilebilir tasarım, kodun daha küçük bağımsız birimlerden oluşmasını sağlar. Mock ve stub kullanımı ile dış bağımlılıkları izole edilir. Classlar genellikle interface üzerinden test edilir. Refactor sonrası testler sayesinde bozulma riski azalır.     
 • **Test double**, yazılım testlerinde gerçek nesnelerin yerine kullanılan sahte nesneleri ifade eder. Amaç, testin izole, hızlı, kontrollü ve tahmin edilebilir olmasını sağlamaktır. Çeşitli test double türleri vardır; dummy, stub, spy, mock, fake.   
 
-- **Dummy**: Sadece prametre olarak geçilir, testte kullanılmaz. Genellikle null olmayan zorunlu parametreler için kullanılır. Nesne gereklidir ama aktif rol oynamaz.    
+- **Dummy**: Sadece parametre olarak geçilir, testte kullanılmaz. Genellikle null olmayan zorunlu parametreler için kullanılır. Nesne gereklidir ama aktif rol oynamaz.    
 
 ```java
 class Logger {
@@ -1040,10 +1040,10 @@ void testUserService() {
 ```
 
 
-> JUnit, test yazmak
-> Mockito, mock nesneler oluşturmak
-> AssertJ, daha okunabilir assertionlar
-> Hamcrest, matcher bazlı testler
+> JUnit, test yazmak   
+> Mockito, mock nesneler oluşturmak   
+> AssertJ, daha okunabilir assertionlar    
+> Hamcrest, matcher bazlı testler    
 
 • Kodumuzu esnek, sürdürülebilir tutan birim testlerdir. Çünkü test ne kadar kapsamlı olursa kodda değişiklik yapmaktan o kadar az korkarız. Test olmadan yapılan her değişiklik olası bir bugdır.    
 • Clean test yazmanın en önemli kriteri readabilitydir. Testi okuyan kişi kodun ne yaptığını hızlıca anlayabilmelidir. Karmaşık testler, hataları gizler ve güveni azaltır.    
@@ -1098,7 +1098,7 @@ public void testGetPageHierarchyHasRightTags() throws Exception {
 
 Bu kod tekrarını iki yöntem ile çözebiliriz: Template Method Pattern, @BeforeEach    
 
-- **Template Method Pattern:** Behavioral patterndir. Bir algoritmanın iskeleti bir abstract classta tanımlanır ve bazı adımların detaylarını sub classlara bırakır. Given ve when ortaktır ve bir base classa konulur, her test sınıfı then bölümünü tanımlar.   
+- **Template Method Pattern:** Behavioral patterndir. Bir algoritmanın iskeleti bir abstract classta tanımlanır ve bazı adımların detaylarını sub classlara bırakır. Given ve when ortaktır ve bir base classa konulur, her test sınıfı then bölümünü tanımlar. (Bakınız: https://github.com/SedaGUNEYDURAN/Foundation/blob/main/DesignPattern.md#template-method )            
 - **@BeforeEach:** JUnit'te bu notasyon, her testten önce çalışacak bir metodu tanımlar. Ortak hazırlık adımları @BeforeEach metoduna alınır. Her @Test sadece kendi assertini içerir. Her doğrulama için ayrı bir test classı oluştururuz.   
 
 
@@ -1154,4 +1154,4 @@ public class PageHierarchyTagTest extends BasePageHierarchyTest {
  - Independent: Her test kendi başına çalışabilmelidir, birbirini etkilememelidir. Bir testin başarısız olması diğer testi etkilememelidir.    
  - Repetable: Testler çevrimdışı bile çalışabilmelidir. Her ortamda çalışabilmelidir. Ortam bağımlılıkları(saat, tarih, dosya sistemi, ağ bağlantısı gibi faktörler) testin güvenirliğini azaltır.    
  - Self Validating: Testin sonucu net olmalıdır. Manuel okuma, log karşılaştırma yapılmamalıdır.    
- - Timely: Production koddan önce yazılmış olmalıdır.    
+ - Timely: Test kodu,production koddan önce yazılmış olmalıdır.    
