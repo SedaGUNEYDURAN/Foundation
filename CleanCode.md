@@ -882,6 +882,7 @@ public class TransmitterAdapter implements Transmitter {
 }
 ```
 FakeTransmitter geliştirme ve test aşamasında kullanılır, simüle etmemizi sağlar. Testlerin hızlı ve bağımsız olarak yapılabilmesine olanak sağlar. TransmitterAdapter ise gerçek API ile bağlantı kurar yani gerçek sistemle çalışır, işlemi gerçekleştirir. Sistemi gerçek API'ye bağlar.  
+
 ## Unit Tests
 ### TDD (Test Driven Development-Test Güdümlü Geliştirme)
 • **Önce test et sonra kod.**  Bu yaklaşıma göre koddan önce test yazılır. Kodun doğruluğunu ve tasarım kalitesini artırmayı hedefler.Bu yaklaşım sadece bir test yazmaktan ibaret değildir, aynı zamanda bir tasarım yaklaşımıdır.   
@@ -1155,3 +1156,17 @@ public class PageHierarchyTagTest extends BasePageHierarchyTest {
  - Repetable: Testler çevrimdışı bile çalışabilmelidir. Her ortamda çalışabilmelidir. Ortam bağımlılıkları(saat, tarih, dosya sistemi, ağ bağlantısı gibi faktörler) testin güvenirliğini azaltır.    
  - Self Validating: Testin sonucu net olmalıdır. Manuel okuma, log karşılaştırma yapılmamalıdır.    
  - Timely: Test kodu,production koddan önce yazılmış olmalıdır.    
+
+
+## Classes
+• Kodun okunabilirliğini ve bakımını kolaylaştırmak için classlar, variable listesi ile başlamalıdır. Değişkenleri de belirli bir sıraya göre yazarsak anlaşılır bir kod yapısı oluşur;
+
+- public static constants(public static final int MAX_SIZE = 100;)  
+- private static variables(private static int counter = 0;)  
+- private instance variables(private String name;)
+
+  Dikkat edersek sıralamada public variablelar yok. Public değişkenler encapsulation ilkesine aykırı olduğu için önerilmezler. Değişkene doğrudan erişilmesi, kontrolsüz veri değişimine yol açabilir, kodun bakımı ve test edilmesi zorlaşabilir. Setter/getterlarla(çok önerilmese de) erişmek daha sağlıklıdır.    
+• Değişkenlerdn sonra fonksiyonlar gelmelidir. Öncelikle public method sonrasında ise private method gelir. Bu düzenleme şekline **stepdown rule(aşağıya doğru adım kuralı)** denir. Private methodlar genellikle public methodların bir parçasıdır. Yani önce public method ile bilgi sonrasında private metot ile detay gelir.
+• Değişkenleri ve utility yani yardımcı fonksiyonları genelde private yaparız. Ancak test yazarken ihtiyaç durumununda protected veya package-private erişime açabiliriz. Ama önceliğimiz her zaman gizliliği korumaktır. Erişimi gevşetmek her zaman son çare olarak ele alınmalıdır.   
+• Bazı kütüphaneler(Guava gibi) @VisibleForTesting gibi notsyonlar sunarak private olan bir metodun test için görünür.olmasını sağlar.   
+•  Bir classın sorumlulukları net, sınırlı ve iyi tanımlanmış olması gerekir. Eğer bir sınıfa net, kısa ve anlamlı bir isim veremiyorsak; bu o sınıfın çok fazla işi bir arada yaptığını gösterir. Processor, Manager, Handler, Super gibi isimlendirmeler çok fazla sorumluluğun toplandığını gösterir. Sınıfı 25 harf ile ve  if , and, or, but gibi kelimeler kullanmadan adlandırabilmeliyiz. Bu tarz kelimeler birden fazla sorumluluğa işaret eder. Bu da SRP(single responsibility principle) ilkesine aykırıdır.     
