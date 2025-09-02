@@ -1196,7 +1196,8 @@ public class PageHierarchyTagTest extends BasePageHierarchyTest {
 • Yüksek cohesion için;
 - Az sayıda instance variable kullanılmalıdır. Variable sayısı arttıkça; sınıfın karmaşıklığı artar ve sorumluluklar bulanıklaşır.
 - Her metodun classın en az bir instance variable'ını kullanması beklenir. Bir method ne kadar çok instance variable'ı anlamlı şekilde kullanıyorsa, o metodun classa olan cohesion'u o kadar yüksektir.
-• Her metodun, sınıftaki tüm değişkenleri kullanması maksimum cohesion'dur. Ancak bu teorik olarak mümkün olsa da pratikte hem zor hem de gereksizdir. Sınıf içersinde birbirinden kopuk, ilgisiz metotlar ve değişkenler varsa bu düşük cohesiondur ve fazla sorumluluk işaretidir.
-• Eğer bazı değişkenler sadece belirli metotlar tarafından kullanılıyorsa; bu metotlar ve değişkenlerin aslında başka bir classın parçası olması gerektiğini gösterir.
-
- 
+  
+• Her metodun, sınıftaki tüm değişkenleri kullanması maksimum cohesion'dur. Ancak bu teorik olarak mümkün olsa da pratikte hem zor hem de gereksizdir. Sınıf içersinde birbirinden kopuk, ilgisiz metotlar ve değişkenler varsa bu düşük cohesiondur ve fazla sorumluluk işaretidir.   
+• Eğer bazı değişkenler sadece belirli metotlar tarafından kullanılıyorsa; bu metotlar ve değişkenlerin aslında başka bir classın parçası olması gerektiğini gösterir.   
+• Elimizde çok sayıda local variable kullanan büyük bir metodun olduğunu düşünelim. Bu fonksiyona refactoring yaparak içindeki sorumluluklardan birini alıp ayrı bir metot oluşturmak istiyoruz. Ancak bu küçük kısım fonksiyonun içinde tanımlı dört farklı local variableları kullanıyor.  Bu durumda yeni metoda bu dört variable parametre olarak geçilmeli. Ancak bu kadar fazla değişkeni parametre olarak geçmek okunurluğu azaltır. Bunun yerine bu dört değişkeni classın instance variable'ı yaparsak, yeni metoda parametre döndermemize gerek kalmaz. Yani değişkenler artık sınıfın durumunun(state)
+ bir parçası olur. Bu durumda da sınıfta sadece bazı metotlar tarafından kullanılan çok sayıda instance variable birikmeye başlar. Bu değişkenler, sınıfın genel amacı ile değil sadece birkaç metodun işini kolaylaştırmak için bulunur. Bu da cohesion'u düşürür. Eğer bazı metotlar ve bazı dğişkenler sürekli birlikte çalışıyorsa bu aslında ayrı bir sınıf olması gerektiğini işaret eder. Yani cohesion düştüğünde sınıfı bölmeye gidebiliyor muyuz diye bakmalıdır. 
