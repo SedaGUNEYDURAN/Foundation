@@ -1171,3 +1171,32 @@ public class PageHierarchyTagTest extends BasePageHierarchyTest {
 • Değişkenleri ve utility yani yardımcı fonksiyonları genelde private yaparız. Ancak test yazarken ihtiyaç durumununda protected veya package-private erişime açabiliriz. Ama önceliğimiz her zaman gizliliği korumaktır. Erişimi gevşetmek her zaman son çare olarak ele alınmalıdır.   
 • Bazı kütüphaneler(Guava gibi) @VisibleForTesting gibi notsyonlar sunarak private olan bir metodun test için görünür.olmasını sağlar.   
 •  Bir classın sorumlulukları net, sınırlı ve iyi tanımlanmış olması gerekir. Eğer bir sınıfa net, kısa ve anlamlı bir isim veremiyorsak; bu o sınıfın çok fazla işi bir arada yaptığını gösterir. Processor, Manager, Handler, Super gibi isimlendirmeler çok fazla sorumluluğun toplandığını gösterir. Sınıfı 25 harf ile ve  if , and, or, but gibi kelimeler kullanmadan adlandırabilmeliyiz. Bu tarz kelimeler birden fazla sorumluluğa işaret eder. Bu da SRP(single responsibility principle) ilkesine aykırıdır.     
+ 
+ ### Single Responsibility Principle
+ • Bir sınıfın değişmesi için asla birden fazla sebep olmamalıdır.   
+ • Bir classın fonksiyonel birlikteliğe sahip olması gerektiğini ifade eder.
+ • Sınıf öyle odaklı olmalıdır ki değişmesi için birden fazla sebep olmamalıdır. Bir sınıf sadece bir şeyi soyutlamalı ve sadece ona odaklanmalı, onunla ilgili veriye sahip olmalı ve sorumluluları yerine getirmelidir. Dolayısıyla da bir sınıf sadece bir soyutlamayla ilgili sebeplerden dolayı değişebilir. Separation of Concerns prensibinin bir uygulaması olarak görülebilir.   
+
+- **Separation of Concerns:** Sorunları ayrılmasıdır. Yazılım geliştirme sürecinde karmaşıklığı azaltmak ve yazılımın daha esnek, sürdürülebilir ve ölçeklenebilir olmasını sağlamak amacıyla kullanılır. Katmanlı mimari, MVC, Mikroservisler bu prensibin uygulandığı bazı yaklaşımlardır.   
+- **DRY(Don't Repeat Yourself):** Eğer bir statement ya da bloğun birden fazla yerde bulunması gerekiyorsa, bu ifade bir metoda dönüştürülmelidir. Hiç bir kod parçası asla tekrar etmemelidir ve sistemde sadece bir yerde bulunmalıdır.
+- Bazen sınıfların birden fazla interface'i implement ederek, pek çok role sahip olduğu görülür. Özellikle yetkinlik kazandırmak amacıyla bir API'nin parçası olan interfaceleri yerine getiren ama aynı zamanda bir rolü olan nesnelerde bu durum yaygındır. Böyle sınıflar **composite/aggregate(bileşik/küme sınıf) olarak adlandırılır. Böyle interfacelere fat, pollued olarak adlandırılır ve code smell oluşturur.   
+- Eğer single responsibility prensibi ihlal edilirse fat classlar ortaya çıkar. Fat class; yazılım geliştirmede fazla büyük ve karmaşık hale gelmiş classları tanımlar. Çok fazla sorumluluğa sahiplerdir.
+     
+ ### Cohesion
+ • Bir classın veya modülün  tek bir sorumluluğa ne kadar odaklandığını ölçer. Yüksek cohesion durumunda classta bulunan tüm metotlar aynı amaca odaklanır. Mesela InvoiceCalculater classındaki bütün metotlar sadece fatura hesaplama ile ilgilenir. Düşük cohesion durumunda ise metotlar farklı ve birbiri ile ilgisizdir. Cohesion çeşitleri; 
+ 
+  - **Gelişigüzel(Coincidental):** Bir araya getirilmiş ilgisiz yapılardır. Nesne soyutlamasının eksik ya da hiç olmadığı durumlarda sıklıkla görülür. En kötü seviye cohesiondur.  Örneğin; util classları   
+  - **Mantıksal(Logical)**:Gerçekte farklı tabiatta olmalarına rağmen tek bir şey ile ilgili olduğu düşünülen bir araya getirilmiş yapılardır. Örneğin; Cutter class’ında cutHair() cutTalk() metodunun bulunması gibi. İşler benzer ama amaçlar farklı   
+  - **Zamansal(Temporal):** Zamansal birliktelikten dolayı bir araya getirilmişlerdir.   
+  - **Prosedürel(Procedural):** Bir konu ile ilgili işlerin yukarıdan aşağıya doğru fonksiyonel olarak ayrılması ve hepsinin bir sınıfta bir araya getirilmesi. Örneğin; dosya açmakla ilgili her şeyi yapan, dosya erişimini ve gerekli belleği kontrol eden, dosyayı açıp kaydedip e-mail olarak gönderen bir class.  
+  - **İletişimsel(Communicational/Informational):** Aynı veri üzerinde çalışan yapıların bir araya getirilmesidir. Veri işlemenin öne çıktığı durumlarda görülür. (Ortak bir veri yapısı vardır; birisi onu okur birisi onu işler gibi)
+  - **Ardışıl(Sequential):** Class seviyesinde birinin çıktısının diğerini beslediği, pipe şeklinde çalışan fonksiyonları bir araya getiren classlardır.
+  - **Fonksiyonel(Functional):** En iyi birliktelik durumudur, büyümeye karşı direnebilir. Tek, çok iyi tanımlanmış ve olabildiğince küçük bir işe ya da sorumluluğa yönelik olarak bir araya getirilmiş yapılardır. Yazılım geliştirme sürecinde detaylar arttıkça diğer birliktelik türlerinde yapılar gittikçe büyüme eğiliminde olurken fonksiyonel birliktelikte bölüp parçalama yoluyla odağın korunmasına çalışılır. Çünkü detay arttıkça iş ya da sorumluğun tanımı değişir buyüzden de her iş farklı ve küçük işlere bölünür.   
+
+• Yüksek cohesion için;
+- Az sayıda instance variable kullanılmalıdır. Variable sayısı arttıkça; sınıfın karmaşıklığı artar ve sorumluluklar bulanıklaşır.
+- Her metodun classın en az bir instance variable'ını kullanması beklenir. Bir method ne kadar çok instance variable'ı anlamlı şekilde kullanıyorsa, o metodun classa olan cohesion'u o kadar yüksektir.
+• Her metodun, sınıftaki tüm değişkenleri kullanması maksimum cohesion'dur. Ancak bu teorik olarak mümkün olsa da pratikte hem zor hem de gereksizdir. Sınıf içersinde birbirinden kopuk, ilgisiz metotlar ve değişkenler varsa bu düşük cohesiondur ve fazla sorumluluk işaretidir.
+• Eğer bazı değişkenler sadece belirli metotlar tarafından kullanılıyorsa; bu metotlar ve değişkenlerin aslında başka bir classın parçası olması gerektiğini gösterir.
+
+ 
