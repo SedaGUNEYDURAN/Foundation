@@ -1169,17 +1169,17 @@ public class PageHierarchyTagTest extends BasePageHierarchyTest {
       
 • Değişkenlerdn sonra fonksiyonlar gelmelidir. Öncelikle public method sonrasında ise private method gelir. Bu düzenleme şekline **stepdown rule(aşağıya doğru adım kuralı)** denir. Private methodlar genellikle public methodların bir parçasıdır. Yani önce public method ile bilgi sonrasında private metot ile detay gelir.    
 • Değişkenleri ve utility yani yardımcı fonksiyonları genelde private yaparız. Ancak test yazarken ihtiyaç durumununda protected veya package-private erişime açabiliriz. Ama önceliğimiz her zaman gizliliği korumaktır. Erişimi gevşetmek her zaman son çare olarak ele alınmalıdır.   
-• Bazı kütüphaneler(Guava gibi) @VisibleForTesting gibi notsyonlar sunarak private olan bir metodun test için görünür.olmasını sağlar.   
+• Bazı kütüphaneler(Guava gibi) @VisibleForTesting gibi notAsyonlar sunarak private olan bir metodun test için görünür olmasını sağlar.   
 •  Bir classın sorumlulukları net, sınırlı ve iyi tanımlanmış olması gerekir. Eğer bir sınıfa net, kısa ve anlamlı bir isim veremiyorsak; bu o sınıfın çok fazla işi bir arada yaptığını gösterir. Processor, Manager, Handler, Super gibi isimlendirmeler çok fazla sorumluluğun toplandığını gösterir. Sınıfı 25 harf ile ve  if , and, or, but gibi kelimeler kullanmadan adlandırabilmeliyiz. Bu tarz kelimeler birden fazla sorumluluğa işaret eder. Bu da SRP(single responsibility principle) ilkesine aykırıdır.     
  
  ### Single Responsibility Principle
- • Bir sınıfın değişmesi için asla birden fazla sebep olmamalıdır.   
- • Bir classın fonksiyonel birlikteliğe sahip olması gerektiğini ifade eder.
+ • Bir sınıfın değişmesi için asla birden fazla sebep olmamalıdır.     
+ • Bir classın fonksiyonel birlikteliğe sahip olması gerektiğini ifade eder.    
  • Sınıf öyle odaklı olmalıdır ki değişmesi için birden fazla sebep olmamalıdır. Bir sınıf sadece bir şeyi soyutlamalı ve sadece ona odaklanmalı, onunla ilgili veriye sahip olmalı ve sorumluluları yerine getirmelidir. Dolayısıyla da bir sınıf sadece bir soyutlamayla ilgili sebeplerden dolayı değişebilir. Separation of Concerns prensibinin bir uygulaması olarak görülebilir.   
 
 - **Separation of Concerns:** Sorunları ayrılmasıdır. Yazılım geliştirme sürecinde karmaşıklığı azaltmak ve yazılımın daha esnek, sürdürülebilir ve ölçeklenebilir olmasını sağlamak amacıyla kullanılır. Katmanlı mimari, MVC, Mikroservisler bu prensibin uygulandığı bazı yaklaşımlardır.   
 - **DRY(Don't Repeat Yourself):** Eğer bir statement ya da bloğun birden fazla yerde bulunması gerekiyorsa, bu ifade bir metoda dönüştürülmelidir. Hiç bir kod parçası asla tekrar etmemelidir ve sistemde sadece bir yerde bulunmalıdır.
-- Bazen sınıfların birden fazla interface'i implement ederek, pek çok role sahip olduğu görülür. Özellikle yetkinlik kazandırmak amacıyla bir API'nin parçası olan interfaceleri yerine getiren ama aynı zamanda bir rolü olan nesnelerde bu durum yaygındır. Böyle sınıflar **composite/aggregate(bileşik/küme sınıf) olarak adlandırılır. Böyle interfacelere fat, pollued olarak adlandırılır ve code smell oluşturur.   
+- Bazen sınıfların birden fazla interface'i implement ederek, pek çok role sahip olduğu görülür. Özellikle yetkinlik kazandırmak amacıyla bir API'nin parçası olan interfaceleri yerine getiren ama aynı zamanda bir rolü olan nesnelerde bu durum yaygındır. Böyle sınıflar **composite/aggregate(bileşik/küme sınıf)** olarak adlandırılır. Böyle interfacelere **fat, pollued** olarak adlandırılır ve code smell oluşturur.   
 - Eğer single responsibility prensibi ihlal edilirse fat classlar ortaya çıkar. Fat class; yazılım geliştirmede fazla büyük ve karmaşık hale gelmiş classları tanımlar. Çok fazla sorumluluğa sahiplerdir.
      
  ### Cohesion
@@ -1195,9 +1195,157 @@ public class PageHierarchyTagTest extends BasePageHierarchyTest {
 
 • Yüksek cohesion için;
 - Az sayıda instance variable kullanılmalıdır. Variable sayısı arttıkça; sınıfın karmaşıklığı artar ve sorumluluklar bulanıklaşır.
-- Her metodun classın en az bir instance variable'ını kullanması beklenir. Bir method ne kadar çok instance variable'ı anlamlı şekilde kullanıyorsa, o metodun classa olan cohesion'u o kadar yüksektir.
+- Her metodun, classdaki en az bir instance variable'ı kullanması beklenir. Bir method ne kadar çok instance variable'ı anlamlı şekilde kullanıyorsa, o metodun classa olan cohesion'u o kadar yüksektir.
   
-• Her metodun, sınıftaki tüm değişkenleri kullanması maksimum cohesion'dur. Ancak bu teorik olarak mümkün olsa da pratikte hem zor hem de gereksizdir. Sınıf içersinde birbirinden kopuk, ilgisiz metotlar ve değişkenler varsa bu düşük cohesiondur ve fazla sorumluluk işaretidir.   
+• Her metodun, sınıftaki tüm değişkenleri kullanması maksimum cohesion'dur. Ancak bu teorik olarak mümkün olsa da pratikte hem zor hem de gereksizdir. Sınıf içerisinde birbirinden kopuk, ilgisiz metotlar ve değişkenler varsa bu düşük cohesiondur ve fazla sorumluluk işaretidir.   
 • Eğer bazı değişkenler sadece belirli metotlar tarafından kullanılıyorsa; bu metotlar ve değişkenlerin aslında başka bir classın parçası olması gerektiğini gösterir.   
 • Elimizde çok sayıda local variable kullanan büyük bir metodun olduğunu düşünelim. Bu fonksiyona refactoring yaparak içindeki sorumluluklardan birini alıp ayrı bir metot oluşturmak istiyoruz. Ancak bu küçük kısım fonksiyonun içinde tanımlı dört farklı local variableları kullanıyor.  Bu durumda yeni metoda bu dört variable parametre olarak geçilmeli. Ancak bu kadar fazla değişkeni parametre olarak geçmek okunurluğu azaltır. Bunun yerine bu dört değişkeni classın instance variable'ı yaparsak, yeni metoda parametre döndermemize gerek kalmaz. Yani değişkenler artık sınıfın durumunun(state)
- bir parçası olur. Bu durumda da sınıfta sadece bazı metotlar tarafından kullanılan çok sayıda instance variable birikmeye başlar. Bu değişkenler, sınıfın genel amacı ile değil sadece birkaç metodun işini kolaylaştırmak için bulunur. Bu da cohesion'u düşürür. Eğer bazı metotlar ve bazı dğişkenler sürekli birlikte çalışıyorsa bu aslında ayrı bir sınıf olması gerektiğini işaret eder. Yani cohesion düştüğünde sınıfı bölmeye gidebiliyor muyuz diye bakmalıdır. 
+ bir parçası olur. Bu durumda da sınıfta sadece bazı metotlar tarafından kullanılan çok sayıda instance variable birikmeye başlar. Bu değişkenler, sınıfın genel amacı ile değil sadece birkaç metodun işini kolaylaştırmak için bulunur. Bu da cohesion'u düşürür. Eğer bazı metotlar ve bazı dğişkenler sürekli birlikte çalışıyorsa bu aslında ayrı bir sınıf olması gerektiğini işaret eder. Yani **cohesion düştüğünde sınıfı bölmeye gidebiliyor muyuz diye bakmalıyız**. 
+
+```java
+package literatePrimes;
+public class PrintPrimes {
+    public static void main(String[] args) {
+     final int M = 1000;
+     final int RR = 50;
+     final int CC = 4;
+     final int WW = 10;
+     final int ORDMAX = 30;
+     int P[] = new int[M + 1];
+     int PAGENUMBER;
+     int PAGEOFFSET;
+     int ROWOFFSET;
+     int C;
+     int J;
+     int K;
+     boolean JPRIME;
+     int ORD;
+     int SQUARE;
+     int N;
+     int MULT[] = new int[ORDMAX + 1];
+     J = 1;
+     K = 1;
+     P[1] = 2;
+     ORD = 2;
+     SQUARE = 9;
+     while (K < M) {
+       do {
+         J = J + 2;
+         if (J == SQUARE) {
+           ORD = ORD + 1;
+           SQUARE = P[ORD] * P[ORD];
+           MULT[ORD - 1] = J;
+         }
+         N = 2;
+         JPRIME = true;
+         while (N < ORD && JPRIME) {
+           while (MULT[N] < J)
+             MULT[N] = MULT[N] + P[N] + P[N];
+           if (MULT[N] == J)
+             JPRIME = false;
+           N = N + 1;
+        }
+      } while (!JPRIME);
+      K = K + 1;
+      P[K] = J;
+    }
+ {
+ PAGENUMBER = 1;
+ PAGEOFFSET = 1;
+ while (PAGEOFFSET <= M) {
+   System.out.println("The First " + M + " Prime Numbers --- Page " + PAGENUMBER);
+   System.out.println("");
+   for (ROWOFFSET = PAGEOFFSET; ROWOFFSET < PAGEOFFSET + RR; ROWOFFSET++){
+     for (C = 0; C < CC;C++)
+       if (ROWOFFSET + C * RR <= M)
+         System.out.format("%10d", P[ROWOFFSET + C * RR]);
+       System.out.println("");
+   }
+   System.out.println("\f");
+   PAGENUMBER = PAGENUMBER + 1;
+   PAGEOFFSET = PAGEOFFSET + RR * CC;
+   }
+  }
+ }
+}
+
+```
+
+
+Bu kod oldukça karışık ve birden fazla işlemi bir classta(PrintPrimes classında) hatta bir metotta(main metodunda) yapmakta, cohesion düşük. Bu kodu sorumluluklarına göre bölersek kodun okunurluğu ve cohesion'u artmış olacak. Bu kodun refactor edilmiş hali;         
+
+```java
+package literatePrimes;
+public class PrimePrinter {
+ public static void main(String[] args) {
+    final int NUMBER_OF_PRIMES = 1000;
+    int[] primes = PrimeGenerator.generate(NUMBER_OF_PRIMES);
+    final int ROWS_PER_PAGE = 50;
+    final int COLUMNS_PER_PAGE = 4;
+    RowColumnPagePrinter tablePrinter =new RowColumnPagePrinter(ROWS_PER_PAGE, COLUMNS_PER_PAGE, "The First " + NUMBER_OF_PRIMES +" Prime Numbers");
+    tablePrinter.print(primes);
+ }
+}
+```
+
+```java
+package literatePrimes;
+import java.io.PrintStream;
+public class RowColumnPagePrinter {
+ private int rowsPerPage;
+ private int columnsPerPage;
+ private int numbersPerPage;
+ private String pageHeader;
+ private PrintStream printStream;
+ public RowColumnPagePrinter(int rowsPerPage, int columnsPerPage, String pageHeader) {
+   this.rowsPerPage = rowsPerPage;
+   this.columnsPerPage = columnsPerPage;
+   this.pageHeader = pageHeader;
+   numbersPerPage = rowsPerPage * columnsPerPage;
+   printStream = System.out;
+ }
+ public void print(int data[]) {
+   int pageNumber = 1;
+   for (int firstIndexOnPage = 0; firstIndexOnPage < data.length; firstIndexOnPage += numbersPerPage) {
+     int lastIndexOnPage = Math.min(firstIndexOnPage + numbersPerPage - 1, data.length - 1);
+     printPageHeader(pageHeader, pageNumber);
+     printPage(firstIndexOnPage, lastIndexOnPage, data);
+     printStream.println("\f");
+     pageNumber++;
+   }
+ }
+ private void printPage(int firstIndexOnPage, int lastIndexOnPage, int[] data) {
+   int firstIndexOfLastRowOnPage = firstIndexOnPage + rowsPerPage - 1;
+     for (int firstIndexInRow = firstIndexOnPage; firstIndexInRow <= firstIndexOfLastRowOnPage; firstIndexInRow++) {
+       printRow(firstIndexInRow, lastIndexOnPage, data);
+       printStream.println("");
+     }
+ }
+ private void printRow(int firstIndexInRow, int lastIndexOnPage,  int[] data) {
+   for (int column = 0; column < columnsPerPage; column++) {
+     int index = firstIndexInRow + column * rowsPerPage;
+     if (index <= lastIndexOnPage)
+       printStream.format("%10d", data[index]);
+   }
+ }
+ private void printPageHeader(String pageHeader, int pageNumber) {
+   printStream.println(pageHeader + " --- Page " + pageNumber);
+   printStream.println("");
+ }
+ public void setOutput(PrintStream printStream) {
+   this.printStream = printStream;
+ }
+}
+
+```
+
+Kod aslında uzamış gibi görünüyor ancak kod anlaşılması daha kolay olan parçalara bölündü ve karmaşıklık azaltıldı.     
+
+
+
+
+
+
+
+
+• 
