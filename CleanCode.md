@@ -1342,10 +1342,5 @@ public class RowColumnPagePrinter {
 Kod aslında uzamış gibi görünüyor ancak kod anlaşılması daha kolay olan parçalara bölündü ve karmaşıklık azaltıldı.     
 
 
-
-
-
-
-
-
-• 
+• Yazılım sistemleri sürekli değişir, bozulma riski taşır. Buyüzden değişiklik yaparken Open/Closed Principle dikkati alınmalı; sınıflar genişletmeye açık, değişime kapalı olmalıdır. Yani yani işlev eklemek için mevcut classı değiştirmek yerine, onu miras alarak veya interface implement etmek daha güvenlidir.       
+• Somut ayrıntılara olan bağımlılıklar, sistemimizi test etmemizi zoraştırır. Concrete classlar, uygulama detaylarını içerir. Abstrack classlar ise yalnızca kavramları temsil eder. Detaylara olan bağımlılık hataya açıklılıa neden olur. Bu detayları izole etmek için interface ve abstract kullanılır. Bunlar, concrete classlarla doğrudan bağlantı kurmak yerine bir katman oluşturur. Bu sayede **bir sınıf başka sınıfın ne yaptığına değil, ne sunduğuna odaklanır.**    
