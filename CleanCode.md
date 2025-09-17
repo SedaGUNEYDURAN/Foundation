@@ -1344,3 +1344,19 @@ Kod aslında uzamış gibi görünüyor ancak kod anlaşılması daha kolay olan
 
 • Yazılım sistemleri sürekli değişir, bozulma riski taşır. Buyüzden değişiklik yaparken Open/Closed Principle dikkati alınmalı; sınıflar genişletmeye açık, değişime kapalı olmalıdır. Yani yani işlev eklemek için mevcut classı değiştirmek yerine, onu miras alarak veya interface implement etmek daha güvenlidir.       
 • Somut ayrıntılara olan bağımlılıklar, sistemimizi test etmemizi zoraştırır. Concrete classlar, uygulama detaylarını içerir. Abstrack classlar ise yalnızca kavramları temsil eder. Detaylara olan bağımlılık hataya açıklılıa neden olur. Bu detayları izole etmek için interface ve abstract kullanılır. Bunlar, concrete classlarla doğrudan bağlantı kurmak yerine bir katman oluşturur. Bu sayede **bir sınıf başka sınıfın ne yaptığına değil, ne sunduğuna odaklanır.**    
+
+
+
+## Systems
+• Yazılım sistemlerinde başlatma süreçleri(startup) ile çalışma zamanı mantığı(runtime logic) arasında ayrım yapılmalıdır. Startup, bir uygulama çalıştırıldığında ilk olarak gerçeleşen işlemleri kapsar; object construction, dependency wiring, konfigürasyonların yüklenmesi ....      
+• Bu ayrım yapılmazsa karmaşık ve bakımı zor yapılar ortaya çıkar. Buna örnek olarak Lazy Initializaion/Evaluation verelebiliriz.  Uygulama başlarken gereksiz nesne uygulama oluşturulmaz, null dönme riski olmnadığı için güvenli ama burada burada hem nesne oluşturma hem de iş mantığı yani servis kullanımını içeriyor. Bu sorumlulukların ayrımı (SRP) bozar.       
+
+```java
+public Service getService() {
+ if (service == null)
+   service = new MyServiceImpl(...); // Good enough default for most cases?
+ return service;
+}
+```
+
+• Yukarıdaki örnekteki gibi  bir durumda hard coded bağımlılıklar ortaya çıkar; MyServiceImpl classına doğrudan bağımlılık oluşur. Testlerde, service nesnesi yerine Mock Object veya Test Double kullanılır. Nesne, getService() içinde oluşturulduğu için, test ortamında bu nesneyi oluşturmak zordur.        
