@@ -1368,3 +1368,6 @@ factory = LineItemFactoryImplementation(); //main()'de oluşturuluyor
 orderProcessor = OrderProcessor(factory);  // Fabrika uygulamaya veriliyor
 orderProcessor.processOrder();
 ```
+• Bunu yapmanın diğer bir yolu da [Dependencency Injection(DI)](https://github.com/SedaGUNEYDURAN/Foundation/blob/main/DesignPattern.md#dependency-injection)'dır. Dependency Injection, IoC'nin  bir uygulama biçimidir. Bir nesneye ihtiyaç duyulduğunda diğer nesneler(bağımlılıklar), constructor, setter ya da interface aracılığı ile dışarı verilir. 
+
+- **IoC(Inversion of Control)**: Geleneksel programlamada bir nesne, ihtiyaç duyduğu diğer nesneleri kendisi oluşturur. IoC ile bu konrol tersine çevrilir, nesne ihtiyaç duyduğu bağımlılıkları dışarıdan alır. Böylece nesne, sadece kendi işlevine odaklanır , bağımlılıkları oluşturmak başka bir yapıya devredilir. 
