@@ -16,7 +16,7 @@
   - **Sneak Case**: Kelimeler arasına alt çizgi ekleyerek ve tüm harfleri küçük tutarak yazılır. (my_variable_name)
   - **Kabab Case**: Kelimeleri ayırmak için - kullanılır ve tüm karakterler küçüktür.Genellikle web geliştirme ve URL yapılarında kullanılır.(kabab-case-example) 
   
-• Yazılımın büyümesi var olan bileşenlerin büyümesiyle değil yeni orijinal bileşenlerin eklenmesiyle gerçekleşir. Yazılımın bileşenleri arasındaki ilişkiler de doğrusal(lineer) değildir.
+• Yazılımın büyümesi var olan bileşenlerin büyümesiyle değil yeni orijinal bileşenlerin eklenmesiyle gerçekleşir. Yazılımın bileşenleri arasındaki ilişkiler de doğrusal(lineer) değildir.    
 • Bir işin yapısı üç parçadan oluşur; işin ürettiği çıktılar(products), iş için gerekli işlemler yada davranışlar(required acts), iş için gerekli bilgi girdisi(information cues). Bunu yazılıma uyguladığımızda iki karmaşıklık oluşuyor;Component complexity(bileşen karmaşıklığı, ayrık işlemlerin karmaşıklığı, bilgi girdileriin karmaşıklığı), Coordinate complexity(ilişkisel karmaşıklı, işlemler arasındaki ilişkilerin karmaşıklığı)
 
 
@@ -1359,4 +1359,12 @@ public Service getService() {
 }
 ```
 
-• Yukarıdaki örnekteki gibi  bir durumda hard coded bağımlılıklar ortaya çıkar; MyServiceImpl classına doğrudan bağımlılık oluşur. Testlerde, service nesnesi yerine Mock Object veya Test Double kullanılır. Nesne, getService() içinde oluşturulduğu için, test ortamında bu nesneyi oluşturmak zordur.        
+• Yukarıdaki örnekteki gibi  bir durumda hard coded bağımlılıklar ortaya çıkar; MyServiceImpl classına doğrudan bağımlılık oluşur. Testlerde, service nesnesi yerine Mock Object veya Test Double kullanılır. Nesne, getService() içinde oluşturulduğu için, test ortamında bu nesneyi oluşturmak zordur.            
+• Yazılım geliştirirken, nesne oluşturur ve bu nesneleri kullanırız. Nesne oluşturma işlemleri main fonksiyonunda yapılmalı ve uygulamaya main() vermelidir. Uygulama bu nesneleri kullanır ama nasıl oluşturulduklarını bilmez yani main'in nasıl çalıştığını bilmiyor. Böylece ne olmuş oldu ? Bağımlılık yönü  tek taraflı oldu, uygulama kısmı daha bağımsız, test edilebilir  ve anlaşılabilir hale geldi. main(), sadece setup(kurulum) alanı oldu.      
+• Nesneleri main() oluşturmalı dedik ama bazen uygulamanın kendisi bir nesneyi ne zaman oluşturacağını, kontrol edeceğini bilmek zorundadır. Diyelim ki; e-ticaret uygulaması geliştiriyoruz ve kullanıcı sepete ürün ekliyor. Kullanıcı sepete her ürün eklediğinde LineItem nesnesi oluşturmalıyız. Yani uygulama kendisi oluşturmalı nesneyi ama ne demiştik uygulama hem nesne oluşturup hem de ayrıntılarla ilgilenmek zorunda kalmamalı. Yani LıneItem nesnesinin iç yapısını, constructor'ını, bağımlılıklarını bilmemeli. Bunun için Abstract Factory Pattern (bakınız: https://github.com/SedaGUNEYDURAN/Foundation/blob/main/DesignPattern.md#abstract-factory) kullanabiliriz. . main(), LineItemFactoryImplementation adlı factory'i oluşturur ve uygulamaya verir. Uygulama da bu factoryi kullanarak LineItem oluşturur. Böylece uygulama LıneItem nesnesinin nasıl oluştuğunu, iç yapısını bilmez.    
+
+```java
+factory = LineItemFactoryImplementation(); //main()'de oluşturuluyor
+orderProcessor = OrderProcessor(factory);  // Fabrika uygulamaya veriliyor
+orderProcessor.processOrder();
+```
