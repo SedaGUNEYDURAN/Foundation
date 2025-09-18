@@ -13,7 +13,7 @@ int messageId=mesagge.getId();
 hashMap.computeIfAbsent(messageId, k-> new HashMap<>());
 ```
 
-•   
+•   Reference or primitive type; 
 
 ```java
 Boolean booleanValue = null;
