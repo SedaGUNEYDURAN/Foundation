@@ -1370,4 +1370,7 @@ orderProcessor.processOrder();
 ```
 • Bunu yapmanın diğer bir yolu da [Dependencency Injection(DI)](https://github.com/SedaGUNEYDURAN/Foundation/blob/main/DesignPattern.md#dependency-injection)'dır. Dependency Injection, IoC'nin  bir uygulama biçimidir. Bir nesneye ihtiyaç duyulduğunda diğer nesneler(bağımlılıklar), constructor, setter ya da interface aracılığı ile dışarı verilir. 
 
-- **IoC(Inversion of Control)**: Geleneksel programlamada bir nesne, ihtiyaç duyduğu diğer nesneleri kendisi oluşturur. IoC ile bu konrol tersine çevrilir, nesne ihtiyaç duyduğu bağımlılıkları dışarıdan alır. Böylece nesne, sadece kendi işlevine odaklanır , bağımlılıkları oluşturmak başka bir yapıya devredilir. 
+- **IoC(Inversion of Control)**: Geleneksel programlamada bir nesne, ihtiyaç duyduğu diğer nesneleri kendisi oluşturur. IoC ile bu konrol tersine çevrilir, nesne ihtiyaç duyduğu bağımlılıkları dışarıdan alır. Böylece nesne, sadece kendi işlevine odaklanır , bağımlılıkları oluşturmak başka bir yapıya devredilir.   
+- JNDI kısmı bir dependency injection olarak görülüyor; nesne, dışarıdan bir yapı tarafından değil, kendi içinde bağımlılığı çözdüğü için. Ama gerçek dependency injectionda class tamamen pasiftir, bağımlılıkları kendisi çözmez.
+- Spring, Java dünyasında kullanılan en yaygın DI container'dır.   
+- Lazy Inıtialization ile dependency injection birlikte kullanıldığında; DI container, nesneyi ilk ihtiyaç duyulduğunda oluşturur. Bu da performansı arttırır.    
