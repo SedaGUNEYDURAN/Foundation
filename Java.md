@@ -1,3 +1,17 @@
+# JAVA İle İlgili Terimler
+• **Java Naming and Directory Interface(JNDI)**: Java platformunda adlandırma ve dizin hizmetlerine erişim sağlayan bir API'dır. Veratabanı, mesajlaşma sistemleri, EJB bileşenleri gibi kaynaklara erişimi kolaylaştırmak için kullanılır.    
+
+- Uygulamalar, bir veritabanı bağlantısı veya başka bir servisi doğrudan tanımalamak yerine, JNDI üzerinden bir isimle çağırırlar.   
+- Bağlantıyı  soyutlar. Kodda bağlantı detayları yer almaz, bu sayede uygulama farklı ortamlarda kolayca çalıştırılabilir.   
+- LDAP gibi dizin servisleri ile çalışabilir.    
+
+```java
+Context ctx = new InitialContext();
+DataSource ds = (DataSource) ctx.lookup("java:/comp/env/jdbc/MyDB"); //MyDB isimli veritabanı bağlantısı JNDI üzerinden bulunup kullanılıyor. 
+Connection conn = ds.getConnection();
+```
+
+
 # Object Oriented Kavramlar
 •  **Polimorfizm**; aynı işlemin, farklı veri tipleri veya sınıflar üzerinde farklı şekillerde çalışabilmesini sağlar. Aynı isimdeki bir metoduni farklı classlar tarafından farklı şekillerde uygulanmasına olanak verir.  
 •  **Concrete Class(Somut Sınıf)**, doğrudan örneklenebilen yani new anahtar kelimesi kullanılarak bir instance'ının yani objesinin oluşturulabileceği anlamına gelir.  Bir obje yaratmak için constructor'a sahip olan ve doğrudan kullanılabilen bir sınıftır.      
@@ -480,5 +494,5 @@ Bu örnekte MyCustomAnnotation adında bir anotasyon tanımlanmıştır ve value
 
 
 ## Diğer Kavramlar 
-• **Specification:** Bir yazılım bileşeninin veya sisteminin ne yapması gerektiğini tanımlayan bir belgedir. Geliştirilen yazılımın hedeflerini, özelliklerini ve davranışlarını belirler. Kullanıcı ihtiyaçlarını anlamak ve geliştirme sürecine rehberlik etmek için kullnılır. 
+• **Specification:** Bir yazılım bileşeninin veya sisteminin ne yapması gerektiğini tanımlayan bir belgedir. Geliştirilen yazılımın hedeflerini, özelliklerini ve davranışlarını belirler. Kullanıcı ihtiyaçlarını anlamak ve geliştirme sürecine rehberlik etmek için kullnılır.     
 • **Implementation:** Yazılımın nasıl oluşturulduğunu ve kodlarını ifade eder. Spesifikasyonun belirtilen gereksinimlerin somut, çalışır durumdaki bir yazılım ürününe dönüşmesini sağlar. 
