@@ -1374,3 +1374,8 @@ orderProcessor.processOrder();
 - JNDI kısmı bir dependency injection olarak görülüyor; nesne, dışarıdan bir yapı tarafından değil, kendi içinde bağımlılığı çözdüğü için. Ama gerçek dependency injectionda class tamamen pasiftir, bağımlılıkları kendisi çözmez.
 - Spring, Java dünyasında kullanılan en yaygın DI container'dır.   
 - Lazy Inıtialization ile dependency injection birlikte kullanıldığında; DI container, nesneyi ilk ihtiyaç duyulduğunda oluşturur. Bu da performansı arttırır.    
+
+
+• Sistemlerin en baştan en kapsayıcı, doğru şekilde oluşturulabilmesi sadece bir efsanedir. Bunun yerine zamanla genişlemeye açık sistemler tercih etmeliyiz. (mükemmelliyetçi olma burda bari olma!)   
+• Teoride; veri ile ilgili işlemleri ayrı bir modülde tutabiliriz denilir. Ancak uygulamada, aynı veri işleme kodlarını bir çok farklı sınıfa yaymak zorunda kalırız, yani kod tekrarı yaparız. Bu tür tekrar eden, bir çok yere yayılan sorunlara **cross-cutting concerns(kesitsel sorunlar)** denir. Bu tarz durumlar için Aspect-Oriented Programming(AOP-Kesit Yönelimli Programlama) yaklaşımı  tercih edilir. AOPile ortak işlemleri **aspect** adı ile verilen modüllerde toplarsın. Böylece kodun daha temiz ve sade olur, tek bir yerden kontrol edilebilir, tekrar eden kodlar ortadan kalkar.     
+• Bir nesnenin veya verinin kalıcı hale getirilmesi yani genellikle veritabanına kaydedilmesine persistence(veri kalıcılığı) denir. Hangi nesnenin hangi özelliğinin kalıcı olacağını belirtiriz  ve veriyi veritabanına kaydetme işini bir persistence framework'e(Hibernate, JPA gibi ..) devrederiz. AOP sayesinden, persistence işlemleri gibi davranışlar hedef koda müdahale etmedene eklenebilir-> kodun içine dağılmadı, merkezi düzenli bir şekilde uygulandı.    
