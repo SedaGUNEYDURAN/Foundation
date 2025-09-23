@@ -1378,4 +1378,63 @@ orderProcessor.processOrder();
 
 • Sistemlerin en baştan en kapsayıcı, doğru şekilde oluşturulabilmesi sadece bir efsanedir. Bunun yerine zamanla genişlemeye açık sistemler tercih etmeliyiz. (mükemmelliyetçi olma burda bari olma!)   
 • Teoride; veri ile ilgili işlemleri ayrı bir modülde tutabiliriz denilir. Ancak uygulamada, aynı veri işleme kodlarını bir çok farklı sınıfa yaymak zorunda kalırız, yani kod tekrarı yaparız. Bu tür tekrar eden, bir çok yere yayılan sorunlara **cross-cutting concerns(kesitsel sorunlar)** denir. Bu tarz durumlar için Aspect-Oriented Programming(AOP-Kesit Yönelimli Programlama) yaklaşımı  tercih edilir. AOPile ortak işlemleri **aspect** adı ile verilen modüllerde toplarsın. Böylece kodun daha temiz ve sade olur, tek bir yerden kontrol edilebilir, tekrar eden kodlar ortadan kalkar.     
-• Bir nesnenin veya verinin kalıcı hale getirilmesi yani genellikle veritabanına kaydedilmesine persistence(veri kalıcılığı) denir. Hangi nesnenin hangi özelliğinin kalıcı olacağını belirtiriz  ve veriyi veritabanına kaydetme işini bir persistence framework'e(Hibernate, JPA gibi ..) devrederiz. AOP sayesinden, persistence işlemleri gibi davranışlar hedef koda müdahale etmedene eklenebilir-> kodun içine dağılmadı, merkezi düzenli bir şekilde uygulandı.    
+• Bir nesnenin veya verinin kalıcı hale getirilmesi yani genellikle veritabanına kaydedilmesine persistence(veri kalıcılığı) denir. Hangi nesnenin hangi özelliğinin kalıcı olacağını belirtiriz  ve veriyi veritabanına kaydetme işini bir persistence framework'e(Hibernate, JPA gibi ..) devrederiz. AOP sayesinden, persistence işlemleri gibi davranışlar hedef koda müdahale etmedene eklenebilir-> kodun içine dağılmadı, merkezi düzenli bir şekilde uygulandı.  
+
+## Java Proxies
+• [Proxy](https://github.com/SedaGUNEYDURAN/Foundation/blob/main/DesignPattern.md#proxy), bir nesnenin yerine geçerek onun davranışlarını kontrol eden yapıdır. Java'da dinamik proxy ile runtime'da bir nesnenin davranışını değiştirebiliriz. JDK Proxy API, özellikle veritabanı işlemleri gibi cross-cutting işlemleri merkezi bir noktada toplamak için kullanışlıdır. Ancak InvocationHandler, reflection, metot isimleri nedeniyle kodu karmaşıklaştırır.  **Java'nın standart kütüphanesi, sadece interfaceler için dinamik proxy oluşturabilir.** Eğer bir class'ı proxylemek istiyorsak; CGLIB, ASM veya javassist gibi byte-code manipulation kütüphanelerini kullanabiliriz. JDK Proxy API, Java'nın java.lang.reflect paketinde yer alır ve iki bileşen ile çalışır;   
+
+- **Proxy classı:** Dinamik proxy nesnesi oluşturmak için kullanılır. Sadece interfaceleri proxyleyebilir, classları değil.Proxy nesnesi, gerçek nesne gibi davranır ama çağrılar önce bir handler'a yönlendirilir.   
+- **InvocationHandler:** Proxy üzerinden yapılan her metot çağrısı invoke() öetoduna düşer. Burada çağrıyı yakalayabiliriz,  değiştirebiliriz, loglayabiliriz, yönlendirebiliriz.
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        Service proxy = (Service) Proxy.newProxyInstance(
+            Service.class.getClassLoader(),
+            new Class[] { Service.class },
+            new ServiceHandler(new RealService())
+        );
+
+        proxy.perform(); // Proxy üzerinden çağrı yapılır
+    }
+}
+```
+
+```java
+public interface Service {
+    void perform();
+}
+```
+
+```java
+public class RealService implements Service {
+    public void perform() {
+        System.out.println("Gerçek işlem yapılıyor.");
+    }
+}
+```
+
+```java
+import java.lang.reflect.*;
+
+public class ServiceHandler implements InvocationHandler {
+    private final Service realService;
+
+    public ServiceHandler(Service realService) {
+        this.realService = realService;
+    }
+
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        System.out.println("Proxy: işlem başlamadan önce...");
+        Object result = method.invoke(realService, args);
+        System.out.println("Proxy: işlem tamamlandı.");
+        return result;
+    }
+}
+```
+
+
+• 
+
+
+
