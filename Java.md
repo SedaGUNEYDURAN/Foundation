@@ -11,6 +11,17 @@ DataSource ds = (DataSource) ctx.lookup("java:/comp/env/jdbc/MyDB"); //MyDB isim
 Connection conn = ds.getConnection();
 ```
 
+# Programlama Paradigmaları(Yazılım Geliştirme Yaklaşımları)
+• Yazılım geliştirme metodolojileri, süreç yaklaşımıdır. Yani projeyi nasıl planlayıp yöneteceğini belirler.Waterfall, Agile gibi. Programlama paradigması ise kodlamaya yaklaşımdır. Kodun nasıl yazılacağını belirler. OOP, AOP, FP gibi  
+
+## Aspect Oriented Programming(ASP)
+• OOP için tamamlayıcı bir yaklaşımdır. Kodun yapısını ve davranışını nasıl organize edeceğimizi tanımlar. Amacı; loglama, hata yönetimi, güvenlik gibi konularda tekrarlayan kodları  ([cross cutting concerns](https://github.com/SedaGUNEYDURAN/Foundation/blob/main/CleanCode.md#cross-cutting-concernskesitsel-sorunlar) )ayrı bir yerde tanımlayıp farklı sınıflara otomatik olarak enjekte etmektir. Bu tekrarlayan davranışlarada aspect(boyut) denir. OOP ile log metodu yazacağımızda log metodunu her sınıfa ekleyip çağırırız. AOPile bir LoggingAspect tanımlarız ve bu aspect belirli metotlar çağırıldığında otomatik olarak devreye girer. 
+• Java AOP'yi doğrudan desteklemez ama Spring Framework gibi kütüphanelerle uygulanabilir. 
+
+
+
+
+
 
 # Object Oriented Kavramlar
 •  **Polimorfizm**; aynı işlemin, farklı veri tipleri veya sınıflar üzerinde farklı şekillerde çalışabilmesini sağlar. Aynı isimdeki bir metoduni farklı classlar tarafından farklı şekillerde uygulanmasına olanak verir.  
