@@ -1377,6 +1377,8 @@ orderProcessor.processOrder();
 
 
 • Sistemlerin en baştan en kapsayıcı, doğru şekilde oluşturulabilmesi sadece bir efsanedir. Bunun yerine zamanla genişlemeye açık sistemler tercih etmeliyiz. (mükemmelliyetçi olma burda bari olma!)   
+
+### Cross-Cutting Concerns(Kesitsel Sorunlar)
 • Teoride; veri ile ilgili işlemleri ayrı bir modülde tutabiliriz denilir. Ancak uygulamada, aynı veri işleme kodlarını bir çok farklı sınıfa yaymak zorunda kalırız, yani kod tekrarı yaparız. Bu tür tekrar eden, bir çok yere yayılan sorunlara **cross-cutting concerns(kesitsel sorunlar)** denir. Bu tarz durumlar için Aspect-Oriented Programming(AOP-Kesit Yönelimli Programlama) yaklaşımı  tercih edilir. AOP ile ortak işlemleri **aspect** adı ile verilen modüllerde toplarsın. Böylece kodun daha temiz ve sade olur, tek bir yerden kontrol edilebilir, tekrar eden kodlar ortadan kalkar.        
 
 - Kodun tekrar etmesi cross-cutting concern değildir ama cross-cutting concernlerin sonucundan kod tekrar ortaya çıkar. İşin özünde cross-cutting concerns, bir yazılımın birçok farklı yerinde ihtiyaç duyulan ortak davranışlardır.Bu davranışlar iş mantığından bağımsızdır.   
