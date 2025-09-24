@@ -1435,7 +1435,7 @@ Bu örnekte anotasyonlar kulladıldı;
 Before anotasyonu o paketteki bir metot çağırıldığında aspectin çağırılacağını ifade etmektedir. placeholder() ve paymentservice() metotları sırasıyla çağırıldığında aşağıdaki çıktıyı verir. Burada System.out.println("Sipariş verildi.");
  kodu siparişin gerçekten verildiğini kullanıcıya veya sistem içi bir loga bildirmek için yazılmıştır. Bu mesaj, işin kendisinin bir parçasıdır. Siparişin başarıyla işlendiğini gösterir. LOG: Metot çağrılıyor → placeOrder ise metot çağırıldığında otomatik olarak AOP tarafından üretilir. Bu metot çalıştırılıyor bilgisini verir ve işin kendisiyle değil, metodun davranışıyla ilgilidir.     
       
-• Bir nesnenin veya verinin kalıcı hale getirilmesi yani genellikle veritabanına kaydedilmesine persistence(veri kalıcılığı) denir. Hangi nesnenin hangi özelliğinin kalıcı olacağını belirtiriz  ve veriyi veritabanına kaydetme işini bir persistence framework'e(Hibernate, JPA gibi ..) devrederiz. AOP sayesinden, persistence işlemleri gibi davranışlar hedef koda müdahale etmedene eklenebilir-> kodun içine dağılmadı, merkezi düzenli bir şekilde uygulandı.     
+• Bir nesnenin veya verinin kalıcı hale getirilmesi yani genellikle veritabanına kaydedilmesine persistence(veri kalıcılığı) denir. Hangi nesnenin hangi özelliğinin kalıcı olacağını belirtiriz  ve veriyi veritabanına kaydetme işini bir persistence framework'e(Hibernate, JPA gibi ..) devrederiz. AOP sayesinden, persistence işlemleri gibi davranışlar hedef koda müdahale etmedene eklenebilir(saveUser() metoduna loglama eklemek için metodu değiştirmezsin. AOP bunu dışarıdan yapar gibi)-> kodun içine dağılmadı, merkezi düzenli bir şekilde uygulandı.     Java'da aspect ya da aspect benzeri mekanizmalar; Java Proxies, Spring AOP, AspectJ, 
 
 ### Java Proxies
 • [Proxy](https://github.com/SedaGUNEYDURAN/Foundation/blob/main/DesignPattern.md#proxy), bir nesnenin yerine geçerek onun davranışlarını kontrol eden yapıdır. Java'da dinamik proxy ile runtime'da bir nesnenin davranışını değiştirebiliriz. JDK Proxy API, özellikle veritabanı işlemleri gibi cross-cutting işlemleri merkezi bir noktada toplamak için kullanışlıdır. Ancak InvocationHandler, reflection, metot isimleri nedeniyle kodu karmaşıklaştırır.  **Java'nın standart kütüphanesi, sadece interfaceler için dinamik proxy oluşturabilir.** Eğer bir class'ı proxylemek istiyorsak; CGLIB, ASM veya javassist gibi byte-code manipulation kütüphanelerini kullanabiliriz. JDK Proxy API, Java'nın java.lang.reflect paketinde yer alır ve iki bileşen ile çalışır;   
@@ -1491,7 +1491,62 @@ public class ServiceHandler implements InvocationHandler {
 ```
 
 
-• 
 
+### Spring AOP
+• Spring AOP, JBoss gibi frameworkler aspectleri uygulamak için proxy kullanır. Proxy ile ilgili karmaşık kodlar otomatik olarak araçlar ile yönetilir. Spring'de iş mantığını POJO'lar ile yazarız. POJO'lara doğrudan loglama kodu yazmayız. Bunu 
 
+- **POJO(Plain Old Java Object):**  Sade, sıradan, bağımsız Java nesnesidir. Sadece veri tutar ya da iş mantığı içerir, altyapı kodu(loglama, güvenlik vb.) içermez.. Hiçbir framework'e, API'ye veya kütüphaneye beğımlı değildir. Bir frameworkebağımlı olmadığı için kolayca test edilebilir.  Basit setter/getter metotlarını, constructorları içerir. POJO, sadece Java nesnesidir. Java Bean ise POJO'nun özel bir türüdür. Getter/setterları vardır. Serializable olabilir ve genellikle parametresiz constructor içerir. **Her Java Bean POJO'dur ancak her POJO java bean değildir.** Aşağıdaki kod bir POJO'dur; hiçbir framework'e bağlı değil, sadece veri tutuyor. 
+
+```java
+public class User {
+    private String name;
+    private int age;
+
+    public User() {}
+
+    public User(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+}
+
+```
+
+Aşağıdaki kod ise POJO değildir; notasyonlar bulunuyor, JPA framework'e bağlı.    
+```java
+@Entity
+public class User {
+    @Id
+    private Long id;
+
+    @Column(name = "username")
+    private String name;
+}
+```
+
+- Loglamalar,cache ayarları, güvenlik kuralları, veritabanı bağlantıları gibi altyapı kodları, yapılandırma dosyalarında(applicaiton.properties gibi), anotasyonlarla( @Transactional, @Cacheable, @Secured etc.)  tanımlanır. Notasyonlar, POJO'nun üzerine yazılır ama davranışı framework yönetir. Bu notasyonları her biri aspecttir. Spring, bu metodu proxy ile sarar ve işlem öncesi/sonrası otomatik davranışları ekler.    
+  > @Transactional: Spring otomatik olarak başlatır, commit eder ve rollback eder. Transaction işlemini gerçekleştirir.   
+  > @Cacheable: Üzerinde bulunduğu metodun sonucu cache'e alınır. Aynı veri tekrar istenirse veritabanına gitmeden cache'den gelir.   
+  > @Secured: üzerinde bulunduğu metot sadece admin yetkisine sahip kullanıcılar tarafından çalıştırılabilir.    
+
+- Yazılım mimarisi Russian Doll'a benzetilir. Matruşka gibi her katman bir diğerinin içine yerleştirilmiştir.Her katman diğerini proxy yani sarmalayıcı olarak kapsar. Yazılımda katmanlı mimari ve soyutlama sağlamak için yapılır. Bu yapı modülerlik(her katmanın kend görevinden sorumlu olması), test edilebilirlik(DAO objesi, Domain objeden bağımsız test edilebilir), esneklik(veritabanı değişikliğinden domain object etkilenmez), bakım kolaylığı(her katman ayrı geliştirilebilir) sağlar.  **Bean**, Java'da genellikle bir nesne ya da bileşen anlamına gelir. Spring gibi frameworklerde bir sınıfın örneğini yani instance olarak kullanılır.    
+  > En içte domain object bulunur. İş mantığını temsil eder. **Domain Object**, gerçek dünyadaki bir kavramı temsil eden nesnedir. Banka classı bankayı temsil eder.
+  > Ortada DAO(Data Access Object- Veri Erişim Nesnesi) bulunur. **DAO**, veritabanına erişimi soyutlayan bir katmandır. Domain objeleriyle veritabanı arasında köprü görevi görür.  Bank objesini kapsar, onun verisini varitabanından alır.
+  > En dışta JDBC veri kaynağı bulunmaktadır. **JDBC**, Java'nın veritabanı ile iletişim kurmasını sağlayan alt seviye yapıdır. Yani DAO'nun veritabanına erişmesini sağlar.
 
