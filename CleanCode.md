@@ -1377,10 +1377,65 @@ orderProcessor.processOrder();
 
 
 • Sistemlerin en baştan en kapsayıcı, doğru şekilde oluşturulabilmesi sadece bir efsanedir. Bunun yerine zamanla genişlemeye açık sistemler tercih etmeliyiz. (mükemmelliyetçi olma burda bari olma!)   
-• Teoride; veri ile ilgili işlemleri ayrı bir modülde tutabiliriz denilir. Ancak uygulamada, aynı veri işleme kodlarını bir çok farklı sınıfa yaymak zorunda kalırız, yani kod tekrarı yaparız. Bu tür tekrar eden, bir çok yere yayılan sorunlara **cross-cutting concerns(kesitsel sorunlar)** denir. Bu tarz durumlar için Aspect-Oriented Programming(AOP-Kesit Yönelimli Programlama) yaklaşımı  tercih edilir. AOPile ortak işlemleri **aspect** adı ile verilen modüllerde toplarsın. Böylece kodun daha temiz ve sade olur, tek bir yerden kontrol edilebilir, tekrar eden kodlar ortadan kalkar.     
-• Bir nesnenin veya verinin kalıcı hale getirilmesi yani genellikle veritabanına kaydedilmesine persistence(veri kalıcılığı) denir. Hangi nesnenin hangi özelliğinin kalıcı olacağını belirtiriz  ve veriyi veritabanına kaydetme işini bir persistence framework'e(Hibernate, JPA gibi ..) devrederiz. AOP sayesinden, persistence işlemleri gibi davranışlar hedef koda müdahale etmedene eklenebilir-> kodun içine dağılmadı, merkezi düzenli bir şekilde uygulandı.  
+• Teoride; veri ile ilgili işlemleri ayrı bir modülde tutabiliriz denilir. Ancak uygulamada, aynı veri işleme kodlarını bir çok farklı sınıfa yaymak zorunda kalırız, yani kod tekrarı yaparız. Bu tür tekrar eden, bir çok yere yayılan sorunlara **cross-cutting concerns(kesitsel sorunlar)** denir. Bu tarz durumlar için Aspect-Oriented Programming(AOP-Kesit Yönelimli Programlama) yaklaşımı  tercih edilir. AOP ile ortak işlemleri **aspect** adı ile verilen modüllerde toplarsın. Böylece kodun daha temiz ve sade olur, tek bir yerden kontrol edilebilir, tekrar eden kodlar ortadan kalkar.        
 
-## Java Proxies
+- Kodun tekrar etmesi cross-cutting concern değildir ama cross-cutting concernlerin sonucundan kod tekrar ortaya çıkar. İşin özünde cross-cutting concerns, bir yazılımın birçok farklı yerinde ihtiyaç duyulan ortak davranışlardır.Bu davranışlar iş mantığından bağımsızdır.   
+- İş mantığı uygulamanın asıl amacı ile ilgili kodlardır. Yani kullanıcının ihtiyacını karşılayan uygulamanın ne işe yaradığını belirleyen kısımlardır(e-ticaret sitesinde ürün satmak, banka uygulamasında para transferi yapmak gibi). Loglama bir iş mantığı değildir. Sadece ne olduğunu kaydeder. Güvenlik, hata ayıklama da bunun gibi. Bu işlemler her yerde yapılır ama her işlemin amacı farklıdır. Bu davranışlar uygulamanın ne yaptığı ile değil, nasıl izlendiği ile ilgilidir. Bu yüzden de iş mantığından bağımsızlardır.    
+
+```xml
+<!-- pom.xml -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-aop</artifactId>
+</dependency>
+
+```
+
+```java
+@Aspect
+@Component
+public class LoggingAspect {
+
+    @Before("execution(* com.example.service.*.*(..))")
+    public void logBeforeMethod(JoinPoint joinPoint) {
+        System.out.println("LOG: Metot çağrılıyor → " + joinPoint.getSignature().getName());
+    }
+}
+
+```
+
+```java
+@Service
+public class OrderService {
+    public void placeOrder() {
+        // sipariş işlemi
+        System.out.println("Sipariş verildi.");
+    }
+}
+
+@Service
+public class PaymentService {
+    public void processPayment() {
+        // ödeme işlemi
+        System.out.println("Ödeme işlendi.");
+    }
+}
+
+```
+
+
+Bu örnekte anotasyonlar kulladıldı;
+ 
+ - @Aspect : bu sınıf bir aspecttir.   
+ - @Before : metot çağırılmadan önce çalışır.  @Before("execution(* com.example.service.*.*(..))") bu bölümde execution(* com.example.service.*.*(..)) paketindeki tüm sınıfların tüm metotlarını hedef alır.    
+ - JointPoint: hangi metodun çağırıldığını gösterir.   
+
+Before anotasyonu o paketteki bir metot çağırıldığında aspectin çağırılacağını ifade etmektedir. placeholder() ve paymentservice() metotları sırasıyla çağırıldığında aşağıdaki çıktıyı verir. Burada System.out.println("Sipariş verildi.");
+ kodu siparişin gerçekten verildiğini kullanıcıya veya sistem içi bir loga bildirmek için yazılmıştır. Bu mesaj, işin kendisinin bir parçasıdır. Siparişin başarıyla işlendiğini gösterir. LOG: Metot çağrılıyor → placeOrder ise metot çağırıldığında otomatik olarak AOP tarafından üretilir. Bu metot çalıştırılıyor bilgisini verir ve işin kendisiyle değil, metodun davranışıyla ilgilidir.     
+      
+• Bir nesnenin veya verinin kalıcı hale getirilmesi yani genellikle veritabanına kaydedilmesine persistence(veri kalıcılığı) denir. Hangi nesnenin hangi özelliğinin kalıcı olacağını belirtiriz  ve veriyi veritabanına kaydetme işini bir persistence framework'e(Hibernate, JPA gibi ..) devrederiz. AOP sayesinden, persistence işlemleri gibi davranışlar hedef koda müdahale etmedene eklenebilir-> kodun içine dağılmadı, merkezi düzenli bir şekilde uygulandı.     
+
+### Java Proxies
 • [Proxy](https://github.com/SedaGUNEYDURAN/Foundation/blob/main/DesignPattern.md#proxy), bir nesnenin yerine geçerek onun davranışlarını kontrol eden yapıdır. Java'da dinamik proxy ile runtime'da bir nesnenin davranışını değiştirebiliriz. JDK Proxy API, özellikle veritabanı işlemleri gibi cross-cutting işlemleri merkezi bir noktada toplamak için kullanışlıdır. Ancak InvocationHandler, reflection, metot isimleri nedeniyle kodu karmaşıklaştırır.  **Java'nın standart kütüphanesi, sadece interfaceler için dinamik proxy oluşturabilir.** Eğer bir class'ı proxylemek istiyorsak; CGLIB, ASM veya javassist gibi byte-code manipulation kütüphanelerini kullanabiliriz. JDK Proxy API, Java'nın java.lang.reflect paketinde yer alır ve iki bileşen ile çalışır;   
 
 - **Proxy classı:** Dinamik proxy nesnesi oluşturmak için kullanılır. Sadece interfaceleri proxyleyebilir, classları değil.Proxy nesnesi, gerçek nesne gibi davranır ama çağrılar önce bir handler'a yönlendirilir.   
