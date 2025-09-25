@@ -11,6 +11,14 @@ DataSource ds = (DataSource) ctx.lookup("java:/comp/env/jdbc/MyDB"); //MyDB isim
 Connection conn = ds.getConnection();
 ```
 
+• **Enterprise JavaBeans 2.x (EJB2)**: 2000 yıllarının başında kullanılan sunucu tarafı bileşendir. Kurulsal uygulamalarda business logic, veri erişimini, dağıtık işlem yönetimini standartlaştırmak için geliştirilmiştir. XML yapılandırması çok fazla, unit test yazması zor, kodlar sıkı bir şekilde container'a bağımlı olduğu için zamanla yerini EJB3 aldı.EJB3 de zamanla yerini Spring Boot, Micronaut, Quarkus gibi frameworklere bıraktı. EJB2, 3 ana bileşenden oluşur.      
+
+-  Session Bean: Business logic içerir. Stateful ve stateless olmak üzere iki çeşittir.      
+-  Entity Bean: Veritabanındaki kalıcı verileri temsil eder.Otomatik(Container-Managed Persistence(CMP)) veya manuel(Bean-Managed Persistence(BMP)) veri yönetimini sağlar. Entity beanler primary key ile tanımlanır ve sunucu kapanıp açıldığında bile verileri korunur. Bir Customer tablosu varsa onu temsil eden CustomerEntityBean classı olur.         
+-  Message-Driven Bean: Mesaj tabanlı işlemleri yönetir. Genellikle JMS(Java Messaging Service) ile kullanılır.      
+
+• **Java Persistence API(JPA):** Entity beanler yerini JPA(Java Persistence API)'a bıraktı. JPA, java'da veritabanı işlemlerini yönetmek için geliştirilen bir standarttır. Herhangi bir class, varitabanı tablosunu temsil eder. Anotasyonlar kullanılarak tablo-sütun eşleşmesi yapılır. Spring gibi frameworklerle kolayca entegre olur.    
+
 ## Programlama Paradigmaları(Yazılım Geliştirme Yaklaşımları)
 • Yazılım geliştirme metodolojileri, süreç yaklaşımıdır. Yani projeyi nasıl planlayıp yöneteceğini belirler.Waterfall, Agile gibi. Programlama paradigması ise kodlamaya yaklaşımdır. Kodun nasıl yazılacağını belirler. OOP, AOP, FP gibi  
 
