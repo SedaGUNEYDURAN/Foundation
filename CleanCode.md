@@ -1493,9 +1493,10 @@ public class ServiceHandler implements InvocationHandler {
 
 
 ### Spring AOP
-• Spring AOP, JBoss gibi frameworkler aspectleri uygulamak için proxy kullanır. Proxy ile ilgili karmaşık kodlar otomatik olarak araçlar ile yönetilir. Spring'de iş mantığını POJO'lar ile yazarız. POJO'lara doğrudan loglama kodu yazmayız. Bunu 
+• Spring AOP, JBoss gibi frameworkler aspectleri uygulamak için proxy kullanır. Proxy ile ilgili karmaşık kodlar otomatik olarak araçlar ile yönetilir. Spring'de iş mantığını POJO'lar ile yazarız. POJO'lara doğrudan loglama kodu yazmayız. 
 
-- **POJO(Plain Old Java Object):**  Sade, sıradan, bağımsız Java nesnesidir. Sadece veri tutar ya da iş mantığı içerir, altyapı kodu(loglama, güvenlik vb.) içermez.. Hiçbir framework'e, API'ye veya kütüphaneye beğımlı değildir. Bir frameworkebağımlı olmadığı için kolayca test edilebilir.  Basit setter/getter metotlarını, constructorları içerir. POJO, sadece Java nesnesidir. Java Bean ise POJO'nun özel bir türüdür. Getter/setterları vardır. Serializable olabilir ve genellikle parametresiz constructor içerir. **Her Java Bean POJO'dur ancak her POJO java bean değildir.** Aşağıdaki kod bir POJO'dur; hiçbir framework'e bağlı değil, sadece veri tutuyor. 
+#### POJO(Plain Old Java Object)
+Sade, sıradan, bağımsız Java nesnesidir. Sadece veri tutar ya da iş mantığı içerir, altyapı kodu(loglama, güvenlik vb.) içermez.. Hiçbir framework'e, API'ye veya kütüphaneye beğımlı değildir. Bir frameworkebağımlı olmadığı için kolayca test edilebilir.  Basit setter/getter metotlarını, constructorları içerir. POJO, sadece Java nesnesidir. Java Bean ise POJO'nun özel bir türüdür. Getter/setterları vardır. Serializable olabilir ve genellikle parametresiz constructor içerir. **Her Java Bean POJO'dur ancak her POJO java bean değildir.** Aşağıdaki kod bir POJO'dur; hiçbir framework'e bağlı değil, sadece veri tutuyor. 
 
 ```java
 public class User {
@@ -1545,8 +1546,14 @@ public class User {
   > @Cacheable: Üzerinde bulunduğu metodun sonucu cache'e alınır. Aynı veri tekrar istenirse veritabanına gitmeden cache'den gelir.   
   > @Secured: üzerinde bulunduğu metot sadece admin yetkisine sahip kullanıcılar tarafından çalıştırılabilir.    
 
-- Yazılım mimarisi Russian Doll'a benzetilir. Matruşka gibi her katman bir diğerinin içine yerleştirilmiştir.Her katman diğerini proxy yani sarmalayıcı olarak kapsar. Yazılımda katmanlı mimari ve soyutlama sağlamak için yapılır. Bu yapı modülerlik(her katmanın kend görevinden sorumlu olması), test edilebilirlik(DAO objesi, Domain objeden bağımsız test edilebilir), esneklik(veritabanı değişikliğinden domain object etkilenmez), bakım kolaylığı(her katman ayrı geliştirilebilir) sağlar.  **Bean**, Java'da genellikle bir nesne ya da bileşen anlamına gelir. Spring gibi frameworklerde bir sınıfın örneğini yani instance olarak kullanılır.    
+- Yazılım mimarisi Russian Doll'a benzetilir. Matruşka gibi her katman bir diğerinin içine yerleştirilmiştir.Her katman diğerini proxy yani sarmalayıcı olarak kapsar. Yazılımda katmanlı mimari ve soyutlama sağlamak için yapılır. Bu yapı modülerlik(her katmanın kendi görevinden sorumlu olması), test edilebilirlik(DAO objesi, Domain objeden bağımsız test edilebilir), esneklik(veritabanı değişikliğinden domain object etkilenmez), bakım kolaylığı(her katman ayrı geliştirilebilir) sağlar.  **Bean**, Java'da genellikle bir nesne ya da bileşen anlamına gelir. Spring gibi frameworklerde bir sınıfın örneğini yani instance olarak kullanılır.    
   > En içte domain object bulunur. İş mantığını temsil eder. **Domain Object**, gerçek dünyadaki bir kavramı temsil eden nesnedir. Banka classı bankayı temsil eder.
   > Ortada DAO(Data Access Object- Veri Erişim Nesnesi) bulunur. **DAO**, veritabanına erişimi soyutlayan bir katmandır. Domain objeleriyle veritabanı arasında köprü görevi görür.  Bank objesini kapsar, onun verisini varitabanından alır.
   > En dışta JDBC veri kaynağı bulunmaktadır. **JDBC**, Java'nın veritabanı ile iletişim kurmasını sağlayan alt seviye yapıdır. Yani DAO'nun veritabanına erişmesini sağlar.
+<img width="416" height="174" alt="image" src="https://github.com/user-attachments/assets/e4f3a0e7-e42c-4e46-ba3d-2241f24144ce" />
 
+
+• Yukarıdaki şemada [decorator](https://github.com/SedaGUNEYDURAN/Foundation/blob/main/DesignPattern.md#decorator) patterni kullanılmıştır. Decorator pattern, bir nesnenin davranışını dinamik olarak genişletmek için kullanılır. Yani temel bir nesneye ek özellik eklemek istiyorsak, matruşka gibi onu başka nesnelerle sararız. Bu katmanlı yapı manuel olarak oluşturulmaz. Dependency injection container, XML dosyasındaki tanımlara göre bu nesneleri oluşturur ve birbirine bağlar. Uygulama sadece "bana Bank nesnesini ver" der, DI container ise tüm decoratorlarla sarılmış halini verir.        
+• Yukarıdaki şemada Client sistemden getAccounts() gibi bir metodu çağırıyor. AppDataSource en dıştaki decoratordur, caching(önbellekleme) gibi işlemler yapıyor. Client bu nesne ile konuşur. BankDataAccessObject ise AppDataSource'un içinde yer alan başka bir decoratordur ve data access(veri erişimi) gibi işlemler sağlar.  Burada Bank en içteki gerçek nesnedir ve asıl işlev burada tanımlıdır. Bank classı, POJO'dur ve getAccounts() gibi veri getiren bir metot içerir. Yani kısaca; Client, aslında Bank nesnesi ile değil, en dıştaki decorator ile konuşuyor. Çağrılar iç içe geçerek en sonunda Bank nesnesine ulaşıyor.       
+• 
+• 
