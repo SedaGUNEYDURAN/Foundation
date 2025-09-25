@@ -1553,7 +1553,17 @@ public class User {
 <img width="416" height="174" alt="image" src="https://github.com/user-attachments/assets/e4f3a0e7-e42c-4e46-ba3d-2241f24144ce" />
 
 
-• Yukarıdaki şemada [decorator](https://github.com/SedaGUNEYDURAN/Foundation/blob/main/DesignPattern.md#decorator) patterni kullanılmıştır. Decorator pattern, bir nesnenin davranışını dinamik olarak genişletmek için kullanılır. Yani temel bir nesneye ek özellik eklemek istiyorsak, matruşka gibi onu başka nesnelerle sararız. Bu katmanlı yapı manuel olarak oluşturulmaz. Dependency injection container, XML dosyasındaki tanımlara göre bu nesneleri oluşturur ve birbirine bağlar. Uygulama sadece "bana Bank nesnesini ver" der, DI container ise tüm decoratorlarla sarılmış halini verir.        
+• Yukarıdaki şemada [decorator](https://github.com/SedaGUNEYDURAN/Foundation/blob/main/DesignPattern.md#decorator) patterni kullanılmıştır. Decorator pattern, bir nesnenin davranışını dinamik olarak genişletmek için kullanılır. Yani temel bir nesneye ek özellik eklemek istiyorsak, matruşka gibi onu başka nesnelerle sararız. Bu katmanlı yapı manuel olarak oluşturulmaz. Dependency injection container, XML dosyasındaki tanımlara göre bu nesneleri oluşturur, birbirine bağlar hangi decoratorların hangi sırayla kullanılacağı tanımlanır. Uygulama DI container'a sadece "bana Bank nesnesini ver" der, DI container ise tüm decoratorlarla sarılmış halini verir yani XML'de tanımlı olan decorator zincirini oluşturur ve en dıştaki nesneyi döner. Böylece client, getAccounts() çağrısı yaparken zincirin en dışındaki decorator'a çağrı yapar.         
 • Yukarıdaki şemada Client sistemden getAccounts() gibi bir metodu çağırıyor. AppDataSource en dıştaki decoratordur, caching(önbellekleme) gibi işlemler yapıyor. Client bu nesne ile konuşur. BankDataAccessObject ise AppDataSource'un içinde yer alan başka bir decoratordur ve data access(veri erişimi) gibi işlemler sağlar.  Burada Bank en içteki gerçek nesnedir ve asıl işlev burada tanımlıdır. Bank classı, POJO'dur ve getAccounts() gibi veri getiren bir metot içerir. Yani kısaca; Client, aslında Bank nesnesi ile değil, en dıştaki decorator ile konuşuyor. Çağrılar iç içe geçerek en sonunda Bank nesnesine ulaşıyor.       
-• 
+
+
+### AspectJ
+• Büyük ve karmaşık yazılımlarda tekrar eden kodalrı merkezi bir şekilde yönetmek için kullanılır. En kapsamlı AOP'i sağlar. AspectJ,Java'ya özel bir uzantıdır ve AOP'yi birinci sınıf bir vatandaş gibi destekler. Ancak aspect compiler(ajc) aracı kullanmak, IDE ve build sistemine entegrasyon zorlukları gibi handikapları var.    
+
+- Aspect: Proagramın farklı noktalarına müdahale eden modüllerdir.  
+- Pointcut: Müdahale edilecek programın noktalarını tanımlar. (bir metotun çağırılması gibi)  
+- Advice: Belirli bir pointcut gerçekleştiğinde çalıştırılacak kod bloğudur. Üç türü vardır;  
+  > Before   
+  > After  
+  > Around: işlemin hem öncesinde hem de sonrasında çalışabilir, hatta işlemi devralabilir.   
 • 
