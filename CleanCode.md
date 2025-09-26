@@ -1437,7 +1437,7 @@ Before anotasyonu o paketteki bir metot çağırıldığında aspectin çağır�
       
 • Bir nesnenin veya verinin kalıcı hale getirilmesi yani genellikle veritabanına kaydedilmesine persistence(veri kalıcılığı) denir. Hangi nesnenin hangi özelliğinin kalıcı olacağını belirtiriz  ve veriyi veritabanına kaydetme işini bir persistence framework'e(Hibernate, JPA gibi ..) devrederiz. AOP sayesinden, persistence işlemleri gibi davranışlar hedef koda müdahale etmedene eklenebilir(saveUser() metoduna loglama eklemek için metodu değiştirmezsin. AOP bunu dışarıdan yapar gibi)-> kodun içine dağılmadı, merkezi düzenli bir şekilde uygulandı.     Java'da aspect ya da aspect benzeri mekanizmalar; Java Proxies, Spring AOP, AspectJ, 
 
-### Java Proxies
+#### Java Proxies
 • [Proxy](https://github.com/SedaGUNEYDURAN/Foundation/blob/main/DesignPattern.md#proxy), bir nesnenin yerine geçerek onun davranışlarını kontrol eden yapıdır. Java'da dinamik proxy ile runtime'da bir nesnenin davranışını değiştirebiliriz. JDK Proxy API, özellikle veritabanı işlemleri gibi cross-cutting işlemleri merkezi bir noktada toplamak için kullanışlıdır. Ancak InvocationHandler, reflection, metot isimleri nedeniyle kodu karmaşıklaştırır.  **Java'nın standart kütüphanesi, sadece interfaceler için dinamik proxy oluşturabilir.** Eğer bir class'ı proxylemek istiyorsak; CGLIB, ASM veya javassist gibi byte-code manipulation kütüphanelerini kullanabiliriz. JDK Proxy API, Java'nın java.lang.reflect paketinde yer alır ve iki bileşen ile çalışır;   
 
 - **Proxy classı:** Dinamik proxy nesnesi oluşturmak için kullanılır. Sadece interfaceleri proxyleyebilir, classları değil.Proxy nesnesi, gerçek nesne gibi davranır ama çağrılar önce bir handler'a yönlendirilir.   
@@ -1492,10 +1492,10 @@ public class ServiceHandler implements InvocationHandler {
 
 
 
-### Spring AOP
+#### Spring AOP
 • Spring AOP, JBoss gibi frameworkler aspectleri uygulamak için proxy kullanır. Proxy ile ilgili karmaşık kodlar otomatik olarak araçlar ile yönetilir. Spring'de iş mantığını POJO'lar ile yazarız. POJO'lara doğrudan loglama kodu yazmayız. 
 
-#### POJO(Plain Old Java Object)
+##### POJO(Plain Old Java Object)
 Sade, sıradan, bağımsız Java nesnesidir. Sadece veri tutar ya da iş mantığı içerir, altyapı kodu(loglama, güvenlik vb.) içermez.. Hiçbir framework'e, API'ye veya kütüphaneye beğımlı değildir. Bir frameworkebağımlı olmadığı için kolayca test edilebilir.  Basit setter/getter metotlarını, constructorları içerir. POJO, sadece Java nesnesidir. Java Bean ise POJO'nun özel bir türüdür. Getter/setterları vardır. Serializable olabilir ve genellikle parametresiz constructor içerir. **Her Java Bean POJO'dur ancak her POJO java bean değildir.** Aşağıdaki kod bir POJO'dur; hiçbir framework'e bağlı değil, sadece veri tutuyor. 
 
 ```java
@@ -1557,13 +1557,31 @@ public class User {
 • Yukarıdaki şemada Client sistemden getAccounts() gibi bir metodu çağırıyor. AppDataSource en dıştaki decoratordur, caching(önbellekleme) gibi işlemler yapıyor. Client bu nesne ile konuşur. BankDataAccessObject ise AppDataSource'un içinde yer alan başka bir decoratordur ve data access(veri erişimi) gibi işlemler sağlar.  Burada Bank en içteki gerçek nesnedir ve asıl işlev burada tanımlıdır. Bank classı, POJO'dur ve getAccounts() gibi veri getiren bir metot içerir. Yani kısaca; Client, aslında Bank nesnesi ile değil, en dıştaki decorator ile konuşuyor. Çağrılar iç içe geçerek en sonunda Bank nesnesine ulaşıyor.       
 
 
-### AspectJ
-• Büyük ve karmaşık yazılımlarda tekrar eden kodalrı merkezi bir şekilde yönetmek için kullanılır. En kapsamlı AOP'i sağlar. AspectJ,Java'ya özel bir uzantıdır ve AOP'yi birinci sınıf bir vatandaş gibi destekler. Ancak aspect compiler(ajc) aracı kullanmak, IDE ve build sistemine entegrasyon zorlukları gibi handikapları var.    
-
+#### AspectJ
+• Büyük ve karmaşık yazılımlarda tekrar eden kodları merkezi bir şekilde yönetmek için kullanılır. En kapsamlı AOP'i sağlar. AspectJ,Java'ya özel bir uzantıdır ve AOP'yi birinci sınıf bir vatandaş gibi destekler. Ancak aspect compiler(ajc) aracı kullanmak, IDE ve build sistemine entegrasyon zorlukları gibi handikapları vardır.    
+ 
 - Aspect: Proagramın farklı noktalarına müdahale eden modüllerdir.  
 - Pointcut: Müdahale edilecek programın noktalarını tanımlar. (bir metotun çağırılması gibi)  
 - Advice: Belirli bir pointcut gerçekleştiğinde çalıştırılacak kod bloğudur. Üç türü vardır;  
-  > Before   
-  > After  
-  > Around: işlemin hem öncesinde hem de sonrasında çalışabilir, hatta işlemi devralabilir.   
-• 
+  > @Before   
+  > @After  
+  > @Around: işlemin hem öncesinde hem de sonrasında çalışabilir, hatta işlemi devralabilir.   
+
+
+
+• **Big Design Up Front(BDUF):**  Bu yaklaşım projenin başında mimariyi detaylıca planmayı savunur.Yani Agile ve YAGNI(You Aren't Gonna Need It) gibi yaklaşımlarının tasarımı küçük parçalara bölerek ihtiyaç oldukça geliştirilmesi düşüncesine karşı gelen bir yaklaşımdır. Ancak bu yaklaşım değişime direnç gösterir, öncesinde çok fazla emek verildiği için değişim demek emeklerin çöp olması demektir. Erken alınan mimari kararlar sonraki tasarım düşüncesini kısıtlar. Yazılımda radikal değişiklikler ekonomik olarak mümkündür, tabi eğer sorumluluklar iyi ayrıştırılmış(separation of concerns) ise. Bu açıdan clean kod yazmak istiyorsak bu yaklaşımı pek tercih etmiyoruz. Çünkü projeye basit ama iyi ayrıştırılmış bir mimariyle başlamak hızlı sonuç üretmeyi sağlar. Gereksinimler arttıkça, altyapı ve teknolojiler eklenebilir. EJB gibi bazı API'lar aşırı mühendislik içerdiği için sorumluluk ayrımını bozar. İyi bir API arka planda kalmalıdır.    
+ 
+ - Separation of concerns: Yazılımda her bileşen sadece kendi işini yapması gerekir.   
+
+• Kararlarımızı mümkün olan en son ana ertelemeliyiz. Bu kulağa kötü bir yaklaşım gibi geliyor ancak şöyle düşünelim erken seçim yapıp yetersiz bilgi ile yol almaktansa, müşterilerden daha çok feedback alıp ilerlemek, proje hakkında derinlemesine düşünmek daha çok işimize yarar. POJO'nun sağladığı agility ile kararları zamanı geldiğinde almamız karmaşıklığı da azaltır.       
+
+• **Domain-Spesific Language(DSL)**: Belirli bir iş alanına göre tasarlanmış, o alanın ihtiyaçlarını sadee ve anlaşılır bir şekilde ifade etmeyi sağlayan bir dil veya API'dır. Kodun amacını açık ifade etmesini sağlar.Karmaşık altyapı kodları gizlenerek temiz ve anlaşıır bir yapı sunmuş olur.İki ana türde olabilirler;      
+
+- Internal DSL: Mevcut bir programlama dili içinde tanımlanırlar. Örneğin;Kotlin DSL, Ruby DSL gibi ..      
+- External DSL: Tamamen ayrı bir olarak tasarlanırlar. SQL, HTML, Regular Expression gibi ..   
+
+
+```SQL
+  # DSL'e örnek olarak Veritabı DSL'i yani SQL 
+  SELECT name FROM customers WHERE age > 30; 
+```java
