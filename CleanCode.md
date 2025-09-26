@@ -1496,7 +1496,7 @@ public class ServiceHandler implements InvocationHandler {
 • Spring AOP, JBoss gibi frameworkler aspectleri uygulamak için proxy kullanır. Proxy ile ilgili karmaşık kodlar otomatik olarak araçlar ile yönetilir. Spring'de iş mantığını POJO'lar ile yazarız. POJO'lara doğrudan loglama kodu yazmayız. 
 
 ##### POJO(Plain Old Java Object)
-Sade, sıradan, bağımsız Java nesnesidir. Sadece veri tutar ya da iş mantığı içerir, altyapı kodu(loglama, güvenlik vb.) içermez.. Hiçbir framework'e, API'ye veya kütüphaneye beğımlı değildir. Bir frameworkebağımlı olmadığı için kolayca test edilebilir.  Basit setter/getter metotlarını, constructorları içerir. POJO, sadece Java nesnesidir. Java Bean ise POJO'nun özel bir türüdür. Getter/setterları vardır. Serializable olabilir ve genellikle parametresiz constructor içerir. **Her Java Bean POJO'dur ancak her POJO java bean değildir.** Aşağıdaki kod bir POJO'dur; hiçbir framework'e bağlı değil, sadece veri tutuyor. 
+• Sade, sıradan, bağımsız Java nesnesidir. Sadece veri tutar ya da iş mantığı içerir, altyapı kodu(loglama, güvenlik vb.) içermez.. Hiçbir framework'e, API'ye veya kütüphaneye beğımlı değildir. Bir frameworkebağımlı olmadığı için kolayca test edilebilir.  Basit setter/getter metotlarını, constructorları içerir. POJO, sadece Java nesnesidir. Java Bean ise POJO'nun özel bir türüdür. Getter/setterları vardır. Serializable olabilir ve genellikle parametresiz constructor içerir. **Her Java Bean POJO'dur ancak her POJO java bean değildir.** Aşağıdaki kod bir POJO'dur; hiçbir framework'e bağlı değil, sadece veri tutuyor. 
 
 ```java
 public class User {
@@ -1584,4 +1584,11 @@ public class User {
 ```SQL
   # DSL'e örnek olarak Veritabı DSL'i yani SQL 
   SELECT name FROM customers WHERE age > 30; 
-```java
+```
+
+
+## Emergence
+
+
+
+ 
