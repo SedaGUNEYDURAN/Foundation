@@ -1588,7 +1588,21 @@ public class User {
 
 
 ## Emergence
+• Kent Benck'in Simple Design'ın dört kuralı iyi tasarım oluşturmamız yardımcı olur.
 
-
+### Simple Design Rule 1:Runs All the Tests
+• Bir sistemin tasarımı kağıt üzerinde mükemmel olabilir ancak test edilemiyorsa, tasarım sorgulanır. Test edilebilirlik, tasarımın doğruluğunu kanıtlamanın ana yoludur. Test edilemeyen sistemler doğrulanamaz, doğrulanamayan sistemlerin yayına alınması da risklidir.    
+• Test yazabilmemiz için classların küçük ve tek sorumluluğa sahip olmaları gerekir. Yani SRP'ye uymaları gerekir. Ne kadar çok test yazarsak o kadar sadece ve modüler tasarımlar yaparız.    
+• Tight coupled classlar test yazmayı zorlaştırır. Bu nedenle de DIP(Dependency Inversion Principle) gibi prensipleri kullanırız. Dependency Injection, interface ve abstraction  gibi araçlarla bağımlılıkları azaltırız. Sürekli test yazarak ilerlemek OOP tasarım hedeflerine ulaşmamıza yardımcı olur ->**low coupling,high cohesion**    
+  
+### Simple Design Rule 2: Contains No Duplication
+• Kod yazarken test de yazıyorsak kodumuzu rahatça refactor edebiliriz. Test ya bir şeyi bozarsam korkusunu ortadan kaldırır. Refaktör yaparken yazılım tasarımıyla ilgili bir çok iyi uygulamayı da hayata geçirebiliriz;       
+ 
+ - Cohesion(Bütünlük): Her sınıfın tek bir amaca hizmet etmesi      
+ - Coupling(Bağımlılık): Sınıfların birbirlerine olan bağımlılıklarını azaltmak      
+ - Separation of concerns: Farklı işlevleri ayrı sınıflara bölmek     
+ - Modülerlik: Sistemi bağımsız parçalara ayırmak   
+ - Fonksiyon ve sınıfları küçültmek: Sade ve okunabilir hale getirmek.   
+ - İsimlendirme: Daha anlamlı ve açıklayıcı isimler kullanmak   
 
  
