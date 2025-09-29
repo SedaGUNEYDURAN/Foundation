@@ -1596,7 +1596,7 @@ public class User {
 • Tight coupled classlar test yazmayı zorlaştırır. Bu nedenle de DIP(Dependency Inversion Principle) gibi prensipleri kullanırız. Dependency Injection, interface ve abstraction  gibi araçlarla bağımlılıkları azaltırız. Sürekli test yazarak ilerlemek OOP tasarım hedeflerine ulaşmamıza yardımcı olur ->**low coupling,high cohesion**    
   
 ### Simple Design Rule 2: Contains No Duplication
-• Kod yazarken test de yazıyorsak kodumuzu rahatça refactor edebiliriz. Test ya bir şeyi bozarsam korkusunu ortadan kaldırır. Refaktör yaparken yazılım tasarımıyla ilgili bir çok iyi uygulamayı da hayata geçirebiliriz;       
+• Kod yazarken test de yazıyorsak kodumuzu rahatça refactor edebiliriz. Test, "ya bir şeyi bozarsam" korkusunu ortadan kaldırır. Refaktör yaparken yazılım tasarımıyla ilgili bir çok iyi uygulamayı da hayata geçirebiliriz;       
  
  - Cohesion(Bütünlük): Her sınıfın tek bir amaca hizmet etmesi      
  - Coupling(Bağımlılık): Sınıfların birbirlerine olan bağımlılıklarını azaltmak      
@@ -1605,4 +1605,21 @@ public class User {
  - Fonksiyon ve sınıfları küçültmek: Sade ve okunabilir hale getirmek.   
  - İsimlendirme: Daha anlamlı ve açıklayıcı isimler kullanmak   
 
+
+• Duplikasyon, bir sistemde **aynı veya benzer** kod parçalarının birden fazla yerde bulunmasıdır.  
+
+```Java
+int size() {}
+boolean isEmpty() {}
+```
+Bu metotlar ayrı ayrı veri tutabilir ancak isEmpty() metodu aslında size() metoduna bağlı olabilir;
  
+```java
+boolean isEmpty() {
+  return 0 == size(); //size() metodu, listedeki eleman sayısını döner. isEmpty() metodu, size() metodunu kullanarak listenin boş olup olmadığını kontrol eder.  
+}
+```
+
+
+
+• 
