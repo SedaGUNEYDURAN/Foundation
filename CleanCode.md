@@ -1620,6 +1620,19 @@ boolean isEmpty() {
 }
 ```
 
+• KoddaKİ ortak noktalar SRP ihlaline neden olur. Bunun önüne geçmek için [template method](https://github.com/SedaGUNEYDURAN/Foundation/blob/main/DesignPattern.md#template-method) design patterni kullanılabilir.  Tepmlate method, bir algoritmanın iskeletini tanımlar ve bazı adımlar alt sınıflara bırakır. Kod tekrarını azaltır ve algoritmanın değişmeyen kısımlarını merkei bir yerde tutmak için kullanılır. 
 
 
-• 
+  
+### Simple Design Rule 3: Expresses The Intent Of The Programmer
+• Yazılım projelerinin en büyük maliyeti uzun vadeli bakımdır. Bu da koda geriye dönüp bakmak demek. Kodun yazan kişi basit, açık bir şekilde ifade ettiğinde bu süre kısalır. Peki bunun için neler yapabiliriz? ;  
+
+- Class, method isimleriyle ne yaptıklarını açıkça anlatmalıyız.   
+- Classlar ve methodlar küçük, kısa olmalı. Küçük yapılar daha kolay anlaşılır, isimlendirilir.   
+- Standart terimlre kullanmalıyız. Bu diğer developerlar ile iletişimi kolaylaştırır. Classın adında Visitor, Command gibi şeyler geçiyorsa geliştirici classta bu patternin kullanıldığını anlar.   
+- Anlamlı testler yazmalıyız. İyi yazılmış bir test bir classın ne yaptığını hızlıca anlatır.    
+- 
+
+### Simple Design Rule 4: Minimizes The Number Of Classes And Methods
+• Yukarıdaki kurallara önem vermeliyiz ancak abartıp aşırıya kaçarsak çok fazla küçük sınıf ve fonksiyon oluşabilir. Katı kurallara bağlı kalmak için kendimizi zorlarsak(her class için interface tanımlanmalı, verileri ve davranışları ayrı sınıflara bölmek) koda zarar verebilir. Bunun yerine pragmatik yani esnek ve mantıklı çözümler tercih etmeliyiz.    
+
