@@ -1631,8 +1631,8 @@ boolean isEmpty() {
 - Classlar ve methodlar küçük, kısa olmalı. Küçük yapılar daha kolay anlaşılır, isimlendirilir.   
 - Standart terimlre kullanmalıyız. Bu diğer developerlar ile iletişimi kolaylaştırır. Classın adında Visitor, Command gibi şeyler geçiyorsa geliştirici classta bu patternin kullanıldığını anlar.   
 - Anlamlı testler yazmalıyız. İyi yazılmış bir test bir classın ne yaptığını hızlıca anlatır.    
-- 
 
 ### Simple Design Rule 4: Minimizes The Number Of Classes And Methods
 • Yukarıdaki kurallara önem vermeliyiz ancak abartıp aşırıya kaçarsak çok fazla küçük sınıf ve fonksiyon oluşabilir. Katı kurallara bağlı kalmak için kendimizi zorlarsak(her class için interface tanımlanmalı, verileri ve davranışları ayrı sınıflara bölmek) koda zarar verebilir. Bunun yerine pragmatik yani esnek ve mantıklı çözümler tercih etmeliyiz.    
 
+## Concurrency
