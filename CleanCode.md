@@ -1636,3 +1636,34 @@ boolean isEmpty() {
 • Yukarıdaki kurallara önem vermeliyiz ancak abartıp aşırıya kaçarsak çok fazla küçük sınıf ve fonksiyon oluşabilir. Katı kurallara bağlı kalmak için kendimizi zorlarsak(her class için interface tanımlanmalı, verileri ve davranışları ayrı sınıflara bölmek) koda zarar verebilir. Bunun yerine pragmatik yani esnek ve mantıklı çözümler tercih etmeliyiz.    
 
 ## Concurrency
+• Concurrency(eşzamanlılık), birden fazla işlemin ya da görevin aynı zaman diliminde yürütülmesini ifade eder. Ne yapılacağı ile ne zaman yapılacağı arasındaki bağı koparma stratejisidir. Şimdi bu ne demek dersek; bir sistem hangi işleri yapacağını planlıyor ama bu işlemlerin hangi anda ya da hangi sırayla yapılacağına takılmıyor.    
+• Faydaları;  
+
+- Birden fazla iş aynı anda ya da çok yakın zamanlarda yapılabilir.   
+- Görevler birbirini beklemek zorunda değildir.   
+- Zamanlama değişse bile görevler bozulmadığı için sistem daha esnek olur.   
+- Görevler birbirinden bağımsız çalıştığı için daha modüler olur. Test edilebilir ve hata ayıklamak kolaylaşır.    
+- İşlemci boş kalmadığ ve kaynaklar verimli kullanıldığı için daha performanslı olur.   
+
+• Zorlukları ve riskleri;   
+
+- Race conditions: İki işkem aynı anda aynı veriye erişirse veri tutarsızlığı oluşabilir.   
+- Deadlock: iki işlemin birbirini beklerken kitlenmesidir.   
+- Starvation: Bazı işlemlerin kaynaklara hiç erişememesidir.  
+- Stace trace yetersiz olabilir. Loglama ve tracing daha iyi olabilir.    
+
+• Tek threadli uygulamalarda neyin ne zaman yapılacağı iç içedir, stack trace üzerinden sistemin durumu anlaşılabilir.     Ancak concurrency ile görevler birbirinden bağımsız hale gelir, zamanlama business logicten ayrılır ve uygulama tek bir döngü gibi değil birden çok küçük işbirlikçi gibi görünür.   
+• Uygulama mimarilerinde concurrency;  
+
+- Servlet Modeli(Java EE): Servletler, web sunucusu tarafından yönetilen threadler içinde çalışır. Her HTTP isteği ayrı bir thread ya da async işlem olarak ele alınır. Programcı thread yönetimi ile uğraşmaz, bu görevi container üstlenir.   
+- Actor Model(Akka, Erlang): Her actor kendi durumunu ve mesaj kuyruğunu yönetir. Actorler birbiriyle mesajlaşarak iletişim kurar. Her actor izole şekilde çalıştığı için concurrency sağlanmış olur.   
+- Event Loop(Node.js): Tek thread üzerinde event-driven mimari, I/O işlemleri async olarak yürütülür. Callbackler ve Promiseler ile concurrency sağlanır.   
+
+• Sonuç olaran concurrency sadece performansı değil, sürdürülebilirlik, ölçeklenebilirlik ve mimari temizlik açısından da önemlidir. Ancak concurrency ustalık gerektirir;   
+
+- Hataları tespit etmek zordur. Nondeterministic hatalar olabilir. Aynı kod her çalıştığında farklı sonuçlar verebilir. Buyüzden tek seferlik sanılıp yazılımcı tarafından gözardı edilebilir. Oysa arkada çok ciddi sorunlar yatıyor olabilir.
+- Basit problemlere bile concurrency eklenince karmaşık hale gelir. Paylaşılan kaynaklar, senkronizasyon, hata ayıklama gibi konulara önem vermek gerekir.   
+- Ek yük getirir. Çünkü daha fazla kod yazılır, daha da fazla test yazılır bu da daha fazla maliyet demektir.  
+- Sadece kod seviyesinde değil mimari seviyesinde de farklı düşünmeyi gerektirir. Tek threadli sistemlerde lineer akış varken, concurrent sistemde görevler birbirinden bağımsızdır. Ne yapılacağı ile ne zaman yapılacağının ayrılması doğal olarak mimariyi etkiler.    
+- Her zaman performansı arttırmaz.   
+- Containerlar, concurrency detaylarını soyutlasa da containerın nasıl çalıştığını bilmeliyiz.    
