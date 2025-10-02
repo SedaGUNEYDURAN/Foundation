@@ -1667,3 +1667,44 @@ boolean isEmpty() {
 - Sadece kod seviyesinde değil mimari seviyesinde de farklı düşünmeyi gerektirir. Tek threadli sistemlerde lineer akış varken, concurrent sistemde görevler birbirinden bağımsızdır. Ne yapılacağı ile ne zaman yapılacağının ayrılması doğal olarak mimariyi etkiler.    
 - Her zaman performansı arttırmaz.   
 - Containerlar, concurrency detaylarını soyutlasa da containerın nasıl çalıştığını bilmeliyiz.    
+
+• **Atomic classlar** Java'da concurent programlama sırasında veri yarışlarını(race condition) önlemek için özel classlardır. Bu classlar işlemleri atomik yani bölünemez ve kesintisiz bir şekilde gerçekleştirir. Yani işlem ya tamamaen gerçekleşir ya da hiç gerçekleşmez. Başka bir thread araya giremez. Normal değişkenlerde (int, long etc. ) işlemler birden fazla adımda gerçekleşir. Bu da threadler arası çakışmalara yol açabilir. Atomic classlar, bu işlemleri donanımsal seviyede kilitleme olmadan güvenli bir şekilde yapar. 
+• Karışıklıkların nasıl oluştuğunu bilmemiz gerekir demiştik. Java kodu derlenirken  önce bytecode'a çevrilir. JVM bu byte kodu çalıştırırken JIT(Just-In-Time) devreye girer ve kodu daha hızlı çalışması için optimize eder. Bu optimizasyonlar;   
+
+- Kodun yeniden sıralanması (instruction reorddering)  
+- Bazı işlemlerin atlanması   
+- bellek erişimlerinin farklı zamanlarda yapılmasına neden olabilir. Bu da demek olur ki aynı java kodu farklı zamanlarda farklı şekillerde çalışabilir. (birden fazla thread olduğunda dikkat)  
+ 
+•**JVM, çoğu platformda belleği 32 bitlik parçalara ayırarak işler.** int tipi 32 bit okuma veya yazma işlemiyle işlendiği için atomiktir. int değişkeniyle çalışılırken JVM tek bir işlemle okur ve yazar.Bu işlemi bölmez yani thread okuma yaparken başka bir thread yarım yazma yapamaz. Ancak ++int gibi birden fazla adım içeren işlemler atomik değildir.    
+
+```Java
+count = count + 1; // okuma + yazma (bu işlem atomic DEĞİLDİR)
+return count; // sadece okuma (bu işlem atomic'tir)
+count = value; // sadece yazma (bu işlem atomic'tir)
+x++; // x'i okur x'e 1 ekleyerek x'e yazar (bu işlem atomic DEĞİLDİR)
+```
+
+Aşağıdaki kod parçası basit bir işlem gibi duruyor ancak bir thread getNextId() metodunu çağırdığında başka bir thread de çağırırsa race condition'a sebep olabilir.    
+
+```Java
+public class X {
+ private int lastIdUsed;
+ public int getNextId() {
+ return ++lastIdUsed;
+ }
+}
+```
+
+long 32 bitlik sistemlerde atomic değilken 64 bitlik sistemlerde atomictir. JVM, long değerini iki ayrı 32 bit olarak saklar. Yani okuma ve yazma işlemi ikişer adımda gerçekleşir; alt 32 bit, üst 32 bit. Thread A yazarken thread B  okuma yaparsa yarım veri okunabilir. Bu yüzdende long değişkenler concurrent kullanımında risklidir. volatile long(JVM'e bu değişkeni atomik işle talimatını verir) ya da AtomicLong(Tam güvenli, kilitsiz atomik işlemler sağlar) olarak tanımlamak gerekir.     
+
+
+### Concurrency Defense Principles
+• SRP'ye her sınıfın tek bir değişim nedeni olmalıdır. Concurrency ise başlı başına bir değişim nedenidir. Concurrency kodu, business logic'e gömülürse karmaşa oluşur, test yazmak, hataları saptamak zorlaşır. Bu nedenle concurrency için de SRP önemlidir. Concurrency kodu ayrı tutulamı yani thread yönetimi ayrı sınıfta olmalı, locking sistemi soyutlanmalı , modülerleştirilmelidir.    
+• Veri erişimini sınırlamak önemlidir. Birden fazla thread aynı anda aynı veriye(field, variable) değiştirmeye çalışırsa race condition, beklenmedik davranışlar oluşur ve kodun güvenilirliği bozulur. Bu tür çakışmaları önlemek için **synchronized** kullanılır ve böylece br thread'in belirli bir kod bloğuna girerken diğerlerini betletmesi sağlanıyor Ancak bu da tam çözüm değildir. Çünkü senkronize edilen yerleri ne kadar çoğaltırsak, hata yapma ihtimalimiz o kadar artar. Bu yüzden veri encapsulation'ı önemsemeliyiz. Paylaşıan veriye erişimi private yaparak dışarıdan doğrudan erişimi engellemeliyiz. Veri sadece tek bir noktadan değiştirilebilemeli.     
+• Veriyi paylaşmak yerine kopyalamalıyı tercih etmeliyiz. Nesne kopyalarsak bellek tüketimi artar, garbage collector daha fazla çalışır. Ancak senkronizasyon maliyeti, kopya nesne oluşturma maliyetinden daha fazla olabilir. Bunu ancak deneyerek, performans testleri yaparak görebiliriz. Nesne kopyamanın iki yolu vardır ;
+ 
+ - Kopyala ve salt okunur yap. Her thread kendi kopyasını oluşturur. Kopya üzerinden sadece okuma yapar. Veri değişmediği için senkronizasyona gerek kalmaz.
+ - Kopyala, Sonuçları Topla,Birleştir.  Her thread kendi kopyasında işlem yapar. Sonuçlar bir yerde toplanır. Tek bir thread bu sonuçları birleştirir. Bu yönteme paralel hesaplama ve map-reduce denir.   
+• Paralel computing(paralel hesaplama): bir işlemi veya problemi aynı anda birden fazla işlemci, çekirdek ya da thread kullanarak çözme yöntemidir. İşlem sürelerini kısaltmak, büyük veri ya da karmaşık hesaplamaları daha verimli yapmayı amaçlar. İşler parçalara bölünür ve her parça aynı anda farklı işlemcilerde çalıştırılır. Sonrasında birleştirilir. Bu durumda thread yönetimi iyi planlanmalıdır. Race condition riski bulunur.   
+
+•Threadler bağımsız olmalıdır,  veri paylaşımı olmamalıdır. Bu durumda senkronizasyona gerek kalmaz, race condition riski olmaz. Mesela Servlet'ler; HttpServlet sınıfları her HTTP isteği için ayrı bir thread çalıştırır. doGet() veya doPost() metoduna gelen veriler parametre olarak gelir. Bu veriler local değişken olarak tutulur. Yani her thread kendi isteğini işler, kendi verisini kullanır, başka threadlerle veri paylaşmaz. Bu nedenle de senkronizasyona ihtiyaç duymadan güvenli bit şekilde çalışır. Ancak gerçek dünyada bunu yapmak zordur. Uygulamalar genellikle veritabanı bağlantısı, paylaşılan önbellek ve dosya sistemi gibi ortak kaynaklara erişmek zorunda kalır. Bu durumda threadler arası veri paylaşımı kaçınılmazdır. Böyle bir durumda; veriyi bağımsız parçalara ayrır ve her thread sadece kendi parçasını işleyebilir. Bunun için her thread kendi veri kopyasını verir, ortak kaynaklara erişim merkezi bir noktada toplar, mümkünse threadler farklı işlemcilere dağıtılır. Böylece senkronizasyon azaltılmış olur, tasarım sadeleşir.    
