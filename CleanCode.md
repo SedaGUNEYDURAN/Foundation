@@ -1707,4 +1707,95 @@ long 32 bitlik sistemlerde atomic değilken 64 bitlik sistemlerde atomictir. JVM
  - Kopyala, Sonuçları Topla,Birleştir.  Her thread kendi kopyasında işlem yapar. Sonuçlar bir yerde toplanır. Tek bir thread bu sonuçları birleştirir. Bu yönteme paralel hesaplama ve map-reduce denir.   
 • Paralel computing(paralel hesaplama): bir işlemi veya problemi aynı anda birden fazla işlemci, çekirdek ya da thread kullanarak çözme yöntemidir. İşlem sürelerini kısaltmak, büyük veri ya da karmaşık hesaplamaları daha verimli yapmayı amaçlar. İşler parçalara bölünür ve her parça aynı anda farklı işlemcilerde çalıştırılır. Sonrasında birleştirilir. Bu durumda thread yönetimi iyi planlanmalıdır. Race condition riski bulunur.   
 
-•Threadler bağımsız olmalıdır,  veri paylaşımı olmamalıdır. Bu durumda senkronizasyona gerek kalmaz, race condition riski olmaz. Mesela Servlet'ler; HttpServlet sınıfları her HTTP isteği için ayrı bir thread çalıştırır. doGet() veya doPost() metoduna gelen veriler parametre olarak gelir. Bu veriler local değişken olarak tutulur. Yani her thread kendi isteğini işler, kendi verisini kullanır, başka threadlerle veri paylaşmaz. Bu nedenle de senkronizasyona ihtiyaç duymadan güvenli bit şekilde çalışır. Ancak gerçek dünyada bunu yapmak zordur. Uygulamalar genellikle veritabanı bağlantısı, paylaşılan önbellek ve dosya sistemi gibi ortak kaynaklara erişmek zorunda kalır. Bu durumda threadler arası veri paylaşımı kaçınılmazdır. Böyle bir durumda; veriyi bağımsız parçalara ayrır ve her thread sadece kendi parçasını işleyebilir. Bunun için her thread kendi veri kopyasını verir, ortak kaynaklara erişim merkezi bir noktada toplar, mümkünse threadler farklı işlemcilere dağıtılır. Böylece senkronizasyon azaltılmış olur, tasarım sadeleşir.    
+• Threadler bağımsız olmalıdır,  veri paylaşımı olmamalıdır. Bu durumda senkronizasyona gerek kalmaz, race condition riski olmaz. Mesela Servlet'ler; HttpServlet sınıfları her HTTP isteği için ayrı bir thread çalıştırır. doGet() veya doPost() metoduna gelen veriler parametre olarak gelir. Bu veriler local değişken olarak tutulur. Yani her thread kendi isteğini işler, kendi verisini kullanır, başka threadlerle veri paylaşmaz. Bu nedenle de senkronizasyona ihtiyaç duymadan güvenli bit şekilde çalışır. Ancak gerçek dünyada bunu yapmak zordur. Uygulamalar genellikle veritabanı bağlantısı, paylaşılan önbellek ve dosya sistemi gibi ortak kaynaklara erişmek zorunda kalır. Bu durumda threadler arası veri paylaşımı kaçınılmazdır. Böyle bir durumda; veriyi bağımsız parçalara ayrır ve her thread sadece kendi parçasını işleyebilir. Bunun için her thread kendi veri kopyasını verir, ortak kaynaklara erişim merkezi bir noktada toplar, mümkünse threadler farklı işlemcilere dağıtılır. Böylece senkronizasyon azaltılmış olur, tasarım sadeleşir.    
+
+### JAVA'nın Gelişimi İle Concurrency
+ 
+• Java'nın ilk yıllarında Doug Lea tarafından Concurrent Programming in Java kitabı çıkarıldı. Bu kitapla çoklu threadler arasında güvenli veri paylaşımı sağlayan collection sınıfları geliştirildi. Bu sınıflar JAVA 5 ile java.util.concurrent paketine eklendi. Java 5  ileri seviye concurrency tasarımları için özel sınıflar sundu; ReentrantLock, Semaphore, CountDownLatch.      
+
+- ConcurrentHashMap,  gibi koleksiyonlar çoklu threadler tarafından aynı anda okunup yazılabilir olduğu için HashMapten daha iyi performans gösterir.      
+- putIfAbsent, computeIfPresent gibi bileşik işlemleri güvenli şekilde yapabilir.      
+- **ReentrantLock**, Java'da bir threadin aynı kilidi birden fazla kez alabilmesini sağlayan gelişmiş bir senkronizasyon aracıdır. java.util.concurrent.locks.ReentrantLock classı, Lock interface'ini kullanır. synchronized yerine kullanılır ve daha fazla kontol sağlar.    
+  • Reentrancy(tekrar giriş): Bir thread'in aynı kilidi birden fazla kez alabilmesidir. Bu durumda hold count(kilit sayacı) artırılır ve her unlock() çağrısında azaltılır. Sayacın sıfıra ulaşmasıyla kilit serbest kalır.  Her lock() çağrısı sayacı arttırır, unlock() çağrısı bir azaltır.     
+
+```Java
+ReentrantLock lock = new ReentrantLock();
+
+lock.lock(); // kilidi al
+try {
+    // kritik bölüm
+} finally { // finally bloğu kullanılmak zorunda yoksa lock serbest kalmaz ve deadlock oluşur.
+    lock.unlock(); // kilidi bırak
+}
+
+```
+
+- **Semaphore**, birden fazla processin eş zamanlı çalışması durumunda birbirleri için risk teşkil ettikleri kritik zamanlarda birbirlerini beklemesini sağlayan mekanizmadır. Belirli sayıda threadin kaynağa erişimini kontrol etmek için kullanılır. Negatif olmayan bir tamsayı değişkenidir. Bu sayı bir kaynağın kullanılabilirliğini temsil eder. Atomic(bölünmez) işlemlerle çalışır. Öncelik sıralaması yoktur. Bekleyen işlemler sırayla değil, rastgele seçilebilir. Deadlock riski taşır. Yanlış kullanıldığından işlemler birbirini sonsuza kadar bekleyebilir. 4 oda olduğunu düşün , her gelen müşteriye bir anahtar verilir ve semaphore sayısı azalır. Müşteri çıkış yaptığında ise anahtarı geri alınır ve semahphore değeri artar. Semaphore yani anahtar sayısı sıfırsa müşteri bekler. İki temel işlemi vardır;           
+  • Wait(P): Semaphore değerini azaltır. Eğer değer sıfırsa, işlem bekletilir.      
+  • Signal(V): Semaphore değerini arttırır. Kaynağın serbest bırakıldığını gösterir.     
+
+  İki tür semaphore var;       
+  • Binary Semaphore; Değeri sadece 0 ve 1 olablir Mutex gibi çalışır; bir kaynak ya boş ya doludur.Başlangıç genellikle 1 olarak ayarlanır. Bir thread semaforu kitleyebilir  -> wait ya da serbest bırakabilir -> signal.       
+  • Counting Semaphore; Değeri sıfırdan büyük olabilir, birden fazla duruma sahiptir. Aynı anda birden fazla threade kaynak erişimi sağlar. Bir thread semaforu kişlitleyebilir(wait) veya birden fazla thread semaforu serbaest bırakabilir.Resource pools veya sınırlı kaynakları yönetmek için uygundur.   
+
+```Java
+import java.util.concurrent.Semaphore;
+
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        Semaphore sema = new Semaphore(1); // 1 izinli semaphore (mutex gibi)
+
+        sema.acquire(); // izin al
+        System.out.println("Kritik bölgeye erişildi.");
+        sema.release(); // izin bırak
+    }
+}
+```
+
+- **CountDownLatch**, belirli sayıda olay gerçekleşene kadar bekleyen ve sonra tüm bekleyen threadleri serbest bırakan bir yapıdır. Birden fazla görev aynı anda başlasın istiyorsak kullanabiliriz. Paralel görevlerin tamamlanmasını beklemek için, testlerde, belirli işlemlerin bitmesini senkronize etmek için, başlatma sırasını kontrol etmek için(servislerin sırayla başlatılması gibi) kullanılır. Başlangıç sayısı ile oluşturulur. Her countDown() çağrısı bu sayıyı 1 azaltır. Sayı sıfıra ulaştığında ise await() ile bekleyen tün threadler çalışmaya devam eder.   
+
+```Java
+CountDownLatch latch = new CountDownLatch(3);
+
+Runnable task = () -> {
+    // Görev yapılır
+    System.out.println("Görev tamamlandı");
+    latch.countDown(); // Sayı 1 azalır
+};
+
+new Thread(task).start();
+new Thread(task).start();
+new Thread(task).start();
+
+latch.await(); // Sayı 0 olana kadar bekler
+System.out.println("Tüm görevler tamamlandı, devam ediliyor...");
+```
+
+• Java 21 ile birlikte sanal threadler, yapılandırılmış eşzamanlılık ve modern API'ler sayesinde daha güvenli concurrent kodlar yazabiliriz.
+
+- Virtual Threads: JVM tarafından hafif threadlerdir. Binlerce thread üretmek artık sistem kaynaklarını tüketmez. Executors.newVirtualThreadPerTaskExecutor() ile kullanılabilir.
+- Structured Concurrency: Alt görevler üst görevlerle birlikte başlar ve biter. Hatalı görevler diğerlerini otomatik olarak iptal eder. Kodun okunabilirliği ve hata yönetimi büyük ölçüde iyileşir.
+- ConcurrentHashmap, LongAdder, AtomicInteger gibi classlar hala geçerli.
+- ThreadLocal kullanımı sanal threadlerde önerilmez.
+- CompleretableFuture ile asenkron programalama sayesinde zincirleme işlemler(thenApply, thenAccept) ile non-blocking mantık kurulur. I/O ağırlıklı uygulamalarda gecikmeyi azaltır.
+- ForkJoinPool ve paralelStream sayesinde CPU yoğun görevlerde iş yükünü alt görevlere bölerek verimliliği arttırır. paralelStream() büyük veri kümelerinde performans sağlar. 
+- synchronized yerine reentrantLock tercih etmeliyiz. Virtual threadler senkronize bloklarda OS threadlerine bağlanır, bu da verimliliği düşürür. 
+  
+
+
+### Concurency Temel Kavramlar
+• **Bound Resources(sınırlı kaynaklar):** Sabit sayıda veya sizeda olan kaynaklardır. Aynı anda sadece belirli sayıda thread bu kkaynaklara erişebilir. Amaç; kaynakların aşırı kullanımını önlemek ve sistemin dengeli çalışmasını sağlamaktır.   
+• **Mutual Exclusion(Karşılıklı Dışlama):**  Paylaşılan bir veri ya da kaynağa aynı anda yalnızca bir thread erişebilir. Amaç; veri tutarlığını korumak ve race condition önlemektir.   
+• **Starvation** Bir threadin uzun süre ya da sonsuza kadar çalışmasına izn verilmemesidir. Mesela, hızlı çalışan threadler hep öncelikle geçerse yavaş olanlar hiç çalışamayabilir.   
+• **Deadlock**: İki veya daha fazla thread birbirini beklerken sonsuza kadar bloke olur. Bu sorunla karşılaşmamak için ; kaynakları sabit sırayla isteyebiliriz, timeout kullanabiliriz, deadlock algılama ve çözme algoritmaları kullanabiliriz.   
+• **Livelock:** Threadler aktif olarak çalışıyor olarak görülür ancak ilerleme sağlayamazlar. Deadlockta threadler bekler, livelock'ta ise sürekli hareket ederler ama işe yaramaz. İki kişi dar bir koridorda birbirine yol vermeye çalışırken sürekli yer değiştirirler ama bir türlü geçemezler. Onun gibi düşün. Bu sorundan kaçabilmek için thread davranışlarını randomized edebiliriz ya da backoff strategy uygulayabiliriz.         
+
+### Temel 3 Concurrency Problemi 
+#### Producer-Consumer
+• **Producer** threadler, yapılacak işleri üretir ve bunları buffera koyar. **Consumer** threadler ise bu buffera bakar ve içindeki işleri alıp temizler. Buffer(queue), producer ile consumer arasında bir ara belek görevi görür. Bu buffer sınırlı kapasiteye sahip bir kaynaktır(bound resource). Yani belirli sayıda iş tutabilir. Eğer buffer doluysa producer bekler, buffer boşsa consumer bekler. Producer, buffera bir iş eklediğinde bufferın boş olmadığına dair sinyal verir. Consumer, bufferdan iş aldığında buffer artık dolu değil diye sinyal verir.    
+
+#### Readers-Writers
+• **Reader** kaynağı  sadece okur, değiştirmez. **Writer** bu kaynağı günceller ve değiştirir.  Aynı anda birden fazla reader çalışabilir; veri değişemediği için. Ama writer geldiğinde veri değişiyor olabileceği için reader'ın durması gerekir. Readeryazma işlemi nedeniyle sık sık  engellenebilir bu da throughput(verimlilik) düşmesine neden olabilir. Verimlilik düşüşünü, starvation'ı engellemek için backoff ile çakışmalar azaltılabilir, randomized algoritmaları kullanılabilir.   
+
+#### Dining Phşilosophers Problem
+• * Bir grup filozof yuvarlak bir masada oturur. Her filozofun solunda bir çatal bulunur. Ortada büyük bir spagetti kasesi bulunur. Filozoflar genelde düşünür, acıktıklarında yemek yemek isterler. Yemek yiyebilmek için iki çatal gerekir; solunda ve sağında.E ğer komşu filozoflardan biri çatalı kullanıyorsa beklemek zorundadır. Yemek yedikten sonra çatalları bırakır ve tekrar düşünmeye döner.Burada filozoflar threadler, çatallar ise paylaşılan kaynakları temsil eder. Her thread işlem yapabilmek için iki kaynağa ihtiyaç duyar. Eğe kaynaklar başka threadler tarafından kullanılıyorsa beklemek zorundandır.     
