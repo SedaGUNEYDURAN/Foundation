@@ -1798,4 +1798,67 @@ System.out.println("Tüm görevler tamamlandı, devam ediliyor...");
 • **Reader** kaynağı  sadece okur, değiştirmez. **Writer** bu kaynağı günceller ve değiştirir.  Aynı anda birden fazla reader çalışabilir; veri değişemediği için. Ama writer geldiğinde veri değişiyor olabileceği için reader'ın durması gerekir. Readeryazma işlemi nedeniyle sık sık  engellenebilir bu da throughput(verimlilik) düşmesine neden olabilir. Verimlilik düşüşünü, starvation'ı engellemek için backoff ile çakışmalar azaltılabilir, randomized algoritmaları kullanılabilir.   
 
 #### Dining Phşilosophers Problem
-• * Bir grup filozof yuvarlak bir masada oturur. Her filozofun solunda bir çatal bulunur. Ortada büyük bir spagetti kasesi bulunur. Filozoflar genelde düşünür, acıktıklarında yemek yemek isterler. Yemek yiyebilmek için iki çatal gerekir; solunda ve sağında.E ğer komşu filozoflardan biri çatalı kullanıyorsa beklemek zorundadır. Yemek yedikten sonra çatalları bırakır ve tekrar düşünmeye döner.Burada filozoflar threadler, çatallar ise paylaşılan kaynakları temsil eder. Her thread işlem yapabilmek için iki kaynağa ihtiyaç duyar. Eğe kaynaklar başka threadler tarafından kullanılıyorsa beklemek zorundandır.     
+• Bir grup filozof yuvarlak bir masada oturur. Her filozofun solunda bir çatal bulunur. Ortada büyük bir spagetti kasesi bulunur. Filozoflar genelde düşünür, acıktıklarında yemek yemek isterler. Yemek yiyebilmek için iki çatal gerekir; solunda ve sağında.E ğer komşu filozoflardan biri çatalı kullanıyorsa beklemek zorundadır. Yemek yedikten sonra çatalları bırakır ve tekrar düşünmeye döner.Burada filozoflar threadler, çatallar ise paylaşılan kaynakları temsil eder. Her thread işlem yapabilmek için iki kaynağa ihtiyaç duyar. Eğe kaynaklar başka threadler tarafından kullanılıyorsa beklemek zorundandır.
+
+• Java'da synchronized anahtar kelimesi, "bir metodu" aynı anda sadece bir thread'in çalıştırabilmesini sağlar. Eğer aynı nesne üzerinde birden fazla synchronized metot varsa ve bu metotlar birbirine bağımlı bir şekilde çağırılıyorsa mesela biri veriyi yazıyor diğeri okuyorsa hatalar oluşabilir. Bunlardan kaçınmaya çalışmalıyız ama bazen kaçınmak imkansızdır bu durumlar için üç çözüm yolu vardır. 
+
+• **Client Based Locking(İstemci Taraflı Kilitleme):** Client, server nesnesini kullanmadan önce kendisi kilit alır ardından gerekli metotları çağırır ve kilidi tüm işlem tamamlanana kadar bırakmaz.
+
+```Java
+synchronized(sharedObject) {
+    sharedObject.methodA();
+    sharedObject.methodB();
+    //iki metot arasına başka thread giremez.
+}
+```
+
+•**Server-Based Locking(Sunucu Traflı Kilitleme):** Server classında birden fazla metodu çağıran tek bir metot oluşturulur. Bu metot synchronized olur ve içeride diğer metotları çağırır. Client ise sadece bu yeni metodu çağırır. 
+
+
+```Java
+public synchronized void doAll() {
+    methodA();
+    methodB();
+}
+```
+
+•**Adapted Server(Uyarlanmış Sunucu)**: Server kodunu değiştiremiyorsa(kütüphane koduysa) araya bir adapter koyarız ve bu adapter server nesnesini kilitler ve metotları çağırır. 
+
+
+```Java
+public class ServerAdapter {
+    private final Server server;
+
+    public synchronized void safeCall() {
+        server.methodA();
+        server.methodB();
+    }
+}
+
+```
+
+• synchronized, lockler oluşturur ve locklar performans açısından pahalıdır; threadler beklemek zorunda kalır, sistem kaynakları tüketilir, kodun çalışması yavaşlayabilir. Buyüzden gereksiz yere kullanmamalıyız. Kritik bölümlerde yani birden fazla threadin çalıştığı, veri bozulması olabilecek kod parçalarında kullanmalıyız. Kilit sadece gerekli yerde kullanılmalıdır yani kodun kritik kısmında. Kocaman bir metodu synchronized yapmaya gerek yoktur çoğu zaman. 
+
+```Java
+public void process() {
+    // Hesaplama kısmı - thread-safe değilse bile veri değiştirmiyor
+    int result = compute();
+
+    // Sadece veri yazma kısmı kilitleniyor
+    synchronized(this) {
+        sharedData = result;
+    }
+}
+```
+
+• **Graceful Shutdown**: Sistemin kaynakları serbest bırakması , verileri kaydetmesi ve hiçbir threadin yarım kalmaması anlamına gelir. Deadlock yaygın bir sorundur, sistemin kapatılabilmesini engeller;    
+
+- bir child thread deadlock'a girerse, main thread sonsuz bekler ve sistem asla kapanmaz.   
+- Main thread kapanmak için consumer threadin kapanmasını bekelr, consumer thread kapanmaz, sistem kapanamaz.   
+
+  Bu gibi durumlara düşmemek için;   
+
+  - join(timeout) ile sonsuza kadar bekleme önlenebilir   
+  - interrupt(), volatile() ile threadlere sinyal gönderilebilir,  
+  - CountDownLatch, ExecuterService.shutdown(), BlockingQueue gibi yapılar kullanılabilir.  
+  - her thread kapanmadan önce durumu raporlayabilir.    
