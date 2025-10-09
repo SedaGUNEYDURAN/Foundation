@@ -1862,3 +1862,34 @@ public void process() {
   - interrupt(), volatile() ile threadlere sinyal gönderilebilir,  
   - CountDownLatch, ExecuterService.shutdown(), BlockingQueue gibi yapılar kullanılabilir.  
   - her thread kapanmadan önce durumu raporlayabilir.    
+
+
+• Test kodun hatasız olduğunu garanti etmez ama riskleri azaltır. Concurrent kodlarda hata çıkma olasılığı çok yüksektir. Buyüzden test yazarken daha dikkatli olunmalı; sorunları ortaya çıkaracak testler yazmalıyız, testleri olası dağıtım ortamlarında, farklı sistem konfigürasyonlarında çalıştırmalıyız. Bir test başarısızsa bunu geçiştirmemeliyiz.İlk testten geçemedi diyelim tekrar denediğimizde ise geçti testte bu durumu gözardı etmemeliyiz. Rastgele oluşan hatalar büyük ihtimalle thread kaynaklıdır. İlk olarak tek threadli kodun ve thread dışında kalan kodun parçaların da düzgün çalıştığından emin olmalıyız. Kodumuz pluggable yani modüler ve değiştirilebilir olmalıdır. Kodumuz ayarlanabilir(tunable) olmalıdır yani thread sayısı, zamanlayıcılar gibi parametreleri ayarlayabiliyor olmalıyız. İşlemci sayısından daha fazla thread ile sistemi test etmeliyiz. Concurrent sistemlerde güvenilirlik ve kararlılık sağamak için önemlidir.         
+
+- Thread sayısını ayarlamak zordur. Her sistemin donanımı, yüküve görev türü farklı olduğu için sabit bir sayı belirlemek doğru bir yaklaşım olmaz bunun yerine deneme yanılma yoluyla doğru thread sayısını bulmalıyız. Thread sayısı kolayca değiştirilebilir olmalı ya da sistem çalışırken bile dinamik ayarlama sayesinde thread sayısı değiştirilebilir olmalı. (dinamik ayarlama, sistemin değişen yük koşullarına uyum sağlamasını kolaylaştırır.) Sistemin kendi performansını izleyerek thread sayısını otomatik olarak ayarlabilmesini sağlamalıyız.
+-  İşletim sistemi, aynı anda çalışan threadler arasında sürekli geçiş yapar. Bu geçişler sırasında paylaşılan kaynaklara erişim, kilit mekanizmaları ve kritik bölgeler devreye girer. Böylece hataları saptayabilmemmiz daha kolay olablilr, sık görev değişimi bu hataları daha görünür hale getirir. Kısaca işlemci sayısından fazla thread ile çalıştırmak -> daha fazla görev değişimi -> daha fazla hata tetikleme şansı  
+-  Concurrent kodlarda hataları yakalamak zordur; binlerce olası yürütme yolu vardır ve bu yolların çok azı hata üretir. Bu hatalı yolların rastgele seçilme olasılığı düşüktür. Bu hataları daha kolay yakalayabilmek için,  thread yürütme sırasını değiştirebiliriz bunun için iki yol vardır.    
+
+   - **Hand-coded(Elle Kodlama):** Geliştirici belirli yerlerde manuel olarak sleep(), yield(), wait(), priority() gibi çağrılar yapar. Bu çağrılar thread yürütme sırasını değiştirir. Ancak bu çağrılar performası  düşürür. Hataları bulma garantisi yoktur sadece olasılığını arttırır. Genelde yapılan bir hatada bu kodun üretim kodunda olması. Bu tarz kodlar sadece test kodlarında olmalı.
+
+     - **Object.wait():** thread bekelemeye alınır.
+     - **Object.sleep():** thread belirli bi süre uyur.
+     - **Object.yield():** thread'in işlemciyi başka bir threade bırakmasını sağlar.
+     - **Object.setPriority():** threadin önceliğini değiştirerek zamanlamayı tetikler.
+   -  **Automated(Otomatik Enstrümantasyon):** Araçlar veya frameworkler, kodu analiz ederek otomatik olarak enstrümante eder. Daha hızlı ve geniş kapsamlı testler yapılabilir. **Jiggling**, hataları tetiklemek için kodun yürütme sırasını değiştirmek için özel çağrılar eklemektir.Elle ya da otomatik olarak uygulanabilir.   
+ 
+### Concurrency Bölümünün Özeti
+
+• Tek threadli kodlar genellikle öngürülebilir ve anlaşılabilirdir. Ancak birden fazla thread aynı veriyi paylaşmaya başaldığında işler karışır. Bu karışıklık nadir tekrarlanabilen hatalara sebep olur. Bunlarla başa çıkabilmek için;   
+
+- SRP'yi uygulamalıyız. Kodumuzu ikiye ayırmalıyız; Thread-aware(concurrency ile ilgilenen kod) ve threa-ignorant(concurrency ile ilgilenmeyen kod).  Bu test etmeyi ve hata ayıklamayı kolaylaştırır.   
+- Thread-aware kodları POJO'lardan ayrı tutmalıyız. Testjigleri ile farklı senaryoları denemeyi kolaylaştırırlar.   
+- Concurrency sorunları genellikle paylaşılan veri üzerinde çalışan birden fazla thread , ortak kaynak havuzları, sınır durumları(döngü bitişleri, sistem kapanışı gibi noktalar) gibi nedenlerden kaynaklanır.  
+- Kullandığımız kütüphanelerin concurrency ile ilgili sunduğu özellikleri öğrenmeliyiz.   
+- Kilitleme sistemlerini sadece gerekli bölgelerde kullanmalıyız. Kilitli bölgenin başka bir kilitli bölgeyi çağırmasından kaçınmalıyız.   
+- Kodun farklı platformlarda ve konfigürasyonlarda tekrar tekrar test edilebilir olması gerekir.   
+- Kodun içine sleep(), yield(), wait() gibi çağrılar eklenerek yürütme sırasını değiştirerek test etmeliyiz.    
+
+         
+
+
