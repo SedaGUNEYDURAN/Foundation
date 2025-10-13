@@ -27,6 +27,24 @@ Connection conn = ds.getConnection();
 • Java AOP'yi doğrudan desteklemez ama Spring Framework gibi kütüphanelerle uygulanabilir. 
 
 
+### Nesne Kopyalama Yöntemleri
+•   Java'da veriyi kopyalamak, bir nesnenin mevcut durumunu başka bir nesneye aktarmaktır. Veri paylaşımı yerine kopyalama, multi-thread ortamlarda race condition ve senkronizasyon maaliyetini azaltmak için kullanılır. Her thread kendi kopyasıyla çalışır, böylece lock kullanmamıza gerek kalmaz. Her thread kendi kopyası ile çalıştığı için thread safedir ancak nesneyi kopyalamanın da dezazantıjı varır; bellek tüketimi.      
+
+#### Shallow Copy(Sık Kopya)
+•   
+
+#### Deep Copy(Derin Kopya)
+•   
+
+#### Lazy Copy(Tembel Kopya-Copy-on-Write)
+•   
+
+#### Manuel Copy(Elle Kopyalama)
+•   
+
+#### Serialization Tabanalı Kopyalama
+•   
+
 
 
 
