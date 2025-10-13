@@ -1643,16 +1643,16 @@ boolean isEmpty() {
 - Görevler birbirini beklemek zorunda değildir.   
 - Zamanlama değişse bile görevler bozulmadığı için sistem daha esnek olur.   
 - Görevler birbirinden bağımsız çalıştığı için daha modüler olur. Test edilebilir ve hata ayıklamak kolaylaşır.    
-- İşlemci boş kalmadığ ve kaynaklar verimli kullanıldığı için daha performanslı olur.   
+- İşlemci boş kalmadığı ve kaynaklar verimli kullanıldığı için daha iyi bir performansa sahip olur.
 
 • Zorlukları ve riskleri;   
 
 - Race conditions: İki işkem aynı anda aynı veriye erişirse veri tutarsızlığı oluşabilir.   
-- Deadlock: iki işlemin birbirini beklerken kitlenmesidir.   
-- Starvation: Bazı işlemlerin kaynaklara hiç erişememesidir.  
+- Deadlock: iki işlemin birbirini beklerken kitleyebilir.   
+- Starvation: Bazı işlemlerin kaynaklara hiç erişemez.  
 - Stace trace yetersiz olabilir. Loglama ve tracing daha iyi olabilir.    
 
-• Tek threadli uygulamalarda neyin ne zaman yapılacağı iç içedir, stack trace üzerinden sistemin durumu anlaşılabilir.     Ancak concurrency ile görevler birbirinden bağımsız hale gelir, zamanlama business logicten ayrılır ve uygulama tek bir döngü gibi değil birden çok küçük işbirlikçi gibi görünür.   
+• **Tek threadli uygulamalarda neyin ne zaman yapılacağı iç içedir, stack trace üzerinden sistemin durumu anlaşılabilir.     Ancak concurrency ile görevler birbirinden bağımsız hale gelir, zamanlama business logicten ayrılır ve uygulama tek bir döngü gibi değil birden çok küçük işbirlikçi gibi görünür.**   
 • Uygulama mimarilerinde concurrency;  
 
 - Servlet Modeli(Java EE): Servletler, web sunucusu tarafından yönetilen threadler içinde çalışır. Her HTTP isteği ayrı bir thread ya da async işlem olarak ele alınır. Programcı thread yönetimi ile uğraşmaz, bu görevi container üstlenir.   
@@ -1663,15 +1663,15 @@ boolean isEmpty() {
 
 - Hataları tespit etmek zordur. Nondeterministic hatalar olabilir. Aynı kod her çalıştığında farklı sonuçlar verebilir. Buyüzden tek seferlik sanılıp yazılımcı tarafından gözardı edilebilir. Oysa arkada çok ciddi sorunlar yatıyor olabilir.
 - Basit problemlere bile concurrency eklenince karmaşık hale gelir. Paylaşılan kaynaklar, senkronizasyon, hata ayıklama gibi konulara önem vermek gerekir.   
-- Ek yük getirir. Çünkü daha fazla kod yazılır, daha da fazla test yazılır bu da daha fazla maliyet demektir.  
+- Ek yük getirir. Çünkü daha fazla kod yazılır, daha fazla test yazılır bu da daha fazla maliyet demektir.  
 - Sadece kod seviyesinde değil mimari seviyesinde de farklı düşünmeyi gerektirir. Tek threadli sistemlerde lineer akış varken, concurrent sistemde görevler birbirinden bağımsızdır. Ne yapılacağı ile ne zaman yapılacağının ayrılması doğal olarak mimariyi etkiler.    
 - Her zaman performansı arttırmaz.   
 - Containerlar, concurrency detaylarını soyutlasa da containerın nasıl çalıştığını bilmeliyiz.    
 
-• **Atomic classlar** Java'da concurent programlama sırasında veri yarışlarını(race condition) önlemek için özel classlardır. Bu classlar işlemleri atomik yani bölünemez ve kesintisiz bir şekilde gerçekleştirir. Yani işlem ya tamamaen gerçekleşir ya da hiç gerçekleşmez. Başka bir thread araya giremez. Normal değişkenlerde (int, long etc. ) işlemler birden fazla adımda gerçekleşir. Bu da threadler arası çakışmalara yol açabilir. Atomic classlar, bu işlemleri donanımsal seviyede kilitleme olmadan güvenli bir şekilde yapar. 
+• **Atomic classlar** Java'da concurent programlama sırasında veri yarışlarını(race condition) önlemek için özel classlardır. Bu classlar işlemleri atomik yani bölünemez ve kesintisiz bir şekilde gerçekleştirir. Yani işlem ya tamamaen gerçekleşir ya da hiç gerçekleşmez. Başka bir thread araya giremez. Normal değişkenlerde (int, long etc. ) işlemler birden fazla adımda gerçekleşir. Bu da threadler arası çakışmalara yol açabilir. Atomic classlar, bu işlemleri donanımsal seviyede kilitleme olmadan güvenli bir şekilde yapar.        
 • Karışıklıkların nasıl oluştuğunu bilmemiz gerekir demiştik. Java kodu derlenirken  önce bytecode'a çevrilir. JVM bu byte kodu çalıştırırken JIT(Just-In-Time) devreye girer ve kodu daha hızlı çalışması için optimize eder. Bu optimizasyonlar;   
 
-- Kodun yeniden sıralanması (instruction reorddering)  
+- Kodun yeniden sıralanması (instruction reordering)  
 - Bazı işlemlerin atlanması   
 - bellek erişimlerinin farklı zamanlarda yapılmasına neden olabilir. Bu da demek olur ki aynı java kodu farklı zamanlarda farklı şekillerde çalışabilir. (birden fazla thread olduğunda dikkat)  
  
@@ -1690,7 +1690,7 @@ Aşağıdaki kod parçası basit bir işlem gibi duruyor ancak bir thread getNex
 public class X {
  private int lastIdUsed;
  public int getNextId() {
- return ++lastIdUsed;
+   return ++lastIdUsed;
  }
 }
 ```
@@ -1699,9 +1699,9 @@ long 32 bitlik sistemlerde atomic değilken 64 bitlik sistemlerde atomictir. JVM
 
 
 ### Concurrency Defense Principles
-• SRP'ye her sınıfın tek bir değişim nedeni olmalıdır. Concurrency ise başlı başına bir değişim nedenidir. Concurrency kodu, business logic'e gömülürse karmaşa oluşur, test yazmak, hataları saptamak zorlaşır. Bu nedenle concurrency için de SRP önemlidir. Concurrency kodu ayrı tutulamı yani thread yönetimi ayrı sınıfta olmalı, locking sistemi soyutlanmalı , modülerleştirilmelidir.    
-• Veri erişimini sınırlamak önemlidir. Birden fazla thread aynı anda aynı veriye(field, variable) değiştirmeye çalışırsa race condition, beklenmedik davranışlar oluşur ve kodun güvenilirliği bozulur. Bu tür çakışmaları önlemek için **synchronized** kullanılır ve böylece br thread'in belirli bir kod bloğuna girerken diğerlerini betletmesi sağlanıyor Ancak bu da tam çözüm değildir. Çünkü senkronize edilen yerleri ne kadar çoğaltırsak, hata yapma ihtimalimiz o kadar artar. Bu yüzden veri encapsulation'ı önemsemeliyiz. Paylaşıan veriye erişimi private yaparak dışarıdan doğrudan erişimi engellemeliyiz. Veri sadece tek bir noktadan değiştirilebilemeli.     
-• Veriyi paylaşmak yerine kopyalamalıyı tercih etmeliyiz. Nesne kopyalarsak bellek tüketimi artar, garbage collector daha fazla çalışır. Ancak senkronizasyon maliyeti, kopya nesne oluşturma maliyetinden daha fazla olabilir. Bunu ancak deneyerek, performans testleri yaparak görebiliriz. Nesne kopyamanın iki yolu vardır ;
+• SRP'ye her sınıfın tek bir değişim nedeni olmalıdır. Concurrency ise başlı başına bir değişim nedenidir. Concurrency kodu, business logic'e gömülürse karmaşa oluşur, test yazmak, hataları saptamak zorlaşır. Bu nedenle concurrency için de SRP önemlidir. Concurrency kodu ayrı tutalım yani thread yönetimi ayrı sınıfta olmalı, locking sistemi soyutlanmalı , modülerleştirilmelidir.    
+• Veri erişimini sınırlamak önemlidir. Birden fazla thread aynı anda aynı veriye(field, variable) değiştirmeye çalışırsa race condition, beklenmedik davranışlar oluşur ve kodun güvenilirliği bozulur. Bu tür çakışmaları önlemek için **synchronized** kullanılır ve böylece bir thread'in belirli bir kod bloğuna girerken diğerlerini bekletmesi sağlanıyor. Ancak bu da tam çözüm değildir. Çünkü senkronize edilen yerleri ne kadar çoğaltırsak, hata yapma ihtimalimiz o kadar artar. Bu yüzden veri encapsulation'ı önemsemeliyiz. Paylaşılan veriye erişimi private yaparak dışarıdan doğrudan erişimi engellemeliyiz. Veri sadece tek bir noktadan değiştirilebilemeli.     
+• Veriyi paylaşmak yerine kopyalamalıyı tercih etmeliyiz. Nesne kopyalarsak bellek tüketimi artar, garbage collector daha fazla çalışır. Ancak senkronizasyon maliyeti, kopya nesne oluşturma maliyetinden daha fazla olabilir. Bunu ancak deneyerek, performans testleri yaparak görebiliriz. Nesne kopyalamanın iki yolu vardır ;
  
  - Kopyala ve salt okunur yap. Her thread kendi kopyasını oluşturur. Kopya üzerinden sadece okuma yapar. Veri değişmediği için senkronizasyona gerek kalmaz.
  - Kopyala, Sonuçları Topla,Birleştir.  Her thread kendi kopyasında işlem yapar. Sonuçlar bir yerde toplanır. Tek bir thread bu sonuçları birleştirir. Bu yönteme paralel hesaplama ve map-reduce denir.   
@@ -1713,7 +1713,7 @@ long 32 bitlik sistemlerde atomic değilken 64 bitlik sistemlerde atomictir. JVM
  
 • Java'nın ilk yıllarında Doug Lea tarafından Concurrent Programming in Java kitabı çıkarıldı. Bu kitapla çoklu threadler arasında güvenli veri paylaşımı sağlayan collection sınıfları geliştirildi. Bu sınıflar JAVA 5 ile java.util.concurrent paketine eklendi. Java 5  ileri seviye concurrency tasarımları için özel sınıflar sundu; ReentrantLock, Semaphore, CountDownLatch.      
 
-- ConcurrentHashMap,  gibi koleksiyonlar çoklu threadler tarafından aynı anda okunup yazılabilir olduğu için HashMapten daha iyi performans gösterir.      
+- ConcurrentHashMap  gibi koleksiyonlar multi-threadler tarafından aynı anda okunup yazılabilir olduğu için HashMapten daha iyi performans gösterir.      
 - putIfAbsent, computeIfPresent gibi bileşik işlemleri güvenli şekilde yapabilir.      
 - **ReentrantLock**, Java'da bir threadin aynı kilidi birden fazla kez alabilmesini sağlayan gelişmiş bir senkronizasyon aracıdır. java.util.concurrent.locks.ReentrantLock classı, Lock interface'ini kullanır. synchronized yerine kullanılır ve daha fazla kontol sağlar.    
   • Reentrancy(tekrar giriş): Bir thread'in aynı kilidi birden fazla kez alabilmesidir. Bu durumda hold count(kilit sayacı) artırılır ve her unlock() çağrısında azaltılır. Sayacın sıfıra ulaşmasıyla kilit serbest kalır.  Her lock() çağrısı sayacı arttırır, unlock() çağrısı bir azaltır.     
@@ -1735,8 +1735,8 @@ try {
   • Signal(V): Semaphore değerini arttırır. Kaynağın serbest bırakıldığını gösterir.     
 
   İki tür semaphore var;       
-  • Binary Semaphore; Değeri sadece 0 ve 1 olablir Mutex gibi çalışır; bir kaynak ya boş ya doludur.Başlangıç genellikle 1 olarak ayarlanır. Bir thread semaforu kitleyebilir  -> wait ya da serbest bırakabilir -> signal.       
-  • Counting Semaphore; Değeri sıfırdan büyük olabilir, birden fazla duruma sahiptir. Aynı anda birden fazla threade kaynak erişimi sağlar. Bir thread semaforu kişlitleyebilir(wait) veya birden fazla thread semaforu serbaest bırakabilir.Resource pools veya sınırlı kaynakları yönetmek için uygundur.   
+  • Binary Semaphore; Değeri sadece 0 ve 1 olabilir Mutex gibi çalışır; bir kaynak ya boş ya doludur.Başlangıç genellikle 1 olarak ayarlanır. Bir thread semaforu kitleyebilir  -> wait ya da serbest bırakabilir -> signal.       
+  • Counting Semaphore; Değeri sıfırdan büyük olabilir, birden fazla duruma sahiptir. Aynı anda birden fazla threade kaynak erişimi sağlar. Bir thread semaforu kilitleyebilir(wait) veya birden fazla thread semaforu serbest bırakabilir.Resource pools veya sınırlı kaynakları yönetmek için uygundur.   
 
 ```Java
 import java.util.concurrent.Semaphore;
@@ -1784,9 +1784,9 @@ System.out.println("Tüm görevler tamamlandı, devam ediliyor...");
 
 
 ### Concurency Temel Kavramlar
-• **Bound Resources(sınırlı kaynaklar):** Sabit sayıda veya sizeda olan kaynaklardır. Aynı anda sadece belirli sayıda thread bu kkaynaklara erişebilir. Amaç; kaynakların aşırı kullanımını önlemek ve sistemin dengeli çalışmasını sağlamaktır.   
+• **Bound Resources(sınırlı kaynaklar):** Sabit sayıda veya sizeda olan kaynaklardır. Aynı anda sadece belirli sayıda thread bu kaynaklara erişebilir. Amaç; kaynakların aşırı kullanımını önlemek ve sistemin dengeli çalışmasını sağlamaktır.   
 • **Mutual Exclusion(Karşılıklı Dışlama):**  Paylaşılan bir veri ya da kaynağa aynı anda yalnızca bir thread erişebilir. Amaç; veri tutarlığını korumak ve race condition önlemektir.   
-• **Starvation** Bir threadin uzun süre ya da sonsuza kadar çalışmasına izn verilmemesidir. Mesela, hızlı çalışan threadler hep öncelikle geçerse yavaş olanlar hiç çalışamayabilir.   
+• **Starvation** Bir threadin uzun süre ya da sonsuza kadar çalışmasına izin verilmemesidir. Mesela, hızlı çalışan threadler hep öncelikle geçerse yavaş olanlar hiç çalışamayabilir.   
 • **Deadlock**: İki veya daha fazla thread birbirini beklerken sonsuza kadar bloke olur. Bu sorunla karşılaşmamak için ; kaynakları sabit sırayla isteyebiliriz, timeout kullanabiliriz, deadlock algılama ve çözme algoritmaları kullanabiliriz.   
 • **Livelock:** Threadler aktif olarak çalışıyor olarak görülür ancak ilerleme sağlayamazlar. Deadlockta threadler bekler, livelock'ta ise sürekli hareket ederler ama işe yaramaz. İki kişi dar bir koridorda birbirine yol vermeye çalışırken sürekli yer değiştirirler ama bir türlü geçemezler. Onun gibi düşün. Bu sorundan kaçabilmek için thread davranışlarını randomized edebiliriz ya da backoff strategy uygulayabiliriz.         
 
@@ -1795,12 +1795,12 @@ System.out.println("Tüm görevler tamamlandı, devam ediliyor...");
 • **Producer** threadler, yapılacak işleri üretir ve bunları buffera koyar. **Consumer** threadler ise bu buffera bakar ve içindeki işleri alıp temizler. Buffer(queue), producer ile consumer arasında bir ara belek görevi görür. Bu buffer sınırlı kapasiteye sahip bir kaynaktır(bound resource). Yani belirli sayıda iş tutabilir. Eğer buffer doluysa producer bekler, buffer boşsa consumer bekler. Producer, buffera bir iş eklediğinde bufferın boş olmadığına dair sinyal verir. Consumer, bufferdan iş aldığında buffer artık dolu değil diye sinyal verir.    
 
 #### Readers-Writers
-• **Reader** kaynağı  sadece okur, değiştirmez. **Writer** bu kaynağı günceller ve değiştirir.  Aynı anda birden fazla reader çalışabilir; veri değişemediği için. Ama writer geldiğinde veri değişiyor olabileceği için reader'ın durması gerekir. Readeryazma işlemi nedeniyle sık sık  engellenebilir bu da throughput(verimlilik) düşmesine neden olabilir. Verimlilik düşüşünü, starvation'ı engellemek için backoff ile çakışmalar azaltılabilir, randomized algoritmaları kullanılabilir.   
+• **Reader** kaynağı  sadece okur, değiştirmez. **Writer** bu kaynağı günceller ve değiştirir.  Aynı anda birden fazla reader çalışabilir; veri değişmediği için. Ama writer geldiğinde veri değişiyor olabileceği için reader'ın durması gerekir. Reader yazma işlemi nedeniyle sık sık  engellenebilir bu da throughput(verimlilik) düşmesine neden olabilir. Verimlilik düşüşünü, starvation'ı engellemek için backoff ile çakışmalar azaltılabilir, randomized algoritmaları kullanılabilir.   
 
-#### Dining Phşilosophers Problem
-• Bir grup filozof yuvarlak bir masada oturur. Her filozofun solunda bir çatal bulunur. Ortada büyük bir spagetti kasesi bulunur. Filozoflar genelde düşünür, acıktıklarında yemek yemek isterler. Yemek yiyebilmek için iki çatal gerekir; solunda ve sağında.E ğer komşu filozoflardan biri çatalı kullanıyorsa beklemek zorundadır. Yemek yedikten sonra çatalları bırakır ve tekrar düşünmeye döner.Burada filozoflar threadler, çatallar ise paylaşılan kaynakları temsil eder. Her thread işlem yapabilmek için iki kaynağa ihtiyaç duyar. Eğe kaynaklar başka threadler tarafından kullanılıyorsa beklemek zorundandır.
+#### Dining Philosophers Problem
+• Bir grup filozof yuvarlak bir masada oturur. Her filozofun solunda bir çatal bulunur. Ortada büyük bir spagetti kasesi bulunur. Filozoflar genelde düşünür, acıktıklarında yemek yemek isterler. Yemek yiyebilmek için iki çatal gerekir; solunda ve sağında. Eğer komşu filozoflardan biri çatalı kullanıyorsa beklemek zorundadır. Yemek yedikten sonra çatalları bırakır ve tekrar düşünmeye döner.Burada filozoflar threadler, çatallar ise paylaşılan kaynakları temsil eder. Her thread işlem yapabilmek için iki kaynağa ihtiyaç duyar. Eğer kaynaklar başka threadler tarafından kullanılıyorsa beklemek zorundandır.
 
-• Java'da synchronized anahtar kelimesi, "bir metodu" aynı anda sadece bir thread'in çalıştırabilmesini sağlar. Eğer aynı nesne üzerinde birden fazla synchronized metot varsa ve bu metotlar birbirine bağımlı bir şekilde çağırılıyorsa mesela biri veriyi yazıyor diğeri okuyorsa hatalar oluşabilir. Bunlardan kaçınmaya çalışmalıyız ama bazen kaçınmak imkansızdır bu durumlar için üç çözüm yolu vardır. 
+• Java'da synchronized anahtar kelimesi, "bir metodu" aynı anda sadece bir thread'in çalıştırabilmesini sağlar. Eğer aynı nesne üzerinde birden fazla synchronized metot varsa ve bu metotlar birbirine bağımlı bir şekilde çağırılıyorsa mesela biri veriyi yazıyor diğeri okuyorsa hatalar oluşabilir. Bunlardan kaçınmaya çalışmalıyız ama bazen kaçınmak imkansızdır bu durumlar için üç çözüm yolu vardır; 
 
 • **Client Based Locking(İstemci Taraflı Kilitleme):** Client, server nesnesini kullanmadan önce kendisi kilit alır ardından gerekli metotları çağırır ve kilidi tüm işlem tamamlanana kadar bırakmaz.
 
@@ -1837,7 +1837,7 @@ public class ServerAdapter {
 
 ```
 
-• synchronized, lockler oluşturur ve locklar performans açısından pahalıdır; threadler beklemek zorunda kalır, sistem kaynakları tüketilir, kodun çalışması yavaşlayabilir. Buyüzden gereksiz yere kullanmamalıyız. Kritik bölümlerde yani birden fazla threadin çalıştığı, veri bozulması olabilecek kod parçalarında kullanmalıyız. Kilit sadece gerekli yerde kullanılmalıdır yani kodun kritik kısmında. Kocaman bir metodu synchronized yapmaya gerek yoktur çoğu zaman. 
+• synchronized, lockler oluşturur ve locklar performans açısından pahalıdır; threadler beklemek zorunda kalır, sistem kaynakları tüketilir, kodun çalışması yavaşlayabilir. Bu yüzden gereksiz yere kullanmamalıyız. Kritik bölümlerde yani birden fazla threadin çalıştığı, veri bozulması olabilecek kod parçalarında kullanmalıyız. Kilit sadece gerekli yerde kullanılmalıdır yani kodun kritik kısmında. Kocaman bir metodu synchronized yapmaya gerek yoktur çoğu zaman. 
 
 ```Java
 public void process() {
@@ -1854,7 +1854,7 @@ public void process() {
 • **Graceful Shutdown**: Sistemin kaynakları serbest bırakması , verileri kaydetmesi ve hiçbir threadin yarım kalmaması anlamına gelir. Deadlock yaygın bir sorundur, sistemin kapatılabilmesini engeller;    
 
 - bir child thread deadlock'a girerse, main thread sonsuz bekler ve sistem asla kapanmaz.   
-- Main thread kapanmak için consumer threadin kapanmasını bekelr, consumer thread kapanmaz, sistem kapanamaz.   
+- Main thread kapanmak için consumer threadin kapanmasını bekler, consumer thread kapanmazsa sistem kapanamaz.   
 
   Bu gibi durumlara düşmemek için;   
 
@@ -1864,15 +1864,15 @@ public void process() {
   - her thread kapanmadan önce durumu raporlayabilir.    
 
 
-• Test kodun hatasız olduğunu garanti etmez ama riskleri azaltır. Concurrent kodlarda hata çıkma olasılığı çok yüksektir. Buyüzden test yazarken daha dikkatli olunmalı; sorunları ortaya çıkaracak testler yazmalıyız, testleri olası dağıtım ortamlarında, farklı sistem konfigürasyonlarında çalıştırmalıyız. Bir test başarısızsa bunu geçiştirmemeliyiz.İlk testten geçemedi diyelim tekrar denediğimizde ise geçti testte bu durumu gözardı etmemeliyiz. Rastgele oluşan hatalar büyük ihtimalle thread kaynaklıdır. İlk olarak tek threadli kodun ve thread dışında kalan kodun parçaların da düzgün çalıştığından emin olmalıyız. Kodumuz pluggable yani modüler ve değiştirilebilir olmalıdır. Kodumuz ayarlanabilir(tunable) olmalıdır yani thread sayısı, zamanlayıcılar gibi parametreleri ayarlayabiliyor olmalıyız. İşlemci sayısından daha fazla thread ile sistemi test etmeliyiz. Concurrent sistemlerde güvenilirlik ve kararlılık sağamak için önemlidir.         
+• Test kodun hatasız olduğunu garanti etmez ama riskleri azaltır. Concurrent kodlarda hata çıkma olasılığı çok yüksektir. Bu yüzden test yazarken daha dikkatli olunmalı; sorunları ortaya çıkaracak testler yazmalıyız, testleri olası dağıtım ortamlarında, farklı sistem konfigürasyonlarında çalıştırmalıyız. Bir test başarısızsa bunu geçiştirmemeliyiz.İlk testten geçemedi diyelim tekrar denediğimizde ise geçti testte bu durumu gözardı etmemeliyiz. Rastgele oluşan hatalar büyük ihtimalle thread kaynaklıdır. İlk olarak tek threadli kodun ve thread dışında kalan kodun parçalarının da düzgün çalıştığından emin olmalıyız. Kodumuz pluggable yani modüler ve değiştirilebilir olmalıdır. Kodumuz ayarlanabilir(tunable) olmalıdır yani thread sayısı, zamanlayıcılar gibi parametreleri ayarlayabiliyor olmalıyız. İşlemci sayısından daha fazla thread ile sistemi test etmeliyiz. Concurrent sistemlerde güvenilirlik ve kararlılık sağlamak için önemlidir.         
 
-- Thread sayısını ayarlamak zordur. Her sistemin donanımı, yüküve görev türü farklı olduğu için sabit bir sayı belirlemek doğru bir yaklaşım olmaz bunun yerine deneme yanılma yoluyla doğru thread sayısını bulmalıyız. Thread sayısı kolayca değiştirilebilir olmalı ya da sistem çalışırken bile dinamik ayarlama sayesinde thread sayısı değiştirilebilir olmalı. (dinamik ayarlama, sistemin değişen yük koşullarına uyum sağlamasını kolaylaştırır.) Sistemin kendi performansını izleyerek thread sayısını otomatik olarak ayarlabilmesini sağlamalıyız.
--  İşletim sistemi, aynı anda çalışan threadler arasında sürekli geçiş yapar. Bu geçişler sırasında paylaşılan kaynaklara erişim, kilit mekanizmaları ve kritik bölgeler devreye girer. Böylece hataları saptayabilmemmiz daha kolay olablilr, sık görev değişimi bu hataları daha görünür hale getirir. Kısaca işlemci sayısından fazla thread ile çalıştırmak -> daha fazla görev değişimi -> daha fazla hata tetikleme şansı  
+- Thread sayısını ayarlamak zordur. Her sistemin donanımı, yükü ve görev türü farklı olduğu için sabit bir sayı belirlemek doğru bir yaklaşım olmaz bunun yerine deneme yanılma yoluyla doğru thread sayısını bulmalıyız. Thread sayısı kolayca değiştirilebilir olmalı ya da sistem çalışırken bile dinamik ayarlama sayesinde thread sayısı değiştirilebilir olmalı. (dinamik ayarlama, sistemin değişen yük koşullarına uyum sağlamasını kolaylaştırır.) Sistemin kendi performansını izleyerek thread sayısını otomatik olarak ayarlabilmesini sağlamalıyız.
+-  İşletim sistemi, aynı anda çalışan threadler arasında sürekli geçiş yapar. Bu geçişler sırasında paylaşılan kaynaklara erişim, kilit mekanizmaları ve kritik bölgeler devreye girer. Böylece hataları saptayabilmemiz daha kolay olabilir, sık görev değişimi bu hataları daha görünür hale getirir. Kısaca işlemci sayısından fazla thread ile çalıştırmak -> daha fazla görev değişimi -> daha fazla hata tetikleme şansı  
 -  Concurrent kodlarda hataları yakalamak zordur; binlerce olası yürütme yolu vardır ve bu yolların çok azı hata üretir. Bu hatalı yolların rastgele seçilme olasılığı düşüktür. Bu hataları daha kolay yakalayabilmek için,  thread yürütme sırasını değiştirebiliriz bunun için iki yol vardır.    
 
    - **Hand-coded(Elle Kodlama):** Geliştirici belirli yerlerde manuel olarak sleep(), yield(), wait(), priority() gibi çağrılar yapar. Bu çağrılar thread yürütme sırasını değiştirir. Ancak bu çağrılar performası  düşürür. Hataları bulma garantisi yoktur sadece olasılığını arttırır. Genelde yapılan bir hatada bu kodun üretim kodunda olması. Bu tarz kodlar sadece test kodlarında olmalı.
 
-     - **Object.wait():** thread bekelemeye alınır.
+     - **Object.wait():** thread beklemeye alınır.
      - **Object.sleep():** thread belirli bi süre uyur.
      - **Object.yield():** thread'in işlemciyi başka bir threade bırakmasını sağlar.
      - **Object.setPriority():** threadin önceliğini değiştirerek zamanlamayı tetikler.
@@ -1880,9 +1880,9 @@ public void process() {
  
 ### Concurrency Bölümünün Özeti
 
-• Tek threadli kodlar genellikle öngürülebilir ve anlaşılabilirdir. Ancak birden fazla thread aynı veriyi paylaşmaya başaldığında işler karışır. Bu karışıklık nadir tekrarlanabilen hatalara sebep olur. Bunlarla başa çıkabilmek için;   
+• Tek threadli kodlar genellikle öngürülebilir ve anlaşılabilirdir. Ancak birden fazla thread aynı veriyi paylaşmaya başladığında işler karışır. Bu karışıklık nadir tekrarlanabilen hatalara sebep olur. Bunlarla başa çıkabilmek için;   
 
-- SRP'yi uygulamalıyız. Kodumuzu ikiye ayırmalıyız; Thread-aware(concurrency ile ilgilenen kod) ve threa-ignorant(concurrency ile ilgilenmeyen kod).  Bu test etmeyi ve hata ayıklamayı kolaylaştırır.   
+- SRP'yi uygulamalıyız. Kodumuzu ikiye ayırmalıyız; Thread-aware(concurrency ile ilgilenen kod) ve thread-ignorant(concurrency ile ilgilenmeyen kod).  Bu test etmeyi ve hata ayıklamayı kolaylaştırır.   
 - Thread-aware kodları POJO'lardan ayrı tutmalıyız. Testjigleri ile farklı senaryoları denemeyi kolaylaştırırlar.   
 - Concurrency sorunları genellikle paylaşılan veri üzerinde çalışan birden fazla thread , ortak kaynak havuzları, sınır durumları(döngü bitişleri, sistem kapanışı gibi noktalar) gibi nedenlerden kaynaklanır.  
 - Kullandığımız kütüphanelerin concurrency ile ilgili sunduğu özellikleri öğrenmeliyiz.   
