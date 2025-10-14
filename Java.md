@@ -207,13 +207,26 @@ AtomicInteger counter=new AtomicInteger(0);
 counter.incrementAndGet();//arttırma işlemi
 counter.decrementAndGet();//azaltma işlemi
 ```
-•  **()->**, java 8  ve sonraki sürümlerde sunulan bir fonksiyonel programlama özelliğidir. Java dilindeki fonksiyonel arayüzlerin (interface) kullanımını kolaylaştırır. _Bir lambda ifadesi, interface'in işlevselliğini tanımlayan küçük bir kod bloğudur._ Lambda ifadesi genellikle bir fonksiyonun işlevselliğini bir başka yöntem veya sınıf içine yazmak yerine doğrudan bir değişkene atamak veya bir metoda geçirmek için için kullanılır.Parametre listesi ve kod bloğundan oluşur. "->" lambda ifadesinin parametreleri ve kod bloğu arasında ayrım sağlar."()->" ifadesi hiçbir parametre almayan bir lambda ifadesidir. Kod bloğu boş olduğunda ()->{} yerine ()-> kullanılabilir. 
+
+
+
+•Java'da anonim, bilinmeyen bir fonksiyon tanımlamak için kullanılır.  Yani fonksiyonun bir adı olmadan doğrudan işlev tanımlıyoruz. Genelikle functional interface(tek bir abstract metodu olan interface) ile birlikte kullanılır. 
+Aşağıdaki kod parçasını inceleyecek olursak; Thread classı bir thread başlatmak için kullanılır. Thread constructor'ı bir Runnable objesi ister. Runnable interface'i de tek bir metot içerir -> run() . ()->{...} ifadesi, run() metodunun içeriğini lamda ile tanımlar. Tek satırlık durumlarda {}'a gerek yoktur. Java 8 ile gelen bir özelliktir.    
+
+```java
+Thread t1 = new Thread(() -> {
+    // kodlar buraya gelecek
+});
+```
+
+
 ```java
 List<String> liste=new ArrayList<>();
 liste.add("elma");
 liste.add("cilek");
 liste.forEach((String meyve)->System.out.println(meyve));
 ```
+
   - Burada forEach metodu "Consumer" adında bir interface beklemektedir.("Consumer" interface'i, genellikle bir işlem yapmak için bir girdi değerine ihtiyaç duyudulduğunda kullanılır. Örneğin;listedeki her bir öğe için bir işlem yapmak istiyorsak "Consumer" interface'i kullanılabilir.)  
   - Consumer, bir girdi değeri alır ve herhangi bir değer döndürmez.forEach metodu,"Consumer" interface'ine sahip bir nesne bekler ve listedeki her öge için Consumer'ın abstractı "accept" metodunu çağırır.
 
