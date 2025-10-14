@@ -53,5 +53,6 @@ fred.acquire(); // Semaforu azaltır, gerekirse thread'i bloklar
 fred.release(); // Semaforu arttırır, gerekirse bekleyen thread'i uyandırır
 ```
 
+• Diyelim ki semafor değerimiz 1. İki thread aynı anda geldi.İlk thread semaforu 1 azaltır. Semaphore 0 oldu. Bloklanmaz ve bu thread çalışır. İkinci thread semaphoru 1 azaltır. Semaphore -1 oldu. Bu durumda thread bloklanır, beklemeye geçer.  Aynı anda iki thread gelirse , aynı anda iki thread semophoru azaltamaz; **Semaphore işlemleri atomictir. Semaforun acquire() işlemi işletim sistemi tarafından kilitlenerek yapılır.** 
 • Bir thread semaforu azaltmadan önce bloklanıp bloklanmayacağını bilemeyiz. Özel durumlarda önceden tahmin edilebilir.    
 • Semaforu arttırdığımızda, bekleyen bir thread olup olmadığını bilemeyiz -> bazen kimse uyanmaz.    
