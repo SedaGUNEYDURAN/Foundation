@@ -23,7 +23,16 @@ Tüm threadler synchronize çalışırsa **en büyük olası değer= 100 thread 
 En küçük değeri incelediğimiz, her artış çakışır yani her iki thread aynı anda count'u okur ve aynı değeri yazar. Bu durumda iki işlem sonucunda 1 geçerli artış olur. Böyle bir senaryoda 10.000 işlem yapmış ama 5000 geçerli artış yapmış oluruz. Ancak en kötü durum bu değil. Her thread sadece bir kere başarılı artış yapabilir, diğer 99 artış başka threadlerle çakışabilir ve etkisiz olabilir bu durumda.  Böylece **en küçük olası değer: 100 thread x 1 geçerli atış= 100**     
 
 ## Semaphore    
-• Bu kavram Edsger Dijstra tarafından geliştirilmiştir. Semaphore bir seknronizasyon mekanizmasıdır. Temel amacı; multi-thread veya porcess aynı anda çalışırken kritik bölgelere erişimi kontrol etmek ve veri tutarlılığını sağlamaktır. Teknik olarak bir veri yapısı değildir ancak veri yapıları kullanılarak uygulanır. İki bileşen ile temsil edilir;
+• Bu kavram Edsger Dijstra tarafından geliştirilmiştir. Semaphore bir seknronizasyon mekanizmasıdır. Temel amacı; multi-thread veya porcess aynı anda çalışırken kritik bölgelere erişimi kontrol etmek ve veri tutarlılığını sağlamaktır.
+• Java'da semaforlar, java.util.concurrent paketinde yer alan Semaphore sınıfı ile sağlanır. 
+
+```java
+import java.util.concurrent.Semaphore;
+
+Semaphore fred = new Semaphore(3); // Başlangıç değeri 3
+```
+
+• Teknik olarak bir veri yapısı değildir ancak veri yapıları kullanılarak uygulanır. İki bileşen ile temsil edilir;
 
 - bir counter(integer), paylaşılan kaynakların sayısını tutar. 
 - bir queue, bekleyen threadleri sıraya koyar.
@@ -31,7 +40,18 @@ En küçük değeri incelediğimiz, her artış çakışır yani her iki thread 
 
 ## Semaphore Durumları
 • Semafor oluştururke başlangıç değeri veririr. Sonrasında arttırma +1, azaltma -1 yapabiliriz. Ama değerini okuyamayız, yani semaforun anlık değerini bilemeyiz.   
-• Azaltma sonucu semafor değeri negatifse thread bloklanır. Yani bu thread durdurulur be thread queue'ya beklemek üzere geçer. Başka bir thread semaforu artırana kadar devam edemez.Negatif değer kaç threadin queue'da beklediğini ifade eder.    
+• Azaltma sonucu semafor değeri negatifse thread bloklanır. Yani bu thread durdurulur be thread queue'ya beklemek üzere geçer. Başka bir thread semaforu artırana kadar devam edemez.Negatif değer kaç threadin queue'da beklediğini ifade eder. CPU kaynağı tüketmezler sadece beklerler. Queue'ya geçer dedik bekleyen ancak queue veri yapısı gibi FIFO prensibiyle çalışmaz. Ancak **new Semaphore(1,true)** şeklinde oluşturursak bekleyen threadler FIFO sırasına göre uyanır. 
+
+```java
+fred.acquire(); // Semaforu azaltır, gerekirse thread'i bloklar
+```
+
+ - acquire() metodu InterruptException fırlatır. Bu yüzden try-catch bloğu ile korunur. 
 • Bir thread semaforu arttırırsa, queue'da bekleyen başka thread varsa bunlardan bir tanesi uyanır(unblock) ancak hangi threadin uyanacağı belli değildir.   
+
+```java
+fred.release(); // Semaforu arttırır, gerekirse bekleyen thread'i uyandırır
+```
+
 • Bir thread semaforu azaltmadan önce bloklanıp bloklanmayacağını bilemeyiz. Özel durumlarda önceden tahmin edilebilir.    
 • Semaforu arttırdığımızda, bekleyen bir thread olup olmadığını bilemeyiz -> bazen kimse uyanmaz.    
