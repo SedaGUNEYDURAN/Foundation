@@ -5,7 +5,7 @@
   - Mutual Exclusion: A olayı B ile aynı anda gerçekleşmemeli      
 
 • Bir olayın gerçekleşmesinin sıralamasını yaparken saate bakarak karar veririz ancak bilgisayar sistemlerinde olayların zamanını yeterince hassas ölçemeyebiliriz. Bunun yerine lock mekanizmalarını, semaforları, concurrent veri yapılarını, barrier'lar, message passing gibi teknikleri kullanırız.      
-• **Paralel Sistemler**: Birden fazla işlemci aynı anda farklı komutları çalıştırabilir. Bu durumda hangi işlemcideki komutun önce çalıştığını bilmek zordur.     
+• **Paralel Sistemler**: Birden fazla işlem biriminin (işlemci, çekirdek, bilgisayar vs.) aynı anda çalışarak bir görevi birlikte yerine getirdiği bilgisayar sistemidir. Bu durumda hangi işlemcideki komutun önce çalıştığını bilmek zordur. Büyük bir görev, daha küçük parçalara ayrılarak farklı işlemcilere dağıtılır. Görevler aynı anda yürütülür. Bu da işlem süresini kısaltır. İşlem birimleri arasında veri alışverişi ve zamanlama koordinasyonu gerekir. Sisteme daha fazla işlemci ekleyerek sistem kapasitesi arttırılabilir yani ölçeklenebilirdir.         
 • **Multithreating**: Tek işlemci birden fazla threadi sırasıyla çalıştırır. İşletim sistemi hangi threadin ne zaman çalışacağına karar verir. Yazılımcı bu sırayı kontrol edemez.   
 • **Message Passing**: Bir threadin veya sürecin diğerine bilgi göndermesi içi mesaj-veri paketi iletmesidir. Veriyi doğrudan paylaşmak yerine iletir.  Thread A, "işlem tamamlandı" mesajı gönderir. Thread B, bu mesajı alana kadar bekler ve sonra işleme başlar. Böylece A'nın B'den önce çalıştığı garanti edilir. Senkronizasyon sağlanmış olur.    
 • Deterministic bir kod her çalıştığında aynı sonu verir. Non-deterministic bir kod ise, farklı çalıştırmalarda farklı sonuçlar verir. Concurrent programlar da non-deterministic davranışlar görterebilirler.     
@@ -63,3 +63,178 @@ fred.release(); // Semaforu arttırır, gerekirse bekleyen thread'i uyandırır
 • Diyelim ki semafor değerimiz 1. İki thread aynı anda geldi.İlk thread semaforu 1 azaltır. Semaphore 0 oldu. Bloklanmaz ve bu thread çalışır. İkinci thread semaphoru 1 azaltır. Semaphore -1 oldu. Bu durumda thread bloklanır, beklemeye geçer. 
 • Bir thread semaforu azaltmadan önce bloklanıp bloklanmayacağını bilemeyiz. Özel durumlarda önceden tahmin edilebilir.        
 • Semaforu arttırdığımızda, bekleyen bir thread olup olmadığını bilemeyiz -> bazen kimse uyanmaz.    
+
+```java
+import java.util.concurrent.Semaphore;
+
+public class SignalingExample {
+    // Başlangıç değeri 0 olan semaphore
+    static Semaphore a1Done = new Semaphore(0);
+    static String line;
+
+    public static void main(String[] args) {
+        Thread threadA = new Thread(() -> {
+            // statement a1: dosyadan satır okuma (simülasyon)
+            line = "Merhaba dünya!";
+            System.out.println("Thread A: Satır okundu.");
+            
+            // signal: a1Done semaphore'u artırılır
+            a1Done.release();
+        });
+
+        Thread threadB = new Thread(() -> {
+            try {
+                // wait: a1Done semaphore'u 0 ise bekler
+                a1Done.acquire();
+                
+                // statement b1: satırı ekrana yazdırma
+                System.out.println("Thread B: Satır yazdırılıyor → " + line);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        threadB.start(); // Önce B başlasa bile bekleyecek
+        threadA.start(); // A sinyal gönderince B devam edecek
+    }
+}
+```
+
+Yukarıdaki örneği inceleyediğimizde görüyoruz ki Thread A'nın işi bitmeden B başlayamaz ve kodun sıralaması garanti altına alınır. Semaphore başlangıç değeri sıfır yani B threadi önce çalışsa bile acquire() threadi bloklar ve beklemeye geçer.Thread B artık  a1Done.acquire(); satırında bekliyor. Thread A çalışır işini yapar, bitirir ve kaynağı serbest bırakıp semaphore değerini bir arttırdığında B başlayabilir.    
+
+
+### Rendezvous
+• İki threadin belirli bir noktada buluşmasını ve her ikisinin de o noktaya ulaşmadan ilerlememelerini garanti etmek isteriz. Bu buluştukları noktaya rendezvous(buluşma noktası)  denir.  Böyle bir durum için iki tane semafor kullanmamız gerekebilir. Diyelim ki  elimizde iki thread var; ThreadA ve TheadB. ThreadA; statementA1 ve statementA2'den oluşuyor. ThreadB; statementB1 statementB2'den oluşuyor. Şu iki koşulu sağlamak istiyoruz ;
+
+- A1 -> B2'den önce çalışmalı
+- B1-> A2'den önce çalışmalı
+
+Bu durumu incelediğimizde A1 ile B1'in birbirine göre çalışma sıralamasının bir önemi olmadığını anlıyoruz. 2 adet semafor kullanırız; 
+
+- birinci semaphore aArrived, TreadA'nın buluşma noktasına ulaştığını belirtir.
+- ikinci semaphore bArrived, TreadB'nin buluşma noktasına ulaştığını belirtir.  
+
+```java
+import java.util.concurrent.Semaphore;
+
+public class RendezvousExample {
+    static Semaphore aArrived = new Semaphore(0);
+    static Semaphore bArrived = new Semaphore(0);
+
+    public static void main(String[] args) {
+        Thread threadA = new Thread(() -> {
+            System.out.println("A: statement a1");
+            aArrived.release();         // A geldiğini bildirir
+            try {
+                bArrived.acquire();     // B'nin gelmesini bekler
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("A: statement a2");
+        });
+
+        Thread threadB = new Thread(() -> {
+            System.out.println("B: statement b1");
+            bArrived.release();         // B geldiğini bildirir
+            try {
+                aArrived.acquire();     // A'nın gelmesini bekler
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("B: statement b2");
+        });
+
+        threadA.start();
+        threadB.start();
+    }
+}
+```
+
+• **Mutex(Mutual Exclusion):** Paylaşılan bir veriye birde fazla thread'in erişmesini engeller. Aynı anda sadece bir thread belirli bir kod bloğuna erişmesini sağlayan mekanizmadır. Bu kod bloğuna critical section(kritik bölüm) denir. Race condition durumuna çözüm sunar. Java'da mutual exclusion için Semaphore kullanılabilir. 
+
+
+```java
+import java.util.concurrent.Semaphore;
+
+public class MutexExample {
+    static int count = 0;
+    static Semaphore mutex = new Semaphore(1); // 1: sadece bir thread geçebilir
+
+    public static void main(String[] args) {
+        Thread threadA = new Thread(() -> {
+            try {
+                mutex.acquire(); // mutex'i al
+                count = count + 1;
+                System.out.println("Thread A: count = " + count);
+                mutex.release(); // mutex'i bırak
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        Thread threadB = new Thread(() -> {
+            try {
+                mutex.acquire(); // mutex'i al
+                count = count + 1;
+                System.out.println("Thread B: count = " + count);
+                mutex.release(); // mutex'i bırak
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        threadA.start();
+        threadB.start();
+    }
+}
+```
+
+- **Symmetric Solution:** Thread'lerin aynı kodu veya aynı davranışı kalıbını izlediği senkronizasyon yapısıdır. Genellkle daha kolay genelleştirilebilir ve daha az hata içerir. 
+- **Asymmetric Solution:** Her thread'in farklı görevler üstlendiği ve senkronizasyonunun bu farklılıklara göre kurulduğu yapıdır. Doğruluğunu kanıtlamak zordur, genellikle karmaşıktır.
+
+
+• **Multiplex(çoklu geçiş) Problem:** Kritik bölgeye aynı anda en fazla n thread'in girmesine izin vermek için kullanılır. Eğer daha fazla thread gelirse kalan kısımm bekler. Bu sayıyıda Semaphore'un constracter'ın çağırırken parametre olarak verilir.    
+• **Barrier:** Amacımız tüm threadler belirli bir noktaya yani rendezvous ulaşmadan hiçbirinin bir sonraki adım olan critical point'i geçmemesini sağlamaktır. Yani n tane threadimiz var diyelim, n-1 thread geldiğinde bekleyecek n. thread geldiğinde hepsi birlikte devam edecek. 
+
+```java
+import java.util.concurrent.Semaphore;
+
+public class BarrierExample {
+    static final int n = 5; // Toplam thread sayısı
+    static int count = 0;
+    static Semaphore mutex = new Semaphore(1);
+    static Semaphore barrier = new Semaphore(0);
+
+    public static void main(String[] args) {
+        Runnable task = () -> {
+            try {
+                // RENDEZVOUS
+                mutex.acquire();
+                count++;
+                if (count == n) {
+                    for (int i = 0; i < n - 1; i++) {
+                        barrier.release();
+                    }
+                    mutex.release();
+                } else {
+                    mutex.release();
+                    barrier.acquire();
+                }
+
+                // CRITICAL POINT
+                System.out.println(Thread.currentThread().getName() + " kritik noktaya ulaştı.");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        };
+
+        for (int i = 0; i < n; i++) {
+            new Thread(task, "Thread-" + i).start();
+        }
+    }
+}
+```
+
+Yukarıdaki kodda her thread geldiğinde count değişkenini arttırır. İlk n-1 thread barrier.acquire() ile bekler. n. thread geldiğinde count==n koşulu gerçekleşir ve n-1 kez barrier.release() çağrılır. Böylece bekleyen threadler serbest kalır ve tüm threadler critical point'e aynı anda geçebilir. Burada   mutex için release(); ve acquire() kullanmamamızın nedeni; count değişkenine birden fazla thread aynı anda erişirse race condition durumu oluşmasını engellemektir. 
+
+• **Turnstile(Turnike Deseni):** 
