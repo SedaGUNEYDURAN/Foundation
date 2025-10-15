@@ -36,9 +36,14 @@ Semaphore fred = new Semaphore(3); // Başlangıç değeri 3
 
 - bir counter(integer), paylaşılan kaynakların sayısını tutar. 
 - bir queue, bekleyen threadleri sıraya koyar.
+  
+• Semafor kullanımı problemlerin çözümü için tek yol değildir. Ancak semaphore kullanmak kodun güvenliğini, doğruluğunu, taşınabilirliğini arttırır.      
+ 
+ - Hataları önleyici kısıtlamalar getirir -> güvenilirlik
+ - Semapforlarla oluşturulmuş algoritmaların doğru çalıştığını matematiksel olarak göstermek daha kolaydır.   
+ - Donanım seviyesinde veya işletim sistemi çekirdeğinde desteklenebilir. Hızlı ve kaynak dostudurlar. ->taşınabilir    
 
-
-## Semaphore Durumları
+### Semaphore Durumları
 • Semafor oluştururke başlangıç değeri veririr. Sonrasında arttırma +1, azaltma -1 yapabiliriz. Ama değerini okuyamayız, yani semaforun anlık değerini bilemeyiz.       
 • Azaltma sonucu semafor değeri negatifse thread bloklanır. Yani bu thread durdurulur be thread queue'ya beklemek üzere geçer. Başka bir thread semaforu artırana kadar devam edemez.Negatif değer kaç threadin queue'da beklediğini ifade eder. CPU kaynağı tüketmezler sadece beklerler. Queue'ya geçer dedik bekleyen ancak queue veri yapısı gibi FIFO prensibiyle çalışmaz. Ancak **new Semaphore(1,true)** şeklinde oluşturursak bekleyen threadler FIFO sırasına göre uyanır.     
 
