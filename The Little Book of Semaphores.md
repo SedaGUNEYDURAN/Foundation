@@ -22,6 +22,21 @@ Bu durumda en büyük ve en küçük olası değer nedir ?
 Tüm threadler synchronize çalışırsa **en büyük olası değer= 100 thread x 100 artış= 10.000**.   
 En küçük değeri incelediğimiz, her artış çakışır yani her iki thread aynı anda count'u okur ve aynı değeri yazar. Bu durumda iki işlem sonucunda 1 geçerli artış olur. Böyle bir senaryoda 10.000 işlem yapmış ama 5000 geçerli artış yapmış oluruz. Ancak en kötü durum bu değil. Her thread sadece bir kere başarılı artış yapabilir, diğer 99 artış başka threadlerle çakışabilir ve etkisiz olabilir bu durumda.  Böylece **en küçük olası değer: 100 thread x 1 geçerli atış= 100**     
 
+• Multi-threaded programlamada threadlerin birbiri ile uyumlu ve güvenli bir şekilde çalışmasını sağlamak içinkullanım senkronizasyon design patterleri vardır. Bunlar;
+
+  - Mutex(Mutual Exclusion)    
+  - Semaphore   
+  - Barrier   
+  - Reusable Barrier   
+  - Rendezvous   
+  - Readers - Writers   
+  - Producer - Consumer (Buffer)   
+  - Dining Philophers   
+  - Thread Pool   
+  - Condition Variables   
+
+
+
 ## Semaphore    
 • Bu kavram Edsger Dijstra tarafından geliştirilmiştir. Semaphore bir seknronizasyon mekanizmasıdır. Temel amacı; multi-thread veya process aynı anda çalışırken kritik bölgelere erişimi kontrol etmek ve veri tutarlılığını sağlamaktır.    
 • Java'da semaforlar, java.util.concurrent paketinde yer alan Semaphore sınıfı ile sağlanır.     
@@ -103,7 +118,7 @@ public class SignalingExample {
 Yukarıdaki örneği inceleyediğimizde görüyoruz ki Thread A'nın işi bitmeden B başlayamaz ve kodun sıralaması garanti altına alınır. Semaphore başlangıç değeri sıfır yani B threadi önce çalışsa bile acquire() threadi bloklar ve beklemeye geçer.Thread B artık  a1Done.acquire(); satırında bekliyor. Thread A çalışır işini yapar, bitirir ve kaynağı serbest bırakıp semaphore değerini bir arttırdığında B başlayabilir.    
 
 
-### Rendezvous
+## Rendezvous
 • İki threadin belirli bir noktada buluşmasını ve her ikisinin de o noktaya ulaşmadan ilerlememelerini garanti etmek isteriz. Bu buluştukları noktaya rendezvous(buluşma noktası)  denir.  Böyle bir durum için iki tane semafor kullanmamız gerekebilir. Diyelim ki  elimizde iki thread var; ThreadA ve TheadB. ThreadA; statementA1 ve statementA2'den oluşuyor. ThreadB; statementB1 statementB2'den oluşuyor. Şu iki koşulu sağlamak istiyoruz ;
 
 - A1 -> B2'den önce çalışmalı
@@ -150,7 +165,8 @@ public class RendezvousExample {
 }
 ```
 
-• **Mutex(Mutual Exclusion):** Paylaşılan bir veriye birde fazla thread'in erişmesini engeller. Aynı anda sadece bir thread belirli bir kod bloğuna erişmesini sağlayan mekanizmadır. Bu kod bloğuna critical section(kritik bölüm) denir. Race condition durumuna çözüm sunar. Java'da mutual exclusion için Semaphore kullanılabilir. 
+## Mutex(Mutual Exclusion) 
+• Paylaşılan bir veriye birde fazla thread'in erişmesini engeller. Aynı anda sadece bir thread belirli bir kod bloğuna erişmesini sağlayan mekanizmadır. Bu kod bloğuna critical section(kritik bölüm) denir. Race condition durumuna çözüm sunar. Java'da mutual exclusion için Semaphore kullanılabilir. 
 
 
 ```java
@@ -194,7 +210,11 @@ public class MutexExample {
 
 
 • **Multiplex(çoklu geçiş) Problem:** Kritik bölgeye aynı anda en fazla n thread'in girmesine izin vermek için kullanılır. Eğer daha fazla thread gelirse kalan kısımm bekler. Bu sayıyıda Semaphore'un constracter'ın çağırırken parametre olarak verilir.    
-• **Barrier:** Amacımız tüm threadler belirli bir noktaya yani rendezvous ulaşmadan hiçbirinin bir sonraki adım olan critical point'i geçmemesini sağlamaktır. Yani n tane threadimiz var diyelim, n-1 thread geldiğinde bekleyecek n. thread geldiğinde hepsi birlikte devam edecek. 
+
+
+
+## Barrier   
+• Amacımız tüm threadler belirli bir noktaya yani rendezvous ulaşmadan hiçbirinin bir sonraki adım olan critical point'i geçmemesini sağlamaktır. Yani n tane threadimiz var diyelim, n-1 thread geldiğinde bekleyecek n. thread geldiğinde hepsi birlikte devam edecek. 
 
 ```java
 import java.util.concurrent.Semaphore;
@@ -237,4 +257,44 @@ public class BarrierExample {
 
 Yukarıdaki kodda her thread geldiğinde count değişkenini arttırır. İlk n-1 thread barrier.acquire() ile bekler. n. thread geldiğinde count==n koşulu gerçekleşir ve n-1 kez barrier.release() çağrılır. Böylece bekleyen threadler serbest kalır ve tüm threadler critical point'e aynı anda geçebilir. Burada   mutex için release(); ve acquire() kullanmamamızın nedeni; count değişkenine birden fazla thread aynı anda erişirse race condition durumu oluşmasını engellemektir. 
 
-• **Turnstile(Turnike Deseni):** 
+## Turnstile(Turnike Deseni)
+• Birden fazla threadin belirli bir noktaya kadar ilerlemesini durdurup sonrasında geçmelerini sağlamayan bir senkronizasyon mekanizmasıdır. Barrier'den sonra threadlerin birer birer geçmesini sağlar. Turnstile birbiri ile karıştırılabilir. Buyüzden 
+aralarındaki farklara gözatalım;
+
+- Barrier, tüm threadlerin belirli bir noktaya kadar gelip birlikte devam etmesini sağlar. Turstile ise threadlerin sırayla geçmesini sağlar.   
+- Barrier genellikle bir kerelik veya reusable'dır. Turnstile ise genellikle thread geçtikten sonra sıradakine izin verir.   
+- Barrierde, threadler gelir ve son gelen barrieri açar. Turnstile başlangıçta kilitlidir, bir thread açar.    
+- Barrierde tüm threadler aynı anda geçer. Turnstile'de, her thread geçtikten sonra kaynağı serbest bırakarak sonrakini geçirir.    
+- Barrier yapısı ->  count == n olduğunda barrier.signal()  , Turnstile yapısı -> semaphore.acquire() → işlem → semaphore.release()    
+- Barrier, threadlerin senkronize şekilde ilerlemesi gereken durumlarda kullanılır.  Turnstile, threadlerin sırayla işlem yapması gereken durumlarda kullanılır.     
+
+```java
+import java.util.concurrent.Semaphore;
+
+public class TurnstileExample {
+    private static final int THREAD_COUNT = 5;
+    private static final Semaphore turnstile = new Semaphore(0); // Başlangıçta kilitli
+
+    public static void main(String[] args) {
+        for (int i = 0; i < THREAD_COUNT; i++) {
+            int id = i;
+            new Thread(() -> {
+                try {
+                    // Turnstile'de bekleme
+                    turnstile.acquire();
+                    System.out.println("Thread " + id + " geçti.");
+
+                    // Sıradaki thread'e geçiş izni ver
+                    turnstile.release();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        }
+
+        // İlk thread'e geçiş izni ver
+        turnstile.release();
+    }
+}
+```
+
