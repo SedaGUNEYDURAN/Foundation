@@ -310,7 +310,7 @@ public class BarrierDemo {
         Runnable task = () -> {
             try {
                 System.out.println(Thread.currentThread().getName() + " bariyere geldi");
-                barrier.rendezvous(); // 🔴 İşte burada çağrılıyor!
+                barrier.rendezvous(); 
                 System.out.println(Thread.currentThread().getName() + " bariyeri geçti");
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -324,9 +324,6 @@ public class BarrierDemo {
 }
 
 ```
-
-
-
 
 ```java
 import java.util.concurrent.Semaphore;
