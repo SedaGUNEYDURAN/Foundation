@@ -298,3 +298,100 @@ public class TurnstileExample {
 }
 ```
 
+## Reusable Barrier(Yeniden Kullanılabilir Bariyer)
+• Barrierin birden fazla kez tekrarlanabildiği durumdur. Aynı barrier döngüsel işlemlerde tekrar tekrar kullanılabilir. 
+
+```java
+public class BarrierDemo {
+    public static void main(String[] args) {
+        final int THREAD_COUNT = 3;
+        ReusableBarrier barrier = new ReusableBarrier(THREAD_COUNT);
+
+        Runnable task = () -> {
+            try {
+                System.out.println(Thread.currentThread().getName() + " bariyere geldi");
+                barrier.rendezvous(); // 🔴 İşte burada çağrılıyor!
+                System.out.println(Thread.currentThread().getName() + " bariyeri geçti");
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        };
+
+        for (int i = 0; i < THREAD_COUNT; i++) {
+            new Thread(task, "Thread-" + i).start();
+        }
+    }
+}
+
+```
+
+
+
+
+```java
+import java.util.concurrent.Semaphore;
+
+class ReusableBarrier {
+    private final int n; //barrierde beklemesi gereken thread sayısı
+    private int count = 0; //kaç threadin geldiğini sayar
+    private final Object mutex = new Object(); //count erişimini korur
+    private final Semaphore turnstile1 = new Semaphore(0); //İlk geçiş; birlikte geçmesini sağlar.
+    private final Semaphore turnstile2 = new Semaphore(1); // ikinci geçiş; threadlerin birikte çıkmasını sağlar
+
+    public ReusableBarrier(int n) {
+        this.n = n;
+    }
+
+    public void rendezvous() throws InterruptedException {
+        // Phase 1: Thread’ler geliyor
+        synchronized (mutex) {
+            count += 1;
+            if (count == n) {
+                turnstile2.acquire(); // ikinci geçişi kapat
+                turnstile1.release(); // ilk geçişi aç
+            }
+        }
+
+        turnstile1.acquire(); // bekle
+        turnstile1.release(); // diğerlerini geçir
+
+        // Critical Point
+
+        // Phase 2: Thread’ler çıkıyor
+        synchronized (mutex) {
+            count -= 1;
+            if (count == 0) {
+                turnstile1.acquire(); // ilk geçişi kapat
+                turnstile2.release(); // ikinci geçişi aç
+            }
+        }
+
+        turnstile2.acquire(); // bekle
+        turnstile2.release(); // diğerlerini geçir
+    }
+}
+```
+
+main() içinde THREAD_COUNT kadar thread oluşturulur. Her thread task adlı işlemi çalıştırıyor. task içerisinde barrier.rendezvous() çağırılıyor. Bu method, her thread tarafından çağırılır. Threadler bariyere gelir. Şimdi bu durumu inceleyelim;
+
+ - İlk thread(ThreadA) thread geldi count=1 oldu. count==n değil. Hiçbir semafor değişmez. **ThreadA turnstile1.acquire()'da bekler.** turnstile1=0 .       
+ - İkinci thread(ThreadB) geldi count=2 oldu. count ==n değil. Hiçbir semafor değişmez. **ThreadB turnstile1.acquire()'da bekler.** turnstile1=0 .      
+ - Üçüncü thread(ThreadC) geldi count=3 oldu. count ==n, bariyer doldu. turnstile2.acquire() ile ikinci geçiş kapatılır. turnstile2=0 olur.  turnstile1.release() ile ilk geçişi açar ve  turnstile1=1 olur.   
+ - Şimdi bütün threadler turnstile1 geçişine geldiler. ThreadC,  turnstile1.acquire(); geçer. turnstile1=0 olur. urnstile1.release() → turnstile1 = 1 → diğerleri geçebilir.   
+ - Thread-A → turnstile1.acquire() → geçer. turnstile1=0 olur. turnstile1.release() → turnstile1 = 1   
+ - Thread-B → turnstile1.acquire() → geçer.  turnstile1=0 olur. turnstile1.release() → turnstile1 = 1   
+ - Tüm threadler kritik noktaya ulaştı. Burada işlemler yapılır(boş bıraktık, programcı doldurur oraları)   
+ - Threadler barrierden çıkış yapacak. ThreadC, geldi count=3'dü, count=2 oldu. count==0 değil semaforlar değişmez. Metotan çıkış yapar. ThreadC,  turnstile2.acquire()'a gelir. turnstile2=0'dı.  Bekler.     
+ - ThreadA geldi, count=1 oldu. count==0 değil. Semaforlar değişmez.Metotdan çıkar. ThreadA,  turnstile2.acquire()'a gelir. turnstile2=0'dı.  Bekler.    
+ - ThreadB geldi, count=0. count==0 koşulu sağlandı. En son turnstile1 = 1'di. ThreadB,  turnstile1.acquire()'ye gelir  turnstile1=0 olur ve geçer. İlk geçiş kapandı. turnstile2.release()'ye gelir. turnstile2 semaforunu en başta kapatmıştık. turnstile2=1 olur. Thread B geçer.  turnstile2.acquire()'a gelir. turnstile2=1'dı turnstile2=0 olur. Geçer ve  turnstile2.release()'e gelir. turnstile2=1 olur.   
+ - ThreadC, turnstile2=1'di turnstile2.acquire()'den geçer. turnstile2=0 olur. turnstile2.release()'e gelir. turnstile2=1 olur.   
+ - ThreadA turnstile2=1'di turnstile2.acquire()'den geçer. turnstile2=0 olur. turnstile2.release()'e gelir. turnstile2=1 olur.   
+ - Tüm threadler barrieri terk etti ve barrier tekrar kullanılabilir hale geldi. Son durumda;  count=0, turnstile1=0, turnstile2=1 olur. Yeni bir grup thread geldiğinde aynı döngü tekrar edebilir.    
+
+Phase 1 bölümünde;her thread geldiğinde count değeri arttırılır. Koşul sağlandığında (count==n) kaynak serbest bırakıldı (turnstile1). Buraya kadar her şey beklediğimiz gibi. Ama öncesinde ikinci geçişi(turnstile2) kapatıyoruz. Bunu neden yaptığımızı anlamak için adım adım gidelim;   
+ThreadA girer -> count=1      
+ThreadB girer -> count=2  burada bloktan çıkmadan bir interrupt olduğunu varsayalım ve bu durumda CPU diğer threade geçer.       
+ThreadC girer -> count=3  ve turnstile1 kaynağı serbest bırakılır. ThreadB devam eder.Hala count=3, bu durumda ThreadB de turnstile1.release() çağırır. İki farklı thread count==n durumunu görür ve iki kez release() çağırılır. Bu da semaforun fazladan açılmasına neden olur ve barrier bozulur.       
+
+
+
