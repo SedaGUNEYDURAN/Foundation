@@ -22,7 +22,7 @@ Bu durumda en büyük ve en küçük olası değer nedir ?
 Tüm threadler synchronize çalışırsa **en büyük olası değer= 100 thread x 100 artış= 10.000**.   
 En küçük değeri incelediğimiz, her artış çakışır yani her iki thread aynı anda count'u okur ve aynı değeri yazar. Bu durumda iki işlem sonucunda 1 geçerli artış olur. Böyle bir senaryoda 10.000 işlem yapmış ama 5000 geçerli artış yapmış oluruz. Ancak en kötü durum bu değil. Her thread sadece bir kere başarılı artış yapabilir, diğer 99 artış başka threadlerle çakışabilir ve etkisiz olabilir bu durumda.  Böylece **en küçük olası değer: 100 thread x 1 geçerli atış= 100**     
 
-• Multi-threaded programlamada threadlerin birbiri ile uyumlu ve güvenli bir şekilde çalışmasını sağlamak içinkullanım senkronizasyon design patterleri vardır. Bunlar;
+• Multi-threaded programlamada threadlerin birbiri ile uyumlu ve güvenli bir şekilde çalışmasını sağlamak için kullanım senkronizasyon design patterleri vardır. Bunlar;
 
   - Mutex(Mutual Exclusion)    
   - Semaphore   
@@ -60,7 +60,7 @@ Semaphore fred = new Semaphore(3); // Başlangıç değeri 3
 
 ### Semaphore Durumları
 • Semafor oluştururken başlangıç değeri veririr. Sonrasında arttırma +1, azaltma -1 yapabiliriz. Ama değerini okuyamayız, yani semaforun anlık değerini bilemeyiz.       
-• Azaltma sonucu semafor değeri negatifse thread bloklanır. Yani bu thread durdurulur ve thread queue'ya beklemek üzere geçer. Başka bir thread semaforu artırana kadar devam edemez.Negatif değer kaç threadin queue'da beklediğini ifade eder. CPU kaynağı tüketmezler sadece beklerler. Queue'ya geçer dedik bekleyen ancak queue veri yapısı gibi FIFO prensibiyle çalışmaz. Ancak **new Semaphore(1,true)** şeklinde oluşturursak bekleyen threadler FIFO sırasına göre uyanır.     
+• Azaltma sonucu semafor değeri negatifse(kavramsal olarak düşünüyoruz yoksa semaphore negatif değer olamaz) thread bloklanır. Yani bu thread durdurulur ve thread queue'ya beklemek üzere geçer. Başka bir thread semaforu artırana kadar devam edemez.Negatif değer kaç threadin queue'da beklediğini ifade eder. CPU kaynağı tüketmezler sadece beklerler. Queue'ya geçer dedik bekleyen ancak queue veri yapısı gibi FIFO prensibiyle çalışmaz. Ancak **new Semaphore(1,true)** şeklinde oluşturursak bekleyen threadler FIFO sırasına göre uyanır.     
 
 ```java
 fred.acquire(); // Semaforu azaltır, gerekirse thread'i bloklar
@@ -390,5 +390,86 @@ ThreadA girer -> count=1
 ThreadB girer -> count=2  burada bloktan çıkmadan bir interrupt olduğunu varsayalım ve bu durumda CPU diğer threade geçer.       
 ThreadC girer -> count=3  ve turnstile1 kaynağı serbest bırakılır. ThreadB devam eder.Hala count=3, bu durumda ThreadB de turnstile1.release() çağırır. İki farklı thread count==n durumunu görür ve iki kez release() çağırılır. Bu da semaforun fazladan açılmasına neden olur ve barrier bozulur.       
 
+• İki aşamalı barrierde hatalar özel ve nadirdir. Bu yüzden de hatalar test ile yakalanamaz, hataları tekrar üretmek çok zordur.     
+
+
+### Problem 
+• Her bir dans eşlemesi, bir leader+bir follower ile gerçekleşir. Birden fazla follower, birden fazla leader olabilir. Bir leader geldiğinde, bir follower onunla eşleşir ve dansa geçer. Bir follower geldiğinde, bir leader varsa eşleşir ve dansa geçer. Eşleşmeler 1:1 olur. Fazla gelen kişiler, karşı türden biri gelene kadar sırada bekler.    
+
+
+```java
+DanceFloor floor = new DanceFloor();
+
+Runnable dance = () -> System.out.println(Thread.currentThread().getName() + " dans ediyor");
+
+Runnable leader = () -> {
+    try {
+        floor.leaderArrives(dance);
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    }
+};
+
+Runnable follower = () -> {
+    try {
+        floor.followerArrives(dance);
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    }
+};
+
+// Örnek olarak birkaç leader ve follower başlatalım
+for (int i = 0; i < 3; i++) {
+    new Thread(leader, "Leader-" + i).start();
+    new Thread(follower, "Follower-" + i).start();
+}
+```
+
+```java
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class DanceFloor {
+    private final Semaphore leaderQueue = new Semaphore(0);
+    private final Semaphore followerQueue = new Semaphore(0);
+    private final ReentrantLock lock = new ReentrantLock(); //counterlara güvenli erişimi sağlar. 
+
+    private int waitingLeaders = 0; //kaç leaderin beklediğini tutar
+    private int waitingFollowers = 0; //kaç followerın beklediğini tutar. 
+
+    public void leaderArrives(Runnable dance) throws InterruptedException {
+        lock.lock();
+        if (waitingFollowers > 0) {
+            waitingFollowers--;
+            followerQueue.release(); // eşleşen follower'ı uyandır
+            lock.unlock();
+        } else {
+            waitingLeaders++;
+            lock.unlock();
+            leaderQueue.acquire(); // eşleşme yoksa bekle
+        }
+
+        // eşleşme sağlandı, dans başlasın
+        dance.run();
+    }
+
+    public void followerArrives(Runnable dance) throws InterruptedException {
+        lock.lock();
+        if (waitingLeaders > 0) {
+            waitingLeaders--;
+            leaderQueue.release(); // eşleşen leader'ı uyandır
+            lock.unlock();
+        } else {
+            waitingFollowers++;
+            lock.unlock();
+            followerQueue.acquire(); // eşleşme yoksa bekle
+        }
+
+        // eşleşme sağlandı, dans başlasın
+        dance.run();
+    }
+}
+
+```
 
 
