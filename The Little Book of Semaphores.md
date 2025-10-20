@@ -7,11 +7,11 @@
 • Bir olayın gerçekleşmesinin sıralamasını yaparken saate bakarak karar veririz ancak bilgisayar sistemlerinde olayların zamanını yeterince hassas ölçemeyebiliriz. Bunun yerine lock mekanizmalarını, semaforları, concurrent veri yapılarını, barrier'lar, message passing gibi teknikleri kullanırız.      
 • **Paralel Sistemler**: Birden fazla işlem biriminin (işlemci, çekirdek, bilgisayar vs.) aynı anda çalışarak bir görevi birlikte yerine getirdiği bilgisayar sistemidir. Bu durumda hangi işlemcideki komutun önce çalıştığını bilmek zordur. Büyük bir görev, daha küçük parçalara ayrılarak farklı işlemcilere dağıtılır. Görevler aynı anda yürütülür. Bu da işlem süresini kısaltır. İşlem birimleri arasında veri alışverişi ve zamanlama koordinasyonu gerekir. Sisteme daha fazla işlemci ekleyerek sistem kapasitesi arttırılabilir yani ölçeklenebilirdir.         
 • **Multithreating**: Tek işlemci birden fazla threadi sırasıyla çalıştırır. İşletim sistemi hangi threadin ne zaman çalışacağına karar verir. Yazılımcı bu sırayı kontrol edemez.   
-• **Message Passing**: Bir threadin veya sürecin diğerine bilgi göndermesi içi mesaj-veri paketi iletmesidir. Veriyi doğrudan paylaşmak yerine iletir.  Thread A, "işlem tamamlandı" mesajı gönderir. Thread B, bu mesajı alana kadar bekler ve sonra işleme başlar. Böylece A'nın B'den önce çalıştığı garanti edilir. Senkronizasyon sağlanmış olur.    
+• **Message Passing**: Bir threadin veya sürecin diğerine bilgi göndermesi için mesaj-veri paketi iletmesidir. Veriyi doğrudan paylaşmak yerine iletir.  Thread A, "işlem tamamlandı" mesajı gönderir. Thread B, bu mesajı alana kadar bekler ve sonra işleme başlar. Böylece A'nın B'den önce çalıştığı garanti edilir. Senkronizasyon sağlanmış olur.    
 • Deterministic bir kod her çalıştığında aynı sonu verir. Non-deterministic bir kod ise, farklı çalıştırmalarda farklı sonuçlar verir. Concurrent programlar da non-deterministic davranışlar görterebilirler.     
 
 • **Serialization problemi**: Threadler senkronize edilmezlerse, birden fazla threadin(multi-thread) çalıştığı programlarda veriye erişim sırasında tutarsızlıklar oluşabilir; mesela okuma işlemi yazma işleminden önce gerçekleşebilir.     
-• count+=1 bu ifade tek bir işlem gibi gözükse de makine diline çevrildiğinde iki adıma bölünür; okuma ve yazma. Bu bir threadin iki adımıdır. Bu iki adım arasına bir thread girerse yarış durumu(race condition) oluşur. Böyle bir durum ile karşılaşmamak için mutex(mutual exclusion) kullanılabilirdi ya da atomic veri yapı tipi ile tanımlanabilirdi, synchronized bloklar oluşturulabilirdi. Varsayalım ki 100 thread var ;    
+• count+=1 bu ifade tek bir işlem gibi gözükse de makine diline çevrildiğinde iki adıma bölünür; okuma ve yazma. Bu bir threadin, iki adımıdır. Bu iki adım arasına bir thread girerse yarış durumu(race condition) oluşur. Böyle bir durum ile karşılaşmamak için mutex(mutual exclusion) kullanılabilirdi ya da atomic veri yapı tipi ile tanımlanabilirdi, synchronized bloklar oluşturulabilirdi. Varsayalım ki 100 thread var ;    
 
 ```java
 for i in range (100):
@@ -38,7 +38,7 @@ En küçük değeri incelediğimiz, her artış çakışır yani her iki thread 
 
 
 ## Semaphore    
-• Bu kavram Edsger Dijstra tarafından geliştirilmiştir. Semaphore bir seknronizasyon mekanizmasıdır. Temel amacı; multi-thread veya process aynı anda çalışırken kritik bölgelere erişimi kontrol etmek ve veri tutarlılığını sağlamaktır.    
+• Bu kavram Edsger Dijstra tarafından geliştirilmiştir. Semaphore, bir senkronizasyon mekanizmasıdır. Temel amacı; multi-thread veya process aynı anda çalışırken kritik bölgelere erişimi kontrol etmek ve veri tutarlılığını sağlamaktır.    
 • Java'da semaforlar, java.util.concurrent paketinde yer alan Semaphore sınıfı ile sağlanır.     
 
 ```java
@@ -59,8 +59,8 @@ Semaphore fred = new Semaphore(3); // Başlangıç değeri 3
  - Donanım seviyesinde veya işletim sistemi çekirdeğinde desteklenebilir. Hızlı ve kaynak dostudurlar. ->taşınabilir    
 
 ### Semaphore Durumları
-• Semafor oluştururken başlangıç değeri veririr. Sonrasında arttırma +1, azaltma -1 yapabiliriz. Ama değerini okuyamayız, yani semaforun anlık değerini bilemeyiz.       
-• Azaltma sonucu semafor değeri negatifse(kavramsal olarak düşünüyoruz yoksa semaphore negatif değer olamaz) thread bloklanır. Yani bu thread durdurulur ve thread queue'ya beklemek üzere geçer. Başka bir thread semaforu artırana kadar devam edemez.Negatif değer kaç threadin queue'da beklediğini ifade eder. CPU kaynağı tüketmezler sadece beklerler. Queue'ya geçer dedik bekleyen ancak queue veri yapısı gibi FIFO prensibiyle çalışmaz. Ancak **new Semaphore(1,true)** şeklinde oluşturursak bekleyen threadler FIFO sırasına göre uyanır.     
+• Semafor oluştururken başlangıç değeri veririz. Sonrasında arttırma +1, azaltma -1 yapabiliriz. Ama değerini okuyamayız, yani semaforun anlık değerini bilemeyiz.       
+• Azaltma sonucu semafor değeri negatifse(kavramsal olarak düşünüyoruz yoksa semaphore negatif değer olamaz) thread bloklanır. Yani bu thread durdurulur ve thread queue'ya beklemek üzere geçer. Başka bir thread semaforu artırana kadar devam edemez.Negatif değer kaç threadin queue'da beklediğini ifade eder.(Kavramsallık burada önemli. Diyelim ki anlık kuyrukta bekleyen sayısı 3 yani semaphore'u -3 olarak düşündün. 1 tane kaynak serbest kaldı -2 oldu, sıradaki threadlerden biri bu kaynağı alır semaphorun 0 olmasını beklemez, beklemesine gerek yoktur.) CPU kaynağı tüketmezler sadece beklerler. Queue'ya geçer dedik bekleyen ancak queue veri yapısı gibi FIFO prensibiyle çalışmaz. Ancak **new Semaphore(1,true)** şeklinde oluşturursak bekleyen threadler FIFO sırasına göre uyanır.     
 
 ```java
 fred.acquire(); // Semaforu azaltır, gerekirse thread'i bloklar
@@ -115,7 +115,7 @@ public class SignalingExample {
 }
 ```
 
-Yukarıdaki örneği inceleyediğimizde görüyoruz ki Thread A'nın işi bitmeden B başlayamaz ve kodun sıralaması garanti altına alınır. Semaphore başlangıç değeri sıfır yani B threadi önce çalışsa bile acquire() threadi bloklar ve beklemeye geçer.Thread B artık  a1Done.acquire(); satırında bekliyor. Thread A çalışır işini yapar, bitirir ve kaynağı serbest bırakıp semaphore değerini bir arttırdığında B başlayabilir.    
+Yukarıdaki örneği incelediğimizde görüyoruz ki Thread A'nın işi bitmeden B başlayamaz ve kodun sıralaması garanti altına alınır. Semaphore başlangıç değeri sıfır yani B threadi önce çalışsa bile acquire() threadi bloklar ve beklemeye geçer.Thread B artık  a1Done.acquire(); satırında bekliyor. Thread A çalışır işini yapar, bitirir ve kaynağı serbest bırakıp semaphore değerini bir arttırdığında B başlayabilir.    
 
 
 ## Rendezvous
@@ -166,7 +166,7 @@ public class RendezvousExample {
 ```
 
 ## Mutex(Mutual Exclusion) 
-• Paylaşılan bir veriye birde fazla thread'in erişmesini engeller. Aynı anda sadece bir thread belirli bir kod bloğuna erişmesini sağlayan mekanizmadır. Bu kod bloğuna critical section(kritik bölüm) denir. Race condition durumuna çözüm sunar. Java'da mutual exclusion için Semaphore kullanılabilir. 
+• Paylaşılan bir veriye birden fazla thread'in erişmesini engeller. Aynı anda sadece bir thread belirli bir kod bloğuna erişmesini sağlayan mekanizmadır. Bu kod bloğuna critical section(kritik bölüm) denir. Race condition durumuna çözüm sunar. Java'da mutual exclusion için Semaphore kullanılabilir. 
 
 
 ```java
@@ -209,7 +209,7 @@ public class MutexExample {
 - **Asymmetric Solution:** Her thread'in farklı görevler üstlendiği ve senkronizasyonunun bu farklılıklara göre kurulduğu yapıdır. Doğruluğunu kanıtlamak zordur, genellikle karmaşıktır.
 
 
-• **Multiplex(çoklu geçiş) Problem:** Kritik bölgeye aynı anda en fazla n thread'in girmesine izin vermek için kullanılır. Eğer daha fazla thread gelirse kalan kısımm bekler. Bu sayıyıda Semaphore'un constracter'ın çağırırken parametre olarak verilir.    
+• **Multiplex(çoklu geçiş) Problem:** Kritik bölgeye aynı anda en fazla n thread'in girmesine izin vermek için kullanılır. Eğer daha fazla thread gelirse kalan kısımı bekler. Bu sayıyıda Semaphore'un constracter'ın çağırırken parametre olarak verilir.    
 
 
 
@@ -374,7 +374,7 @@ main() içinde THREAD_COUNT kadar thread oluşturulur. Her thread task adlı iş
  - İlk thread(ThreadA) thread geldi count=1 oldu. count==n değil. Hiçbir semafor değişmez. **ThreadA turnstile1.acquire()'da bekler.** turnstile1=0 .       
  - İkinci thread(ThreadB) geldi count=2 oldu. count ==n değil. Hiçbir semafor değişmez. **ThreadB turnstile1.acquire()'da bekler.** turnstile1=0 .      
  - Üçüncü thread(ThreadC) geldi count=3 oldu. count ==n, bariyer doldu. turnstile2.acquire() ile ikinci geçiş kapatılır. turnstile2=0 olur.  turnstile1.release() ile ilk geçişi açar ve  turnstile1=1 olur.   
- - Şimdi bütün threadler turnstile1 geçişine geldiler. ThreadC,  turnstile1.acquire(); geçer. turnstile1=0 olur. urnstile1.release() → turnstile1 = 1 → diğerleri geçebilir.   
+ - Şimdi bütün threadler turnstile1 geçişine geldiler. ThreadC,  turnstile1.acquire(); geçer. turnstile1=0 olur. turnstile1.release() → turnstile1 = 1 → diğerleri geçebilir.   
  - Thread-A → turnstile1.acquire() → geçer. turnstile1=0 olur. turnstile1.release() → turnstile1 = 1   
  - Thread-B → turnstile1.acquire() → geçer.  turnstile1=0 olur. turnstile1.release() → turnstile1 = 1   
  - Tüm threadler kritik noktaya ulaştı. Burada işlemler yapılır(boş bıraktık, programcı doldurur oraları)   
