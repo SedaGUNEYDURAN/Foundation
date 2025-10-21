@@ -473,5 +473,96 @@ public class DanceFloor {
 ```
 
 # Classical Synchronization Problems
+İşletim sistemlerin(OS) ve threadler arasında kaynak paylaşımı ve senkronizasyonla ilgili  temel sorunlar vardır. Bu problemler gerçek dünyada birebir yaşanaz ancak anlaması kolay olsun diye hayattan benzetmelerle açıklanır.     
+
 ## Producer-Consumer Problem
-• 
+• Producer, bir event oluştuğunda yakalayıp buffera ekler. Consumer, bufferdan eventi alır ve işler. Bu iki tür thread aynı buffer üzerinde çalışırken veri tutarlılığı ve doğru zamanlamayı sağlamalıdır.        
+• Buffera erişim concurrency olmalıdır; bir thread add() veya get() işlemi yaparken buffer tutarsız durumda olabileceği için diğer threadler beklemelidir. Consumer get() çağırdığında buffer boşsa, yeni bir olay gelene kadar bloklanmalıdır. 
+Buffer, producerların eventleri eklediği ve consumerların aldığı ortak queue'dur.        
+
+
+```java
+class Producer extends Thread {
+    public void run() {
+        while (true) { //Producer sürekli çalışır ve yeni olayları bekler. 
+            Event event = waitForEvent(); // yeni bir event olduğunda yakalar
+            synchronized (lock) { //buffer'a erişim sırasında diğer threaleri engeller
+                buffer.add(event); // yeni eventi queue'ya ekler 
+                lock.notify(); // Consumer wait() ile bekliyorsa consumerı uyandır
+            }
+        }
+    }
+}
+
+```
+
+
+```java
+class Consumer extends Thread {
+    public void run() {
+        while (true) { // Consumer sürekli çalışır
+            Event event;
+            synchronized (lock) { //Buffer'a erişimi kontrol eder
+                while (buffer.isEmpty()) { 
+                    try {
+                        lock.wait(); // consumer, buffer boşsa bekler ve producer notify() ile uyandırana kadar bekler. 
+                    } catch (InterruptedException e) {}
+                }
+                event = buffer.remove();//queue'dan bir olay alır 
+            }
+            event.process(); // Senkronize edilmesine gerek yok
+        }
+    }
+}
+
+```
+
+
+## Readers-Writers Problem
+• Bir veri yapısına(dosya, veritabani, paylaşın liste vs.) birden fazla threadin read ve write işlemi yaptığı durumlarda ortaya çıkar. Birden fazla reader aynı anda okuyabilir çünkü okuma işlemi sırasında veri yapısı değişmez. Writer tek başına çalışmalıdır. Yazma sırasında veri yapısı değiştiği için başka bir reader ya da writer girmemelidir.        
+
+
+
+```java
+Semaphore mutex = new Semaphore(1);     // readerCount erişimi için
+Semaphore writeLock = new Semaphore(1); // yazıcılar için kilit
+int readerCount = 0;
+
+class Reader extends Thread {
+    public void run() {
+        try {
+            mutex.acquire(); //readerCount'a güvenli erişim
+            readerCount++;
+            if (readerCount == 1) {
+                writeLock.acquire(); // İlk reader, writer'ı engeller
+            }
+            mutex.release();//reader kaynağı serbest bıraktı
+
+            readData(); //readerlar  veriyi okunur
+
+            mutex.acquire();//readerCount'a erişim 
+            readerCount--;
+            if (readerCount == 0) { 
+                writeLock.release(); //Son reader, writerı uyandırır
+            }
+            mutex.release(); //readerCount güncellendi ve lock bırakıldı 
+        } catch (InterruptedException e) {}
+    }
+}
+
+class Writer extends Thread {
+    public void run() {
+        try {
+            writeLock.acquire(); // Yalnızca bir writer girebilir
+            // --- Kritik Bölge: Yazma ---
+            writeData(); //veri yazılır
+            writeLock.release(); //yazma işlemi bitti, lock bırakıldı
+        } catch (InterruptedException e) {}
+    }
+}
+
+```
+
+
+Yukarıdaki koda ilk reader geldiğinde wrteLock'u alır ve writerlar engellenir. Son reader gittiğinde writeLock'u bırakır ve writerlar girebilir. Reader işlemi sırasında birden fazla reader aynı anda çalışabilir. mutex sadece readerCount'ı korur, veri yapısına erişimi değil.      
+Writer, writeLock'u alarak hem reader hem de diğer writerları engeller. İşlem bitince writeLock'u bırakır ve diğer threadlerde girebilir.      
