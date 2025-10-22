@@ -519,7 +519,7 @@ class Consumer extends Thread {
 
 
 ## Readers-Writers Problem
-• Bir veri yapısına(dosya, veritabani, paylaşın liste vs.) birden fazla threadin read ve write işlemi yaptığı durumlarda ortaya çıkar. Birden fazla reader aynı anda okuyabilir çünkü okuma işlemi sırasında veri yapısı değişmez. Writer tek başına çalışmalıdır. Yazma sırasında veri yapısı değiştiği için başka bir reader ya da writer girmemelidir.        
+• Bir veri yapısına(dosya, veritabani, paylaşın liste vs.) birden fazla threadin read ve write işlemi yaptığı durumlarda ortaya çıkar. Birden fazla reader aynı anda okuyabilir çünkü okuma işlemi sırasında veri yapısı değişmez. Writer tek başına çalışmalıdır. Yazma sırasında veri yapısı değiştiği için başka bir reader ya da writer girmemelidir. Buna **Lightswitch Pattern** denir. Şöyle düşün bir odada birden fazla kişi varsa ışık açık kalır. Son kişi çıkınca ışık kapanır.Bu mantıkla ilk reader geldiğinde kaynağı kilitler ve writer'ı engeller. Son reader çıktığında kilidi serbest bırakır ve writera izin verir.        
 
 
 
