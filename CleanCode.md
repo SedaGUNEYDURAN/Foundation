@@ -1891,5 +1891,181 @@ public void process() {
 - Kodun içine sleep(), yield(), wait() gibi çağrılar eklenerek yürütme sırasını değiştirerek test etmeliyiz.    
 
          
+## Smeels and Heuristics
+### Comments   
+• Comment olarak versiyon geçmişi, yazar bilgisi, son değişiklik tarihi, hata takip no gibi bilgiler tutulmamalıdır. Bunlar jirada, gitde tutulmalıdır.   
+• Kod yorumları zamanla, eski, alakasız veya yanlış hale gelebilir -> obsolute comments . Kodun kendisi zaten ne yaptığını açıkça gösteriyorsa comment redundanttır.Bu tarz yorumlar kodun verdiği bilgiden daha fazla bilgi vermez hatta daha az bilgi verir. Olabildiğince commentten kaçınılmalıdır. Comment yazıyorsak da  neden bu algoritmanın seçildiği, hangi özel durumların göz önünde bulundurulduğu, karmaşık bir mantık varsa nasıl çalıştığı, tasarım kalıpları gibi bilgiler olmalı.   
+• Commentler profesyonel bir izlenim vermelidir. Anlamlı, kısa, net, dil bilgisi kurallarına uymalıdır.    
+• Yorum satırıyla kapatılmış kod gördüğünde sil. Bu tarz kodların ne kadar eski olduğu bilinmez, ne işe yaradığı belirsizdir ve zamanla kod değişir ve comment çöp haline gelir. Kaynak kod sistemleri -git gibi- zaten geçmiş versiyonları saklar. Gerçekten gerekliyse eski versiyona dönüp o kodu bulabiliriz.   
+
+### Environment
+• Bir projeyi derlemek, tek adımlı ve kolay bir iş olmalıdır. Bunun için bağımlılıklarımız az olmalıdır. XML konfigürasyonları, özel betikler olabildiğince kullanılmamalıdır.    
+• Testler kolay ve hızlı bir şekilde çalıştırılabilir olmalıdır. Geliştirici her test doyasını ayrı ayrı çalıştırmak zorunda kalmamalıdır. Test süreçleri karmaşık betikler ve manuel adımlar gerektirmemelidir. 
+• Fonksiyonlar ne kadar az argüman alırsa kod o kadar sade, anlaşılabilir ve baımı kolay olur.3'ten fazla argüman kullanmak tasarımın gözden geçirilmesi gerektiğine bir işarettir. 
+• Parametreler sadece input olarak kullanılır, output dönüş değeri ile net bir şekilde ifade edilmelidir. Parametreyi aşağıdaki gibi output olarak kullanmak kafa karıştırır.    
+
+```Java
+public void fillList(List<String> outputList) {
+    outputList.add("data");
+}
+```
+• Bir metot tanımında boolean argüman kullanmak, genellikle o metodun birden fazla iş yaptığına işarettir. Bu da kodu karmaşıklaştırır. Aşağıdaki kod overwrite argümanına göre iki farklı davranış göstermektedir. 
+
+```Java
+public void saveFile(String path, boolean overwrite) {
+    if (overwrite) {
+        // Dosyayı üzerine yaz
+    } else {
+        // Dosya varsa hata ver
+    }
+}
+```
+Yukarıdaki kodu aşağıdaki koda çevirirsek daha okunabilir bir hale gelir. 
+
+```Java
+public void saveFile(String path) {
+    // Dosya yoksa kaydet, varsa hata ver
+}
+
+public void overwriteFile(String path) {
+    // Dosya varsa üzerine yaz
+}
+```
+
+Burada amaç anlaşılabilirliği arttırmaktır baştaki metot çağrımı şu şekilken;
+
+```Java
+saveFile(path, true);  // Üzerine yaz
+saveFile(path, false); // Yazma, varsa hata ver
+```
+
+Şuna döndü;   
+
+```Java
+saveFile(path);        // Dosya yoksa kaydeder, varsa hata verir
+overwriteFile(path);   // Dosya varsa üzerine yazar
+```
+
+### General
+• Tek dosyada çok fazla dil kullanmak karışıklık yaratır. Mümkünse her dil kendi dosyasında yazılmalıdır. Zorunlu olduğumuz durumlarda ise dil sayısını ve kapsamını minimumda tutmalıyız. 
+• The Principle of Least Surprise ilkesine uygun olmalıdır.Yani metodun, classın davranışı, ismi uyumlu olmalıdır. 
+
+```Java
+Day day = DayDate.StringToDay("Monday");
+```
+Bu kod satırını gören bir kişi StringToDay() metodunun stringi ADAY enumına çevirdiğini düşünür. Bunu karşılamazsa karışıklıklar oluşabilir. 
+```Java
+public static Day StringToDay(String dayName) {
+    switch(dayName.toLowerCase()) {
+        case "monday":
+        case "mon":
+            return Day.MONDAY;
+        // diğer günler...
+        default:
+            throw new IllegalArgumentException("Geçersiz gün adı: " + dayName);
+    }
+}
+```
+
+Metot yukarıdaki gibi bir içeriğe sahip olmalıdır. Yani büyük-küçük harf duyarsız olmalıdır, kısaltmaları tanımalıdır, hatalı girişlerde anlamlı hata mesajı vermelidir.     
+
+• Kodun doğru çalıştığını sezgiyle değil test ile garanti altına al. Her uç olası durumu düşün, gerçek dünyada kodun karşılaşabileceği uç durumlar(corner case) ve sınır durumlar(boundary condiytions) çok fazladır.  
+• Güvenlik önlemlerini devredışı bırakmak çok risklidir ->Chernobyl faciası. 
+ - serialVersionUID Java'da manuel olarak tanımlanabilir ancak yanlış kullanılırsa nesne uyumsuzlukları oluşabilir.
+ - @SuppressWarnings gibi derleyici uyarılarını kapatmak, görmezden gelmek ileride armaşık buglara neden olabilir.
+ - Testleri geçici olarak kapatmak hataları gizler ve güvensiz bir sistem yaratır.
+
+•   Dry ilkesine dikkat et. Kodda tekrar varsa bir şeyler yanlış gidiyor demektir.  
+•  Aynı switch-case veya if-else zinciri farklı yerlerde tekrar ediyorsa bu aslında polimorfizm ile çözmemiz gerektiğine işarettir. Aşağıdaki koddan örnek verecek olursak her role kendi davranışını tanımlamalıdır. 
 
 
+```Java
+// Birinci yerde
+switch (user.getRole()) {
+    case ADMIN:
+        showAdminPanel();
+        break;
+    case USER:
+        showUserDashboard();
+        break;
+}
+
+// İkinci yerde
+switch (user.getRole()) {
+    case ADMIN:
+        logAdminAccess();
+        break;
+    case USER:
+        logUserAccess();
+        break;
+}
+
+```
+
+• Kodlar birebir aynı değil ama mantık benzerse Templete Method ya da Strategy Pattern gibi design patternları kullanmamız gerektiğine işarettir.   
+• Yazılımda yüksek seviye soyutlamalar(abstraclar interfaceler gibi genel kavramlar) ile düşük seviye detaylar(uygulama ayrıntıları) ayrı tutulmalıdır. Aşağıdaki kodu incelediğimizde hiçbir sorun yok gibi gözüküyor. Ancak bu bir interface yani bütün Stackler için geçerli olmalı ama sadece bazı stackler için geçerli. Çünkü percentFull() metodu saddece sabit boyutlu metotlar için dönüş yapabilir LinkedStack gibi dinamik büyüyen stackler için anlamsızdır. Bu yüzden abstraction bozulur. 
+
+```Java
+public interface Stack {
+    Object pop() throws EmptyException;
+    void push(Object o) throws FullException;
+    double percentFull(); // Hatalı soyutlama
+}
+
+```
+ Aşağıdaki gibi bir kod daha iyidir. 
+
+
+```Java
+public interface Stack {
+    Object pop() throws EmptyException;
+    void push(Object o) throws FullException;
+}
+
+public interface BoundedStack extends Stack {
+    double percentFull();
+}
+
+```
+
+• Yazılım tasarımında ;
+
+ - Base class(üst seviye): genel davranışları ve soyutlamaları tanımlar.
+ - Derivative class(alt seviye): detaylı uygulamaları içerir.
+
+  Üst seviye, alt sınıflardan bağımsız olmalıdır. Üst sınıf, alt sınıfların isimlerini, detaylarını, özel davranışlarını bilmemelidir. Bu bağımlılık yaratır ve abstraction'ı bozar. 
+
+
+
+```Java
+  public abstract class Animal {
+    public void makeSound() {
+        if (this instanceof Dog) {
+            System.out.println("Woof");
+        } else if (this instanceof Cat) {
+            System.out.println("Meow");
+        }
+    }
+}
+
+```
+Mesela bu kodda üst sınıf Animal ve Dog, Cat sınıfalrını tanıyor. Bu tasarım yanlıştır. Yeni alt class eklendiğinde base class'da değişmek zorunda kalır. Üst class, alt classa bağımlı. Bu kodun doğru versiyonu ;
+
+```Java
+public abstract class Animal {
+    public abstract void makeSound();
+}
+
+public class Dog extends Animal {
+    public void makeSound() {
+        System.out.println("Woof");
+    }
+}
+
+public class Cat extends Animal {
+    public void makeSound() {
+        System.out.println("Meow");
+    }
+}
+```
+Artık Animal alt sınıfları bilmiyor. Her alt sınıf kendi davranışını tanımlıyor. Yani artık alt sınıf yazmak için sadece o sınıfı yazmak yeterlidir. 
