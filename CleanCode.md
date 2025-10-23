@@ -2068,4 +2068,59 @@ public class Cat extends Animal {
     }
 }
 ```
-Artık Animal alt sınıfları bilmiyor. Her alt sınıf kendi davranışını tanımlıyor. Yani artık alt sınıf yazmak için sadece o sınıfı yazmak yeterlidir. 
+Artık Animal alt sınıfları bilmiyor. Her alt sınıf kendi davranışını tanımlıyor. Yani artık alt sınıf yazmak için sadece o sınıfı yazmak yeterlidir.    
+
+• Temiz bir tasarım için;      
+- az sayıda metot tanımlamalıyız,  
+- fonksiyonlar mümkün olduğunca az değişken bilmeli   
+- classlar az sayıda instance variable bilmeli   
+- interfaceler küçük ve az sayıda işlev sunmalıdır.   
+  Kötü yazılmış bir interface çok fazla işlev sunar, bu durumda bağımlılığı yani couplingi arttırır.   
+
+• Hiç çalışmayan ya da çağırılmayan kod parçalarına dead code denir. if, castch, switch ve yardımcı metotlarda görülüe. Zaman içerisinden güncellenmez, kafa karıştırır ve bakım maliyetini arttırır. Silinmelidir.     
+
+```Java
+if (false) {
+    // Bu kod asla çalışmaz
+}
+```
+
+• Variablelar, kullanıldıkları yere mümkün olduğunca yakın tanımlanmalı; fonksiyonlar, çağırıldıkları yerin hemen altında tanımlanmalıdır. Değişkenin scope'u dar tutulmalıdır.   
+• Kodu okuyan kişi, daha önce gördüğü bir yapının başka yerde de aynı şekilde çalışmasını bekler -> Principle of Least Suprise. Bunu  sağlayabilmek için tutarlı olmak gerekir. Aynı türdeki değişken-metot için aynı isim yapısı kullanılmalıdır. Kodun içinde bir desen varsa, her yerde aynı şekilde uygulanmalıdır.   
+
+```Java
+void doSomething(HttpServletResponse response) {
+    // işlem yapılır
+}
+void logResponse(HttpServletResponse response) {
+    // aynı isimle işlem yapılır, kafa karıştırı değil 
+}
+void logResponse(HttpServletResponse httpRes) {
+    // farklı isim, kafa karıştırıcı
+}
+```
+
+• Bir classın constructorı, hiçbir işlem yapmıyorsa ve classın başka özel bir constructorı yoksa zaten otomatik olarak oluşturulduğu için bu constructorı tanımlamak gereksizdir. Bunlar **clutter** yani gereksiz kod kalabalığı yapar.   
+• Gereksiz yere modülleri birbirine bağlamak yapay bağımlılık(artificial coupling) oluşturur. Mesela genel amaçlı enumların özel bir classın içinde tanımlanması durumunda o enumı kullanmak isteyen her yer, classı bilmek zorunda kalır. Static metotlar(StringUtils), private bir classın(UserManager gibi) içinde tanımlanırsa başka yerde kullanmak zorlaşır.   
+• **Feature Envy(özellik kıskançlığı)** bir metodun kendi sınıfının verileriyle değil, başka bir sınıfın vverileriyle aşırı derecede ilgilenmesi durumudur. Yani bir metot başka bir classın getter, setter ve iç yapısını yoğun bir şekilde kullanıyorsa bu metot o classın içinde olmak istiyor diyebiliriz. Bu kötü bir tasarımın, kod smeel işarettir.    
+• Bir fonksiyona davranışını değiştirmesi için gönderilen parametreye **selector argument** denir. 
+
+```Java
+//Burada true-false selector argument
+calculateWeeklyPay(true);  // Fazla mesai var
+calculateWeeklyPay(false); // Fazla mesai yok
+//Burada PDF-HTML selector argument
+calculateReport("PDF");
+calculateReport("HTML");
+```
+
+Selector argument kullanımı kötü bir yaklaşımdır. Tek bir fonksiyon birden fazla iş yapmaya başlar ->SRP ihlali.  Yeni bir davranış eklemek için if/else blokları eklemek gerekir -> Open/Closed Principle ihlali.   
+
+• Kodun mantığı, amacı ve işlevi açıkça görülebilmelidir. 
+ 
+ - Run-on expression(uzun, sıkışık ifadeler) tek satırda çok fazla işlem yapar ve okunması, anlaşılması zordur.
+ - Hungarian notation(tür belirten isimler), kodun amacını değil türünü vurgular yani anlamı gizler.
+ - Magic numbers kullanılmalı, doğrudan koda bir sayı yazmak anlaşılır bir durum değil. Kodu okuyan kişi sayının neti temsil ettiğini bilmesi gerekir.
+   
+ 
+•  Yazılım geliştirirken kodun nereye yazıldığı da önemlidir. Kod, okuyucunun beklediği yerde olmalıdır. Fonksiyon adı yaptığı şeyi yansıtmalı. Fonksiyonlar ve sınıflar ait oldukları classta tanımlanmalıdır.
