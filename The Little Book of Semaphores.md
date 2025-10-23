@@ -566,3 +566,135 @@ class Writer extends Thread {
 
 Yukarıdaki koda ilk reader geldiğinde wrteLock'u alır ve writerlar engellenir. Son reader gittiğinde writeLock'u bırakır ve writerlar girebilir. Reader işlemi sırasında birden fazla reader aynı anda çalışabilir. mutex sadece readerCount'ı korur, veri yapısına erişimi değil.      
 Writer, writeLock'u alarak hem reader hem de diğer writerları engeller. İşlem bitince writeLock'u bırakır ve diğer threadlerde girebilir.      
+
+
+
+## Starvation
+• Bir threadin kaynaklara erişememesi nedeniyle süresiz beklemesi durumuna **starvation** denir. Diğer threadler sürekli çalışırken bir tane threadin hep beklemesi ve hiçbir zaman çalışamamasıdır. Kaynaklara erişimin adil olmadığı, bazı işlemlerin sürekli olarak öncelikli olduğu, senkronizasyon mekanizmalarının yanlış kullanıldığı durumlarda ortaya çıkar.        
+• Starvationda thread kaynaklara erişemediği için sürekli olarak bekler, deadlockta ise iki veya daha fazla thread birbirini beklediği için sistem kilitlenir.    
+• Bu gibi durumlar için Round Robin gibi adil zaman algoritmaları kullanılabilir. Öncelikler dinamik olarak ayarlanabilir(aging). Starvation'ı engellemek için sistemde bounded waiting sağlanmalıdır. Yani bir threadin bekleme süresi kesinlikle sonlu olmalıdır.    
+•  Threadi çalıştıran scheduler, starvation'ı önlemekte kritik rol oynar. Eğer scheduler bir threadi hiç seçmezse o thread ne yaparsa yapsın aç kalır.     
+• Weak semaphore, bekleyen bir threadi uyandırır. Strong semaphore ise FIFO gibi sıralı uyandırma sağlar. Strong semaphore ile  starvationı önleyebiliriz.   
+
+ ### Morris's Algorithm(Ticket Algorithm)
+• Morris'in algortması weak semaphore kullanarak starvation'ı engeller. Threadi üç odadan geçirir. Room1; entrance queue gelen threadler burada toplanıyor. Room2; wait room kritik bölgeye girmeye hazırlık. Room3; kritik bölge. t1 turnstile; Room1'den Room2'ye geçişi kontrol eder. t2 turnstile; Room2'den Room3'e geçişi kontrol eder.  
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        MorrisMutex mutex = new MorrisMutex();
+
+        for (int i = 0; i < 5; i++) {
+            new MorrisWorker(mutex).start();
+        }
+    }
+}
+```
+
+```java
+public class MorrisWorker extends Thread {
+    private final MorrisMutex mutex;
+
+    public MorrisWorker(MorrisMutex mutex) {
+        this.mutex = mutex;
+    }
+
+    @Override
+    public void run() {
+        try {
+            mutex.enterCriticalSection();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+}
+
+```
+
+```java
+public class MorrisWorker extends Thread {
+    private final MorrisMutex mutex;
+
+    public MorrisWorker(MorrisMutex mutex) {
+        this.mutex = mutex;
+    }
+
+    @Override
+    public void run() {
+        try {
+            mutex.enterCriticalSection();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+}
+```
+
+```java
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class MorrisMutex {
+    private final Semaphore mutex = new Semaphore(1); // Room1'e girişte counter güncellemesi için kullanılır
+    private final Semaphore t1 = new Semaphore(1);     // Room1'den Room2'ye geçişi kontrol eder
+    private final Semaphore t2 = new Semaphore(0);     // Room2'den Room3'e yani kritik bölgeye geçişi kontrol eder. 
+
+    private final AtomicInteger room1 = new AtomicInteger(0);
+    private final AtomicInteger room2 = new AtomicInteger(0);
+
+    public void enterCriticalSection() throws InterruptedException {
+        // Room 1'e giriş 
+        mutex.acquire();
+        room1.incrementAndGet();//Room1'e giren thread sayısını arttır
+        mutex.release();
+
+        t1.acquire(); // Room2'ye geçiş için bekle
+        room2.incrementAndGet(); //Room2'ye giren thread sayısını arttır
+
+        mutex.acquire(); //Room1'den çıkış için kaynak alındı
+        room1.decrementAndGet(); // Room1'den çıkan thread sayısı azaltıldı
+
+        if (room1.get() == 0) {
+            mutex.release(); //kimse Room1'de değil
+            t2.release(); // kritik bölge için şartlar uygun turnstile açıldı
+        } else {
+            mutex.release(); //Room1 hala dolu 
+            t1.release(); // Sıradaki thread Room2'ye geçsin 
+        }
+
+        // Room 2
+        t2.acquire(); //kritik bölgeye geçiş için bekle
+        room2.decrementAndGet(); //Room'den çıkan thread sayısını azalt 
+
+        // sadece bir thread burada olabilir. 
+        criticalSection();
+
+        // Çıkış
+        if (room2.get() == 0) {
+            t1.release(); // Room2 boş yeni döngü başlasın
+        } else {
+            t2.release(); // Room2 hala dolu, sıradaki thread kritik bölgeye geçsin 
+        }
+    }
+
+    private void criticalSection() {
+        System.out.println(Thread.currentThread().getName() + " is in the critical section.");
+        try {
+            Thread.sleep(100); // Simülasyon
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+}
+```
+pseudo code ;  Room1 -> mutex + Room++ -> t1 -> Room2 (Room2++) -> t2 -> Room3 
+  
+Burada her thread sırayla geçer, önüne geçme yoktur. Counterlar ve turnstileler adil geçişi sağlar. Finite threa varsayımı ile sistem döngüye girer ve sıfırlanır.     
+
+
+```java
+ mutex.acquire();
+ room1.incrementAndGet();//Room1'e giren thread sayısını arttır
+ mutex.release();
+```
+Bu kod parçası en başta 1 nesilden gelen tüm threadleri sıraya almış oldu. Yani diyelimki threadA kritik bölgeyi tamamladı ve sonsuz döngüde yani tekrar geldi en başa bu durumda ne olur tekrar room1'e girmek isteyecek ama önceki nesiller çoktan room1'e gelip hepsi numaralarını aldılar bir sonraki sırayı yani en son sırayı alacak artık threadA. Bunu da ancak ilk nesildekiler room2'yi tamamen boşalttıktan sonra yapabilir. **Gözden kaçırma her gelen thread arttırıyor counterı ve sonra kaynağı bırakıyor bir sonraki thread counterı arttırıyor. Gelen threadlerin room2'ye geçmesini beklemeye gerek yok room1'e girebilmeleri için,   room1'de işlemler yapılıyor queue oluşturuluyor gibi düşün.**
