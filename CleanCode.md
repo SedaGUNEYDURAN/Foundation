@@ -2123,4 +2123,36 @@ Selector argument kullanımı kötü bir yaklaşımdır. Tek bir fonksiyon birde
  - Magic numbers kullanılmalı, doğrudan koda bir sayı yazmak anlaşılır bir durum değil. Kodu okuyan kişi sayının neti temsil ettiğini bilmesi gerekir.
    
  
-•  Yazılım geliştirirken kodun nereye yazıldığı da önemlidir. Kod, okuyucunun beklediği yerde olmalıdır. Fonksiyon adı yaptığı şeyi yansıtmalı. Fonksiyonlar ve sınıflar ait oldukları classta tanımlanmalıdır.
+•  Yazılım geliştirirken kodun nereye yazıldığı da önemlidir. Kod, okuyucunun beklediği yerde olmalıdır. Fonksiyon adı yaptığı şeyi yansıtmalı. Fonksiyonlar ve sınıflar ait oldukları classta tanımlanmalıdır.   
+• Static keywordü, bir classa ait değişkenleri-metotları tanımlamak için kullanılır. Yani bu değişkenler-metotlar classın instance'ına değil, doğrudan classa bağlı olur. Sınıf yüklenirken bir kez yüklenirler. Polimorfizm veya override gerektirmeyen durumlarda kullanılır. **Bir tanımlama yaparken static mi non-static mi yapacağımıza karar veremezsek non-static yapmalıyız.** Çünkü non-static metotlar, polimorfizme olanak tanır yani farklı alt sınıflar farklı davranışlar sergileyebilir. Daha esnek ve geniş bir tasarım sağlarlar. Ancan static metotlar daha sınıflıdır, polimorfik olamazlar. Genellikle de utility için uygunlardır.     
+• Kodu daha okunabilir ve maintanable yapmak istiyorsak; karmaşık ifadeleri doğrudan yazmak yerine anlamlı isimlere sahip ara değişkenlere bölmeliyiz. Fazla açıklayıcı değişken kullanmak genellikle bir sorun yaratmaz, kodun daha anlaşılır olmasını sağlar.    
+• Fonksyion adlandırması yaparken olabilidiğince fiil kullanmalısın. Fonksionları bir eylemi gerçekleştirir. Geliştirici kodu okurken fonksiyonun hangi eylemi gerçekleştirdiğini fonksiyon isminden anlayabilmeli.    
+• Bir metotu bitirmeden önce nasıl çalıştığını anlamalıyız.Yani testleri geçti yeterli dememeliyiz. Kondun mantığını, algoritmaların neden doğru çalıştığını anlamamız gerekir. Bunun da yapmanın en iyi yolu refactor etmektir. Bir metotu yazdık bitti dememeliyiz. Yazdıktan sonra tekrar tekrar daha ne yapabilirim nasıl daha açık, anlaşılır olur diyerek incelemeliyiz. Her seferinde mutlaka daha uygun bir yol buluruz.   
+• **Explicit dependency(Fiziksel Bağımlılık)**: Bir modülün başka bir modüle olan ihtiyacını açıkça belirtmesidir. Gerekli bilgiyi doğrudan ilgili sınıftan metot aracılığıyla ister. Varsayım yapmaz direkt olarak gerçek veri ile çalısır. Bağımlılık kontrollü ve görünürdür. 
+
+```Java
+int pageSize = formatter.getMaxPageSize();
+```
+
+**Logical Dependency(Mantıksal Bağımlılık)**: Bir modülün başka bir modülün iç işleyişi hakkında varsayımlarda bulunmasıdır. Gerekli bilgiyi doğrydan sormak yerine tahmin eder veya sabitler üzerinden hareket eder. 
+
+```Java
+private final int PAGE_SIZE = 55; // HourlyReporter içinde
+
+```
+Bir modül, başka bir modülün iç işleyişini tahmin etmemelidir. Gerekli bilgiyi doğrudan istemelidir. Yazılımda bağlılıklar açık ve kontrol edilebilir olmalıdır.Kısaca Logical dependencydense explicit dependency tercih edilmelidir.   
+
+• Bir sistemde yeni türler eklemek olasıysa switch yerine polimorfizm tercih etmeliyiz. Polimorfizm farklı türlerin aynı interface'i kullanarak farklı davranışlar sergilemesidir. **One Switch** kuralına göre switch ifadeleri tek bir yerde ve tek bir amaçla kullanılmalıdır. Switch, polimorfik nesneler üretmelidir.    
+• **Magic number**, kodun içinde doğrudan yazılmış ne anlama geldiği belli olmayan sabit sayılardır. Bunları yerine constant kullanımınıtercih etmeliyiz. Burada bir detay var ki çok bilinen ve bağlamı açık olan karışıklığa neden olacağını düşünmediğimiz durumlar bu kuralın dışında kalabilir.    
+• Para hesaplamalarında float ve double kullanmamaya dikkat et. Küçük yuvarlama hataları finansal uygulamalarda büyük sorunlara yol açabilir. Para birimlerini integer ile temsil etmek daha mantıklıdır. Yada gerekirse BigDecimal gibi hassas veri türleri kullanılabilir.    
+• Veriye aynı anda erişim ihtimali varsa mutlaka lock mekanizmalarını kullan. Veritabanı işlemlerinde transaction yönetimini kullan.    
+• **ArrayList yerine List kullanmak daha esnektir.** Daha sonrasında farklı implementasyonlara geçmek kolay olur. Kod daha az bağımlı ve daha esnektir.    
+
+```Java
+List<String> names = new ArrayList<>();
+
+```
+
+• Sorguda birden fazla sonuç dönebilme ihtimalini gözardı etme. (List dönebilir mi? o zaman tüm elemanları değerlendirmem gerekir)   
+• Belirsiz hiçbir durum bırakmamalıyız.     
+• Tasarım kararlarını yapısal yollarla zorunlu kılmalıyız. Yapılar derleyici tarafından kontrol edildiği için bu kurallar ihlal edilemez. 
