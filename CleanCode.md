@@ -2156,3 +2156,137 @@ List<String> names = new ArrayList<>();
 • Sorguda birden fazla sonuç dönebilme ihtimalini gözardı etme. (List dönebilir mi? o zaman tüm elemanları değerlendirmem gerekir)   
 • Belirsiz hiçbir durum bırakmamalıyız.     
 • Tasarım kararlarını yapısal yollarla zorunlu kılmalıyız. Yapılar derleyici tarafından kontrol edildiği için bu kurallar ihlal edilemez. 
+• Uzun uzunkoşullar yazmak yerine bunları daha iyi açıklayan anlamlı fonksiyonlarla soyutlamalıyız.     
+
+```Java
+if (timer.hasExpired() && !timer.isRecurrent())
+```
+Bu gibi durumlarda koşulun neyi kontrol ettiği açık değildir. Bunun yerine aşağıdaki kod bloğunu tercih etmeliyiz.     
+
+```Java
+if (shouldBeDeleted(timer))
+```
+
+• Negatif ifadeler, pozitif ifadelere göre daha zor anlaşılırlar. Kafa karışıklığına neden olmamak için olabildiğince pozitif ifadeleri kullanmayı tercih etmeliyiz.     
+
+```Java
+if (!buffer.shouldNotCompact())
+```
+Burada isimlendirme negatif, bir de başına maktıksal olarak olumsuzluk eklediğimizde karışıklığa neden olabilir. 
+
+
+```Java
+if (buffer.shouldCompact())
+```
+• Bir metot sadece bir iş yapmalı -> **Do one thing** ilkesi or SRP     
+```Java
+public void pay() {
+    for (Employee e : employees) {
+        if (e.isPayday()) {
+            Money pay = e.calculatePay();
+            e.deliverPay(pay);
+        }
+    }
+}
+```
+Kod kısa olduğu için yapılan şey açık gibi görünüyor ancak kod zamanla uzayabilir. Bu duurmda anlamak karmaşıklaşacak. Şuan bile 3 işlemi birlikte yapıyor. Tüm çalışanlar üzerinden döngü kuruluyor. Her çalışanın maş günü olup olmadığı kontrol ediliyor. Maaş günüyse maaşı hesaplanıp teslim ediliyor.     
+
+```Java
+public void pay() {
+    for (Employee e : employees)
+        payIfNecessary(e);
+}
+
+private void payIfNecessary(Employee e) {
+    if (e.isPayday())
+        calculateAndDeliverPay(e);
+}
+
+private void calculateAndDeliverPay(Employee e) {
+    Money pay = e.calculatePay();
+    e.deliverPay(pay);
+}
+```
+
+• Temporal yani zamansal bağımlılıklarda metotların belirli bir sıralama ile çağırılması gerekir. Bu durum aşağıdaki kod parçası gibi açık olmayan şekilde ifade edilirse başka bir geliştirici bunu farketmeyebilir ve metotların sıralamasını bozabilir.   
+
+```Java
+public void dive(String reason) {
+    saturateGradient();
+    reticulateSplines();
+    diveForMoog(reason);
+}
+
+```
+Her metottan çıktı üretip bir sonraki metota parametre olarak verirsek sıralama zorunluluğu kod üzerinden açıkça görünür hale gelir.   
+
+```Java
+public void dive(String reason) {
+    Gradient gradient = saturateGradient();
+    List<Spline> splines = reticulateSplines(gradient);
+    diveForMoog(splines, reason);
+}
+```
+•  Aşağıdaki kod mantıksal bir ilişkiyi yansıtmamasına iç içe bir yapı mevcut. Geliştirici bunu okuduğunda keyfi hareket edilmiş olduğunu düşünür. Aslında bu metot paket seviyesinde farklı bir classta tanımlanmalıdır. Bu görüntü tutarlı değil keyfidir.    
+```Java
+public class AliasLinkWidget extends ParentWidget {
+    public static class VariableExpandingWidgetRoot {
+        ...
+    }
+}
+
+```
+
+• **Boundary condition(sınıf koşulları)**, bir dizinin sonuna yaklaşma, bir sonraki elemanı kontrol etme gibi  durumlardır. Bu tarz kodların takibi zor olabilir.     
+```Java
+if (level + 1 < tags.length) {
+    parts = new Parse(body, tags, level + 1, offset + endTag);
+    body = null;
+}
+```
+Aşağıdaki gib iifade edildiğinde nextLevelin neyi temsil ettiği açıktır, bakımı kolay ve kodun amacı daha nettir.    
+```Java
+int nextLevel = level + 1;
+if (nextLevel < tags.length) {
+    parts = new Parse(body, tags, nextLevel, offset + endTag);
+    body = null;
+}
+
+```
+• Farklı abstraction seviyelerini bir arada kullanmamalıyız. Fonksiyon içindeki ifadeler aynı soyutlama düzeyinde olmalıdır. 
+
+```Java
+public String render() throws Exception {
+    StringBuffer html = new StringBuffer("<hr");
+    if(size > 0)
+        html.append(" size=\"").append(size + 1).append("\"");
+    html.append(">");
+    return html.toString();
+}
+
+```
+
+Burada yatay bir çixgi yani HR tag oluşturuluyor. Ancak aynı metot hem HTML syntax'ı ile uğraşıyor hem de içeri de business logic var(size>0 vs.) Ne yapılacağı ve nasıl yapılacağı aynı yerde.   
+
+```Java
+public String render() throws Exception {
+    HtmlTag hr = new HtmlTag("hr");
+    if (extraDashes > 0)
+        hr.addAttribute("size", hrSize(extraDashes));
+    return hr.html();
+}
+
+private String hrSize(int height) {
+    int hrSize = height + 1;
+    return String.format("%d", hrSize);
+}
+``` 
+
+Yukarıdaki kodda render metodu HRtag oluşturur. HTML syntax'I HtmlTag classına bırakılır. hrSize metodu business logici soyutlar. (
+
+•  Clean code anlamında soyutlama; detayları gizleyip sadece ne yaptığına odaklanmak demektir. 
+
+- Yüksek seyiye soyutlama: Uygulamanın genel yapılandırması, başlangıç noktası
+- Düşük seviye soyutlama: Yardımcı fonksiyonlar, veri işleme, kontrol yapıları
+
+• Bir nesne veya modül, yalnızca doğrudan iş birliği yaptığı(immediate collaborator) diğer nesneleri tanımalıdır -> [Law of Demeter](https://github.com/SedaGUNEYDURAN/Foundation/blob/main/CleanCode.md#law-of-demeter-lod-demeter-yasas%C4%B1)
