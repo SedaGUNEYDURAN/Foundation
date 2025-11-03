@@ -2290,3 +2290,68 @@ Yukarıdaki kodda render metodu HRtag oluşturur. HTML syntax'I HtmlTag classın
 - Düşük seviye soyutlama: Yardımcı fonksiyonlar, veri işleme, kontrol yapıları
 
 • Bir nesne veya modül, yalnızca doğrudan iş birliği yaptığı(immediate collaborator) diğer nesneleri tanımalıdır -> [Law of Demeter](https://github.com/SedaGUNEYDURAN/Foundation/blob/main/CleanCode.md#law-of-demeter-lod-demeter-yasas%C4%B1)
+
+
+### JAVA
+•  Kod yazarken başka paketlerdeki classları kullanmak için import ifadesi kullanırız. Eğer bir paketten birden fazla class kullanıyorsak her birini tek tek yazmak yerine  **import packageName.*;** şeklinde yazarız. Bu kullanıma **wildcard** yani joker karakter denir. Paketteki tüm classlara erişilebilir olur.  Wildcard kullanımında kodun üst kısmı daha sade kalır. Bağımlılık azalır. Spesifik importlar doğrudan o sınıfın varlığına bağlıdır. Wildcard import sadece paketi arama yoluna ekler, belirli bir sınıfın varlığı gerekmez. Modüller daha az bağlı olur bu da bakımı kolaylaştırır.   
+• Wildcard import kullanırken, isim çakışması konusuna dikkat etmeliyiz. İki farklı pakette aynı isimde class varsa hangisinin kullanıldığını belirtmemiz gerekir.      
+
+```Java
+import java.util.Date;
+import java.sql.Date;
+```
+
+• Constant variablelar bir interface içerisinde tanımlayıp, o interface'i inheritance yolu ile kullanmamalıyız.  Aşağıdaki kodda  TENTHS_PER_WEEK ve OVERTIME_RATE sabitleri kullanılmış ama tanımları bu classta değil. extend ettiği classa baktığımızda da bu tanımları göremiyoruz. Ancak extend ettiği Employee classının implement ettiği PayrollConstants classında bu tanımlar bulunuyor. Kodu okuyan bir kişi sabitlerin nereden geldiğini anlamakta zorlanır. Interfaceler davranış tanımlamak içindir, sabitlere etrişmek için interface kullanmak inferface kullanım amacına uymaz. İlla interfacedeki bir sabite erişeceksek Java 5'ten itibaren static import özeliği ile ulaşabiliriz.  HourlyEmployee classının başında import static PayrollConstants.*; şeklinde tanımlayabiliriz. 
+
+```Java
+public class HourlyEmployee extends Employee {
+ private int tenthsWorked;
+ private double hourlyRate;
+ public Money calculatePay() {
+  int straightTime = Math.min(tenthsWorked, TENTHS_PER_WEEK);
+  int overTime = tenthsWorked - straightTime;
+  return new Money(
+  hourlyRate * (tenthsWorked + OVERTIME_RATE * overTime)
+  );
+ }
+}
+```
+```Java
+public interface PayrollConstants {
+    public static final int TENTHS_PER_WEEK = 400;
+    public static final double OVERTIME_RATE = 1.5;
+}
+```
+
+• Java 5 ile birlikte enum(enumaration) yapısı hayatımıza girdi. **public static final int** ile olan eski sabit tanımlarken anlamlar zamanla kaybolabilir. Aşağıdaki kod parçasındaki sabitler sadece sayıdır. if(grade==1) olduğunda okuyucu için 1 belirsizdir, neyi ifade ettiği anlaşılmamaktadır. 
+
+```Java
+public static final int APPRENTICE = 0;
+public static final int JOURNEYMAN = 1;
+```
+
+Bunun yerine aşağıdaki tanımlarsak, tip güvenliği sağlarız yani HourlyPayGrade dışında bir şey atanamaz. -> if (grade == HourlyPayGrade.JOURNEYMAN) gibi 
+
+```Java
+public enum HourlyPayGrade {
+    APPRENTICE, JOURNEYMAN, MASTER
+}
+```
+
+Enumlar sadece bir liste görevi görmez aynı zamanda metotlar ve alanlar içerebiilir. Her enum kendi davranışını tanımlayabilir. Kodda uzun bir if-else yapısından kurtulmuş oluruz böylece. Kod daha nesne yönelimli ve esnek  hale gelir.    
+
+```Java
+public enum HourlyPayGrade {
+    APPRENTICE {
+        public double rate() { return 1.0; }
+    },
+    JOURNEYMAN {
+        public double rate() { return 1.5; }
+    },
+    MASTER {
+        public double rate() { return 2.0; }
+    };
+
+    public abstract double rate();
+}
+```
