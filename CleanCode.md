@@ -2291,6 +2291,7 @@ Yukarıdaki kodda render metodu HRtag oluşturur. HTML syntax'I HtmlTag classın
 
 • Bir nesne veya modül, yalnızca doğrudan iş birliği yaptığı(immediate collaborator) diğer nesneleri tanımalıdır -> [Law of Demeter](https://github.com/SedaGUNEYDURAN/Foundation/blob/main/CleanCode.md#law-of-demeter-lod-demeter-yasas%C4%B1)
 
+• Mrortlar isimlendirilirken uygulmanın detaylarını değil, soyut davranışını yansıtmalıdır. Yani  kodun nasıl çalıştığını değil, ne yaptığını anlatmalıdır. Mesela metottun adı dial() olursa bağlantı sadece arama yolu yani telefon yolu ile gerçekleşiyır olarak anlaşılabilir ama adlandırmayı connect() olarak yaparsak interface artık farklı türde modem türleri için de kullanılabilir.  
 
 ### JAVA
 •  Kod yazarken başka paketlerdeki classları kullanmak için import ifadesi kullanırız. Eğer bir paketten birden fazla class kullanıyorsak her birini tek tek yazmak yerine  **import packageName.*;** şeklinde yazarız. Bu kullanıma **wildcard** yani joker karakter denir. Paketteki tüm classlara erişilebilir olur.  Wildcard kullanımında kodun üst kısmı daha sade kalır. Bağımlılık azalır. Spesifik importlar doğrudan o sınıfın varlığına bağlıdır. Wildcard import sadece paketi arama yoluna ekler, belirli bir sınıfın varlığı gerekmez. Modüller daha az bağlı olur bu da bakımı kolaylaştırır.   
