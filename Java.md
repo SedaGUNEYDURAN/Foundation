@@ -543,6 +543,46 @@ Bu örnekte MyCustomAnnotation adında bir anotasyon tanımlanmıştır ve value
 >View katmanı ile bağlantı için @Named annocation veya XML ayarları kullanılmalıdır.    
 
 
+# JAVA'da Performans
+•	Yazılımın hız, verimlilik ve kaynak kullanımı açısından ne kadar etkili çalıştığını değerlendirme sürecidir. Kullanıcı deneyimini optimize etmeyi ve system kaynaklarını daha verimli kullanmak için bizim için önemlidir.  
+•	Profil etmek ne demektir? Bir uygulamanın performansını analiz etmek amacıyla çalışma süresince hangi kaynakları ne kadar kullandığını izlemek ve ölçmektir. Bu işlemi profiler araçlarıyla yani profil oluşturucularla yapılır. Yazılımın hangi bölümlerinin yavaş çalıştığını, fazla bellek veya işlemci tükettiğini ortaya çıkarır.    
+•	Profil etmenin amacı nedir? Performans dar boğazlarını tespit etmeliyiz. Böylece kodun hangi kısmının sistemi yavaşlattığını belirleyebiliriz ve o kodumuzu iyileştirebiliriz. Kaynak kullanımını optimize etmeliyiz. CPU, RAM, disk gibi donanım kaynaklarının verimli kullanılıp kullanılmadığını görmeliyiz. Buna göre verimli hale getirmeliyiz. Kod kalitesini arttırmalıyız. Yani gereksiz ve kötü yazılmış metotları düzeltmeliyiz. Kullanıcılar sistemle etkileşimdeyken oluşan problemleri analiz edebilmeliyiz. Ölçeklenebilirlik nedir ? Bir sistemin artan yük, kullanıcı sayısı veya veri miktarı karşısında performansını koruyarak büyüyebilme yeteneğidir. Profil ederek darboğazları tespit edip iyileştirdiğimizde, kaynak tüketimini verimli hale getirdiğimizde system daha verimli hale gelir ve daha fazla kullanıcı veya iş yükünü dayanabilecek şekilde ölçeklenebilir olur.    
+•	Profil çalışması nasıl yapılır? İlk olarak hedef belirlenir yani hangi metriklerin izleneceği belirlenir. Bunlar CPU kulanımı, bellek tüketimi, I/O işlemleri, ağ trafiği vb olabilir.    
+- Kullanılan teknolojiye göre ve kriterlerimize göre profil aracı seçilir ve kurulup yapılandırılır. Uygulama profil modunda başlatılır ve gerçek kullanıcı senaryoları veya test senaryoları çalıştırılır. Profil aracı; fonksiyon çağrı sürelerini, bellek tahsisini, garbage collector olaylarını ve diğer metrikleri toplar.
+   - Garbage Collector Collector’un ne olduğunu bilmeyenler veya unutanlar olabilir. Garbage Collector, bir programın çalışması sırasında artık kullanılmayan nesneleri otomatik olarak tespit edip bellekten temizleyen mekanizmadır. Bu sayede manuel bellek yönetimi ile uğraşmadan daha güvenli ve verimli yazılım geliştirebiliriz. Ne iş yapar diye bakacak olursak memory leak yani bellek sızıntılarını önler. Daha da açacak olursak kullanılmayan nesneleri temizleyerek belleğin gereksiz şekilde dolmasını engeller. Bellek yönetimini optimize ederek uygulamanın daha hızlı çalışmasını sağlar, performansı arttırır.
+   - Garbage Collector ne yapıyor? Gidiyor yeni nesneleri heap belleğe yerleştiriyor. Nesnelere olan referansları takip ediyor. Eğer nesneye artık erişim yoksa kullanılmıyor demektir, kullanılmayan nesneleri siliyor ve alanı serbest bırakıyor.
+   - Serial, parale, G1 vs gibi farklı garbage collectorlar bulunuyor.
+     
+-  Toplanan veriler girafikler, istatiksel tablolar şeklinde sunulur. En çok zaman harcayan fonksiyonlar yani hotspotlar belirlenir. Memory leak veya gereksiz nesne tahsisi gibi sorunlar analiz edilir.Sorunlu kod bölümleri optimize edilir. Gereksiz işlemler kaldırılır, algoritmalar iyileştirilir. Değişiklliklerden sonra profil çalışması tekrar yapılır ve iyileştirmelerin etkisi ölçülür. 
+•	**CPU Profiling:**  Bir uygulamanın işlemciyi nasıl kullandığını analiz eden bir profil çalışması türüdür. Amaç hangi kod parçalarının CPU üzerinde ne kadar zaman harcadığını ve system kaynaklarını nasıl tükettiğini ortaya çıkarmaktır.     
+•	**Memory Profiling:** Bir yazılımın runtimeda memory kullanımını analiz ederek hangi nesnelerin ne kadar memory tükettiğini ve bellek sızıntısı olup olmadığını belirleme sürecidir.     
+•	Bir java uygulamasının kullanacağı memory miktarı uygulama çalıştırma esnasında değiştirilebilir;    
+```java
+ Java  –Xms256m  –Xmx512m  –cp  $CLASSPATH Main
+```
+
+> Java: JVM başlatma komutudur. Java uygulamasını çalıştırır.  
+> 	–Xms256m: JVM’in başlangıçta ayıracağı minimum heap bellek miktarıdır.  
+> –Xmx512m: JVM’in kullanabileceği maksimum heap bellek miktarıdır.   
+> -cp $CLASSPATH: JVM’de hangi dizin veya JAR dosyalarının sınıf yüklemesi için kullanılacağını beliritir.  
+> Main: Uygulamamızın ana sınıfıdır. Main classı içinde public static void main (String[] args) metodu bulunmalıdır.
+ 
+•	GraalVM native image ile oluşturulan uygulamalarda runtimeda izleme (monitoring) özelliklerini etkinleştirmek için enable monitoring parametresinin verilmesi gerekir. 
+
+  
+  <img width="602" height="253" alt="image" src="https://github.com/user-attachments/assets/061fd467-5a45-4b79-aadd-b5bd371741ac" />
+
+  
+•  Bu kodu inceleyelim. Boolean tipinde bir variable var true değeri atanmış. Sonsuza kadar dönecek bir while döngüsü başlatılmış. Döngünün her adımında MemoryLeakDemo sınıfından yeni bir nesne oluşturulmuş. Bu Thread classından türediği için aslında bu yeni bir thread nesnesidir. memoryLeakDemo.start () komutuyla bu yeni thread çalıştırılmış. Yani işletim sisteminden yeni bir thread talep ediliyor. Ana threadyani min sadece 100 milisaniye bekliyor ve döngü geriye döner. 1 saniyenin 1000 milisaniye olduğunu ve 100 milisaniye beklediğini düşünürsek main thread bir saniyede 10 thread oluşturur ve çalıştırır. Bu threadler durdurulmaz ve sonlandırılmaz. Yandaki bölüme gelirsek main de new MemoryLeakDemo () yaptığında, her thread kendi özel ArrayList nesnesine sahip olur. Thread start () ile başladığında run() metodu çalışır ve burada da while sonsuz döngüye girer. Bu sonsuz döngüde thread her 0.2 saniyede bir listesine yeni String nesnesi ekler.  Thread asla kendi döngüsünden çıkamaz, sonsuza kadar çalışmak üzere tanımlanmıştır. Sonuç olarak Main sınıfı tarafından oluşturulan binlerce threadin her biri kendi ArrayList’ini sonsuza kadar stringlerle doldurur.    
+•	**Serial Garbage Collector,** Java’da kullanılan en basit garbage collector algoritmasıdır ve tüm bellek temizleme işlemlerini tek bir thread ile gerçekleştirilir. Küçük uygulamalar ve düşük kaynaklı sistemler için uygundur. (Young ve old generation temizliği tek bir thread üzerinde yürütülür.) Bu tarz garbage collectorlerde stop-the-world süreleri uygulama performansını daha çok etkiler. (stop-the-world; garbage collector çalıştığında uygulama tamamen durur.Bu duraklamalar kısa sürelidir ama sık olabilir.)  
+•	Bu grafik uygulamanın kullandığı Java Heap (bellek alanı) miktarını zaman içindeki durumunu gösterir.  Tırtıklı testere ucu gibi olan çizgi used heap’dir (saw-tooth). Bu çizginin sürekli olarak yükselip düşmesi normal bir Java davranışıdır. Yükselme uygulamanın yeni objeler oluşturduğunu, düşüşler Garbage Collector’ün çalışıp gereksiz nesneleri temizlediğini gösterir. Ancak zaman içerisinde saw-tooth tepeleri giderek yükseliyor ve used heap neredeyse heap size’a yaklaşıyor. Düz çizgi ise heap size’ı yani live part çizgisidir. Live part çizgisi, heap bellekte aktif yani canlı nesnelerin miktarını zaman içinde gösteren çizgidir. Normalde live part çizgisinin sabit kalması beklenir. Ancak bu grafikte live part çizgisi de sürekli yükseliyor. Bu uygulamanın nesneler oluşturduğunu ancak bu nesnelerin referanslarını bir şekilde tutmaya devam ettiğini buyüzden de garbage collectorün onları temizleyemediğini gösterir. Bu memory leak’in en net işaretidir. Burada üçüncü olarak bakacağımız yerde kriz anıdır. Yaklaşık 11.08 civarında live part çizgisi uygulamanın kullanabileceği maksimum bellek seviyesine dayanıyor. Artık uygulama için yeni bir nesne oluşturacak yer yoktur. Uygulama uzun süre çalışan nesne biriktiriyor. Garbage collector düzenli olarak çalışıyor ama kurtarmıyor, heap genişlemek zorunda kalıyor.   
+
+<img width="602" height="241" alt="image" src="https://github.com/user-attachments/assets/a4a8e25b-a2e9-4d71-9b81-c199792e460d" />
+
+
+
+
+
 ## Diğer Kavramlar 
 • **Specification:** Bir yazılım bileşeninin veya sisteminin ne yapması gerektiğini tanımlayan bir belgedir. Geliştirilen yazılımın hedeflerini, özelliklerini ve davranışlarını belirler. Kullanıcı ihtiyaçlarını anlamak ve geliştirme sürecine rehberlik etmek için kullnılır.     
 • **Implementation:** Yazılımın nasıl oluşturulduğunu ve kodlarını ifade eder. Spesifikasyonun belirtilen gereksinimlerin somut, çalışır durumdaki bir yazılım ürününe dönüşmesini sağlar. 
