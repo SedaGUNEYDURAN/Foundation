@@ -569,15 +569,33 @@ Bu örnekte MyCustomAnnotation adında bir anotasyon tanımlanmıştır ve value
  
 •	GraalVM native image ile oluşturulan uygulamalarda runtimeda izleme (monitoring) özelliklerini etkinleştirmek için enable monitoring parametresinin verilmesi gerekir. 
 
-  
-  <img width="602" height="253" alt="image" src="https://github.com/user-attachments/assets/061fd467-5a45-4b79-aadd-b5bd371741ac" />
+
 
   
 •  Bu kodu inceleyelim. Boolean tipinde bir variable var true değeri atanmış. Sonsuza kadar dönecek bir while döngüsü başlatılmış. Döngünün her adımında MemoryLeakDemo sınıfından yeni bir nesne oluşturulmuş. Bu Thread classından türediği için aslında bu yeni bir thread nesnesidir. memoryLeakDemo.start () komutuyla bu yeni thread çalıştırılmış. Yani işletim sisteminden yeni bir thread talep ediliyor. Ana threadyani min sadece 100 milisaniye bekliyor ve döngü geriye döner. 1 saniyenin 1000 milisaniye olduğunu ve 100 milisaniye beklediğini düşünürsek main thread bir saniyede 10 thread oluşturur ve çalıştırır. Bu threadler durdurulmaz ve sonlandırılmaz. Yandaki bölüme gelirsek main de new MemoryLeakDemo () yaptığında, her thread kendi özel ArrayList nesnesine sahip olur. Thread start () ile başladığında run() metodu çalışır ve burada da while sonsuz döngüye girer. Bu sonsuz döngüde thread her 0.2 saniyede bir listesine yeni String nesnesi ekler.  Thread asla kendi döngüsünden çıkamaz, sonsuza kadar çalışmak üzere tanımlanmıştır. Sonuç olarak Main sınıfı tarafından oluşturulan binlerce threadin her biri kendi ArrayList’ini sonsuza kadar stringlerle doldurur.    
+  
+  <img width="602" height="253" alt="image" src="https://github.com/user-attachments/assets/061fd467-5a45-4b79-aadd-b5bd371741ac" />
+
 •	**Serial Garbage Collector,** Java’da kullanılan en basit garbage collector algoritmasıdır ve tüm bellek temizleme işlemlerini tek bir thread ile gerçekleştirilir. Küçük uygulamalar ve düşük kaynaklı sistemler için uygundur. (Young ve old generation temizliği tek bir thread üzerinde yürütülür.) Bu tarz garbage collectorlerde stop-the-world süreleri uygulama performansını daha çok etkiler. (stop-the-world; garbage collector çalıştığında uygulama tamamen durur.Bu duraklamalar kısa sürelidir ama sık olabilir.)  
 •	Bu grafik uygulamanın kullandığı Java Heap (bellek alanı) miktarını zaman içindeki durumunu gösterir.  Tırtıklı testere ucu gibi olan çizgi used heap’dir (saw-tooth). Bu çizginin sürekli olarak yükselip düşmesi normal bir Java davranışıdır. Yükselme uygulamanın yeni objeler oluşturduğunu, düşüşler Garbage Collector’ün çalışıp gereksiz nesneleri temizlediğini gösterir. Ancak zaman içerisinde saw-tooth tepeleri giderek yükseliyor ve used heap neredeyse heap size’a yaklaşıyor. Düz çizgi ise heap size’ı yani live part çizgisidir. Live part çizgisi, heap bellekte aktif yani canlı nesnelerin miktarını zaman içinde gösteren çizgidir. Normalde live part çizgisinin sabit kalması beklenir. Ancak bu grafikte live part çizgisi de sürekli yükseliyor. Bu uygulamanın nesneler oluşturduğunu ancak bu nesnelerin referanslarını bir şekilde tutmaya devam ettiğini buyüzden de garbage collectorün onları temizleyemediğini gösterir. Bu memory leak’in en net işaretidir. Burada üçüncü olarak bakacağımız yerde kriz anıdır. Yaklaşık 11.08 civarında live part çizgisi uygulamanın kullanabileceği maksimum bellek seviyesine dayanıyor. Artık uygulama için yeni bir nesne oluşturacak yer yoktur. Uygulama uzun süre çalışan nesne biriktiriyor. Garbage collector düzenli olarak çalışıyor ama kurtarmıyor, heap genişlemek zorunda kalıyor.   
 
 <img width="602" height="241" alt="image" src="https://github.com/user-attachments/assets/a4a8e25b-a2e9-4d71-9b81-c199792e460d" />
+
+•	Bu grafik bellek grafiğindeki kriz anının sonucunu gösterir. CPU Usage; toplam CPU kullanımını gösterir. GC Activity; CPU’nun ne kadarının sadece çöp toplama işlemi için harcandığını gösterir. Bellek grafiğinde sorun başladığı an ile yani  yaklaşık olarak 11.08 ile aynı anda CPU kullanımı aniden fırlıyor. Garbage collector aktivitesi toplam CPU kullanımının büyük bir kısmını oluşturuyor.  ->  ~ %57  Grafiği incelediğimizde dolu bellekte yer açmak için sürekli olarak serial garbage collector çalıştırılmıştır. Ancak bellek sızıntısı nedeniyle temizlenecek bir şey bulunamaz. Uygulama asıl işini yapmak yerine tüm CPU gücünü bu sonuçsuz temizlik çabasına harcar ve kilitlenir.       
+
+<img width="601" height="254" alt="image" src="https://github.com/user-attachments/assets/29a6c00f-203c-4dac-bc6a-66a558e17860" />
+
+•	Live thread çizgisi, o anda çalışan canlı thread sayısını gösterir. Bu grafik sürekli olarak yükseliyor. Thread Leak var yani uygulama sürekli olarak yeni threadler oluşturuyor ama işler bittiğinde onları sonladırmadığını gösteriyor. Her thread canlı olduğu sürece kendisiyle ilişkili nesneleri de canlı tutar. 11.08 civarına baktığımızda yaklaşık 4000 adet thread gözüküyor. Eğer 4000’den fazla threadin her biri bazı nesnelere referans tutuyorsa garbage collector bu nesneleri temizleyemez. Sonuç olarak da thread leak, memory leak’e yol açar.  
+
+<img width="602" height="245" alt="image" src="https://github.com/user-attachments/assets/d64ccdd6-855f-49ba-be3f-8b7ca604dd3f" />
+
+•	Bu grafik analiz süresince Total Loadded Classes (toplam yüklenen sınıflar) sayısının (1969) sabit kaldığını gösteriyor. Bu normal bir grafiktir. Sorunun dinamik olarak yeni sınıflar yüklemekten kaynaklanmadığını doğrular.    
+
+
+<img width="602" height="251" alt="image" src="https://github.com/user-attachments/assets/d8a282ed-d5ee-44a6-bc77-490cf3bc94a7" />
+
+
+- Kısaca durumu özetleyecek olursak; bu senaryodaki asıl sorun thread leaktir. Uygulama sürekli yeni threadler yaratıp bunları kapatmıyor. Bu canlı kalan binlerce thread kendi kullandıkları nesneleri kilitliyor. Bu durum garbage collectorün bu nesneleri temizlemesini engelleyerek bir memory leak neden oluyor. Bu sızıntı, JVM’in önce bellek alanını yani heap size’ını maksimuma büyütmesine ve son olarak da bellek tamamen dolduğunda CPU’nun tamamını tüketen Garbage Collector Thrashing durumuna yol açarak uygulamanın çökmesine neden olur. Birbiri ile ilişkili thread ve memory sızıntısı için çok güzel bir örnektir.     
 
 
 
