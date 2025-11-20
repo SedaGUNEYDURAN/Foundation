@@ -2291,11 +2291,25 @@ Yukarıdaki kodda render metodu HRtag oluşturur. HTML syntax'I HtmlTag classın
 
 • Bir nesne veya modül, yalnızca doğrudan iş birliği yaptığı(immediate collaborator) diğer nesneleri tanımalıdır -> [Law of Demeter](https://github.com/SedaGUNEYDURAN/Foundation/blob/main/CleanCode.md#law-of-demeter-lod-demeter-yasas%C4%B1)
 
-• Mrortlar isimlendirilirken uygulmanın detaylarını değil, soyut davranışını yansıtmalıdır. Yani  kodun nasıl çalıştığını değil, ne yaptığını anlatmalıdır. Mesela metottun adı dial() olursa bağlantı sadece arama yolu yani telefon yolu ile gerçekleşiyır olarak anlaşılabilir ama adlandırmayı connect() olarak yaparsak interface artık farklı türde modem türleri için de kullanılabilir.  
+• Metotlar isimlendirilirken uygulmanın detaylarını değil, soyut davranışını yansıtmalıdır. Yani  kodun nasıl çalıştığını değil, ne yaptığını anlatmalıdır. Mesela metottun adı dial() olursa bağlantı sadece arama yolu yani telefon yolu ile gerçekleşiyır olarak anlaşılabilir ama adlandırmayı connect() olarak yaparsak interface artık farklı türde modem türleri için de kullanılabilir.   
+
+• Değişken isimlerinin uzunluğu ile kapsamlarının yani scopelarının büyüklüğü arasında bir ilişki olması gerekir. Mesela for döngüsündeki i gayet açık. Bu değişkenin ne işe yaradığını anlamak için kodun tamamını gezmeye gerek yok. Ama uzun bir metor var diyelim kodun farklı yerlerinde i ile karşılaşmak kafa karıştırıcı olur. Scope genişlediği için bu variableın adlandırması da genişlemeli.  
+• Eskiden Hungarian notation kullanılıyordu. m_ value adlandırılmasında "m" sınıfın member(üye) değişkeni olduğunu belirtmek için kullanılıyor. f_count, isimlendirmesinde "f" bir field olduğunu göateriyordu, vis_image, visual imaging system alt modülüne ait olduğunu belirtmek için kullanılıyor. Bu tarz kullanımlar eskiden gerekliydi ancak şuanda gereksiz ve kafa karıştırıcı olmaktadır.      
+• Bir metot saedce bir iş ypıyorsa basit bir isimlendirme yeterlidir. Ancak fonksiyonun yan etkileri varsa bunları da açıkça belirtmelidir. Aşağıdki kodu incelediğimizde bu kod m_oos yoksa yeni bir ObjectOutputStream oluşturuyor. Sonra da onu döndürüyor. Yani isimde belirttiği gibi sadece oos getirmiyor. getOos isimlendirmesi yerine creatOrReturnOos adlandırması yaptığı işe .ok daha uygun.   
+
+```Java
+public ObjectOutputStream getOos() throws IOException {
+    if (m_oos == null) {
+        m_oos = new ObjectOutputStream(m_socket.getOutputStream());
+    }
+    return m_oos;
+}
+
+```
 
 ### JAVA
 •  Kod yazarken başka paketlerdeki classları kullanmak için import ifadesi kullanırız. Eğer bir paketten birden fazla class kullanıyorsak her birini tek tek yazmak yerine  **import packageName.*;** şeklinde yazarız. Bu kullanıma **wildcard** yani joker karakter denir. Paketteki tüm classlara erişilebilir olur.  Wildcard kullanımında kodun üst kısmı daha sade kalır. Bağımlılık azalır. Spesifik importlar doğrudan o sınıfın varlığına bağlıdır. Wildcard import sadece paketi arama yoluna ekler, belirli bir sınıfın varlığı gerekmez. Modüller daha az bağlı olur bu da bakımı kolaylaştırır.   
-• Wildcard import kullanırken, isim çakışması konusuna dikkat etmeliyiz. İki farklı pakette aynı isimde class varsa hangisinin kullanıldığını belirtmemiz gerekir.      
+• Wildcard import kullanırken, isim çakışması konusuna dikkat etmeliyiz. İki farklı pakette aynı isimde class varsa hangisinin kullanıldığını belirtmemiz gerekir.    
 
 ```Java
 import java.util.Date;
