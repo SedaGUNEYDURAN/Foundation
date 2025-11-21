@@ -2370,3 +2370,33 @@ public enum HourlyPayGrade {
     public abstract double rate();
 }
 ```
+
+### Tests
+• Kaç test olmalıdan ziyade kırılabilecek her şeyi test ediyor muyuz buna bakmalıyız, bütün riskleri kapsıyor mu terstimiz. Bizim için test sayısı değil, kapsam önemlidir.     
+• **Coverage Tools**, kod kapsama araçlarıdır ve yazdığımız testlerin kodun ne kadarı çalıştırdığını ölçer. Testlerin gerçekten tüm kodu denetleyip denetlemediğini görmektir amaç. Yeşil satırlar test tarafından çalıştırılmış yani kontrol edilmiş kodu ifade eder. Kırmızı satırlar, hiçbir test tarafından çalıştırılmamıştır. Eğer bir satır kırmızıysa, o kodun doğru çalıştığından emin olamayız. Mesela catch durumunu hiç tetiklemediysek; hata durumunda sistemin ne yapacağını bilmiyoruz demektir. %100 coverage'a ulaşmaya çalışma. Bu bakımı zorlaştırır. Test etmen gereken kısımlar;    
+
+- Edge caseleri yani sınır durumlarını     
+- kritik iş mantığını   
+- hata senaryolarını doğrula   
+
+ **Kısaca her satırı çalıştırma, her riski test et.**    
+
+ • **Trivial Test**, çok basit görünen, kolayca yazılabilecek testlerdir. Bir metotun null döndürüp döndürmediğini kontrol etmek, getter/settermetotlarının çalışıp çalışmadığını kontrol etmek gibi. Bu testler önemsiz görülerek atlanılmamalıdır.     
+ • Yazılım geliştiriken bazı durumların net olmadığı da olur. Bu tarz geliştirmeler için test yazarken aslında karşımıza iki durum çıkıyor.   
+
+ - Belirsizlik kodun derlenmesini engelliyorsa(parametreler net olmayabilir vs) test çalışmadığı için test kodunu yorum satırı yaparız.   
+ -  Derlenebilir ama davranış net değilse (metot var ama ne döndürüceği belirsiz vs) test çalışır ama ignore edilir. **@Ignore** anotasyonu, testin bilinçli olarak pas geçildiğini gösterir.   
+
+• Algoritmalar genellikle orta noktalarda doğru çalışır. Asıl hata sınır koşullarında(boundary conditions) ortaya çıkar. Bunlar neler olabilir;   
+ 
+ - Bir listeyi işleyen fonksiyon için boş liste veya tek elemanlı liste   
+ - Bir sayı aralığı için maksimum ve minimum değerler(maksimum değerlerde taşma -> overflow)   
+ - Bir döngü için ilk ve son iterasyon   
+ - **Off-by-one hataları**, döngü bir fazla ya da eksik çalışabilir   
+ - Negatif sayılar gibi beklenmedik girişler, hatalı formatlar    
+ 
+
+
+
+
+
