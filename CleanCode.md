@@ -2393,10 +2393,10 @@ public enum HourlyPayGrade {
  - Bir sayı aralığı için maksimum ve minimum değerler(maksimum değerlerde taşma -> overflow)   
  - Bir döngü için ilk ve son iterasyon   
  - **Off-by-one hataları**, döngü bir fazla ya da eksik çalışabilir   
- - Negatif sayılar gibi beklenmedik girişler, hatalı formatlar    
+ - Negatif sayılar gibi beklenmedik girişler, hatalı formatlar       
  
-
-
-
+• Bir bug bulduğumuzda bu bugları tek başına düşünmemeliyiz. Tam kapsamlı testlerimizi yapmalıyız. Çünkü aynı yerleşik mantık, aynı veri yapısı ya da aynı arayüz kullanımındaki benzer düşünce hataları bir arada görülebilir, dikkatli olmalıyız.    
+• Bir metotda bug bulunduğunda, testleri olabildiğince kapsamlı ve düzenli yapmalıyız -> hata kümelenmelerini farketmemizi sağlar. Böylece başarısız durumların ortak özelliklerini yani patterni çıkarırız. Bu pattern, bugın kök nedenini bulmamıza yardım eder.    
+• Yavaş testler, zamanla çalıştırılmayan testlere dönüşür. Bunun için mock ve stub kullanılabilir. Böylece veritanabı, dosya sistemi veya ağ çağrıları gibi uzun zaman gerektiren şeylerden kaçınmış oluruz. Veri setlerini küçültip sınr değerlerini deneyebiliriz. Uzun setleri ayırabilirizz. Ağır entegrasyon testlerini ve performans testlerini ayrı bir suite'e koyabiliriz. Testleri paralel çalıştırarak yani aynı anda çalıştırarak toplam süreyi kısaltabiliriz.    
 
 
