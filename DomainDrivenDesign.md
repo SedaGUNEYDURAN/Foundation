@@ -23,7 +23,7 @@
   - **Generic Subdomain**: İşimize özgü hiçbir tarafı olmayan, neredeyse her şirkette aynı şekilde çalışan kısımlardır. Genellikle hazır bir yazılım satın alınır veya açık kaynaklı çözümler kullanılır.Mesela; ödeme altyapısı(iyizico, PayPal gibi).
 - Subdomain ile bounded contextin farkı ne diyecek olursak; subdomain iş dünyasındaki bölümlerdir; lojistik, finans, satış gibi. Bounded context, iş bölümlerinin koddaki karşılığıdır.    
 
-    ### Layered Architecture
+    ## Layered Architecture
   - DDD'nin sağlıklı bir şekilde çalışabilmesi için Separation of Concerns prensibi uygulanmalıdır. DDD, dört katmanlı bir yapıda uygulanır;      
     -   User Interface: Kullanıcının gördüğü ekranlar.    
     -   Application Layer: Business adımlarını koordine eder. İş kuralı, mantığı içermez. Sadece şunu al, şuraya ver der yani domain nesnelerini görevlendirir.      
@@ -31,9 +31,27 @@
     -   Infrastructure Layer: Veritabanına bağlanmak, e-posta göndermek gibi teknik detayların bulunduğu yerdir.
 
 
+   ## Relational Pattern
   
     ### Anti-Corruption (ACL)
-    -  Yeni, temiz bir DDD sistemi, legacy ve kötü tasarlanmış bir sistem ile konuşacaksa araya bir proxy koyulmalıdır. Bu eski sistemdeki kötü modellemenin yeni sisteme sızması engellenir.
+    -  Yeni, temiz bir DDD sistemi, legacy ve kötü tasarlanmış bir sistem ile konuşacaksa araya bir proxy, facade, translator koyulmalıdır. Bu eski sistemdeki kötü modellemenin yeni sisteme sızması engellenir.
+
+    ### Conformist
+    - İki farklı bounded context arasındaki ilişkiyi tanımlar ve genellikle güç dengesizliği durumunda ortaya çıkar. Bu ilişkikide bir taraf (Downstream-Alıcı) diğer tarafın(Upstream-Sağlayıcı) modelini olduğu gibi hiç değiştirmeden kabul eder.
+    - Normalde DDD, ACL kullanmamızı önerir. Ancak pazar gücü yüksek Paypal gibi bir sistemi entegre ediyorsak Paypal bizim için modelini değiştirmez, olduğu gibi kullanmamız gerekir. Bu gibi durumlarda conformist ilişki kurulur.
+
+    ### Customer/Supplier
+    - Bu ilişkide iki taraf vardır;
+      - Upstream(Supplier-Tedarikçi):Veriyi veya servisi sağlayan taraftır. Diğer tarafın çalışması için gerekli olan çıktıları üretir.
+      - Downstream(Customer-Müşteri): Supplierdan gelen çıktıları kullanan tarafır. Supplier'a bağımlıdır. 
+    - Customer, ihtiyaçlarını supplier'a iletir. Supplier, customerın taleplerini backloga alır ve planlamasını buna göre yapar. Customer, supplier'ın sunduğu modelin gelişiminde söz sahibidir.  
+
+     ### Partnership
+    - DDD'deki en yüksek iş birliğini temsil eden context mapping patternidir. Alt-üst ilişkisi yoktur, tam bir eşittir(peer) ilişkisi vardır. İki sistemin birbirinden ayrılamayacak kadar iç içe geçtiği durumlarda tercih edilir.
+
+     ### Shared Kernel
+    - DDD'de iki veya daha fazla Bounded Context arasındaki en riskli ama bazen de en pratik olan ilişki modelidir. İki ekibin domain modelinin belirli bir parçasını (kod, veritabanı vb.) fiziksel olarak paylaşması anlamına gelir.
+    - Eğer iki farklı ekip tamamen aynı business logic geliştiriyorsa kod tekrarını(DRY) önlemek için tercih edilebilir. Veya iki sistemin veriyi çok hızlı ve sık takas etmesi gerekiyorsa ortak bir veri modeli üzerinden konuşmak entegrasyon maliyetini düşürür.    
 
     ### Anemic Domain Model
     - Eğer sınıflarımızda sadece getter ve setter varsa ve tüm business logic servislerin içindeyse bu gerçek bir DDD değildir. Nesneler akıllı olmalıdır ve kendi kuralllarını kendileri yönetmelidir. 
