@@ -9,7 +9,6 @@
   -  **Value Objects**: Değişmez(immutable) yapılardır. Kimliği olmayan, sadece değeri olan şeylerdir. Eğer bir değer değişecekse,nesne güncellenmez; yenisi oluşturulur. Özellikler bir bütündür. Örneğin; Adres. Sokak, kapı no, şehir bilgileri bir arada tutulur bunlar birbirinden ayrılmaz parçalardır. İki value objectin eşit olup olmadığını anlamak için ID'lerine değil içindeki tüm özelliklere bakılır. İki adresin sokak, no gibi tüm bilgileri aynıysa bu iki nesne eşittir.**Entity sayısını azaltıp, value object sayısını arttırmak sistemi daha hafif, daha kolay test edilebilir ve daha az hata payı içeren bir hale getirir.**    
   -  **Domain Services**: Bazı işlemler ne bir entitye ne de bir value objecte aittir. Mesela; parayı A bankasından B bankasına transfer et işlemi bir servistir. Stateless yani durumsuzlardır. Servisler kendi içlerinde bir durum saklamazlar; bir veri alırlar, işlerler ve sonuç dönerler. Teknik bir servis değillerdir(veri tabanı bağlantısı gibi), business logicin bir parçasıdır, saf iş kuralı barındırırlar. 
   -  **Invariant**: bir iş kuralının her zaman doğru kalması gereken durumdur. Mesela; bir siparişin tutarı asla negatif olamaz. Bu bir invarianttır.     
-  - **Aggregates**: Birbiri ile sıkı sıkıya bağlı nesneler grubudur(entity ve value object gruplarıdır). Veri bütünlüğünü sağlamak için bir grup nesnenin tek bir kök(aggregate root) üzerinden yönetilmesidir. Aggregate root, veri tutarlılığını(consistency) sağlamak için gruba tek bir giriş noktası sağlar. Dışarıdan kimse içeriye dokunamaz, sadece kök üzerinde işlem yapılır. Kodun herhangi bir yeride invariants kuralı bozacak bir işlem yapılmasını engellemek için nesneleri aggregate dediğimiz korumalı gruplara hapsederiz.  Mesela Order bir aggregate rootdur. OrderItem'sa dışarıdan erişilemez, her şey ana Order nesnesi üzerinden yönetilir.    
   - **Factory**: Karmaşık nesnelerin oluşturulma mantığını saklayan yapılardır. Bir nesnenin yaratılması için çok fazla kural gerektiriyorsa bu nesnenin kendi içinde değil bir factory içinde tutulur. Böylece nesne sadece kendi işine odaklanır.    
   - **Repository**: veritabanı işlemlerini gizleyen interfaceler diyebiliriz. Nesnelerin veritabanına kaydedilmesi ve geri getirilmesini yöneten bir interfacedir. Sanki bellekteki bir collection'mış gibi davranmalıdır. Teknik veritabanı detayları(SQL sorguları vs) burada gizlenir. **Sadece aggregate root'lar için bir repository oluşturulur.**
   - **Domain Event**:İş akışından önemli bir şey olduğunda sistemin geri kalanına haber veren sinyallerdir. Sistemler arasındaki couplingi azaltır.           
@@ -53,5 +52,25 @@
     - DDD'de iki veya daha fazla Bounded Context arasındaki en riskli ama bazen de en pratik olan ilişki modelidir. İki ekibin domain modelinin belirli bir parçasını (kod, veritabanı vb.) fiziksel olarak paylaşması anlamına gelir.
     - Eğer iki farklı ekip tamamen aynı business logic geliştiriyorsa kod tekrarını(DRY) önlemek için tercih edilebilir. Veya iki sistemin veriyi çok hızlı ve sık takas etmesi gerekiyorsa ortak bir veri modeli üzerinden konuşmak entegrasyon maliyetini düşürür.    
 
+
+   ## Aggregate
+  - Birbiri ile sıkı sıkıya bağlı nesneler grubudur(entity ve value object gruplarıdır). Veri bütünlüğünü sağlamak için bir grup nesnenin tek bir kök(aggregate root) üzerinden yönetilmesidir.
+  - Aggregate root, veri tutarlılığını(consistency) sağlamak için gruba tek bir giriş noktası sağlar. Dışarıdan kimse içeriye dokunamaz, sadece kök üzerinde işlem yapılır.
+  - Kodun herhangi bir yeride invariants kuralı bozacak bir işlem yapılmasını engellemek için nesneleri aggregate dediğimiz korumalı gruplara hapsederiz.  Mesela Order bir aggregate rootdur. OrderItem'sa dışarıdan erişilemez, her şey ana Order nesnesi üzerinden yönetilir.
+  - Bir transaction başladığında sadece bir aggregate güncellenmelidir. Bu sistemin ölçeklenebilirliğini arttırır ve deadlock sorunlarını önler. 
+  - Vaugh Vernon'un Kuralları;
+    - Küçük tutulmalıdır. Büyük kümeler performans sorunlarına ve veritabanı kilitleme hatalarına yol açar. Sadece beraber değişmesi gereken, minimum nesne kümeye dahil edilmelidir.
+    - Bir aggregate başka bir aggregate'e referans verecekse bunu nesne olarak değil, ID üzerinden yapmalıdır.
+    - Bir değişiklik başka bir kümede güncelleme gerektiriyorsa anlık değil Domain Events kullanarak zaman içinde yani asenkron olarak yapılmalıdır.
+
+  - Kısaca her şey her şeye bağlanmamalıdır, nesneleri küçük ve korunaklı aggregateler içine hapsedip bunların önünde de bir nöbetçi yani aggregate root bulunmalı.  
+
+   ## Repository
+  -  Veritabanı işlemlerini gizleyen interfaceler diyebiliriz. Nesnelerin veritabanına kaydedilmesi ve geri getirilmesini yöneten bir interfacedir. Sanki bellekteki bir collection'mış gibi davranmalıdır. Teknik veritabanı detayları(SQL sorguları vs) burada gizlenir.   
+  -   **Sadece aggregate root'lar için bir repository oluşturulur.** Order bir aggregate root ise OrderRepository olmalıdır. OrderDate bir root değilse ona eirşmek için bir repository olmamalıdır, ona her zaman Order nesnesi üzerinden ulaşılmalıdır.
+  -   Veritabanından gelen ham veriyi(satırları ve sütunları), iş kuralları ve durumuyla birlikte bir Domain Entity haline getirir.
+  -   Repository interface'i domain layer içerisinde tanımlanırken bu interface'in gerçek SQL kodlarını içeren uygulaması Infrastructure Layer içerisinde yer alır. Bu sayede business logic, veritabanına bağımlı olmaz aksine veritabanı katmanı iş katmanının tanımladığı arayüze hizmet eder. -> Dependency Inversion    
+  -    DAO(Data Access Object), genellikle veritabanı tablolarının bir yansımasıdır(data centric). CRUD(Create-Read-Update-Delete) odaklıdır. Repository ise domain yani iş odaklıdır. Sadece business biriminin ihtiyacı olan sorguları ve işlemleri barındırır. Ubiquitous language kullanır.    
+         
     ### Anemic Domain Model
     - Eğer sınıflarımızda sadece getter ve setter varsa ve tüm business logic servislerin içindeyse bu gerçek bir DDD değildir. Nesneler akıllı olmalıdır ve kendi kuralllarını kendileri yönetmelidir. 
