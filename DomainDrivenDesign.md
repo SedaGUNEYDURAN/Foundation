@@ -71,6 +71,70 @@
   -   Veritabanından gelen ham veriyi(satırları ve sütunları), iş kuralları ve durumuyla birlikte bir Domain Entity haline getirir.
   -   Repository interface'i domain layer içerisinde tanımlanırken bu interface'in gerçek SQL kodlarını içeren uygulaması Infrastructure Layer içerisinde yer alır. Bu sayede business logic, veritabanına bağımlı olmaz aksine veritabanı katmanı iş katmanının tanımladığı arayüze hizmet eder. -> Dependency Inversion    
   -    DAO(Data Access Object), genellikle veritabanı tablolarının bir yansımasıdır(data centric). CRUD(Create-Read-Update-Delete) odaklıdır. Repository ise domain yani iş odaklıdır. Sadece business biriminin ihtiyacı olan sorguları ve işlemleri barındırır. Ubiquitous language kullanır.    
-         
+
+  ## Spring Data JPA 
+  - Geleneksel Spring uygulamalarında veritabanı işlemleri için; her entity sınıfı için bir DAO interface'i ve bu interface'i implemente eden bir class yazılırdı. Bu classlarda sürekli tekrar eden entityManager.persist(), entityManager.find() gibi kodlar bulunurdu. Spring Data ile bunlar ortadan kalktı. Artık class yazmamıza gerek yok sadece interface tanımlıyoruz ve spring runtimeda bu interface'in implementasyonunu otomatik olarak oluşturur.(Temel CRUD işlemlerini otomatik olarak bize sunuyor)
+  - Spring Data JPA kullanmak için projemize bir bağımlılık eklememiz gerekiyor;
+ 
+  <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-jpa</artifactId>
+  </dependency>  
+ 
+  - Spring Boot kullanıyorsak konfigürasyonu spring otomatik olarak yapar ama manuel konfigürasyonda, Spring'e repository interface'ini nerede arayacağını söylememiz gerekir.
+
+    @Configuration
+    @EnambleJpaRepositories(basePackages="com.example.repository")
+    public class PersistenceConfig{
+      //Veritabanı ayarları
+    }
+    
+  - Product adında bir entitymiz olduğunu farzedelim.Spring Data ile erişmek için;
+
+    import org.springframework.data.jpa.repository.JpaRepository;
+    import org.springframework.stereotype.Repository;
+
+    @Repository
+    public interface ProductRepository extends JpaRepository<Product, Long>{
+    //Bu bölümde hiçbir metot yazmasak bile save(), findById(), findAll(), delete() gibi metotlar hazır gelir 
+    }
+
+    JpaRepository<Product, Long>; Buradaki ilk parametre yani Product üzerinde işlem yapılacak olan Entitydir. İkinci parametre Long, o entitynin @Id yani primary key alanının veri tipidir.    
+  -  Spring Data JPA kullanırken JpaRepository extend ediyoruz ama arka planda daha derin bir hiyerarşi mevcut. Hiyerarşiden en yukarıdan aşağıya doğru;
+    - **Repository<T,ID>:** En üstteki boş interfacedir. Hiçbir metot içermez.Sadece tipi belirlemek için kullanılır.
+    - **CrudRepository<T,ID>:** Temel create, read, update, delete işlemlerini saplar.(save, findById, delete vb)
+    - **PagingAndSortingRepository<T,ID>:** CrudRepository'e ek olarak verileri sayfalama(pagination) ve sıralama(sorting) yapabilmeyi sağlar.
+    - **JpaRepository<T,ID>:** PagingAndSortingRepository'e ek olarak JPA'e özgü flush()(değişiklikleri hemen yansıtma), deleteBatch() gibi performans odaklı metotlar sunar.
+
+      @Service
+      public class ProductService{
+        @Autowired
+        private ProductRepository productRepository;
+ 
+        public void demoMethods(){
+          Product p=new Product("Laptop", 15000.0);
+      
+          productRepository.save(p); // save, hem insert hem de update için kullanılır. Eğer objenin ID'si null ise insert, doluysa update yapar.
+          // Genelde transactional bir yapıda, hibernate'in "dirty checking" mekanizması sayesinde metot bitene kadar veritabanına yazma yapmayabilir.
+          //saveAndFlush(), değişikliği anında veritabanına gönderir, commit etmez ama SQL'i hemen tetikler. Veritabanı triggers kullanıldığında kritik olabilir. 
+
+          Optional<Product> found=productRepository.findById(1); //find, Optional döner. Böylece NullPointerException riskini azaltır. 
+          found.ifPresent(product-> System.out.println(product.getName());
+ 
+          boolean exist=productRepository.existsById(1); //exists, veritabanında o ID ile kayıt var mı kontrol eder. Performanslıdır.
+ 
+          long count = productRepository.count(); // count, toplam kaç kayıt olduğunu döner.
+ 
+          productRepository.deleteById(1); //delete
+ 
+          List<Product> sortedProduct=productRepository.findAll(Sort.by("name").ascending()); //isme göre alfabetik sıralama
+ 
+          Pageable pageable=PageRequest.of(0,10, Sort.by("price").descending());// Sayfalama, 0. sayfayı getir, her sayfada 10 kayıt olsun. 
+          Page<Product> productPage=productRepository.findAll(pageable);  
+          List<Product> content= productPage.getContent();//10 adet ürün
+          long totalItems=productPage.getTotalElements();//veritabanındaki toplam ürün sayısı 
+        }
+      }
+  -  
     ### Anemic Domain Model
     - Eğer sınıflarımızda sadece getter ve setter varsa ve tüm business logic servislerin içindeyse bu gerçek bir DDD değildir. Nesneler akıllı olmalıdır ve kendi kuralllarını kendileri yönetmelidir. 
