@@ -73,24 +73,29 @@
   -    DAO(Data Access Object), genellikle veritabanı tablolarının bir yansımasıdır(data centric). CRUD(Create-Read-Update-Delete) odaklıdır. Repository ise domain yani iş odaklıdır. Sadece business biriminin ihtiyacı olan sorguları ve işlemleri barındırır. Ubiquitous language kullanır.    
 
   ## Spring Data JPA 
-  - Geleneksel Spring uygulamalarında veritabanı işlemleri için; her entity sınıfı için bir DAO interface'i ve bu interface'i implemente eden bir class yazılırdı. Bu classlarda sürekli tekrar eden entityManager.persist(), entityManager.find() gibi kodlar bulunurdu. Spring Data ile bunlar ortadan kalktı. Artık class yazmamıza gerek yok sadece interface tanımlıyoruz ve spring runtimeda bu interface'in implementasyonunu otomatik olarak oluşturur.(Temel CRUD işlemlerini otomatik olarak bize sunuyor)
-  - Spring Data JPA kullanmak için projemize bir bağımlılık eklememiz gerekiyor;
- 
+  - Geleneksel Spring uygulamalarında veritabanı işlemleri için; her entity sınıfı için bir DAO interface'i ve bu interface'i implemente eden bir class yazılırdı. Bu classlarda sürekli tekrar eden entityManager.persist(), entityManager.find() gibi kodlar bulunurdu. Spring Data ile bunlar ortadan kalktı. Artık class yazmamıza gerek yok sadece interface tanımlıyoruz ve spring runtimeda bu interface'in implementasyonunu otomatik olarak oluşturur.(Temel CRUD işlemlerini otomatik olarak bize sunuyor)    
+  - Spring Data JPA kullanmak için projemize bir bağımlılık eklememiz gerekiyor;        
+
+ ```java  
   <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
   </dependency>  
- 
+ ```
+
   - Spring Boot kullanıyorsak konfigürasyonu spring otomatik olarak yapar ama manuel konfigürasyonda, Spring'e repository interface'ini nerede arayacağını söylememiz gerekir.
 
+    ```java
     @Configuration
     @EnambleJpaRepositories(basePackages="com.example.repository")
     public class PersistenceConfig{
       //Veritabanı ayarları
     }
-    
+    ```
+
   - Product adında bir entitymiz olduğunu farzedelim.Spring Data ile erişmek için;
 
+    ```java
     import org.springframework.data.jpa.repository.JpaRepository;
     import org.springframework.stereotype.Repository;
 
@@ -98,14 +103,16 @@
     public interface ProductRepository extends JpaRepository<Product, Long>{
     //Bu bölümde hiçbir metot yazmasak bile save(), findById(), findAll(), delete() gibi metotlar hazır gelir 
     }
+    ```
 
-    JpaRepository<Product, Long>; Buradaki ilk parametre yani Product üzerinde işlem yapılacak olan Entitydir. İkinci parametre Long, o entitynin @Id yani primary key alanının veri tipidir.    
-  -  Spring Data JPA kullanırken JpaRepository extend ediyoruz ama arka planda daha derin bir hiyerarşi mevcut. Hiyerarşiden en yukarıdan aşağıya doğru;
-    - **Repository<T,ID>:** En üstteki boş interfacedir. Hiçbir metot içermez.Sadece tipi belirlemek için kullanılır.
-    - **CrudRepository<T,ID>:** Temel create, read, update, delete işlemlerini saplar.(save, findById, delete vb)
-    - **PagingAndSortingRepository<T,ID>:** CrudRepository'e ek olarak verileri sayfalama(pagination) ve sıralama(sorting) yapabilmeyi sağlar.
-    - **JpaRepository<T,ID>:** PagingAndSortingRepository'e ek olarak JPA'e özgü flush()(değişiklikleri hemen yansıtma), deleteBatch() gibi performans odaklı metotlar sunar.
+    JpaRepository<Product, Long>; Buradaki ilk parametre yani Product üzerinde işlem yapılacak olan Entitydir. İkinci parametre Long, o entitynin @Id yani primary key alanının veri tipidir.        
+  -  Spring Data JPA kullanırken JpaRepository extend ediyoruz ama arka planda daha derin bir hiyerarşi mevcut. Hiyerarşiden en yukarıdan aşağıya doğru;   
+    - **Repository<T,ID>:** En üstteki boş interfacedir. Hiçbir metot içermez.Sadece tipi belirlemek için kullanılır.   
+    - **CrudRepository<T,ID>:** Temel create, read, update, delete işlemlerini saplar.(save, findById, delete vb)   
+    - **PagingAndSortingRepository<T,ID>:** CrudRepository'e ek olarak verileri sayfalama(pagination) ve sıralama(sorting) yapabilmeyi sağlar.    
+    - **JpaRepository<T,ID>:** PagingAndSortingRepository'e ek olarak JPA'e özgü flush()(değişiklikleri hemen yansıtma), deleteBatch() gibi performans odaklı metotlar sunar.   
 
+      ```java
       @Service
       public class ProductService{
         @Autowired
@@ -135,6 +142,7 @@
           long totalItems=productPage.getTotalElements();//veritabanındaki toplam ürün sayısı 
         }
       }
+      ```
   -  
     ### Anemic Domain Model
     - Eğer sınıflarımızda sadece getter ve setter varsa ve tüm business logic servislerin içindeyse bu gerçek bir DDD değildir. Nesneler akıllı olmalıdır ve kendi kuralllarını kendileri yönetmelidir. 
