@@ -154,9 +154,9 @@
           Page<Product> productPage=productRepository.findAll(pageable);  
           List<Product> content= productPage.getContent();//10 adet ürün
           long totalItems=productPage.getTotalElements();//veritabanındaki toplam ürün sayısı 
+          }
         }
-      }
-      ```
+        ```
   -  Spring Data JPA, yazdığımız metot ismini parse eder ve arkada otomatik olarak bunu SQL/JPQL(Java Persistence Query Language) sorugusuna dönüştürür. Buna **Query Derivation** denir.  Bir sorgu metodu üç temel parçadan oluşur;
 
       - Prefix; find...By, read..By, query..By, count...By, get..By gibi   
@@ -164,9 +164,9 @@
       - Keywords; And, Or, Between, LessThan, Like, Containing, IgnoreCase  gibi
         
    Bu sorgular üretilirken camelCase dikkate alınmalı yani kelimelerin ilk harfi büyük yazılmalıdır. Diyelim ki private String productName olarak tanımladık bunu nasıl yazacağız? findByProductName olarak. Tek bir sonuç bekliyorsak Entity tipini(Product); birden fazla sonuç bekliyorsak List<Product>, Set<Product>, Stream<Product> dönebiliriz.Tek sonuç beklerken birden fazla sonuç dönerse IncorrectResultSizeDataAccessException fırlatır.  
-   
-      ```java
-      public interface ProductRepository extends JpaRepository<Product, Long>{
+    
+```java
+        public interface ProductRepository extends JpaRepository<Product, Long>{
 
         List<Product> findByName(String  name); // SELECT * FROM Product WHERE name=?
         List<Product> findByAndPriceGreaterThan(String name, Double price); // SELECT * FROM Product WHERE name=? AND price>?
@@ -176,6 +176,7 @@
         List<Product> findByPriceLessThanOrderByNameDesc(Double price); // SELECT * FROM Product WHERE price<? ORDER BY name DESC
 
       }
+```
        
   -  Bazen query derivatin ile çözemeyeceğimiz karmaşık sorgularımız olabilir.  Bu durumda Query anotasyonunu kullanırız. Spring Data JPA bize iki farklı dil sunar;     
 
@@ -213,7 +214,7 @@
      
   -  @Query sadece veri çekmek için kullanılmaz. Güncellemeler için de kullanılır ama **@Modifiying** anotasyonununda kullanılması gerekir. JPA normalde sorguları sadece SELECT olmasını bekler. Buyüzden INSERT, DELETE,UPDATE gibi özel sorgular yapacağımızda bunu belirtmemiz gerekir. Belirtmezsek; **InvalidDataAccessApiUsageException** fırlatır.  
 
-     ```java
+      ```java
       public interface ProductRepository extends JpaRepository<Product, Long>{
        @Modifiing
        @Transactional
@@ -257,9 +258,79 @@
       ```
      
   - Veritabanı işlemlerinde ya hep ya hiç kuralı geçerlidir. Diyelim ki üç tabloya kayıt yapıyoruz, 2. tabloya kayıt yaparken elektrikler kesildi, hata oluştu vs. Bu durumda ilk kaydın da geri alınması yani rollback gerekir.   Sadece veri okuyorsak **@Transactional(readOnly=true)** kullanarak performans artışı sağlayabiliriz.
-  - **Transaction propagation**, bir transactional metod başka bir transactional metot tarafından çağrıldığında,  transactionların nasıl davranacağını belirler. Default olarak Requireddır(@Transactional(propagation = Propagation.REQUIRED)). Yani mevcut transaction vardsa katılır yoksa yeni başlatır.         
+  - **Transaction propagation**, bir transactional metod başka bir transactional metot tarafından çağrıldığında,  transactionların nasıl davranacağını belirler. Default olarak Requireddır(@Transactional(propagation = Propagation.REQUIRED)). Yani mevcut transaction vardsa katılır yoksa yeni başlatır.
+    
+    ### Specification Pattern
+    -   **Specification Pattern:** Business rulelar ayrı nesneler halinde tanımlanıp bunları mantıksal(or, and, not) birleştirilmesini sağlayan tasarım kalıbıdır. Yani her iş kuralı bir spesification nesnesi olarak tanımlanır. Bun nesneler **isSatisfiedBy(entity)** metodunu içerir ve entity'in kurala uyup uymadığını döner. Domain layerda iş kurallarının net tanımlanıp tanımlanmadığını anlamak, dinamik filtreleme yapmak ve nesnelerin belirli kurallara uyup uymadığını anlamak için kullanılır.if-else mantığına göre daha temiz ve nesne odaklıdır, yeniden kullanılabilirliği yüksek, test edilebilirliği kolaydır. 
 
-    ## NOTLAR
+    ```java
+    public interface Specification<T>{
+      boolean isSatisfiedBy(Titem);
+    }
+    ```
+    ```java
+    //Business Rule
+    public class ExpensiveProductSpec implements Specification<Product> {
+      public boolean isSatisfiedBy(Product p) {
+        return p.getPrice() > 100;
+      }
+    }
+
+    public class ActiveProductSpec implements Specification<Product> {
+      public boolean isSatisfiedBy(Product p) {
+        return p.isActive();
+      }
+    }
+    ```
+    
+    ```java
+    //Kurallar birleştiriliyor
+    Specification<Product> spec = new ExpensiveProductSpec()
+                                  .and(new ActiveProductSpec());
+
+    if (spec.isSatisfiedBy(product)) {
+      // ürün hem pahalı hem aktif
+    }
+
+    ```
+    - **JPASpecificationExecutor<T>**: Spring Data JPA'in sağladığı bir interfacedir. Specification nesneleri ile sorgu çalıştırmamızı sağlarlar.  Repository'ye eklenerek Spesification tabanlı sorgular çalıştırılabilir. İçinde toPredicate metodu bulunur.  
+
+     ```java
+    @Nullable
+     Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder cb); //sorgu koşulunu oluşturur
+     ```
+
+      - Optional<T> findOne(@Nullable Specification<T> spec) → tek entity döner.   
+      - List<T> findAll(@Nullable Specification<T> spec) → tüm eşleşenleri döner.    
+      - Page<T> findAll(@Nullable Specification<T> spec, Pageable page) → sayfalama ile sonuç.   
+      - List<T> findAll(@Nullable Specification<T> spec, Sort sort) → sıralı sonuç.   
+      - long count(@Nullable Specification<T> spec) → eşleşen entity sayısı.   
+
+
+ ```java
+    public interface MovieRepository extends JpaRepository<Movie, Integer>, CriteriaMovieRepository, JpaSpecificationExecutor<Movie> {
+
+    @Transactional
+    Stream<Movie> findAllStreamByYearBetween(int from, int to);
+    Optional<Movie> findOneByImdb(String imdb);
+
+    static Specification<Movie> titleContains(String title) { // Specification<Movie>, Movie entitysi için bir sorgu koşulu yani predicate tanımlar. 
+        return (movie, cq, cb) -> // toPredicate metodunun implementasyonudur. movie, sorgulanan entitynin kokö yani Root<Movie>. cq, sorgunun kendisi yani CriteriaQuery<?>. cb sorgu oluşturucu yani CriteriaBuilderdır. 
+            cb.like(movie.get(Movie_.title), "%" + title + "%"); // CriteriaBuilder'ın like metodu, SQL'deki LIKE ifadesini oluşturur. movie.get(Movie_.title) ifadesi, Movie entitysinin title alanına erişir.  
+    }
+}
+   
+ ```
+
+ ```java
+  //Kullanımı
+  movieRepository.findAll(
+      MovieRepository.titleContains("the")
+  ).forEach(System.out::println);
+ ```
+
+   ## NOTLAR
+    
    - **Anemic Domain Model**:Eğer sınıflarımızda sadece getter ve setter varsa ve tüm business logic servislerin içindeyse bu gerçek bir DDD değildir. Nesneler akıllı olmalıdır ve kendi kuralllarını kendileri yönetmelidir.    
    - **Criteria API:** JPA'in sunduğu bir API'dir. Sorguları kod ile tanımlamamızı sağlar.   
 
@@ -272,5 +343,7 @@
      List<Employee> results=em.createQuery(cq).getResultList();//sorgu çalıştırılıyor
      
      ```
+     
+
    -   
    
