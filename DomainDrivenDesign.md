@@ -300,11 +300,12 @@
      Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder cb); //sorgu koşulunu oluşturur
      ```
 
-      - Optional<T> findOne(@Nullable Specification<T> spec) → tek entity döner.   
-      - List<T> findAll(@Nullable Specification<T> spec) → tüm eşleşenleri döner.    
-      - Page<T> findAll(@Nullable Specification<T> spec, Pageable page) → sayfalama ile sonuç.   
-      - List<T> findAll(@Nullable Specification<T> spec, Sort sort) → sıralı sonuç.   
-      - long count(@Nullable Specification<T> spec) → eşleşen entity sayısı.   
+       
+        - Optional<T> findOne(@Nullable Specification<T> spec) → tek entity döner.   
+        - List<T> findAll(@Nullable Specification<T> spec) → tüm eşleşenleri döner.    
+        - Page<T> findAll(@Nullable Specification<T> spec, Pageable page) → sayfalama ile sonuç.   
+        - List<T> findAll(@Nullable Specification<T> spec, Sort sort) → sıralı sonuç.   
+        - long count(@Nullable Specification<T> spec) → eşleşen entity sayısı.   
 
 
  ```java
