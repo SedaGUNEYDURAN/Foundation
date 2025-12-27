@@ -67,6 +67,7 @@
   - Birbiri ile sıkı sıkıya bağlı nesneler grubudur(entity ve value object gruplarıdır). Veri bütünlüğünü sağlamak için bir grup nesnenin tek bir kök(aggregate root) üzerinden yönetilmesidir.
   - Aggregate root, veri tutarlılığını(consistency) sağlamak için gruba tek bir giriş noktası sağlar. Dışarıdan kimse içeriye dokunamaz, sadece kök üzerinde işlem yapılır.
   - Kodun herhangi bir yeride invariants kuralı bozacak bir işlem yapılmasını engellemek için nesneleri aggregate dediğimiz korumalı gruplara hapsederiz.  Mesela Order bir aggregate rootdur. OrderItem'sa dışarıdan erişilemez, her şey ana Order nesnesi üzerinden yönetilir.
+  - Eğer bir aggregate içinde sub-entity varsa, ona da erişim agregate root üzerinden gerçekleşir yani sub-entitye de doğrudan erişilemez. Eğer erişilebilir bir yapı tasarladıysak bu aggregate bütünlüğünü bozar.
   - Bir transaction başladığında sadece bir aggregate güncellenmelidir. Bu sistemin ölçeklenebilirliğini arttırır ve deadlock sorunlarını önler. 
   - Vaugh Vernon'un Kuralları;
     - Küçük tutulmalıdır. Büyük kümeler performans sorunlarına ve veritabanı kilitleme hatalarına yol açar. Sadece beraber değişmesi gereken, minimum nesne kümeye dahil edilmelidir.
@@ -119,7 +120,7 @@
   -  Spring Data JPA kullanırken JpaRepository extend ediyoruz ama arka planda daha derin bir hiyerarşi mevcut. Hiyerarşiden en yukarıdan aşağıya doğru;   
     - **Repository<T,ID>:** En üstteki boş interfacedir. Hiçbir metot içermez.Sadece tipi belirlemek için kullanılır.   
     - **CrudRepository<T,ID>:** Temel create, read, update, delete işlemlerini sağlar.(save, findById, delete vb)   
-    - **PagingAndSortingRepository<T,ID>:** CrudRepository'e ek olarak verileri sayfalama(pagination) ve sıralama(sorting) yapabilmeyi sağlar.    
+    - **PagingAndSortingRepository<T,ID>:** CrudRepository'e ek olarak verileri sayfalama(pagination) ve sıralama(sorting) yapabilmeyi sağlar.findAll(Sort sort), findAll(Pageable pageable)    
     - **JpaRepository<T,ID>:** PagingAndSortingRepository'e ek olarak JPA'e özgü flush()(değişiklikleri hemen yansıtma), deleteBatch() gibi performans odaklı metotlar sunar.   
       > **flush():** bellekteki değişiklikler(insert, update, delete vs)  SQL olarak veritabanına gönderilir ama transaction commit edilmeden değişiklikler kalıcı hale gelmez. Transaction rollback olursa geri alınır işlemler.      
       > **deleteInBatch():**  Verilen entity listesi için tek birSQL sorgusu üreterek siler. DELETE FROM Product WHERE ID in(1,2,3,4,5,.....,100) gibi bir SQL sorgusu üretir. Yani 100 satırı tek komut ile siler. Tüm çöpleri bir torbaya koyup tek seferde attık    
@@ -156,6 +157,71 @@
         }
       }
       ```
-  -  
+  -  Spring Data JPA, yazdığımız metot ismini parse eder ve arkada otomatik olarak bunu SQL/JPQL(Java Persistence Query Language) sorugusuna dönüştürür. Buna **Query Derivation** denir.  Bir sorgu metodu üç temel parçadan oluşur;
+
+      - Prefix; find...By, read..By, query..By, count...By, get..By gibi   
+      - Property; entity içindeki değişken ismi, Name, Price gibi
+      - Keywords; And, Or, Between, LessThan, Like, Containing, IgnoreCase  gibi
+        
+   Bu sorgular üretilirken camelCase dikkate alınmalı yani kelimelerin ilk harfi büyük yazılmalıdır. Diyelim ki private String productName olarak tanımladık bunu nasıl yazacağız? findByProductName olarak. Tek bir sonuç bekliyorsak Entity tipini(Product); birden fazla sonuç bekliyorsak List<Product>, Set<Product>, Stream<Product> dönebiliriz.Tek sonuç beklerken birden fazla sonuç dönerse IncorrectResultSizeDataAccessException fırlatır.  
+   
+      ```java
+      public interface ProductRepository extends JpaRepository<Product, Long>{
+
+        List<Product> findByName(String  name); // SELECT * FROM Product WHERE name=?
+        List<Product> findByAndPriceGreaterThan(String name, Double price); // SELECT * FROM Product WHERE name=? AND price>?
+        List<Product> findByContaining(String partOfName) // SELECT * FROM Product WHERE name LIKE %phone%
+        List<Product> findByActiveTrue(); // SELECT * FROM Product WHERE active=true
+        List<Product> findByNameIgnoreCase(String name); // SELECT * FROM Product WHERE UPPER(name)=UPPER(?)
+        List<Product> findByPriceLessThanOrderByNameDesc(Double price); // SELECT * FROM Product WHERE price<? ORDER BY name DESC
+
+      }
+       
+  -  Bazen query derivatin ile çözemeyeceğimiz karmaşık sorgularımız olabilir.  Bu durumda Query anotasyonunu kullanırız. Spring Data JPA bize iki farklı dil sunar;     
+
+      - **JPQL(Java Persitence Query Language):** Veritabanı tabloları ile değil Java entity classları ile konuşur. Veritabanından bağımsızdır. Runtimeda SQL'e çevrilip çalıştırılır.
+
+      ```java
+     public interface ProductRepository extends JpaRepository<Product, Long>{
+        @Query("SELECT p FROM Product p WHERE p.price> :minPrice AND p.active=true")  // p Product classını temsil eder, price ise sınıfın alanıdır.
+        List<Product> findExpensiveActiveProducts(@Param("minPrice") Double minPrice);  //@Param metod parametresini sorgudaki isimle eşleştirir. Yani buradaki minPrice parametresini sorgudaki :minPrime ile eşleştirir.   
+      }
+       ```
+
+     ```java
+      @Entity
+      @Table(name="movies")
+      @NamedQueries({
+          @NamedQuery(name = "Movie.yillaraGoreAra", //JPQL sorgusunu önceden tanımlayıp isim veriyor.
+                      query = "select m from Movie m where m.year = :year"),
+          @NamedQuery(name = "Movie.birdenFazlaYonetmenliFilmler",
+                      query = "select m from Movie m join m.directors d " +
+                              "group by m.id having count(d) > 1")
+      })
+      public class Movie { ... }
+       ```
+      
+      - **Native SQL**: Veritabanına özgü(PostgreSQL gibi) fonksiyonları kullanmamız gerektiğinde standart SQL yazabiliriz.
+
+      ```java
+       public interface ProductRepository extends JpaRepository<Product, Long>{
+        @Query(value="SELECT * FROM Product WHERE price <?1 AND stock_count>0", nativeQuery=true)  //nativeQuery=true, sorgunun JPA tarafından parse edilmeden veritabanına gönderilmesini sağlar.Eğer false olsaydı JPQL kullanılırdı.
+       // ?1, metot parametresinin sırasını belirtir.price <?1 -> price<minPrice anlamına gelir 
+        List<Product> findCheapInStock(Double minPrice);  // 
+      }
+      ```
+     
+  -  @Query sadece veri çekmek için kullanılmaz. Güncellemeler için de kullanılır ama **@Modifiying** anotasyonununda kullanılması gerekir. JPA normalde sorguları sadece SELECT olmasını bekler. Buyüzden INSERT, DELETE,UPDATE gibi özel sorgular yapacağımızda bunu belirtmemiz gerekir. Belirtmezsek; **InvalidDataAccessApiUsageException** fırlatır.  
+
+     ```java
+      public interface ProductRepository extends JpaRepository<Product, Long>{
+       @Modifiing
+       @Transactional
+       @Query("UPDATE Product p Set p.price=p.price*1.1 WHERE p.category=:category") 
+       int increasePriceByCategory(@Param("category") String category);
+      ```
+  - 
+  -   
+    
     ### Anemic Domain Model
     - Eğer sınıflarımızda sadece getter ve setter varsa ve tüm business logic servislerin içindeyse bu gerçek bir DDD değildir. Nesneler akıllı olmalıdır ve kendi kuralllarını kendileri yönetmelidir. 
