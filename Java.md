@@ -173,14 +173,9 @@ public void metod1(){
 •  64 bit ve 32 bit, bir işlemcinin veya işletim sisteminin bellek adresleme kapasitesini tanımlar. 32 bitler adresleme kapasitesi 32 bittir yani 2^32 bayttır.Bu da yaklaşık olarak 4 GB'a karşılık gelir. 64 bit adresleme kapasitesi 64 bittir yani 2^64 bayttır.    
 
 
-## Java'da Temel Kavramlar    
+# Java'da Temel Kavramlar    
 • Temelde baktığımızda javada new kullanmadan obje oluşturamayız. Ancak Stringler, Arrayler, Wrapperlar, Enumlar oluştururken new kullanmadan obje oluşturabiliriz. Bu durumu reflectionlarla da sağlayabiliyoruz. Kısaca javada new anahtar kelimesi kullanmadan da obje oluşturulabilir.    
-• Java'da bütün sınıflar lazy loading olarak yüklenir, ihtiyaç olmadığı sürece yüklenmez. 
-• Mutuable; bir nesnenin ya da veri yapısının içeriğinin veya durumunun daha sonra değiştirilebilir olduğu anlamına gelir. İmmutable nesneler, bir kez oluşturulduktan sonra değiştirilemeyen nesnelerdir. 
-Java'da mutuable nesneler; 
-> ArrayList, HashMap, Vustom Mutuable Class
-Java'da immutable nesneler;
-> String, Wrapper Classes(Integer, Boolean, Double, vb.), LocalDate, LocalTime(java.time)
+• Java'da bütün sınıflar lazy loading olarak yüklenir, ihtiyaç olmadığı sürece yüklenmez.    
 • **Serileştirme**; bir nesnenin durumunu(state) byte dizisine dönüştürme işlemidir. Nesneleri dosya sistemine kaydetmek, ağ üzerinden göndermek için kullanılır. ObjectOutputStream, nesneyi bir streame yazmak için kullanılır ve wriObject metodu, nesneyi streame dönüştürüp bir dosyaya kaydeder.ObjectInputStream ise serileştirilmiş nesneyi stream'den readObject metodu ile geri okuyarak tekrar bir Java nesnesine dönüştürür.     
 
 • **var**: Local değişkenlerin türünü otomatik olarak belirlemek için kullanılır. Java 10 ile gelen bir özelliktir. var kullanarak bir değişken tanımladığımızda Java derleyicisi atanan değer üzerinden değişkenin değerini belirler. "var" sadece yerel değişkenlerde kullanılabilir, sınıf değişkenlerinde kullanılamaz. 
@@ -265,10 +260,57 @@ Platform.runLater(()->{
 
 
 •  **Dispatcher(Dağıtım) Mekanizması:** Belirli bir isteğin veya olayın yönlendirilmesi ve işlenmesi ile ilgili bir mekanizmadır. MVC mimarisinden dispatch, istemciden gelen bir isteğin doğru   Controller'ı veya işlem birimini bulup işlemesini sağlamak için kullanılan terimdir. İstemci isteği, Dispatcher'a gelir. Dispatcher, isteği analiz eder ve hangi Controller'ın çağırılması gerektiğine karar verir. Controller isteği işler ve uygun komutu(genelde Command pattern ile) çağırır. Controller, iş mantığını çalıştıktan sonra Model ile güncelleme yapar ve uygun View'i render eder.      
+
+
     
+## Mutable- Immutable 
 
+• Mutuable; bir nesnenin ya da veri yapısının içeriğinin veya durumunun daha sonra değiştirilebilir olduğu anlamına gelir. Immutable nesneler, bir kez oluşturulduktan sonra değiştirilemeyen nesnelerdir, nir değer atandıysa o değer sabit kalır.    
+Java'da mutuable nesneler;    
+> ArrayList, HashMap, Vustom Mutuable Class
 
-## Annotation
+Java'da immutable nesneler;
+> String, Wrapper Classes(Integer, Boolean, Double, vb.), LocalDate, LocalTime(java.time)
+
+```java
+String s = "Hello";
+s = s.concat(" World");
+```
+
+Sting bir immutable class demiştik.  concat metodu String birleştirme işlemi yapar. O zaman concat metodu s'yi nasıl değiştiriyor? Değiştirmez. Yeni bir String nesnesi oluşturur ve s artık o nesneyi gösteriri."Hello" nesnesi hala bellekte durur, referansı kaybolur.     
+• Neden immutable kullanılır? 
+  - Nesne bir kere oluşturulduktan sonra değiştirilmez, bu da hataları azaltır.   
+  - Immutable nesneler thread ortamında güvenlidir, kimse için değiştiremez. Yani thread safety.   
+  - Değişmediği için aynı nesne tekrar tekrar kullanılabilir bu da kolay caclemeyi sağlar.   
+
+• Kendi immutable sınıfımızı nasıl oluşturabiliriz?
+  - Classı final olarak tanımlarız. Böylece başka sınıflar classımızı extend edemezler.Yani class miras alınarak değil doğrudan kullanılmalı diyoruz.     
+  - Fieldlarımızı private ve final olarak tanımlarız. Nesne oluşturulduğunda değer atanır, doğrudan değiştirilemez.   
+  - Setter metotları yazmayız. Yalnızca constructor üzerinden değer atarız. Getter metotları yazabiliriz, ama mutable nesneler içeriyorsa;   
+    - **Collections.unmodifiableXXX**:Wrapper oluştururlar. Koleksiyonun yapısını değiştirmeyi engeller.  Collections.unmodifiableList, Collections.unmodifiableSet vb...    
+    - List.copyOf, Set.copyOf, Map.copyOf bu metotlar immutable collection döndürürler. İçerideki koleksiyon değiştirilemez, UnsupportedOperationException fırlatır.   
+    - Google Guava ImmutableList, ImmutableList, ImmutableList sağlar. Hem performanslı hem de güvenlilerdir.   
+    - **Defensive copy**: Bir nesnenin iç durumunu korumak için,referansı döndürmek yerine kopyasını döndürüyoruz. Böylece nesnenin iç durumunu dışarıdan gelecek olan değişikliklere karşı koruyoruz.      
+
+      ```java
+        class Team {
+            private final List<String> members;
+        
+            public Team(List<String> members) {
+                // constructor’da defensive copy
+                this.members = new ArrayList<>(members);
+            }
+        
+            public List<String> getMembers() {
+                // getter’da defensive copy
+                return new ArrayList<>(members);
+            }
+        }
+        ```
+      Constructorda dışarıdan gelen nesneyi kopyalıyoruz., böylece dışarıdaki referans içeriği değişse bile bizim iç listemiz etkilenmez. Getter metodumuzda iç listemizi doğrudan vermek yerine kopyasını döndürüyoruz. Böylece dışarıdaki kod iç listemizi değiştiremiyor.
+             
+
+# Annotation
 • Java diline ve Java komutlarına ek bilgi eklemek için kullanılan ifadelerdir. Eklenen bu ek bilgiler komutların çalışmasını değiştirmeyecektir. Ancak Java Reflection yapısı kullanılarak annotation bilgileri alınır ve işlem yapılabilir. Bildirim için @ eklenmesi yeterlidir. 
 ```java
 public @interface AnnotationAdi{//bu şekilde annotation oluşturulur. 
@@ -282,7 +324,7 @@ veri-tipi adı();
   -  **@FunctionalInterface:** Bu annotation, bir arayüzün fonksiyonel bir arayüz olduğunu belirtir. Bu Java8'den beri kullanılır. lambda ifadeleri ve diğer fonsiyonel programlama özellikleri gibi fonksiyonel arayüzlerin kullanımını kolaylaştırır. 
 
 
-## MVC Mimarisi 
+# MVC Mimarisi 
 •  **MVC(Model-View-Controller)** bir tasarım desenidir. Bu tasarım deseni, bir yazılım uygulamasını üç ana bileşene ayırarak, uygulamnın geliştirilmesini, bakımını ve test edilmesini kolaylaştırır.MVC mimarisi şu şekilde çalışır;   
   - **Model:** Uygulamanın verilerinin tutulduğu bileşendir. Veritabanı veya dosya gibi kalıcı veri kaynaklarına erişebilirler. E-ticaret uygulamasını ele alırsak; bu uygulamanın model bileşeni ürünlerin, müşterilerin, siparişlerin ve stokların verilerini tutar. Bu veriler, veritabanı veya dosya gibi kalıcıveri kaynaklarına depolanabilir. Model bileşeni verilerin doğru bir şekilde işlenmesinden ve yönetilmesinden sorumludur.     
   - **View:** Kullanıcının uygulamayı kullanarak gördüğü bileşendir. JavaFX bileşenleri(örneğin;label,button,textfield) kullanarak oluşturulur.    
