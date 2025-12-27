@@ -1,11 +1,11 @@
 # Domain Driven Design 
-- Karmaşık yazılım projelerini yönetmeek için kullanılan bir felsefe veya yöntemler bütünüdür. Amacı; yazılımı üzerinde çalıştığı domaine(iş alanına) göre şekillendirmektir. Yazılım sadece koddan oluşmamalıdır, işin gerçek hayattaki işleyişinin bir yansıması olmalıdır.Yazılımcının teknik dünyası ile product ownerın gerçek dünyası arasındaki uçurumu kapatmak.
+- Karmaşık yazılım projelerini yönetmek için kullanılan bir felsefe veya yöntemler bütünüdür. Amacı; yazılımı üzerinde çalıştığı domaine(iş alanına) göre şekillendirmektir. Yazılım sadece koddan oluşmamalıdır, işin gerçek hayattaki işleyişinin bir yansıması olmalıdır.Yazılımcının teknik dünyası ile product ownerın gerçek dünyası arasındaki uçurumu kapatmak.
 
   ## Temel Kavramlar 
   -  **Domain**: Yazılım ile çözmeye çalıştığımız işin kendisidir. Bankacılık yazılımı yaptığımızı varsayalım o zaman bizim domainimiz bankacılıktır.
   -  **Domain Expert**: Yazılımı yapan değil, o işi en iyi bilen kişidir.   
   -  **Model**: Gerçek hayatın basitleştirilmiş versiyonudur. Sadece yazılımın ihtiyacı olan kuralları içerir.
-  -  **Entities**:Bir idetitysi olan nesnelerdir. Örneğin; Müşteri entityi, müşterinin soyadı değişse bile aynı müşteridir -> ID'si sabittir. Entityler yaşam süreleri boyunca izlenebilir olmalıdır. Entityler sadece veri torbaları yani DTO değildir. Kendi verilerini korumalı ve üzerinde işlem yapacak iş metotlarına yani davranışlara sahip olmalılardır.  
+  -  **Entities**:Idetitysi(ID) olan nesnelerdir. Örneğin; Müşteri entityi, müşterinin soyadı değişse bile aynı müşteridir -> ID'si sabittir. Entityler yaşam süreleri boyunca izlenebilir olmalıdır. Entityler sadece veri torbaları yani DTO değildir. Kendi verilerini korumalı ve üzerinde işlem yapacak iş metotlarına yani davranışlara sahip olmalılardır.  
   -  **Value Objects**: Değişmez(immutable) yapılardır. Kimliği olmayan, sadece değeri olan şeylerdir. Eğer bir değer değişecekse,nesne güncellenmez; yenisi oluşturulur. Özellikler bir bütündür. Örneğin; Adres. Sokak, kapı no, şehir bilgileri bir arada tutulur bunlar birbirinden ayrılmaz parçalardır. İki value objectin eşit olup olmadığını anlamak için ID'lerine değil içindeki tüm özelliklere bakılır. İki adresin sokak, no gibi tüm bilgileri aynıysa bu iki nesne eşittir.**Entity sayısını azaltıp, value object sayısını arttırmak sistemi daha hafif, daha kolay test edilebilir ve daha az hata payı içeren bir hale getirir.**    
   -  **Domain Services**: Bazı işlemler ne bir entitye ne de bir value objecte aittir. Mesela; parayı A bankasından B bankasına transfer et işlemi bir servistir. Stateless yani durumsuzlardır. Servisler kendi içlerinde bir durum saklamazlar; bir veri alırlar, işlerler ve sonuç dönerler. Teknik bir servis değillerdir(veri tabanı bağlantısı gibi), business logicin bir parçasıdır, saf iş kuralı barındırırlar. 
   -  **Invariant**: bir iş kuralının her zaman doğru kalması gereken durumdur. Mesela; bir siparişin tutarı asla negatif olamaz. Bu bir invarianttır.     
@@ -13,27 +13,37 @@
   - **Repository**: veritabanı işlemlerini gizleyen interfaceler diyebiliriz. Nesnelerin veritabanına kaydedilmesi ve geri getirilmesini yöneten bir interfacedir. Sanki bellekteki bir collection'mış gibi davranmalıdır. Teknik veritabanı detayları(SQL sorguları vs) burada gizlenir. **Sadece aggregate root'lar için bir repository oluşturulur.**
   - **Domain Event**:İş akışından önemli bir şey olduğunda sistemin geri kalanına haber veren sinyallerdir. Sistemler arasındaki couplingi azaltır.           
  
-- Bir nesne Factory ile doğar. Aggregate sınırları içerisinde iş kurallarını uygulayarak yaşar. Repository aracılığı ile saklanır veya uyandırırlır.   
+- **Bir nesne Factory ile doğar. Aggregate sınırları içerisinde iş kurallarını uygulayarak yaşar. Repository aracılığı ile saklanır veya uyandırırlır.**   
 - Herkesin yani yazılımcının da product ownerında business analistinde anladığı ortak bir dil oluşturulur. Buna **ubiquitous language** denir. Productowner diyelim ki bu işlem gerçekleştiğinde müşteri pasife alınsın diyor. Kodda bu durumu gerçekleştiren metot ismi MusteriyiPasifeAl olmalıdır. StatusUpdate(0) gibi teknik şeyler kullanılmaz.
-- Büyük projeleri yönetmek için parçala ve yönet mantığı kullanılır. Burada da karşımıza **bounded context** terimi çıkıyor. Büyük bir sistemde bir kelimenin farklı yerlerde farklı anlamlara gelmesi olarak açıklayabiliriz. Ürün denildiğinde satış birimi bunu fiyatı olan şey olarak görürken lojistik birimi ağırlığı olan şey olarak görür. Eğer bu sınırları çizmezsek kodlar birbirineaşırı bağımlı tightly coupled yani aşırı bağımlı olur. İşte DDD bunları birbirinen ayırır.Her birim kendi bağlamında, kendi evreninde çalışır. Bu küçük şeylerin de birbiriyle nasıl konuştuğunu gösteren haritaya **context map** deriz. Farklı bağlamların birbiriyle nasıl veri alışverişi yapacağının stratejisidir.
+- Büyük projeleri yönetmek için parçala ve yönet mantığı kullanılır. Burada da karşımıza **bounded context** terimi çıkıyor. Büyük bir sistemde bir kelimenin farklı yerlerde farklı anlamlara gelmesi olarak açıklayabiliriz. Ürün denildiğinde satış birimi bunu fiyatı olan şey olarak görürken lojistik birimi ağırlığı olan şey olarak görür. Eğer bu sınırları çizmezsek kodlar birbirine tightly coupled yani aşırı bağımlı olur. İşte DDD bunları birbirinen ayırır.Her birim kendi bağlamında, kendi evreninde çalışır. Bu küçük şeylerin de birbiriyle nasıl konuştuğunu gösteren haritaya **context map** deriz. Farklı bağlamların birbiriyle nasıl veri alışverişi yapacağının stratejisidir.
 - Büyük ve karmaşık domain yönetilebilir parçalara bölünerek subdomainler elde edilir. Subdomainleri, üç ana başlık altında inceleyebiliriz;
   - **Core Subdomain**: Şirketi rakiplerinden ayıran, para kazandıran, özgün kısımdır. En karmaşık mantık bu bölümde bulunur. Özel olarak kodlanan kısımdır.
-  - **Supporting Subdomain**: Core domainin çalışması için gerekli ama tek başınada mesela Amazonu amazon yapan şey değildir. İşimize özeldir ama yıkıcı bir rekabet avantajı da sağlamaz. Dışarıdan birine yaptırılabilir ya da mevcut kütüphanelerle geliştirilebilir. Mesela stok takip sistemi. Stok takip sistemi olmadan satış yapamazyız ama her stok takip sistemi kullanan da amazon olamaz.
+  - **Supporting Subdomain**: Core domainin çalışması için gerekli ama tek başınada mesela Amazonu amazon yapan şey değildir. İşimize özeldir ama yıkıcı bir rekabet avantajı da sağlamaz. Dışarıdan birine yaptırılabilir ya da mevcut kütüphanelerle geliştirilebilir. Mesela stok takip sistemi. Stok takip sistemi olmadan satış yapamayız ama her stok takip sistemi kullanan da amazon olamaz.
   - **Generic Subdomain**: İşimize özgü hiçbir tarafı olmayan, neredeyse her şirkette aynı şekilde çalışan kısımlardır. Genellikle hazır bir yazılım satın alınır veya açık kaynaklı çözümler kullanılır.Mesela; ödeme altyapısı(iyizico, PayPal gibi).
 - Subdomain ile bounded contextin farkı ne diyecek olursak; subdomain iş dünyasındaki bölümlerdir; lojistik, finans, satış gibi. Bounded context, iş bölümlerinin koddaki karşılığıdır.    
 
     ## Layered Architecture
-  - DDD'nin sağlıklı bir şekilde çalışabilmesi için Separation of Concerns prensibi uygulanmalıdır. DDD, dört katmanlı bir yapıda uygulanır;      
-    -   User Interface: Kullanıcının gördüğü ekranlar.    
-    -   Application Layer: Business adımlarını koordine eder. İş kuralı, mantığı içermez. Sadece şunu al, şuraya ver der yani domain nesnelerini görevlendirir.      
-    -   Domain Layer: Sistemin kalbidir. Tüm iş kuralları, entities, value objects burada yaşar. Hiçbir katmana bağımlı olmamalıdır.      
+  - DDD'nin sağlıklı bir şekilde çalışabilmesi için Separation of Concerns prensibi uygulanmalıdır. DDD, dört katmanlı bir yapıda uygulanır ve her katman kendinden üstteki katmana hizmet verir. Katmanlara ayırarak karmaşıklığı yönetir;      
+    -   User Interface: Kullanıcının gördüğü ekranlar. Kullanıdan gelen istekleri alır, sonuçları gösterir.    
+    -   Application Layer: Business adımlarını koordine eder. İş kurallarını çağırır ama iş mantığı içermez. Sadece şunu al, şuraya ver der yani domain nesnelerini görevlendirir.      
+    -   Domain Layer: Sistemin kalbidir. Tüm iş kuralları, entities, value objects, aggregatelr burada yaşar. Hiçbir katmana bağımlı olmamalıdır böylece iş kuralları teknik detaylardan etkilenmez. Domain drive designın en kritik bölümüdür.     
     -   Infrastructure Layer: Veritabanına bağlanmak, e-posta göndermek gibi teknik detayların bulunduğu yerdir.
+  - Spring Bootta;
 
+    > Controller --> Presentation Layer   
+    > Service -->  Application/Domain Layer   
+    > Repository --> Infrastructure Layer  
 
-   ## Relational Pattern
+   ## Hexagonal Architecture
+    **TODO**
+
+   ## Clean Architecture
+    **TODO**
   
+   ## Relational Pattern
+   - Farklı bounded contextler arasındaki ilişkileri tanımlayan stratejik tasarım kalıplarıdır.   
     ### Anti-Corruption (ACL)
-    -  Yeni, temiz bir DDD sistemi, legacy ve kötü tasarlanmış bir sistem ile konuşacaksa araya bir proxy, facade, translator koyulmalıdır. Bu eski sistemdeki kötü modellemenin yeni sisteme sızması engellenir.
+    -  Yeni, temiz bir DDD sistemi, legacy ve kötü tasarlanmış bir sistem ile konuşacaksa araya bir proxy, facade, translator koyulmalıdır. Bu eski sistemdeki kötü modellemenin, yeni sisteme sızması engellenir.
 
     ### Conformist
     - İki farklı bounded context arasındaki ilişkiyi tanımlar ve genellikle güç dengesizliği durumunda ortaya çıkar. Bu ilişkikide bir taraf (Downstream-Alıcı) diğer tarafın(Upstream-Sağlayıcı) modelini olduğu gibi hiç değiştirmeden kabul eder.
@@ -42,7 +52,7 @@
     ### Customer/Supplier
     - Bu ilişkide iki taraf vardır;
       - Upstream(Supplier-Tedarikçi):Veriyi veya servisi sağlayan taraftır. Diğer tarafın çalışması için gerekli olan çıktıları üretir.
-      - Downstream(Customer-Müşteri): Supplierdan gelen çıktıları kullanan tarafır. Supplier'a bağımlıdır. 
+      - Downstream(Customer-Müşteri): Supplierdan gelen çıktıları kullanan taraftır. Supplier'a bağımlıdır. 
     - Customer, ihtiyaçlarını supplier'a iletir. Supplier, customerın taleplerini backloga alır ve planlamasını buna göre yapar. Customer, supplier'ın sunduğu modelin gelişiminde söz sahibidir.  
 
      ### Partnership
@@ -67,14 +77,14 @@
 
    ## Repository
   -  Veritabanı işlemlerini gizleyen interfaceler diyebiliriz. Nesnelerin veritabanına kaydedilmesi ve geri getirilmesini yöneten bir interfacedir. Sanki bellekteki bir collection'mış gibi davranmalıdır. Teknik veritabanı detayları(SQL sorguları vs) burada gizlenir.   
-  -   **Sadece aggregate root'lar için bir repository oluşturulur.** Order bir aggregate root ise OrderRepository olmalıdır. OrderDate bir root değilse ona eirşmek için bir repository olmamalıdır, ona her zaman Order nesnesi üzerinden ulaşılmalıdır.
+  -   **Sadece aggregate root'lar için bir repository oluşturulur.** Order bir aggregate root ise OrderRepository olmalıdır. OrderDate bir root değilse ona erişmek için bir repository olmamalıdır, ona her zaman Order nesnesi üzerinden ulaşılmalıdır.
   -   Veritabanından gelen ham veriyi(satırları ve sütunları), iş kuralları ve durumuyla birlikte bir Domain Entity haline getirir.
   -   Repository interface'i domain layer içerisinde tanımlanırken bu interface'in gerçek SQL kodlarını içeren uygulaması Infrastructure Layer içerisinde yer alır. Bu sayede business logic, veritabanına bağımlı olmaz aksine veritabanı katmanı iş katmanının tanımladığı arayüze hizmet eder. -> Dependency Inversion    
   -    DAO(Data Access Object), genellikle veritabanı tablolarının bir yansımasıdır(data centric). CRUD(Create-Read-Update-Delete) odaklıdır. Repository ise domain yani iş odaklıdır. Sadece business biriminin ihtiyacı olan sorguları ve işlemleri barındırır. Ubiquitous language kullanır.    
 
   ## Spring Data JPA 
-  - Geleneksel Spring uygulamalarında veritabanı işlemleri için; her entity sınıfı için bir DAO interface'i ve bu interface'i implemente eden bir class yazılırdı. Bu classlarda sürekli tekrar eden entityManager.persist(), entityManager.find() gibi kodlar bulunurdu. Spring Data ile bunlar ortadan kalktı. Artık class yazmamıza gerek yok sadece interface tanımlıyoruz ve spring runtimeda bu interface'in implementasyonunu otomatik olarak oluşturur.(Temel CRUD işlemlerini otomatik olarak bize sunuyor)    
-  - Spring Data JPA kullanmak için projemize bir bağımlılık eklememiz gerekiyor;        
+- Geleneksel Spring uygulamalarında veritabanı işlemleri için; her entity sınıfı için bir DAO interface'i ve bu interface'i implemente eden bir class yazılırdı. Bu classlarda sürekli tekrar eden entityManager.persist(), entityManager.find() gibi kodlar bulunurdu. Spring Data ile bunlar ortadan kalktı. Artık class yazmamıza gerek yok sadece interface tanımlıyoruz ve spring runtimeda bu interface'in implementasyonunu otomatik olarak oluşturur.(Temel CRUD işlemlerini otomatik olarak bize sunuyor)    
+- Spring Data JPA kullanmak için projemize bir bağımlılık eklememiz gerekiyor;        
 
  ```java  
   <dependency>
@@ -108,10 +118,13 @@
     JpaRepository<Product, Long>; Buradaki ilk parametre yani Product üzerinde işlem yapılacak olan Entitydir. İkinci parametre Long, o entitynin @Id yani primary key alanının veri tipidir.        
   -  Spring Data JPA kullanırken JpaRepository extend ediyoruz ama arka planda daha derin bir hiyerarşi mevcut. Hiyerarşiden en yukarıdan aşağıya doğru;   
     - **Repository<T,ID>:** En üstteki boş interfacedir. Hiçbir metot içermez.Sadece tipi belirlemek için kullanılır.   
-    - **CrudRepository<T,ID>:** Temel create, read, update, delete işlemlerini saplar.(save, findById, delete vb)   
+    - **CrudRepository<T,ID>:** Temel create, read, update, delete işlemlerini sağlar.(save, findById, delete vb)   
     - **PagingAndSortingRepository<T,ID>:** CrudRepository'e ek olarak verileri sayfalama(pagination) ve sıralama(sorting) yapabilmeyi sağlar.    
     - **JpaRepository<T,ID>:** PagingAndSortingRepository'e ek olarak JPA'e özgü flush()(değişiklikleri hemen yansıtma), deleteBatch() gibi performans odaklı metotlar sunar.   
-
+      > **flush():** bellekteki değişiklikler(insert, update, delete vs)  SQL olarak veritabanına gönderilir ama transaction commit edilmeden değişiklikler kalıcı hale gelmez. Transaction rollback olursa geri alınır işlemler.      
+      > **deleteInBatch():**  Verilen entity listesi için tek birSQL sorgusu üreterek siler. DELETE FROM Product WHERE ID in(1,2,3,4,5,.....,100) gibi bir SQL sorgusu üretir. Yani 100 satırı tek komut ile siler. Tüm çöpleri bir torbaya koyup tek seferde attık    
+      > **deleteAllInBatch()** Verilen entity yani tablodaki tüm satırları siler. DELETE FROM Product gibi bir SQL sorgusu üretir. Çöp kutusunu komple boşalttık.
+      
       ```java
       @Service
       public class ProductService{
