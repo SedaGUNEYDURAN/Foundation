@@ -220,8 +220,57 @@
        @Query("UPDATE Product p Set p.price=p.price*1.1 WHERE p.category=:category") 
        int increasePriceByCategory(@Param("category") String category);
       ```
-  - 
-  -   
-    
-    ### Anemic Domain Model
-    - Eğer sınıflarımızda sadece getter ve setter varsa ve tüm business logic servislerin içindeyse bu gerçek bir DDD değildir. Nesneler akıllı olmalıdır ve kendi kuralllarını kendileri yönetmelidir. 
+  - Custom Repository'de oluşturabiliriz istersek. Namig Convention sayesinde Spring Data kendi yazdığımız sınıfları otomatik olaak mevcut repository ile birleştirebilir. Peki bu custom repository'yi nasıl yazacağız?
+
+    - İlk olarak interface'imizi tanımlamalıyız ;
+
+       ```java
+      public interface ProductRepositoryCustom{
+        void refreshPriceUsingComplexLogic(Long id);
+      } 
+      ```
+      
+    - Interface'i implemente eden bir class yazarız. Ama bu classın adlandırmasını yaparken dikkat etmemiz gereken bir nokta var; sınıf ismi orijinal repository adının sonuna Impl eklenmelidir.
+
+      ```java
+      @Repository
+      public class ProductRepositoryImpl implements ProductRepositoryCustom{
+        @PersistenceContext //EntityManger nesnesini dependency injection yapar. Persistence Context; entitylerin yaşam döngüsünü ve veritabanı ile senkronizasyonunu yönetir. 
+        private EntityManager entityManager;
+
+        @Override
+        public void refreshPriceUsingComplexLogic(Long id){
+          //Bu kısımda QueryDSL, Criteria API veya direkt native işlemler yapabiliriz. 
+          Product p=entityManager.find(Product.class,id);
+          p.setPrice(newPrice);
+          entityManager.merge(p);
+      
+        }
+      }
+      ```
+    - Ana repositoryde bunları birleştiririz.
+
+      ```java
+      public interface ProductRepository extends JPARepository<Product,Long>, ProductRepositoryCustom{
+        //hem hazır metotlarımız hemde kendi yazdığımız özel metotlarımızı aynı yerden çağırabiliriz. 
+      }
+      ```
+     
+  - Veritabanı işlemlerinde ya hep ya hiç kuralı geçerlidir. Diyelim ki üç tabloya kayıt yapıyoruz, 2. tabloya kayıt yaparken elektrikler kesildi, hata oluştu vs. Bu durumda ilk kaydın da geri alınması yani rollback gerekir.   Sadece veri okuyorsak **@Transactional(readOnly=true)** kullanarak performans artışı sağlayabiliriz.
+  - **Transaction propagation**, bir transactional metod başka bir transactional metot tarafından çağrıldığında,  transactionların nasıl davranacağını belirler. Default olarak Requireddır(@Transactional(propagation = Propagation.REQUIRED)). Yani mevcut transaction vardsa katılır yoksa yeni başlatır.         
+
+    ## NOTLAR
+   - **Anemic Domain Model**:Eğer sınıflarımızda sadece getter ve setter varsa ve tüm business logic servislerin içindeyse bu gerçek bir DDD değildir. Nesneler akıllı olmalıdır ve kendi kuralllarını kendileri yönetmelidir.    
+   - **Criteria API:** JPA'in sunduğu bir API'dir. Sorguları kod ile tanımlamamızı sağlar.   
+
+     ```java
+     CriteriaBuilder cb=em.getCriteriaBuilder(); //Sorgu elemanlarını(Predicate, Expression, CriteriaQuery) oluşturan fabrika sınıfıdır. EntityManager üzerinden alınır.
+     CriteriaQuery<Employee> cq=cb.createQuery(Employee.class); // Sorgunun tanımını temsil eder; SELECT, WHERE, ORDER BY gibi
+     Root<Employee> employee=cq.from(Employee.class); //sorgulanacak entity tanımlanır. FROM ifadesine karşılık gelir.
+     Predicate condition=cb.greaterThan(employee.get("salary"), 5000); //Sorgu koşullarını temsil eder yani WHERE ifadesine karşılık gelir.
+     cq.select(employee).where(condition);//sorguya koşul ekleniyor.
+     List<Employee> results=em.createQuery(cq).getResultList();//sorgu çalıştırılıyor
+     
+     ```
+   -   
+   
