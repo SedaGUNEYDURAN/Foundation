@@ -336,6 +336,11 @@
       MovieRepository.titleContains("the")
   ).forEach(System.out::println);
  ```
+## Domain Events
+
+- Domain event, yazılımda iş alanında yani domainde gerçekleşen ve iş açısından anlam taşıyan önemli bir olayı temsil eder. Her event bir domain event midir peki? Tabiki de hayır. Bir eventin domain event olabilmesi için iş alanında önemli bir anlamı olması gerekir. Buna örnek olarak log yazılımasını verebiliriz. Log yazılması teknik bir eventtir ama domain event değildir.  
+- Domain eventler sayesinde farklı bounded contextler veya modüller arasında loosely coupled iletişim kurulur.    
+- Kodda domain eventleri ele almanın iki yolu vardır.
 
    ## NOTLAR
     
