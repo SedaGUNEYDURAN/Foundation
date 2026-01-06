@@ -20,6 +20,13 @@
   - **Core Subdomain**: Şirketi rakiplerinden ayıran, para kazandıran, özgün kısımdır. En karmaşık mantık bu bölümde bulunur. Özel olarak kodlanan kısımdır.
   - **Supporting Subdomain**: Core domainin çalışması için gerekli ama tek başınada mesela Amazonu amazon yapan şey değildir. İşimize özeldir ama yıkıcı bir rekabet avantajı da sağlamaz. Dışarıdan birine yaptırılabilir ya da mevcut kütüphanelerle geliştirilebilir. Mesela stok takip sistemi. Stok takip sistemi olmadan satış yapamayız ama her stok takip sistemi kullanan da amazon olamaz.
   - **Generic Subdomain**: İşimize özgü hiçbir tarafı olmayan, neredeyse her şirkette aynı şekilde çalışan kısımlardır. Genellikle hazır bir yazılım satın alınır veya açık kaynaklı çözümler kullanılır.Mesela; ödeme altyapısı(iyizico, PayPal gibi).
+ 
+    <img width="350" height="350" alt="Copilot_20260106_160254" src="https://github.com/user-attachments/assets/40bb2f57-20c4-48b5-970a-1b8dc4fc5061" />
+
+ Generic subdomain için örnek olarak e-posta gönderme servisini verebiliriz. Supporting subdomain için örnek olarak müşteri ilişkileri yönetimini örnek verebiliriz. Core subdomain için şirketin benzersiz fiyatlandırma algoritması örnek olabilir.   
+ 
+<img width="715" height="242" alt="image" src="https://github.com/user-attachments/assets/3ba75f69-9f85-4d21-8bda-4e0b7000842e" />
+
 - Subdomain ile bounded contextin farkı ne diyecek olursak; subdomain iş dünyasındaki bölümlerdir; lojistik, finans, satış gibi. Bounded context, iş bölümlerinin koddaki karşılığıdır.    
 
     ## Layered Architecture
