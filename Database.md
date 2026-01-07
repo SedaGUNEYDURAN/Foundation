@@ -155,7 +155,12 @@ Bu ifade tablonun sütunlarını, veri türlerini, kısıtlamaları ve diğer ö
 	SELECT CONNECTION_ID(), USER(), CURRENT_USER(), @@hostname;
 ```
 
-
+# Transaction
+- ACID özellikleri transaction için güvenilirliği garanti eden temel prensiplerdir.
+	- **Atomicity**: Transaction içerisindeki bir işlem ya tamamen gerçekleşir ya da hiç gerçekleşmez.   
+ 	- **Consistency**:  Transaction bittiğinde veritabanı tutarlı bir durumda kalır.     
+  - **Isolation**: Aynı anda çalışan transactionlar birbirini etkilemez, tek başına çalışıyormuş gibi davranırlar.   
+  - **Durability**: Transaction başarı ile gerçekleştiğinde sonuç kalıcıdır, sistem çökse dahi veri kaybolmaz.     
 
 # Bağlantılar
 •  Programlar database ile konuşmak için SQL komutlarını kullanır. Komutu Java kodunun içinde çalıştırmak istersek veritabanına bir bağlantı kurulur ve komutu göndeririz. Komutun gönderimi için Statement veya PreparedStatement kullanırız.    
