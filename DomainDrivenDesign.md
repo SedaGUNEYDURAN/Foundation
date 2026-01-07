@@ -66,7 +66,7 @@
     - DDD'deki en yüksek iş birliğini temsil eden context mapping patternidir. Alt-üst ilişkisi yoktur, tam bir eşittir(peer) ilişkisi vardır. İki sistemin birbirinden ayrılamayacak kadar iç içe geçtiği durumlarda tercih edilir.
 
      ### Shared Kernel
-    - DDD'de iki veya daha fazla Bounded Context arasındaki en riskli ama bazen de en pratik olan ilişki modelidir. İki ekibin domain modelinin belirli bir parçasını (kod, veritabanı vb.) fiziksel olarak paylaşması anlamına gelir.
+    - DDD'de iki veya daha fazla Bounded Context arasındaki en riskli ama bazen de en pratik olan ilişki modelidir. İki ekibin domain modelinin belirli bir parçasını (kod, veritabanı vb.) fiziksel olarak paylaşması anlamına gelir.Faklı contextlerde arasında paylaşılan veri ve kurallar da diyebiliriz. 
     - Eğer iki farklı ekip tamamen aynı business logic geliştiriyorsa kod tekrarını(DRY) önlemek için tercih edilebilir. Veya iki sistemin veriyi çok hızlı ve sık takas etmesi gerekiyorsa ortak bir veri modeli üzerinden konuşmak entegrasyon maliyetini düşürür.    
 
 
@@ -339,8 +339,13 @@
 ## Domain Events
 
 - Domain event, yazılımda iş alanında yani domainde gerçekleşen ve iş açısından anlam taşıyan önemli bir olayı temsil eder. Her event bir domain event midir peki? Tabiki de hayır. Bir eventin domain event olabilmesi için iş alanında önemli bir anlamı olması gerekir. Buna örnek olarak log yazılımasını verebiliriz. Log yazılması teknik bir eventtir ama domain event değildir.  
-- Domain eventler sayesinde farklı bounded contextler veya modüller arasında loosely coupled iletişim kurulur.    
-- Kodda domain eventleri ele almanın iki yolu vardır.
+- Domain eventler sayesinde farklı bounded contextler veya modüller arasında loosely coupled iletişim kurulur.
+- Domain eventler geçmiş zamanlı ifadeler ile adlandırılırlar. 
+- Kodda domain eventleri ele almanın iki yolu vardır; system event, domain event
+  - **System Event**: Teknik, kullanıcı arayüzünde ve altyapı düzeyinden gerçekleşen olaylardır. Domain açısından anlam taşımazlar, sistemin çalışmasını sağlarlar. Buna örnek olarak buttona tıklamayı, veritabanına kayıt eklemeyi verebiliriz.   
+  - **Domain Event**: İş mantığı açısından önemlidir. İş kurallarını tetikler. Mümkün olabildiğince az veri içermelilerdir. Kullanıcının ödeme yapması, ATM'e nakit yüklendi.    
+Akışta kullanıcı etkileşimi önce bir teknik olay yaratır yani system event, sonrasında bu olay iş mantığı açısından anlamlı hale gelir yani domain event.     
+- **Event-Driven Integration**: Farklı uygulamaların veya servislerin birbirleriyle events üzerinden haberleşmesini sağlayan entegrasyon yaklaşımıdır. Sistemde önemli bir olay gerçekleştiğinde olay bir mesaj olarak yayınlanır. Diğer sistemler veya servisler bu eventi dinler yani subscribe olur ve buna göre aksiyon alırlar. Böylece loosely coupled bir ilişki oluşur, doğrudan bağımlı olmadan iletişim kurarlar. Olaylar mesaj kuyrukları ya da event buslar üzerinden iletilir yani sistemler aynı anda çalışmak zorunda değildir. Olay gerçekleştiği anda servisler harekete geçer. Yeni servis eklememiz gerektiğinde is mevcut sistemi değiştirmemiz gerekmez, sadece ilgili olayın dinlenmesi yeterlidir.       
 
    ## NOTLAR
     
