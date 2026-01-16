@@ -386,13 +386,47 @@ public class A{
 • Singleton nesne oluşturmayı ulaşılamayan, private kurucu ile yapmak çoğu zaman problemdir. Bu tür çözümler reflection ve serialization ile kırılabilir, birden fazla singleton yaratılabilir. Java ve C#'da constructor private olsa bile reflection ile sınıfların nesneleri oluşturulabilir. Serialize edilmiş singleton nesne birden fazla kere okunarak belleğe farklı nesneler olarak yüklenebilir. Bunlar yerine Enum yönteminin kullanılması daha sağlıklıdır. 
 
  ```java
-public enum Singleton {
-    INSTANCE;
-    public void someMethod() {
-        // Çalıştırılacak kod
+public class MyService { //bu classın signletor getInstance'ını oluşutracağız
+    public void doWork() {
+        System.out.println("MyService çalışıyor...");
+    }
+}
+
+ ```
+ ```java
+public enum MyServiceSingleton {
+    INSTANCE;  // tekil enum sabiti
+
+    private final MyService service;
+
+    // Enum constructor JVM tarafından bir kez çağrılır
+    MyServiceSingleton() {
+        service = new MyService();
+    }
+
+    // getInstance metodu
+    public MyService getInstance() {
+        return service;
     }
 }
  ```
+
+ ```java
+public class Main {
+    public static void main(String[] args) {
+        // Singleton instance'a erişim
+        MyService service1 = MyServiceSingleton.INSTANCE.getInstance();
+        service1.doWork();
+
+        // Tekrar erişim aynı nesneyi döndürür
+        MyService service2 = MyServiceSingleton.INSTANCE.getInstance();
+        System.out.println(service1 == service2); // true
+    }
+}
+ ```
+
+
+
 • Singleton nesne güncellenebilir bir duruma(mutable state) sahipse multi-threaded ortamda mutex lock ile kontrol gerekir. Kullanım kolaylığı açısından singleton nesnenin durumunu değişmez(final/readonly) yapmak ya da en azından gerekiyorsa sadece tek istemci tarafından güncellenecek şekilde kullanmak önemlidir.    
 • Singleton'ı anti-pattern görme eğilimi vardır. Çünkü tek olan nesne erişim kolaylığından dolayı global bir değişkene dönüşmektedir. Singleton pattern ile hem durumu(state) hem de davranışı(behavior) global yapman imkanı vardır. Bu ise singleton nesneye ciddi bir bağımlılık oluşturmaktadır. Singleton nesne, hem uygulamanın her tarafından erişilebilir durumdadır hem de muhtemelen uygulama boyunca bellekte kalmaya devam eder. Bu durumda singleton nesne memory leak'e neden olabilir eğer çok büyükse.    
 • Singleton pattern, inheritance(miras) prensibine terstir. Tüm kurucuları private olduğu için Singleton class'ın alt sınıfları olamaz. Ama ASingleton miras devralabilir. Yani Singleton, bir arayüzden ya da sınıftan miras devralabilir, devraldığı metotlara yeni gerçekleştirmeler vererek onları ezebilir(override).    
