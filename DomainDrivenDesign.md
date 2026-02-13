@@ -356,9 +356,20 @@
 - Domain eventler geçmiş zamanlı ifadeler ile adlandırılırlar. 
 - Kodda domain eventleri ele almanın iki yolu vardır; system event, domain event
   - **System Event**: Teknik, kullanıcı arayüzünde ve altyapı düzeyinden gerçekleşen olaylardır. Domain açısından anlam taşımazlar, sistemin çalışmasını sağlarlar. Buna örnek olarak buttona tıklamayı, veritabanına kayıt eklemeyi verebiliriz.   
-  - **Domain Event**: İş mantığı açısından önemlidir. İş kurallarını tetikler. Mümkün olabildiğince az veri içermelilerdir, içerdiği veri tutarlı olmalıdır. Yani genellikle immutable veri yapıları kullanılır. JSON, DTO veya Event classları kullanılır. Kullanıcının ödeme yapması, ATM'e nakit yüklendi.       
-Akışta kullanıcı etkileşimi önce bir teknik olay yaratır yani system event, sonrasında bu olay iş mantığı açısından anlamlı hale gelir yani domain event.        
-- **Event-Driven Integration**: Farklı uygulamaların veya servislerin birbirleriyle events üzerinden haberleşmesini sağlayan entegrasyon yaklaşımıdır. Sistemde önemli bir olay gerçekleştiğinde olay bir mesaj olarak yayınlanır. Diğer sistemler veya servisler bu eventi dinler yani subscribe olur ve buna göre aksiyon alırlar. Böylece loosely coupled bir ilişki oluşur, doğrudan bağımlı olmadan iletişim kurarlar. Olaylar mesaj kuyrukları ya da event buslar üzerinden iletilir yani sistemler aynı anda çalışmak zorunda değildir. Olay gerçekleştiği anda servisler harekete geçer. Yeni servis eklememiz gerektiğinde is mevcut sistemi değiştirmemiz gerekmez, sadece ilgili olayın dinlenmesi yeterlidir.       
+  - **Domain Event**: İş mantığı açısından önemlidir. İş kurallarını tetikler. Mümkün olabildiğince az veri içermelilerdir, içerdiği veri tutarlı olmalıdır. Yani genellikle immutable veri yapıları kullanılır. JSON, DTO veya Event classları kullanılır. Kullanıcının ödeme yapması, ATM'e nakit yüklendi. (İş birimi için ifade ediyor mu sorusunun cevabı evetse bu bir domain eventtir. Yöneticin stok tükendi m, bugün kaç sipariş verildi gibi şeyleri o zaman bunlar domain event ama bugün kaç kez butona tıklandı diye sormaz bu bir system eventtir) Bir olayın domain event sayılabilmesi için sadece gerçekleşmesi yetmez, etki alanı için anlam ve önem taşıması gereki Faydalaı;
+      
+      - Bounded comtextleri birbirinden ayırır böylece farklı birimlerin birbirinin iç yapısını bilmeden haberleşmesini sağlar.    
+      - Birimler arasındaki bilgi akışını standart hale getirerek iletişimi kolaylaştırır.       
+
+Akışta kullanıcı etkileşimi önce bir teknik olay yaratır yani system event, sonrasında bu olay iş mantığı açısından anlamlı hale gelir yani domain event.
+        
+- **Event-Driven Integration**: Farklı uygulamaların veya servislerin birbirleriyle events üzerinden haberleşmesini sağlayan entegrasyon yaklaşımıdır. Sistemde önemli bir olay gerçekleştiğinde olay bir mesaj olarak yayınlanır. Diğer sistemler veya servisler bu eventi dinler yani subscribe olur ve buna göre aksiyon alırlar. Böylece loosely coupled bir ilişki oluşur, doğrudan bağımlı olmadan iletişim kurarlar. Olaylar mesaj kuyrukları ya da event buslar üzerinden iletilir yani sistemler aynı anda çalışmak zorunda değildir. Olay gerçekleştiği anda servisler harekete geçer. Yeni servis eklememiz gerektiğinde is mevcut sistemi değiştirmemiz gerekmez, sadece ilgili olayın dinlenmesi yeterlidir.
+- Diyelim ki bir haber paketimiz var bu paketi alıcıya hangi yolla göndereceğiz?
+   
+    - Haberi alan ile gönderen kiş aynı odadaysa(yani yazılımın aynı parçası içindeyse) seslenmemiz yeterlidir. Buna **in memory structures** yani bellek içi yapılar denir. Bilgi doğrudan RAM üzerinden aktarılır ve çok hızlıdır.    
+    - Farklı şehirlerdeyseler (farklı bir sunucu ya da uygulamadaysa) haberi mektupla göndermemiz gerekir. Buna **messaging bus** yani mesaj kuyruğu denir. Sistemlerin birbirinden bağımsız çalışmasını sağlar.
+      
+- Bir olayın mantığı ile onun nasıl gönderildiği birbirinden ayrı olarak düşünülmelidir.             
 
    ## NOTLAR
     
