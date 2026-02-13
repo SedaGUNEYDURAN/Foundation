@@ -71,17 +71,20 @@
 
 
    ## Aggregate
-  - Birbiri ile sıkı sıkıya bağlı nesneler grubudur(entity ve value object gruplarıdır). Veri bütünlüğünü sağlamak için bir grup nesnenin tek bir kök(aggregate root) üzerinden yönetilmesidir.
+  -Herşeyi birbirine bağlayıp karmaşa yaratmamalıyız, benzer işleri yapanları birbiri ile alakalı olanları gruplayıp/kümeleyip onları ayrı bir paket halinde yönetmeliyiz. Diyelim ki e-ticaret sitesi yönetiyoruz. Elimizde müşteri bilglleri, kredi kartları, siparişler gibi çeşitli bilgiler var. Bunları birbirleri ile ilgisine göre değil hangi veriler aynı kurallara tabi ve beraber değişmek zorunda olduğuna bakarak kümelemeliyiz; Customer aggregate(müşteri kümesi), Order Aggregate, Product Agregate.      
+  - Birbiri ile sıkı sıkıya bağlı nesneler grubudur(entity ve value object gruplarıdır). Veri bütünlüğünü sağlamak için bir grup nesnenin tek bir kök(aggregate root) üzerinden yönetilir. 
   - Aggregate root, veri tutarlılığını(consistency) sağlamak için gruba tek bir giriş noktası sağlar. Dışarıdan kimse içeriye dokunamaz, sadece kök üzerinde işlem yapılır.
   - Kodun herhangi bir yeride invariants kuralı bozacak bir işlem yapılmasını engellemek için nesneleri aggregate dediğimiz korumalı gruplara hapsederiz.  Mesela Order bir aggregate rootdur. OrderItem'sa dışarıdan erişilemez, her şey ana Order nesnesi üzerinden yönetilir.
   - Eğer bir aggregate içinde sub-entity varsa, ona da erişim agregate root üzerinden gerçekleşir yani sub-entitye de doğrudan erişilemez. Eğer erişilebilir bir yapı tasarladıysak bu aggregate bütünlüğünü bozar.
-  - Bir transaction başladığında sadece bir aggregate güncellenmelidir. Bu sistemin ölçeklenebilirliğini arttırır ve deadlock sorunlarını önler. 
+  - Bir transaction başladığında sadece bir aggregate güncellenmelidir. Bu sistemin ölçeklenebilirliğini arttırır ve deadlock sorunlarını önler.
+  - Her bir işlemde yani transactionda tek bir aggregate  yani küme üzerinde işlem yapmayı hedeflemeliyiz, birden fazla küme ile işlem yapıyorsak bir şeyler yanlış gidiyor demektir.
   - Vaugh Vernon'un Kuralları;
     - Küçük tutulmalıdır. Büyük kümeler performans sorunlarına ve veritabanı kilitleme hatalarına yol açar. Sadece beraber değişmesi gereken, minimum nesne kümeye dahil edilmelidir.
     - Bir aggregate başka bir aggregate'e referans verecekse bunu nesne olarak değil, ID üzerinden yapmalıdır.
     - Bir değişiklik başka bir kümede güncelleme gerektiriyorsa anlık değil Domain Events kullanarak zaman içinde yani asenkron olarak yapılmalıdır.
 
-  - Kısaca her şey her şeye bağlanmamalıdır, nesneleri küçük ve korunaklı aggregateler içine hapsedip bunların önünde de bir nöbetçi yani aggregate root bulunmalı.  
+  - Kısaca her şey her şeye bağlanmamalıdır, nesneleri küçük ve korunaklı aggregateler içine hapsedip bunların önünde de bir nöbetçi yani aggregate root bulunmalı.
+  - Diyelim çok büyük bir aggregate oluşturduk ve iki kişi bu aggregate'in içindeki farklı işleri aynı anda güncellemeye çalışıyor bu durumda sistem kitlenir ve haya verir. Bu duruma **transaction failure** denir.     
 
    ## Repository
   -  Veritabanı işlemlerini gizleyen interfaceler diyebiliriz. Nesnelerin veritabanına kaydedilmesi ve geri getirilmesini yöneten bir interfacedir. Sanki bellekteki bir collection'mış gibi davranmalıdır. Teknik veritabanı detayları(SQL sorguları vs) burada gizlenir.   
@@ -196,6 +199,8 @@
       }
        ```
 
+
+
      ```java
       @Entity
       @Table(name="movies")
@@ -208,8 +213,11 @@
       })
       public class Movie { ... }
        ```
-      
+
+
       - **Native SQL**: Veritabanına özgü(PostgreSQL gibi) fonksiyonları kullanmamız gerektiğinde standart SQL yazabiliriz.
+
+
 
       ```java
        public interface ProductRepository extends JpaRepository<Product, Long>{
@@ -218,8 +226,10 @@
         List<Product> findCheapInStock(Double minPrice);  // 
       }
       ```
+
      
   -  @Query sadece veri çekmek için kullanılmaz. Güncellemeler için de kullanılır ama **@Modifiying** anotasyonununda kullanılması gerekir. JPA normalde sorguları sadece SELECT olmasını bekler. Buyüzden INSERT, DELETE,UPDATE gibi özel sorgular yapacağımızda bunu belirtmemiz gerekir. Belirtmezsek; **InvalidDataAccessApiUsageException** fırlatır.  
+
 
       ```java
       public interface ProductRepository extends JpaRepository<Product, Long>{
@@ -228,6 +238,7 @@
        @Query("UPDATE Product p Set p.price=p.price*1.1 WHERE p.category=:category") 
        int increasePriceByCategory(@Param("category") String category);
       ```
+      
   - Custom Repository'de oluşturabiliriz istersek. Namig Convention sayesinde Spring Data kendi yazdığımız sınıfları otomatik olaak mevcut repository ile birleştirebilir. Peki bu custom repository'yi nasıl yazacağız?
 
     - İlk olarak interface'imizi tanımlamalıyız ;
@@ -275,6 +286,7 @@
       boolean isSatisfiedBy(Titem);
     }
     ```
+    
     ```java
     //Business Rule
     public class ExpensiveProductSpec implements Specification<Product> {
@@ -300,6 +312,7 @@
     }
 
     ```
+    
     - **JPASpecificationExecutor<T>**: Spring Data JPA'in sağladığı bir interfacedir. Specification nesneleri ile sorgu çalıştırmamızı sağlarlar.  Repository'ye eklenerek Spesification tabanlı sorgular çalıştırılabilir. İçinde toPredicate metodu bulunur.  
 
      ```java
@@ -353,6 +366,7 @@ Akışta kullanıcı etkileşimi önce bir teknik olay yaratır yani system even
    - **Criteria API:** JPA'in sunduğu bir API'dir. Sorguları kod ile tanımlamamızı sağlar.   
 
      ```java
+     
      CriteriaBuilder cb=em.getCriteriaBuilder(); //Sorgu elemanlarını(Predicate, Expression, CriteriaQuery) oluşturan fabrika sınıfıdır. EntityManager üzerinden alınır.
      CriteriaQuery<Employee> cq=cb.createQuery(Employee.class); // Sorgunun tanımını temsil eder; SELECT, WHERE, ORDER BY gibi
      Root<Employee> employee=cq.from(Employee.class); //sorgulanacak entity tanımlanır. FROM ifadesine karşılık gelir.
