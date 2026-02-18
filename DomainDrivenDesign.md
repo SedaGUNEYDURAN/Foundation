@@ -7,7 +7,7 @@
   -  **Model**: Gerçek hayatın basitleştirilmiş versiyonudur. Sadece yazılımın ihtiyacı olan kuralları içerir.
   -  **Entities**:Idetitysi(ID) olan nesnelerdir. Örneğin; Müşteri entityi, müşterinin soyadı değişse bile aynı müşteridir -> ID'si sabittir. Entityler yaşam süreleri boyunca izlenebilir olmalıdır. Entityler sadece veri torbaları yani DTO değildir. Kendi verilerini korumalı ve üzerinde işlem yapacak iş metotlarına yani davranışlara sahip olmalılardır.  
   -  **Value Objects**: Değişmez(immutable) yapılardır. Kimliği olmayan, sadece değeri olan şeylerdir. Eğer bir değer değişecekse,nesne güncellenmez; yenisi oluşturulur. Özellikler bir bütündür. Örneğin; Adres. Sokak, kapı no, şehir bilgileri bir arada tutulur bunlar birbirinden ayrılmaz parçalardır. İki value objectin eşit olup olmadığını anlamak için ID'lerine değil içindeki tüm özelliklere bakılır. İki adresin sokak, no gibi tüm bilgileri aynıysa bu iki nesne eşittir.**Entity sayısını azaltıp, value object sayısını arttırmak sistemi daha hafif, daha kolay test edilebilir ve daha az hata payı içeren bir hale getirir.**    
-  -  **Domain Services**: Bazı işlemler ne bir entitye ne de bir value objecte aittir. Mesela; parayı A bankasından B bankasına transfer et işlemi bir servistir. Stateless yani durumsuzlardır. Servisler kendi içlerinde bir durum saklamazlar; bir veri alırlar, işlerler ve sonuç dönerler. Teknik bir servis değillerdir(veri tabanı bağlantısı gibi), business logicin bir parçasıdır, saf iş kuralı barındırırlar. 
+  -  **Domain Services**: Bazı işlemler ne bir entitye ne de bir value objecte aittir. Mesela; parayı A bankasından B bankasına transfer et işlemi bir servistir. Stateless yani durumsuzlardır. Servisler kendi içlerinde bir durum saklamazlar; bir veri alırlar, işlerler ve sonuç dönerler. Teknik bir servis değillerdir(veri tabanı bağlantısı gibi), business logicin bir parçasıdır, saf iş kuralı barındırırlar, dış dünya ile konuşmazlar.  
   -  **Invariant**: bir iş kuralının her zaman doğru kalması gereken durumdur. Mesela; bir siparişin tutarı asla negatif olamaz. Bu bir invarianttır.     
   - **Factory**: Karmaşık nesnelerin oluşturulma mantığını saklayan yapılardır. Bir nesnenin yaratılması için çok fazla kural gerektiriyorsa bu nesnenin kendi içinde değil bir factory içinde tutulur. Böylece nesne sadece kendi işine odaklanır.    
   - **Repository**: veritabanı işlemlerini gizleyen interfaceler diyebiliriz. Nesnelerin veritabanına kaydedilmesi ve geri getirilmesini yöneten bir interfacedir. Sanki bellekteki bir collection'mış gibi davranmalıdır. Teknik veritabanı detayları(SQL sorguları vs) burada gizlenir. **Sadece aggregate root'lar için bir repository oluşturulur.**
@@ -369,11 +369,14 @@ Akışta kullanıcı etkileşimi önce bir teknik olay yaratır yani system even
     - Haberi alan ile gönderen kiş aynı odadaysa(yani yazılımın aynı parçası içindeyse) seslenmemiz yeterlidir. Buna **in memory structures** yani bellek içi yapılar denir. Bilgi doğrudan RAM üzerinden aktarılır ve çok hızlıdır.    
     - Farklı şehirlerdeyseler (farklı bir sunucu ya da uygulamadaysa) haberi mektupla göndermemiz gerekir. Buna **messaging bus** yani mesaj kuyruğu denir. Sistemlerin birbirinden bağımsız çalışmasını sağlar.
       
-- Bir olayın mantığı ile onun nasıl gönderildiği birbirinden ayrı olarak düşünülmelidir.             
-
+- Bir olayın mantığı ile onun nasıl gönderildiği birbirinden ayrı olarak düşünülmelidir.                
+- Handling Domain Events: Bir eventin doğuşundan diğer birimlere dağıtılmasına kadar geçen teknik süreci ifade eder. Creating event; entity veya aggregate roots da doğar. Olayın dağıtımı yani dispatching handling, infrastructure katmanında gerçekleşir.
+- Domain Service ile application Services arasındaki fark ; domain service business logic içerir, dış dünya ile konuşmaz ancak application service yazılımın dış katmanına yakındır ve dış dünya ile iletişim kurar ama iş mantığı içermez.                                                                                                                                                                                                                                                                                                                                                                                      
    ## NOTLAR
     
-   - **Anemic Domain Model**:Eğer sınıflarımızda sadece getter ve setter varsa ve tüm business logic servislerin içindeyse bu gerçek bir DDD değildir. Nesneler akıllı olmalıdır ve kendi kuralllarını kendileri yönetmelidir.    
+   - **Anemic Domain Model**:Eğer sınıflarımızda sadece getter ve setter varsa ve tüm business logic servislerin içindeyse bu gerçek bir DDD değildir, anemic modeldir. Nesneler akıllı olmalıdır ve kendi kuralllarını kendileri yönetmelidir.
+   - **Fat Entities**: Bir nesnenin üzerine çok fazla sorumluluk yüklenmesidir. Örnek olarak diyelim ki bir müşteri nesnemiz var. Bu nesne hem kendi bilgilerini tutup hem de fatura kesip e-posta gönderiyorsa o nesne fat enttiydir ve hata oluşma riski çok yüksektir.
+   - **Repository Anti-Pattern**: Nesnelerin tam olarak hazır olmadan, eksik verilerle sistemde dolaşmasıdır. 
    - **Criteria API:** JPA'in sunduğu bir API'dir. Sorguları kod ile tanımlamamızı sağlar.   
 
      ```java
@@ -388,5 +391,5 @@ Akışta kullanıcı etkileşimi önce bir teknik olay yaratır yani system even
      ```
      
 
-   -   
+- DDD'nin kısaca bize anlatmaya çalıştığı şey; yazılımın merkezini(domain) öyle tasarlansın ki nesneler her zaman sağlam olsun(invariantlar validation), karmaşık olan nesneleri uzman yapılar(factories) kursun, kurallar doğru yerde dursun(servisler) ve nesnelerimiz ne çok dolu ne de boş(anti-pattern) olsun.  
    
