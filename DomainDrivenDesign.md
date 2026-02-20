@@ -71,7 +71,7 @@
 
 
    ## Aggregate
-  -Herşeyi birbirine bağlayıp karmaşa yaratmamalıyız, benzer işleri yapanları birbiri ile alakalı olanları gruplayıp/kümeleyip onları ayrı bir paket halinde yönetmeliyiz. Diyelim ki e-ticaret sitesi yönetiyoruz. Elimizde müşteri bilglleri, kredi kartları, siparişler gibi çeşitli bilgiler var. Bunları birbirleri ile ilgisine göre değil hangi veriler aynı kurallara tabi ve beraber değişmek zorunda olduğuna bakarak kümelemeliyiz; Customer aggregate(müşteri kümesi), Order Aggregate, Product Agregate.      
+  - Herşeyi birbirine bağlayıp karmaşa yaratmamalıyız, benzer işleri yapanları birbiri ile alakalı olanları gruplayıp/kümeleyip onları ayrı bir paket halinde yönetmeliyiz. Diyelim ki e-ticaret sitesi yönetiyoruz. Elimizde müşteri bilglleri, kredi kartları, siparişler gibi çeşitli bilgiler var. Bunları birbirleri ile ilgisine göre değil hangi veriler aynı kurallara tabi ve beraber değişmek zorunda olduğuna bakarak kümelemeliyiz; Customer aggregate(müşteri kümesi), Order Aggregate, Product Agregate.      
   - Birbiri ile sıkı sıkıya bağlı nesneler grubudur(entity ve value object gruplarıdır). Veri bütünlüğünü sağlamak için bir grup nesnenin tek bir kök(aggregate root) üzerinden yönetilir. 
   - Aggregate root, veri tutarlılığını(consistency) sağlamak için gruba tek bir giriş noktası sağlar. Dışarıdan kimse içeriye dokunamaz, sadece kök üzerinde işlem yapılır.
   - Kodun herhangi bir yeride invariants kuralı bozacak bir işlem yapılmasını engellemek için nesneleri aggregate dediğimiz korumalı gruplara hapsederiz.  Mesela Order bir aggregate rootdur. OrderItem'sa dışarıdan erişilemez, her şey ana Order nesnesi üzerinden yönetilir.
@@ -94,6 +94,7 @@
   -    DAO(Data Access Object), genellikle veritabanı tablolarının bir yansımasıdır(data centric). CRUD(Create-Read-Update-Delete) odaklıdır. Repository ise domain yani iş odaklıdır. Sadece business biriminin ihtiyacı olan sorguları ve işlemleri barındırır. Ubiquitous language kullanır.    
 
   ## Spring Data JPA 
+- JPA nedir? Java Persistence API, nesneye dayalı programlamayani java classları ile ilişkisel veritabanı yani tablolar arasındaki köprüyü kuran bir standarttır. Buna ORM(Object-Relational Mapping) denir. Normalde veritanına bağlanmak için, sorgu yazmak için boilerplate kod gerekir. Spring Datab JPA bizim için bu kalabalığı, karışıklığı ortadan kaldırır. Sadece bir interface tanımlayıp belirli isimlendirme kurallarına uyarak SQL yazmamıza gerek kalmadan veritabanı işlemlerimizi yapabiliriz. 
 - Geleneksel Spring uygulamalarında veritabanı işlemleri için; her entity sınıfı için bir DAO interface'i ve bu interface'i implemente eden bir class yazılırdı. Bu classlarda sürekli tekrar eden entityManager.persist(), entityManager.find() gibi kodlar bulunurdu. Spring Data ile bunlar ortadan kalktı. Artık class yazmamıza gerek yok sadece interface tanımlıyoruz ve spring runtimeda bu interface'in implementasyonunu otomatik olarak oluşturur.(Temel CRUD işlemlerini otomatik olarak bize sunuyor)    
 - Spring Data JPA kullanmak için projemize bir bağımlılık eklememiz gerekiyor;        
 
@@ -276,7 +277,8 @@
       ```
      
   - Veritabanı işlemlerinde ya hep ya hiç kuralı geçerlidir. Diyelim ki üç tabloya kayıt yapıyoruz, 2. tabloya kayıt yaparken elektrikler kesildi, hata oluştu vs. Bu durumda ilk kaydın da geri alınması yani rollback gerekir.   Sadece veri okuyorsak **@Transactional(readOnly=true)** kullanarak performans artışı sağlayabiliriz.
-  - **Transaction propagation**, bir transactional metod başka bir transactional metot tarafından çağrıldığında,  transactionların nasıl davranacağını belirler. Default olarak Requireddır(@Transactional(propagation = Propagation.REQUIRED)). Yani mevcut transaction vardsa katılır yoksa yeni başlatır.
+  - **Transaction propagation**, bir transactional metod başka bir transactional metot tarafından çağrıldığında,  transactionların nasıl davranacağını belirler. Default olarak Requireddır(@Transactional(propagation = Propagation.REQUIRED)). Yani mevcut transaction vardsa katılır yoksa yeni başlatır.   
+  - **QueryByExampleExecutor<T, ID> interface'i**; probe yani örnek nesne kullanarak sorgu yapmayı sağlayan metotlar tanımlar.  Diyelim ki elimizde bir nesne var ve veritabanında bu nesnenin dolu olan alanlarına benzeyen kayıtları getirmesini istiyoruz o zaman bu interfacei kullanmamızı gerekiyor diyebiliriz. JpaRepository tarafından desteklenir.    
     
     ### Specification Pattern
     -   **Specification Pattern:** Business rulelar ayrı nesneler halinde tanımlanıp bunları mantıksal(or, and, not) birleştirilmesini sağlayan tasarım kalıbıdır. Yani her iş kuralı bir spesification nesnesi olarak tanımlanır. Bun nesneler **isSatisfiedBy(entity)** metodunu içerir ve entity'in kurala uyup uymadığını döner. Domain layerda iş kurallarının net tanımlanıp tanımlanmadığını anlamak, dinamik filtreleme yapmak ve nesnelerin belirli kurallara uyup uymadığını anlamak için kullanılır.if-else mantığına göre daha temiz ve nesne odaklıdır, yeniden kullanılabilirliği yüksek, test edilebilirliği kolaydır. 
