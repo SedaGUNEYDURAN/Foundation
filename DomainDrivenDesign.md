@@ -250,7 +250,7 @@
       } 
       ```
       
-    - Interface'i implemente eden bir class yazarız. Ama bu classın adlandırmasını yaparken dikkat etmemiz gereken bir nokta var; sınıf ismi orijinal repository adının sonuna Impl eklenmelidir.
+    - Interface'i implemente eden bir class yazarız. Ama bu classın adlandırmasını yaparken dikkat etmemiz gereken bir nokta var; **sınıf ismi orijinal repository adının sonuna Impl eklenmelidir.**
 
       ```java
       @Repository
@@ -278,7 +278,7 @@
      
   - Veritabanı işlemlerinde ya hep ya hiç kuralı geçerlidir. Diyelim ki üç tabloya kayıt yapıyoruz, 2. tabloya kayıt yaparken elektrikler kesildi, hata oluştu vs. Bu durumda ilk kaydın da geri alınması yani rollback gerekir.   Sadece veri okuyorsak **@Transactional(readOnly=true)** kullanarak performans artışı sağlayabiliriz.
   - **Transaction propagation**, bir transactional metod başka bir transactional metot tarafından çağrıldığında,  transactionların nasıl davranacağını belirler. Default olarak Requireddır(@Transactional(propagation = Propagation.REQUIRED)). Yani mevcut transaction vardsa katılır yoksa yeni başlatır.   
-  - **QueryByExampleExecutor<T, ID> interface'i**; probe yani örnek nesne kullanarak sorgu yapmayı sağlayan metotlar tanımlar.  Diyelim ki elimizde bir nesne var ve veritabanında bu nesnenin dolu olan alanlarına benzeyen kayıtları getirmesini istiyoruz o zaman bu interfacei kullanmamızı gerekiyor diyebiliriz. JpaRepository tarafından desteklenir.    
+  - **QueryByExampleExecutor<T, ID> interface'i**; Spring Data'nın sağladığı bir interfacedir. Probe yani örnek nesne kullanarak sorgu yapmayı sağlayan metotlar tanımlar.  Diyelim ki elimizde bir nesne var ve veritabanında bu nesnenin dolu olan alanlarına benzeyen kayıtları getirmesini istiyoruz o zaman bu interface'i kullanmamızı gerekiyor diyebiliriz. JpaRepository tarafından desteklenir.    
     
     ### Specification Pattern
     -   **Specification Pattern:** Business rulelar ayrı nesneler halinde tanımlanıp bunları mantıksal(or, and, not) birleştirilmesini sağlayan tasarım kalıbıdır. Yani her iş kuralı bir spesification nesnesi olarak tanımlanır. Bun nesneler **isSatisfiedBy(entity)** metodunu içerir ve entity'in kurala uyup uymadığını döner. Domain layerda iş kurallarının net tanımlanıp tanımlanmadığını anlamak, dinamik filtreleme yapmak ve nesnelerin belirli kurallara uyup uymadığını anlamak için kullanılır.if-else mantığına göre daha temiz ve nesne odaklıdır, yeniden kullanılabilirliği yüksek, test edilebilirliği kolaydır. 
@@ -391,7 +391,12 @@ Akışta kullanıcı etkileşimi önce bir teknik olay yaratır yani system even
      List<Employee> results=em.createQuery(cq).getResultList();//sorgu çalıştırılıyor
      
      ```
-     
+   ### Bazı Interfaceler
+   - **QueryByExampleExecutor<T, ID>**; Spring Data'nın sağladığı bir interfacedir. Probe yani örnek nesne kullanarak sorgu yapmayı sağlayan metotlar tanımlar.  Diyelim ki elimizde bir nesne var ve veritabanında bu nesnenin dolu olan alanlarına benzeyen kayıtları getirmesini istiyoruz o zaman bu interface'i kullanmamızı gerekiyor diyebiliriz. JpaRepository tarafından desteklenir.      
+  - **Future<T>, CompatableFuture<T>**; Sorgunun arka planda asenkron çalışmasını sağlar. Bu metotların @Async ile işaretlenmesi ve Spring'in asenkton desteğinin açık olması gerekir.       
+  - **Slice<T>**; Verinin bir bölümünü döndürür. Bir sonraki bölümün olup olmadığını bilir ama toplam kayıt sayısını hesaplamaz, performans bakımından avantajlıdır.       
+  - **Page<T>**; Slice'dan farklı olarak toplam kayıt sayısını ve toplam sayfa sayısını da bilir.  
+  - **GeoResult<T>, GeoResult<T>, GeoPage<T>**; Lokasyon bazlı sorgular için kullanılır.       
 
 - DDD'nin kısaca bize anlatmaya çalıştığı şey; yazılımın merkezini(domain) öyle tasarlansın ki nesneler her zaman sağlam olsun(invariantlar validation), karmaşık olan nesneleri uzman yapılar(factories) kursun, kurallar doğru yerde dursun(servisler) ve nesnelerimiz ne çok dolu ne de boş(anti-pattern) olsun.  
    
