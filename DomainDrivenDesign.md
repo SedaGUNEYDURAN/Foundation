@@ -281,7 +281,7 @@
   - **QueryByExampleExecutor<T, ID> interface'i**; Spring Data'nın sağladığı bir interfacedir. Probe yani örnek nesne kullanarak sorgu yapmayı sağlayan metotlar tanımlar.  Diyelim ki elimizde bir nesne var ve veritabanında bu nesnenin dolu olan alanlarına benzeyen kayıtları getirmesini istiyoruz o zaman bu interface'i kullanmamızı gerekiyor diyebiliriz. JpaRepository tarafından desteklenir.    
     
     ### Specification Pattern
-    -   **Specification Pattern:** Business rulelar ayrı nesneler halinde tanımlanıp bunları mantıksal(or, and, not) birleştirilmesini sağlayan tasarım kalıbıdır. Yani her iş kuralı bir spesification nesnesi olarak tanımlanır. Bun nesneler **isSatisfiedBy(entity)** metodunu içerir ve entity'in kurala uyup uymadığını döner. Domain layerda iş kurallarının net tanımlanıp tanımlanmadığını anlamak, dinamik filtreleme yapmak ve nesnelerin belirli kurallara uyup uymadığını anlamak için kullanılır.if-else mantığına göre daha temiz ve nesne odaklıdır, yeniden kullanılabilirliği yüksek, test edilebilirliği kolaydır. 
+    -   **Specification Pattern:** Business rulelar ayrı nesneler halinde tanımlanıp bunları mantıksal(or, and, not) birleştirilmesini sağlayan tasarım kalıbıdır. Veritabanı sorgusu  için bir koşul(filtre) tanımlar. Yani her iş kuralı bir spesification nesnesi olarak tanımlanır. Bu nesneler **isSatisfiedBy(entity)** metodunu içerir ve entity'in kurala uyup uymadığını döner. Domain layerda iş kurallarının net tanımlanıp tanımlanmadığını anlamak, dinamik filtreleme yapmak ve nesnelerin belirli kurallara uyup uymadığını anlamak için kullanılır.if-else mantığına göre daha temiz ve nesne odaklıdır, yeniden kullanılabilirliği yüksek, test edilebilirliği kolaydır. 
 
     ```java
     public interface Specification<T>{
@@ -373,7 +373,24 @@ Akışta kullanıcı etkileşimi önce bir teknik olay yaratır yani system even
       
 - Bir olayın mantığı ile onun nasıl gönderildiği birbirinden ayrı olarak düşünülmelidir.                
 - Handling Domain Events: Bir eventin doğuşundan diğer birimlere dağıtılmasına kadar geçen teknik süreci ifade eder. Creating event; entity veya aggregate roots da doğar. Olayın dağıtımı yani dispatching handling, infrastructure katmanında gerçekleşir.
-- Domain Service ile application Services arasındaki fark ; domain service business logic içerir, dış dünya ile konuşmaz ancak application service yazılımın dış katmanına yakındır ve dış dünya ile iletişim kurar ama iş mantığı içermez.                                                                                                                                                                                                                                                                                                                                                                                      
+- Domain Service ile application Services arasındaki fark ; domain service business logic içerir, dış dünya ile konuşmaz ancak application service yazılımın dış katmanına yakındır ve dış dünya ile iletişim kurar ama iş mantığı içermez.
+
+
+   # Hexagonal Architecture
+-  Klasik katmanlı mimari; Burada Controller'ı garson gibi düşünebiliriz. Garson ne yapar müşteriden siparişi alır. Service'i aşçıbaşı gibi düşünelim, aşçıbaşı siparişin nasıl hazırlanacağını bilir. Persistence bu durumda kiler sorumlusu olur, malzemeleri raftan alır veya rafa koyar. DB yani veritabanımız ise malzemelerin durduğu kilerdir. Bu işleyişten her şey birbirine sıkı bir şekilde bağlıdır. Ama artık böyle birbirine sıkı bağlı bir yapı istemiyoruz. Burada açıkça gözüküyor; separation of concerns ilkesine aykırı bu durum, bu yapıda herkes bir altındakine muhtaç. Eğer veritabanı değişirse üstteki her şey bundan etkilenir. Bu da sistemi esnek olmayan katı bir hale getirir. 
+
+
+<img width="498" height="157" alt="image" src="https://github.com/user-attachments/assets/f3938bba-324e-4eb4-ac53-ee7086208c29" />
+
+- Inversion of Control(), kontrol tersine çevriliyor ve domain hiçbir şeye bağlı değil, sadece kendine bağlı oluyor. Teknik detaylar iş kurallarına uymalı, iş kuralları teknik detaylara uymamalıdır.
+- Hexagonal(Altıgen) mimaride, business logic altıgenin içindedir.Bağımlılıklar her zaman dışarıdan içeriye doğrudur. Dışarıdakiler içeriyi bilir. Controller Domaine şu işi yap diyebilir. Ama içerisi dışarıyı bilmez; domain, veritabanının mysql mi yoksa bir excel dosyası mı bilgisine sahiptir ve sadece veriyi kaydet der. Domain hiçbir teknik frameworke bağımlı olmamalıdır. Bağımlı olursa framework güncellendiğince tüm sistem çökebilir.    
+
+
+  
+-   
+
+
+                                                                
    ## NOTLAR
     
    - **Anemic Domain Model**:Eğer sınıflarımızda sadece getter ve setter varsa ve tüm business logic servislerin içindeyse bu gerçek bir DDD değildir, anemic modeldir. Nesneler akıllı olmalıdır ve kendi kuralllarını kendileri yönetmelidir.
