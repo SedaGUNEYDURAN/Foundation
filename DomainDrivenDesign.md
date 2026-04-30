@@ -353,37 +353,46 @@
  ```
 ## Domain Events
 
-- Domain event, yazılımda iş alanında yani domainde gerçekleşen ve iş açısından anlam taşıyan önemli bir olayı temsil eder. Her event bir domain event midir peki? Tabiki de hayır. Bir eventin domain event olabilmesi için iş alanında önemli bir anlamı olması gerekir. Buna örnek olarak log yazılımasını verebiliriz. Log yazılması teknik bir eventtir ama domain event değildir.  
+- Domain event, yazılımda iş alanında yani domainde gerçekleşen ve iş açısından anlam taşıyan önemli bir olayı temsil eder. Her event bir domain event midir peki? Tabiki de hayır. Bir eventin domain event olabilmesi için iş alanında önemli bir anlamı olması gerekir. Buna örnek olarak log yazılmasını verebiliriz. Log yazılması teknik bir eventtir ama domain event değildir.  
 - Domain eventler sayesinde farklı bounded contextler veya modüller arasında loosely coupled iletişim kurulur.
 - Domain eventler geçmiş zamanlı ifadeler ile adlandırılırlar. 
 - Kodda domain eventleri ele almanın iki yolu vardır; system event, domain event
   - **System Event**: Teknik, kullanıcı arayüzünde ve altyapı düzeyinden gerçekleşen olaylardır. Domain açısından anlam taşımazlar, sistemin çalışmasını sağlarlar. Buna örnek olarak buttona tıklamayı, veritabanına kayıt eklemeyi verebiliriz.   
-  - **Domain Event**: İş mantığı açısından önemlidir. İş kurallarını tetikler. Mümkün olabildiğince az veri içermelilerdir, içerdiği veri tutarlı olmalıdır. Yani genellikle immutable veri yapıları kullanılır. JSON, DTO veya Event classları kullanılır. Kullanıcının ödeme yapması, ATM'e nakit yüklendi. (İş birimi için ifade ediyor mu sorusunun cevabı evetse bu bir domain eventtir. Yöneticin stok tükendi m, bugün kaç sipariş verildi gibi şeyleri o zaman bunlar domain event ama bugün kaç kez butona tıklandı diye sormaz bu bir system eventtir) Bir olayın domain event sayılabilmesi için sadece gerçekleşmesi yetmez, etki alanı için anlam ve önem taşıması gereki Faydalaı;
+  - **Domain Event**: İş mantığı açısından önemlidir. İş kurallarını tetikler. Mümkün olabildiğince az veri içermelilerdir, içerdiği veri tutarlı olmalıdır. Yani genellikle immutable veri yapıları kullanılır. JSON, DTO veya Event classları kullanılır. Kullanıcının ödeme yapması, ATM'e nakit yüklendi. (İş birimi için ifade ediyor mu sorusunun cevabı evetse bu bir domain eventtir. Yöneticin stok tükendi mİ, bugün kaç sipariş verildi gibi şeyleri o zaman bunlar domain event ama bugün kaç kez butona tıklandı diye sormaz bu bir system eventtir) Bir olayın domain event sayılabilmesi için sadece gerçekleşmesi yetmez, etki alanı için anlam ve önem taşıması gerekir. Faydalaı;
       
       - Bounded comtextleri birbirinden ayırır böylece farklı birimlerin birbirinin iç yapısını bilmeden haberleşmesini sağlar.    
       - Birimler arasındaki bilgi akışını standart hale getirerek iletişimi kolaylaştırır.       
 
 Akışta kullanıcı etkileşimi önce bir teknik olay yaratır yani system event, sonrasında bu olay iş mantığı açısından anlamlı hale gelir yani domain event.
         
-- **Event-Driven Integration**: Farklı uygulamaların veya servislerin birbirleriyle events üzerinden haberleşmesini sağlayan entegrasyon yaklaşımıdır. Sistemde önemli bir olay gerçekleştiğinde olay bir mesaj olarak yayınlanır. Diğer sistemler veya servisler bu eventi dinler yani subscribe olur ve buna göre aksiyon alırlar. Böylece loosely coupled bir ilişki oluşur, doğrudan bağımlı olmadan iletişim kurarlar. Olaylar mesaj kuyrukları ya da event buslar üzerinden iletilir yani sistemler aynı anda çalışmak zorunda değildir. Olay gerçekleştiği anda servisler harekete geçer. Yeni servis eklememiz gerektiğinde is mevcut sistemi değiştirmemiz gerekmez, sadece ilgili olayın dinlenmesi yeterlidir.
+- **Event-Driven Integration**: Farklı uygulamaların veya servislerin birbirleriyle events üzerinden haberleşmesini sağlayan entegrasyon yaklaşımıdır. Sistemde önemli bir olay gerçekleştiğinde olay bir mesaj olarak yayınlanır. Diğer sistemler veya servisler bu eventi dinler yani subscribe olur ve buna göre aksiyon alırlar. Böylece loosely coupled bir ilişki oluşur, doğrudan bağımlı olmadan iletişim kurarlar. Olaylar mesaj kuyrukları ya da event buslar üzerinden iletilir yani sistemler aynı anda çalışmak zorunda değildir. Olay gerçekleştiği anda servisler harekete geçer. Yeni servis eklememiz gerektiğinde ise mevcut sistemi değiştirmemiz gerekmez, sadece ilgili olayın dinlenmesi yeterlidir.
 - Diyelim ki bir haber paketimiz var bu paketi alıcıya hangi yolla göndereceğiz?
    
-    - Haberi alan ile gönderen kiş aynı odadaysa(yani yazılımın aynı parçası içindeyse) seslenmemiz yeterlidir. Buna **in memory structures** yani bellek içi yapılar denir. Bilgi doğrudan RAM üzerinden aktarılır ve çok hızlıdır.    
+    - Haberi alan ile gönderen kişi aynı odadaysa(yani yazılımın aynı parçası içindeyse) seslenmemiz yeterlidir. Buna **in memory structures** yani bellek içi yapılar denir. Bilgi doğrudan RAM üzerinden aktarılır ve çok hızlıdır.    
     - Farklı şehirlerdeyseler (farklı bir sunucu ya da uygulamadaysa) haberi mektupla göndermemiz gerekir. Buna **messaging bus** yani mesaj kuyruğu denir. Sistemlerin birbirinden bağımsız çalışmasını sağlar.
       
 - Bir olayın mantığı ile onun nasıl gönderildiği birbirinden ayrı olarak düşünülmelidir.                
 - Handling Domain Events: Bir eventin doğuşundan diğer birimlere dağıtılmasına kadar geçen teknik süreci ifade eder. Creating event; entity veya aggregate roots da doğar. Olayın dağıtımı yani dispatching handling, infrastructure katmanında gerçekleşir.
-- Domain Service ile application Services arasındaki fark ; domain service business logic içerir, dış dünya ile konuşmaz ancak application service yazılımın dış katmanına yakındır ve dış dünya ile iletişim kurar ama iş mantığı içermez.
+- Domain Service ile application services arasındaki fark ; domain service business logic içerir, dış dünya ile konuşmaz ancak application service yazılımın dış katmanına yakındır ve dış dünya ile iletişim kurar ama iş mantığı içermez.
 
 
    # Hexagonal Architecture
--  Klasik katmanlı mimari; Burada Controller'ı garson gibi düşünebiliriz. Garson ne yapar müşteriden siparişi alır. Service'i aşçıbaşı gibi düşünelim, aşçıbaşı siparişin nasıl hazırlanacağını bilir. Persistence bu durumda kiler sorumlusu olur, malzemeleri raftan alır veya rafa koyar. DB yani veritabanımız ise malzemelerin durduğu kilerdir. Bu işleyişten her şey birbirine sıkı bir şekilde bağlıdır. Ama artık böyle birbirine sıkı bağlı bir yapı istemiyoruz. Burada açıkça gözüküyor; separation of concerns ilkesine aykırı bu durum, bu yapıda herkes bir altındakine muhtaç. Eğer veritabanı değişirse üstteki her şey bundan etkilenir. Bu da sistemi esnek olmayan katı bir hale getirir. 
+- Klasik katmanlı mimari; Burada Controller'ı garson gibi düşünebiliriz. Garson ne yapar müşteriden siparişi alır. Service'i aşçıbaşı gibi düşünelim, aşçıbaşı siparişin nasıl hazırlanacağını bilir. Persistence bu durumda kiler sorumlusu olur, malzemeleri raftan alır veya rafa koyar. DB yani veritabanımız ise malzemelerin durduğu kilerdir. Bu işleyişten her şey birbirine sıkı bir şekilde bağlıdır. Ama artık böyle birbirine sıkı bağlı bir yapı istemiyoruz. Burada açıkça gözüküyoruz ki, separation of concerns ilkesine aykırı bu durum, bu yapıda herkes bir altındakine muhtaç. Eğer veritabanı değişirse üstteki her şey bundan etkilenir. Bu da sistemi esnek olmayan katı bir hale getirir.
+  
+  <img width="498" height="157" alt="image" src="https://github.com/user-attachments/assets/f3938bba-324e-4eb4-ac53-ee7086208c29" />
+  
+-  Hexagonal architecture için yazılımı düzenlemek için oluşturulmuş bir tasarım kalıbı diyebiliriz. Amacımız da; iş mantığını yani domaini dış dünyadan(database, thirdparty yazılımlar, kullanıcı arayüzleri) olabildiğince ayırmaktır. Katmanları inceleyecek olursak;
 
+    - Burada domain sadece ne yapmak istiyoruza cevap verir. Nasıl yapacağız kısmı dış katmanların işidir.
+    - API(Application Programming Interface): Dış dünyadan gelen istekleri domaine ileten  interfacedir.
+    - **SPI(Service Provider Interface)**: Domainin dış dünyadan veri alması veya hizmet alması gerektiğinde kullandığı interfacedir. Mesela domain bu siparişi veritabanına kaydet der ama bu işlemi nasıl yapacağını bilmez. SPI ise veritabanı yada bu işlemi yapan başka bir servisi çağırır.
+    -  **Persistence**: bu verilerin nasıl saklanacağını(veritabanı, dosya, bulut vs.) belirleyen katmandır. Bu katman domainin ne yapması gerektiğini bilir ama nasıl yapacağını domaine bırakır.   
 
-<img width="498" height="157" alt="image" src="https://github.com/user-attachments/assets/f3938bba-324e-4eb4-ac53-ee7086208c29" />
+<img width="509" height="282" alt="image" src="https://github.com/user-attachments/assets/de0f247b-05ef-4f70-bd73-6b35003acb36" />
 
-- Inversion of Control(), kontrol tersine çevriliyor ve domain hiçbir şeye bağlı değil, sadece kendine bağlı oluyor. Teknik detaylar iş kurallarına uymalı, iş kuralları teknik detaylara uymamalıdır.
-- Hexagonal(Altıgen) mimaride, business logic altıgenin içindedir.Bağımlılıklar her zaman dışarıdan içeriye doğrudur. Dışarıdakiler içeriyi bilir. Controller Domaine şu işi yap diyebilir. Ama içerisi dışarıyı bilmez; domain, veritabanının mysql mi yoksa bir excel dosyası mı bilgisine sahiptir ve sadece veriyi kaydet der. Domain hiçbir teknik frameworke bağımlı olmamalıdır. Bağımlı olursa framework güncellendiğince tüm sistem çökebilir.    
+- Peki bu katmanlar birlikte nasıl çalışır? Kullanıcı bir istek gönderir. İstek API'a gelir. Apı, bu isteği domaine iletir. Domain kendi içinde iş mantığını çalışırtırır ve veri saklanması gerekiyor SPI'yı çağırır. SPI'da persistence katmanını çağırır. Persistence, veriyi veritabanına yazar. Persistence arka planda domain nesnelerini alır ve onları veritabanına uygun hale çevirir yani adaptör gibi davranır. Çıkan sonuç ise API üzerinden kullanıcıya döner. 
+- Inversion of Control() ile kontrol tersine çevriliyor ve domain hiçbir şeye bağlı değil, sadece kendine bağlı oluyor. Teknik detaylar iş kurallarına uymalı, iş kuralları teknik detaylara uymamalıdır.
+- Hexagonal(Altıgen) mimaride, business logic altıgenin içindedir.Bağımlılıklar her zaman dışarıdan içeriye doğrudur. Dışarıdakiler içeriyi bilir. Controller domaine şu işi yap diyebilir. Ama içerisi dışarıyı bilmez; domain, veritabanının mysql mi yoksa bir excel dosyası mı bilgisine sahiptir ve sadece veriyi kaydet der. Domain hiçbir teknik frameworke bağımlı olmamalıdır. Bağımlı olursa framework güncellendiğince tüm sistem çökebilir.    
 
 
   
