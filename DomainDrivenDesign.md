@@ -376,21 +376,24 @@ Akışta kullanıcı etkileşimi önce bir teknik olay yaratır yani system even
 - Domain Service ile application services arasındaki fark ; domain service business logic içerir, dış dünya ile konuşmaz ancak application service yazılımın dış katmanına yakındır ve dış dünya ile iletişim kurar ama iş mantığı içermez.
 
 
-   # Hexagonal Architecture
+   # Hexagonal Architecture(Ports and Adapters Architecture)
 - Klasik katmanlı mimari; Burada Controller'ı garson gibi düşünebiliriz. Garson ne yapar müşteriden siparişi alır. Service'i aşçıbaşı gibi düşünelim, aşçıbaşı siparişin nasıl hazırlanacağını bilir. Persistence bu durumda kiler sorumlusu olur, malzemeleri raftan alır veya rafa koyar. DB yani veritabanımız ise malzemelerin durduğu kilerdir. Bu işleyişten her şey birbirine sıkı bir şekilde bağlıdır. Ama artık böyle birbirine sıkı bağlı bir yapı istemiyoruz. Burada açıkça gözüküyoruz ki, separation of concerns ilkesine aykırı bu durum, bu yapıda herkes bir altındakine muhtaç. Eğer veritabanı değişirse üstteki her şey bundan etkilenir. Bu da sistemi esnek olmayan katı bir hale getirir.
   
   <img width="498" height="157" alt="image" src="https://github.com/user-attachments/assets/f3938bba-324e-4eb4-ac53-ee7086208c29" />
   
 -  Hexagonal architecture için yazılımı düzenlemek için oluşturulmuş bir tasarım kalıbı diyebiliriz. Amacımız da; iş mantığını yani domaini dış dünyadan(database, thirdparty yazılımlar, kullanıcı arayüzleri) olabildiğince ayırmaktır. Katmanları inceleyecek olursak;
 
-    - Burada domain sadece ne yapmak istiyoruza cevap verir. Nasıl yapacağız kısmı dış katmanların işidir.
-    - API(Application Programming Interface): Dış dünyadan gelen istekleri domaine ileten  interfacedir.
+    - Burada domain sadece ne yapmak istiyoruza cevap verir. Nasıl yapacağız kısmı dış katmanların işidir. **Domain, business logic tutar, hiçbir dış sistemi bilmez.** 
+    - **API(Application Programming Interface):** Dış dünyadan gelen istekleri domaine ileten  interfacedir. 
     - **SPI(Service Provider Interface)**: Domainin dış dünyadan veri alması veya hizmet alması gerektiğinde kullandığı interfacedir. Mesela domain bu siparişi veritabanına kaydet der ama bu işlemi nasıl yapacağını bilmez. SPI ise veritabanı yada bu işlemi yapan başka bir servisi çağırır.
-    -  **Persistence**: bu verilerin nasıl saklanacağını(veritabanı, dosya, bulut vs.) belirleyen katmandır. Bu katman domainin ne yapması gerektiğini bilir ama nasıl yapacağını domaine bırakır.   
+    -  **Persistence**: Bu verilerin nasıl saklanacağını(veritabanı, dosya, bulut vs.) belirleyen katmandır. Bu katman domainin ne yapması gerektiğini bilir ama nasıl yapacağını domaine bırakır.   
 
 <img width="509" height="282" alt="image" src="https://github.com/user-attachments/assets/de0f247b-05ef-4f70-bd73-6b35003acb36" />
 
-- Peki bu katmanlar birlikte nasıl çalışır? Kullanıcı bir istek gönderir. İstek API'a gelir. Apı, bu isteği domaine iletir. Domain kendi içinde iş mantığını çalışırtırır ve veri saklanması gerekiyor SPI'yı çağırır. SPI'da persistence katmanını çağırır. Persistence, veriyi veritabanına yazar. Persistence arka planda domain nesnelerini alır ve onları veritabanına uygun hale çevirir yani adaptör gibi davranır. Çıkan sonuç ise API üzerinden kullanıcıya döner. 
+- Bu mimarinin portlar ve adaptörler olarak adlandırılmasının nedeni; business logicin dış dünyayla portlar üzerinden konuşması ve bu portları adaptörlerin gerçekleştirmesidir.  İki tür port var; API, SPI  
+- Peki bu katmanlar birlikte nasıl çalışır? Kullanıcı bir istek gönderir. İstek API'a gelir. API, bu isteği domaine iletir. Domain kendi içinde iş mantığını çalışırtırır ve veri saklanması gerekiyor SPI'yı çağırır. SPI'da persistence katmanını çağırır. Persistence adaptör, veriyi veritabanına yazar. (Domain müşteriyi bilir, persistence müşteri tablosunu bilir gibi düşünebilirsin.)Persistence arka planda domain nesnelerini alır ve onları veritabanına uygun hale çevirir yani adaptör gibi davranır. Çıkan sonuç ise API üzerinden kullanıcıya döner.
+- Hexagonal olarak tasvir edilmesinin nedeni her kenarın bir I/O noktası olmasıdır. Dış dünya(UI, varitabanı, thirdparty servisler) bu kenarlara bağlanır.    
+- Hexagnal mimari bize isolation, test edilebilirlik, esnekli ve clean code sağlar.       
 - Inversion of Control() ile kontrol tersine çevriliyor ve domain hiçbir şeye bağlı değil, sadece kendine bağlı oluyor. Teknik detaylar iş kurallarına uymalı, iş kuralları teknik detaylara uymamalıdır.
 - Hexagonal(Altıgen) mimaride, business logic altıgenin içindedir.Bağımlılıklar her zaman dışarıdan içeriye doğrudur. Dışarıdakiler içeriyi bilir. Controller domaine şu işi yap diyebilir. Ama içerisi dışarıyı bilmez; domain, veritabanının mysql mi yoksa bir excel dosyası mı bilgisine sahiptir ve sadece veriyi kaydet der. Domain hiçbir teknik frameworke bağımlı olmamalıdır. Bağımlı olursa framework güncellendiğince tüm sistem çökebilir.    
 
@@ -424,5 +427,7 @@ Akışta kullanıcı etkileşimi önce bir teknik olay yaratır yani system even
   - **Page<T>**; Slice'dan farklı olarak toplam kayıt sayısını ve toplam sayfa sayısını da bilir.  
   - **GeoResult<T>, GeoResult<T>, GeoPage<T>**; Lokasyon bazlı sorgular için kullanılır.       
 
-- DDD'nin kısaca bize anlatmaya çalıştığı şey; yazılımın merkezini(domain) öyle tasarlansın ki nesneler her zaman sağlam olsun(invariantlar validation), karmaşık olan nesneleri uzman yapılar(factories) kursun, kurallar doğru yerde dursun(servisler) ve nesnelerimiz ne çok dolu ne de boş(anti-pattern) olsun.  
+- DDD'nin kısaca bize anlatmaya çalıştığı şey; yazılımın merkezini(domain) öyle tasarlansın ki nesneler her zaman sağlam olsun(invariantlar validation), karmaşık olan nesneleri uzman yapılar(factories) kursun, kurallar doğru yerde dursun(servisler) ve nesnelerimiz ne çok dolu ne de boş(anti-pattern) olsun.
+
+- **Cassandra**: Verileri çok sayıda node yani sunucu arasında dağıtarak depolayan, masterless yani ana sunucu olmayan bir mimariye sahip bir NoSQL veritabanıdır.SQL tabanlı veritabanlarının aksine sabir birschema gerektirmez. Verileri tablo şeklinde değil column family ya da key-value şeklinde saklar.    
    
