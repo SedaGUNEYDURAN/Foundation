@@ -398,8 +398,8 @@ Akışta kullanıcı etkileşimi önce bir teknik olay yaratır yani system even
 - Hexagonal(Altıgen) mimaride, business logic altıgenin içindedir.Bağımlılıklar her zaman dışarıdan içeriye doğrudur. Dışarıdakiler içeriyi bilir. Controller domaine şu işi yap diyebilir. Ama içerisi dışarıyı bilmez; domain, veritabanının mysql mi yoksa bir excel dosyası mı bilgisine sahiptir ve sadece veriyi kaydet der. Domain hiçbir teknik frameworke bağımlı olmamalıdır. Bağımlı olursa framework güncellendiğince tüm sistem çökebilir.    
 
 
-  
--   
+# Saga Pattern 
+- Eskiden yazılımlar tek parçadan oluşurdu yani tüm fonksiyonlar aynı kod tabanında ve aynı veritabanında çalışırdı. Microserviste ise uygulamayı küçük bağımsız servislere bölüyoruz. Her servis kendi işini yapar, kendi veritabanını kullanır, kendi kodunu çalıştırır. Böylece sistemin bir kısmında sorun oluştuğunda diğer servisler etkilenmez. Servisler birbirinden bağımsız bir şekilde geliştirilebilir, ölçeklenebilir ve yönetilebilir.
 
 
                                                                 
