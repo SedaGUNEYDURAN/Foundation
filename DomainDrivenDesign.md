@@ -399,7 +399,19 @@ Akışta kullanıcı etkileşimi önce bir teknik olay yaratır yani system even
 
 
 # Saga Pattern 
-- Eskiden yazılımlar tek parçadan oluşurdu yani tüm fonksiyonlar aynı kod tabanında ve aynı veritabanında çalışırdı. Microserviste ise uygulamayı küçük bağımsız servislere bölüyoruz. Her servis kendi işini yapar, kendi veritabanını kullanır, kendi kodunu çalıştırır. Böylece sistemin bir kısmında sorun oluştuğunda diğer servisler etkilenmez. Servisler birbirinden bağımsız bir şekilde geliştirilebilir, ölçeklenebilir ve yönetilebilir.
+- Eskiden yazılımlar tek parçadan oluşurdu yani tüm fonksiyonlar aynı kod tabanında ve aynı veritabanında çalışırdı. Microserviste ise uygulamayı küçük bağımsız servislere bölüyoruz. Her servis kendi işini yapar, kendi veritabanını kullanır, kendi kodunu çalıştırır. Böylece sistemin bir kısmında sorun oluştuğunda diğer servisler etkilenmez. Servisler birbirinden bağımsız bir şekilde geliştirilebilir, ölçeklenebilir(siparişler arttıysa Sipariş Servisini çoğaltabiliriz gibi) ve yönetilebilir.
+- **Transaction**: Birden fazla adımı bir bütün olarak çalıştırma yöntemidir. Diyelim ki bir bankaya para transferi yapıyoruz; A hesabından para düş, B hesabına ekle işlemi gerçekleşiyor. B hesabına ekleme işlemi gerçekleşmezse A hesabından da parayı düşürmüyor. Böylece sistemin tutarlılığı sağlanmış oluyor.   ACID kuralları ile sağlanıyor;
+
+  - **Atomicity:** Ya hep ya hiç..    
+  - **Consistency:** Veri her zaman tutarlıdır.   
+  - **Isolation:** İşlemler birbirini etkilemez.    
+  - **Durability:** İşlem tamamlandıysa kalıcıdır.    
+
+- Monolitik sistemde tüm adımlar tek bir veritabanında olduğu için transaction işlemleri kolaydır.  Microserviste her servis ayı veritabanı kullanır; sipariş oluşturma ayrı veritabanında, ödeme alma ayrı, stok düşme ayrı olarak düşünebiliriz. Dağıtık transaction ihtiyacımız doğuyor bu durumda. Bu duruma çözüm olarak Saga Pattern'i kullanabiliriz.       
+- Kısaca Saga Pattern'i tanımlamak istersek; microservis mimarisinde birden fazla servis arasında tutarlı bir işlem yapmak için kullanılan bir patterndir. Saga patternde her adım tamamlandığında bir sonraki aşamaya geçilir. Bir adım başarısız olursa önceki adım geri alınır(rollback-compensation), bütün adımları tek tek geri alır. Her servis kendi veritabanında bağımsız transaction çalıştırır.İki tür Saga Pattern:   
+
+  - **Choreography(Olay Tabanlı)**: Servisler birbirine event göndererek süreci yönetir. Basittir, merkezi bir kontrol yoktur. Karmaşık durumlarda kontrol zorlaşır, hata yönetimi zordur.Her servis kendi başına karar verir.       
+  - **Orchestration(Merkezi Koordinator)**: Merkezi bir koordinator bulunur. Orchestrator hangi servisin ne zaman çalışacağını belirler. Buradaki önemli nokta her servis kendi işini yapar, Koordinator sadece koordine eder. Kolay yönetilebilirdir ve hata yönetimi basittir ama merkezi bir noktadan kontrol edildiği için tek nokta başarısızlığı ile karşılaşabiliriz. Merkezi bir bileşen eklendiği için de bağımlılık yaratır.     
 
 
                                                                 
