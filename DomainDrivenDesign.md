@@ -417,7 +417,8 @@ Her servis kendi veritabanında bağımsız transaction çalıştırır. Dağıt
   -**Orchestration(Merkezi Koordinator)**: Merkezi bir koordinator bulunur. Orchestrator hangi servisin ne zaman çalışacağını belirler. Buradaki önemli nokta her servis kendi işini yapar, Koordinator sadece koordine eder. Kolay yönetilebilirdir ve hata yönetimi basittir ama merkezi bir noktadan kontrol edildiği için tek nokta başarısızlığı ile karşılaşabiliriz. Merkezi bir bileşen eklendiği için de bağımlılık yaratır.   
 
     
-- Saga Pattern'e gerçek zamanlı tutarlılık sağlanamaz, (eventual consistency)zamanla tutarlılık sağlanır.    
+- Saga Pattern'e gerçek zamanlı tutarlılık sağlanamaz, (eventual consistency)zamanla tutarlılık sağlanır.
+-     
 
                                                                 
    ## NOTLAR
