@@ -427,7 +427,17 @@ Akışta kullanıcı etkileşimi önce bir teknik olay yaratır yani system even
 
     
 - Saga Pattern'e gerçek zamanlı tutarlılık sağlanamaz, (eventual consistency)zamanla tutarlılık sağlanır.
--     
+
+
+## Event Storming 
+- Katılımcıların brlikte süreci tartıştığı, eventleri post-itlerle duvara yazdığı beyin fırtınası, davranış modelleme, görselleştirme yöntemidir. UML ya da tasarım belgesi yerine geçmez. Geliştirme sürecini hızlandrmak ve herkesin aynı büyük remi görebilmesini sağlar.     
+  - Eventler sarı kağıtlara (Müşteri sipariş verdi)    
+  - Komutlar mavi kağırlara (Garson siparişi al)   
+  - Sistemler yeşil kağıtlara (Sipariş sistemi)    
+  - Kullanıcılar pembe kağıtlara (Müşteri) yazılır.
+
+-   Event Stroming temel öğeleri:
+  - Domain Events: İş sürecinde gerçekleşen önemli olaylar    
 
                                                                 
    ## NOTLAR
