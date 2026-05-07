@@ -436,8 +436,14 @@ Akışta kullanıcı etkileşimi önce bir teknik olay yaratır yani system even
   - Sistemler yeşil kağıtlara (Sipariş sistemi)    
   - Kullanıcılar pembe kağıtlara (Müşteri) yazılır.
 
--   Event Stroming temel öğeleri:
-  - Domain Events: İş sürecinde gerçekleşen önemli olaylar    
+-   Event Stroming temel öğeleri:   
+  - Domain Events: İş sürecinde gerçekleşen önemli olaylar (Müşteri sipariş verdi)   
+  - Commands: Eventi tetikleyen eylemlerdir.(Garson siparişi al)   
+  - Aggregate: Eventi yöneten nesneler(Sipariş nesnesi)   
+  - Issues/Hot Spots: Sorunun yaşanan noktalar(Müşteri sipariş verirken stok kontrolü yapılmıyor)   
+  - Read Models: İş sürecinde verilerin nasıl okunduğunu gösteren modellerdir. (Müşteri siparişini görüntülediğinde hangi veriler gösterilir)   
+  - Policies: Karar verme kurallarıdır. (Müşteri sipariş verirken stok kontrolü yapılmalıdır.)   
+  - Users/Actors/External Systems/Timer: İş sürecine katılan kişiler veya sistemlerdir.(Müşteri)       
 
                                                                 
    ## NOTLAR
