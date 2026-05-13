@@ -430,21 +430,27 @@ Akışta kullanıcı etkileşimi önce bir teknik olay yaratır yani system even
 
 
 ## Event Storming 
-- Katılımcıların brlikte süreci tartıştığı, eventleri post-itlerle duvara yazdığı beyin fırtınası, davranış modelleme, görselleştirme yöntemidir. UML ya da tasarım belgesi yerine geçmez. Geliştirme sürecini hızlandrmak ve herkesin aynı büyük remi görebilmesini sağlar.     
+- Katılımcıların birlikte süreci tartıştığı, eventleri post-itlerle duvara yazdığı beyin fırtınası, davranış modelleme, görselleştirme yöntemidir. UML ya da tasarım belgesi yerine geçmez. Geliştirme sürecini hızlandrmak ve herkesin aynı büyük resmi görebilmesini sağlar. Notların soldan sağa yani yatay eksende dizilmesi zaman akışını, yukarıdan aşağıya dizilmesi aynı anda gerçekleşen veya birbirine bağlı olayları gösterir.       
   - Eventler sarı kağıtlara (Müşteri sipariş verdi)    
-  - Komutlar mavi kağırlara (Garson siparişi al)   
+  - Komutlar mavi kağıtlara (Garson siparişi al)   Olaylardan sonra 
   - Sistemler yeşil kağıtlara (Sipariş sistemi)    
   - Kullanıcılar pembe kağıtlara (Müşteri) yazılır.
 
--   Event Stroming temel öğeleri:   
-  - Domain Events: İş sürecinde gerçekleşen önemli olaylar (Müşteri sipariş verdi)   
-  - Commands: Eventi tetikleyen eylemlerdir.(Garson siparişi al)   
-  - Aggregate: Eventi yöneten nesneler(Sipariş nesnesi)   
-  - Issues/Hot Spots: Sorunun yaşanan noktalar(Müşteri sipariş verirken stok kontrolü yapılmıyor)   
-  - Read Models: İş sürecinde verilerin nasıl okunduğunu gösteren modellerdir. (Müşteri siparişini görüntülediğinde hangi veriler gösterilir)   
-  - Policies: Karar verme kurallarıdır. (Müşteri sipariş verirken stok kontrolü yapılmalıdır.)   
-  - Users/Actors/External Systems/Timer: İş sürecine katılan kişiler veya sistemlerdir.(Müşteri)       
-
+-   Event Stroming temel öğeleri:
+  
+    - Domain Events: İş sürecinde gerçekleşen önemli olaylar (Müşteri sipariş verdi)   
+    - Commands: Eventi tetikleyen eylemlerdir.(Garson siparişi al)   
+    - Aggregate: Eventi yöneten nesneler(Sipariş nesnesi)   
+    - Issues/Hot Spots: Sorunun yaşanan noktalar(Müşteri sipariş verirken stok kontrolü yapılmıyor)   
+    - Read Models: İş sürecinde verilerin nasıl okunduğunu gösteren modellerdir. (Müşteri siparişini görüntülediğinde hangi veriler gösterilir)   
+    - Policies: Karar verme kurallarıdır. (Müşteri sipariş verirken stok kontrolü yapılmalıdır.)   
+    - Users/Actors/External Systems/Timer: İş sürecine katılan kişiler veya sistemlerdir.(Müşteri)
+ 
+ -   **CRC Kartları**: Nesne yönelimli tasarımda kullanılan  karmaşık sistemleri sadeleştirmek için kullanılır. Class; sistemdeki 
+varlıklıkları tanımlar. Responsibility; varlıkların görevlerini açıklar. Collaborators; diğer hangi varlıklarla etkileşimde olduklarını gösterir.    
+- Context map, event storming sırasında, sistemin farklı bounded comtext yani bölümlerini ve bu bölümler arasındaki ilişkileri görselleştirmek için kullanılır. Her bounded contextitanımlar ve bu bağlamların birbiriyle olan ilişkilerini gösterir, sistem mimarisini modüler hale getirir.    
+- Context, olayın alıcılarını yani kimin etkilendiğini ve işleyenleri yani kimin üzerinde çalıştığını belirtir.   
+- Entity ve aggregateler olayın nasıl gerçekleştiğini ve kim tarafından yönetildiğini anlamamızı sağlar.      
                                                                 
    ## NOTLAR
     
